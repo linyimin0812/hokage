@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="%PUBLIC_URL%/logo.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="theme-color" content="#000000">
+	<link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+	<title>PCN&CAD服务器管理系统</title>
+</head>
+
+<body>
+	<link rel="stylesheet/less" type="text/css" href="./theme.less" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/less.js/2.7.2/less.min.js"></script>
+	<script>
+		const primaryColor = localStorage.getItem('@primary-color');
+		primaryColor && window.less.modifyVars({
+			'@primary-color': primaryColor,
+		})
+    </script>
+	<noscript>
+		You need to enable JavaScript to run this app.
+	</noscript>
+	<div id="root"></div>
+</body>
+
+</html>
