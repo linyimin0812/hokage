@@ -112,11 +112,9 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                             </span>
                         }
                     >
-                        <MenuItemGroup>
-                            <Menu.Item key="logout" style={{textAlign: "center", paddingBottom: "50px"}}>
+                      <Menu.Item key="logout" style={{textAlign: "center"}}>
                                 <span onClick={this.logout}>退出登录</span>
-                            </Menu.Item>
-                        </MenuItemGroup>
+                      </Menu.Item>
                     </SubMenu>
                 </Menu>
             </Header>

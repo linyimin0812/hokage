@@ -92,7 +92,7 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 className="sider-custom"
             >
                 <div className="logo">
-                  <span>PCN&CAD服务器管理系统</span>
+                  <span>服务器管理系统</span>
                 </div>
                 <SiderMenu
                     menus={routes.menus}

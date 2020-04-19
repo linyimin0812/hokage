@@ -26,7 +26,7 @@ class ThemePicker extends Component {
         const { switcherOn, background } = this.state;
         return (
             <div className={classNames('switcher dark-white', { active: switcherOn })}>
-                <span className="sw-btn dark-white" onClick={this._switcherOn}>
+                {/* <span className="sw-btn dark-white" onClick={this._switcherOn}>
                     <Icon type="setting" className="text-dark" />
                 </span>
                 <div style={{ padding: 10 }} className="clear">
@@ -34,7 +34,7 @@ class ThemePicker extends Component {
                         color={background}
                         onChangeComplete={this._handleChangeComplete}
                     />
-                </div>
+                </div> */}
             </div>
         );
     }
