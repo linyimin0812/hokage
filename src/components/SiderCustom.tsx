@@ -91,7 +91,9 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 style={{ overflowY: 'auto' }}
                 className="sider-custom"
             >
-                <div className="logo" />
+                <div className="logo">
+                  <span>PCN&CAD服务器管理系统</span>
+                </div>
                 <SiderMenu
                     menus={routes.menus}
                     onClick={this.menuClick}
