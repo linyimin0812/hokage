@@ -2,10 +2,11 @@
  * Created by hao.cheng on 2017/4/13.
  */
 import React, { Component } from 'react';
-import { Layout } from 'antd';
+import { Layout, Icon } from 'antd';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import routes from '../routes/config';
 import SiderMenu from './SiderMenu';
+import Emoji from './ui/emoji'
 
 const { Sider } = Layout;
 
@@ -92,7 +93,12 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 className="sider-custom"
             >
                 <div className="logo">
-                  <span>服务器管理系统</span>
+                  {
+                    collapsed ? null : (
+                      <span>服务器管理系统</span>
+                    )
+                  }
+                  <Emoji type="emoji-1"/>
                 </div>
                 <SiderMenu
                     menus={routes.menus}
