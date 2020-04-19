@@ -108,7 +108,7 @@ class App extends Component<AppProps> {
                             <Routes auth={auth} />
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
-                            React-Admin ©{new Date().getFullYear()} Created by 865470087@qq.com
+                            PCN&CAD server Manage ©{new Date().getFullYear()} Created by github@linyimin-bupt
                         </Footer>
                     </Layout>
                 </Layout>
