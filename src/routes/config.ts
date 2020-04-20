@@ -21,29 +21,37 @@ const menus: {
 } = {
     menus: [
         // 菜单相关路由
-        { key: '/app/index', title: '首页', icon: 'mobile', component: 'Dashboard' },
+        { key: '/app/index', title: '首页', icon: 'home', component: 'Dashboard' },
         {
             key: '/app/user',
             title: '用户管理',
             icon: 'user',
             subs: [
-                { key: '/app/user/operator', title: '服务器管理员', component: 'Buttons' },
-                { key: '/app/user/ordinary', title: '服务器使用者', component: 'Icons' }
+                { key: '/app/user/operator', title: '服务器管理员', icon: 'team', component: 'Buttons' },
+                { key: '/app/user/ordinary', title: '服务器使用者', icon: 'team', component: 'Icons' }
             ],
         },
         {
             key: '/app/server',
             title: '我的服务器',
-            icon: 'wallet',
+            icon: 'desktop',
             subs: [
+                {
+                  key: '/app/server/all',
+                    title: '所有的服务器',
+                    icon: 'desktop',
+                    component: 'BasicAnimations',
+                },
                 {
                     key: '/app/server/manage',
                     title: '我管理的服务器',
+                    icon: 'desktop',
                     component: 'BasicAnimations',
                 },
                 {
                     key: '/app/server/use',
                     title: '我使用的服务器',
+                    icon: 'desktop',  
                     component: 'ExampleAnimations',
                 },
             ],
@@ -51,7 +59,8 @@ const menus: {
         {
             key: '/app/file',
             title: '文件管理',
-            icon: 'copy',
+            icon: 'file',
+            component: 'ExampleAnimations'
         },
         {
             key: '/app/monitor',
@@ -61,14 +70,22 @@ const menus: {
               { 
                 key: '/app/monitor/server', 
                 title: '服务器资源监控', 
+                icon: 'line-chart',
                 component: 'BasicForm' 
               },
               { 
                 key: '/app/monitor/process', 
                 title: '进程监控', 
+                icon: 'line-chart',
                 component: 'BasicForm' 
               },
             ],
+        },
+        {
+          key: '/app/penetration',
+          title: '内网穿透',
+          icon: 'link',
+          component: 'BasicForm',
         },
     ],
     others: [], // 非菜单相关路由
