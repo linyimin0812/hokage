@@ -5,8 +5,12 @@ import React, { Component } from 'react';
 import screenfull from 'screenfull';
 import avater from '../style/imgs/b1.jpg';
 import SiderCustom from './SiderCustom';
-import { Menu, Icon, Layout, Popover } from 'antd';
-import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
+import { Menu, Icon, Layout, Popover, Avatar } from 'antd';
+import { 
+  UserOutlined,
+  FullscreenOutlined,
+  FullscreenExitOutlined,
+} from '@ant-design/icons'
 import { gitOauthToken, gitOauthInfo } from '../axios';
 import { queryString } from '../utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -72,9 +76,6 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
         })
       }
     }
-    menuClick = (e: { key: string }) => {
-        e.key === 'logout' && this.logout();
-    };
     logout = () => {
         localStorage.removeItem('user');
         this.props.history.push('/login');
@@ -88,40 +89,18 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
         this.setState({ visible });
     };
     render() {
-        const { responsive = { data: {} } } = this.props;
         const { isFullScreen } = this.state
         return (
             <Header className="custom-theme header">
-                {responsive.data.isMobile ? (
-                    <Popover
-                        content={<SiderCustom popoverHide={this.popoverHide} />}
-                        trigger="click"
-                        placement="bottomLeft"
-                        visible={this.state.visible}
-                        onVisibleChange={this.handleVisibleChange}
-                    >
-                        <Icon type="bars" className="header__trigger custom-trigger" />
-                    </Popover>
-                ) : (
-                    <Icon
-                        className="header__trigger custom-trigger"
-                        type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-                        onClick={this.props.toggle}
-                    />
-                )}
                 <Menu
                     mode="horizontal"
                     style={{ lineHeight: '64px', float: 'right' }}
-                    onClick={this.menuClick}
                 >
-                    <Menu.Item key="pwa">
-                        <PwaInstaller />
-                    </Menu.Item>
                     {
                       isFullScreen ? (
-                        <FullscreenExitOutlined translate onClick={this.exitFullScreen} />
+                        <FullscreenExitOutlined translate='true' onClick={this.exitFullScreen} style={{paddingRight: '64px'}} />
                       ) : (
-                        <FullscreenOutlined translate onClick={this.screenFull} />
+                        <FullscreenOutlined translate='true' onClick={this.screenFull} style={{paddingRight: '64px'}}/>
                       )
                     }
                     <SubMenu
@@ -130,11 +109,21 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                                 <img src={avater} alt="头像" />
                             </span>
                         }
+                        style={{
+                          paddingLeft: '40px', 
+                          paddingRight: '40px',
+                        }}
+                        
                     >
-                      <Menu.Item key="logout" style={{textAlign: "center"}}>
-                                <span onClick={this.logout}>退出登录</span>
+                      <Menu.Item 
+                        key="logout" 
+                        style={{
+                          position: 'absolute',
+                          backgroundColor: '#FFFFFF',
+                        }}>
+                        <span onClick={this.logout}>退出登录</span>
                       </Menu.Item>
-                    </SubMenu>
+                  </SubMenu>
                 </Menu>
             </Header>
         );
