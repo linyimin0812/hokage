@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import screenfull from 'screenfull';
 import avater from '../style/imgs/b1.jpg';
 import SiderCustom from './SiderCustom';
-import { Menu, Icon, Layout, Badge, Popover } from 'antd';
+import { Menu, Icon, Layout, Popover } from 'antd';
+import { FullscreenOutlined, FullscreenExitOutlined } from '@ant-design/icons'
 import { gitOauthToken, gitOauthInfo } from '../axios';
 import { queryString } from '../utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -13,7 +14,6 @@ import { PwaInstaller } from './widget';
 import { connectAlita } from 'redux-alita';
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
 type HeaderCustomProps = RouteComponentProps<any> & {
     toggle: () => void;
@@ -23,14 +23,16 @@ type HeaderCustomProps = RouteComponentProps<any> & {
     path?: string;
 };
 type HeaderCustomState = {
-    user: any;
-    visible: boolean;
+    user: any,
+    visible: boolean,
+    isFullScreen: boolean,
 };
 
 class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
     state = {
         user: '',
         visible: false,
+        isFullScreen: false
     };
     componentDidMount() {
         const QueryString = queryString() as any;
@@ -56,8 +58,20 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
     screenFull = () => {
         if (screenfull.isEnabled) {
             screenfull.request();
+            this.setState({
+              isFullScreen: true
+            })
         }
     };
+    exitFullScreen = () => {
+      const { isFullScreen } = this.state
+      if (screenfull.isEnabled && isFullScreen) {
+        screenfull.exit()
+        this.setState({
+          isFullScreen: false
+        })
+      }
+    }
     menuClick = (e: { key: string }) => {
         e.key === 'logout' && this.logout();
     };
@@ -75,6 +89,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
     };
     render() {
         const { responsive = { data: {} } } = this.props;
+        const { isFullScreen } = this.state
         return (
             <Header className="custom-theme header">
                 {responsive.data.isMobile ? (
@@ -102,9 +117,13 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                     <Menu.Item key="pwa">
                         <PwaInstaller />
                     </Menu.Item>
-                    <Menu.Item key="full" onClick={this.screenFull}>
-                        <Icon type="arrows-alt" onClick={this.screenFull} />
-                    </Menu.Item>
+                    {
+                      isFullScreen ? (
+                        <FullscreenExitOutlined translate onClick={this.exitFullScreen} />
+                      ) : (
+                        <FullscreenOutlined translate onClick={this.screenFull} />
+                      )
+                    }
                     <SubMenu
                         title={
                             <span className="avatar">
