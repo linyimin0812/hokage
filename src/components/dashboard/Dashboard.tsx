@@ -9,7 +9,10 @@ import {
   Icon,
   Comment,
   Tooltip,
-  List
+  List,
+  PageHeader,
+  Descriptions,
+  Divider
 } from 'antd';
 import moment from 'moment'
 import BreadcrumbCustom from '../BreadcrumbCustom';
@@ -72,97 +75,163 @@ class Dashboard extends React.Component {
         return (
             <div className="gutter-example button-demo">
                 <BreadcrumbCustom />
-                <Row gutter={16} title="test">
-                  <Card title="服务器信息概览" bordered>
-                    <Col span={6}>
-                      <Card type="inner" title="主机总数" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title="可用主机总数" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title="全部用户数" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title="在线用户数" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                  </Card>
-                </Row>
+                <div style={{backgroundColor: '#FFFFFF', padding:'8px 8px'}}>
+                  <Divider orientation="left">所有服务器信息概览</Divider>
+                  <Row gutter={16} >
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="主机总数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="可用主机总数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="全部用户数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="在线用户数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                  </Row>
+                </div>
+                <br/>
+                <div style={{backgroundColor: '#FFFFFF', padding:'8px 8px'}}>
+                  <Divider orientation="left">我的服务器信息概览</Divider>
+                  <Row gutter={16} >
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="主机总数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="可用主机总数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="全部用户数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                      
+                      <Col span={6}>
+                        <Card>
+                          <PageHeader
+                            className="site-page-header"
+                            title="在线用户数"
+                            subTitle={18}
+                          >
+                            <Descriptions size="default" column={2}>
+                              <Descriptions.Item label="普通服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                            </Descriptions>
+                          </PageHeader>
+                        </Card>
+                      </Col>
+                  </Row>
+                </div>
                 
-                <Row gutter={16}>
-                  <Card title="我的服务器信息概览" bordered>
-                    <Col span={6}>
-                      <Card type="inner" title="主机总数" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title={<div>可用主机总数</div>} >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title="已连接服务器" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                    
-                    <Col span={6}>
-                      <Card type="inner" title="最近登录时间" >
-                        <span>普通服务器</span>
-                        <span>GPU服务器</span>
-                      </Card>
-                    </Col>
-                  </Card>
-                </Row>
+                <br/>
                 
-                <Row>
-                        <div className="gutter-box">
-                            <Card bordered={false}>
-                                <div className="pb-m">
-                                    <h3>消息栏</h3>
-                                </div>
-                                <span className="card-tool"><Icon type="sync" /></span>
-                                <List
-                                  className="comment-list"
-                                  header={`${data.length} replies`}
-                                  itemLayout="horizontal"
-                                  dataSource={data}
-                                  renderItem={item => (
-                                    <li>
-                                      <Comment
-                                        actions={item.actions}
-                                        author={item.author}
-                                        avatar={item.avatar}
-                                        content={item.content}
-                                        datetime={item.datetime}
-                                      />
-                                    </li>
-                                  )}
+                <div style={{backgroundColor: '#FFFFFF', padding:'8px 8px'}}>
+                  <Divider orientation="left">我的消息</Divider>
+                  <Row>
+                      <Col className="gutter-row">
+                        <Card bordered={false}>
+                          <List
+                            className="comment-list"
+                            itemLayout="horizontal"
+                            dataSource={data}
+                            renderItem={item => (
+                              <li>
+                                <Comment
+                                  actions={item.actions}
+                                  author={item.author}
+                                  avatar={item.avatar}
+                                  content={item.content}
+                                  datetime={item.datetime}
                                 />
-                            </Card>
-                        </div>
-                </Row>
+                              </li>
+                            )}
+                          />
+                        </Card>
+                      </Col>
+                  </Row>
+                </div>
             </div>
         )
     }
