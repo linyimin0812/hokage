@@ -12,7 +12,8 @@ import {
   List,
   PageHeader,
   Descriptions,
-  Divider
+  Divider,
+  Avatar
 } from 'antd';
 import moment from 'moment'
 import BreadcrumbCustom from '../BreadcrumbCustom';
@@ -21,7 +22,12 @@ const data = [
   {
     actions: [<span key="comment-list-reply-to-0">Reply to</span>],
     author: 'Han Solo',
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+    avatar: <Avatar 
+      style={{backgroundColor: '#F56A00', verticalAlign: 'middle'}}
+      size = 'large'
+    >
+      {'banzhe'}
+    </Avatar>,
     content: (
       <p>
         We supply a series of design principles, practical patterns and high quality design
@@ -88,6 +94,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -103,6 +111,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -118,6 +128,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -133,6 +145,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -153,6 +167,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -168,6 +184,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -183,6 +201,8 @@ class Dashboard extends React.Component {
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
@@ -192,12 +212,14 @@ class Dashboard extends React.Component {
                         <Card>
                           <PageHeader
                             className="site-page-header"
-                            title="在线用户数"
+                            title="连接数"
                             subTitle={18}
                           >
                             <Descriptions size="default" column={2}>
                               <Descriptions.Item label="普通服务器">10</Descriptions.Item>
                               <Descriptions.Item label="GPU服务器">8</Descriptions.Item>
+                              <Descriptions.Item label="内网服务器">10</Descriptions.Item>
+                              <Descriptions.Item label="公网服务器">8</Descriptions.Item>
                             </Descriptions>
                           </PageHeader>
                         </Card>
