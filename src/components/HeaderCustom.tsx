@@ -3,18 +3,14 @@
  */
 import React, { Component } from 'react';
 import screenfull from 'screenfull';
-import avater from '../style/imgs/b1.jpg';
-import SiderCustom from './SiderCustom';
-import { Menu, Icon, Layout, Popover, Avatar } from 'antd';
+import { Menu, Icon, Layout, Avatar } from 'antd';
 import { 
-  UserOutlined,
   FullscreenOutlined,
   FullscreenExitOutlined,
 } from '@ant-design/icons'
 import { gitOauthToken, gitOauthInfo } from '../axios';
 import { queryString } from '../utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { PwaInstaller } from './widget';
 import { connectAlita } from 'redux-alita';
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -92,6 +88,11 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
         const { isFullScreen } = this.state
         return (
             <Header className="custom-theme header">
+              <Icon 
+                className="header_trigger custom-trigger"
+                type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+                onClick={this.props.toggle} 
+              />
                 <Menu
                     mode="horizontal"
                     style={{ lineHeight: '64px', float: 'right' }}
@@ -105,9 +106,15 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                     }
                     <SubMenu
                         title={
-                            <span className="avatar">
-                                <img src={avater} alt="头像" />
-                            </span>
+                          <Avatar
+                            style={{
+                              backgroundColor: "#f56a00",
+                              verticalAlign: 'middle'
+                            }}
+                            size="large"
+                          >
+                            {"banzhe"}
+                          </Avatar>
                         }
                         style={{
                           paddingLeft: '40px', 
