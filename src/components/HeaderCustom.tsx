@@ -92,6 +92,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                 className="header_trigger custom-trigger"
                 type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
                 onClick={this.props.toggle} 
+                style={{color: 'white'}}
               />
                 <Menu
                     mode="horizontal"

@@ -95,7 +95,7 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 <div className="logo">
                   {
                     collapsed ? (
-                      <ApartmentOutlined translate style={{fontSize: '24px', color: 'blue', paddingRight: '8px'}} />
+                      <ApartmentOutlined translate style={{fontSize: '24px', color: 'blue'}} />
                     ) : (
                       <Row>
                         <Col span={6} >
