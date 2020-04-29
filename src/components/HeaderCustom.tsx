@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import screenfull from 'screenfull';
-import { Menu, Icon, Layout, Avatar } from 'antd';
+import { Menu, Icon, Layout, Avatar, Row, Col, Carousel } from 'antd';
 import { 
   FullscreenOutlined,
   FullscreenExitOutlined,
@@ -88,12 +88,27 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
         const { isFullScreen } = this.state
         return (
             <Header className="custom-theme header">
-              <Icon 
-                className="header_trigger custom-trigger"
-                type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
-                onClick={this.props.toggle} 
-                style={{color: 'white'}}
-              />
+              <Row>
+                <Col span={1}>
+                  <Icon 
+                    className="header_trigger custom-trigger"
+                    type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
+                    onClick={this.props.toggle} 
+                    style={{color: 'white'}}
+                  />
+                </Col>
+              
+                <Col span={17} style={{justifyContent: 'center'}}>
+                  <Carousel dots={false} autoplay autoplaySpeed={10 * 1000} speed={3000}>
+                    <span>
+                      服务器node1.pcncad.com的IP发生了变化,由原来的`10.108.210.194`变成了`10.108.211.136`, 由于域名存在缓存,可能会短暂不可用.
+                    </span>
+                    <span>
+                      斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
+                    </span>
+                  </Carousel>
+                </Col>
+                <Col span={6}>
                 <Menu
                     mode="horizontal"
                     style={{ lineHeight: '64px', float: 'right' }}
@@ -133,6 +148,8 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                       </Menu.Item>
                   </SubMenu>
                 </Menu>
+                </Col>
+                </Row>
             </Header>
         );
     }
