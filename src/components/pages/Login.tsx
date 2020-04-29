@@ -3,7 +3,6 @@
  */
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { PwaInstaller } from '../widget';
 import { connectAlita } from 'redux-alita';
 import { RouteComponentProps } from 'react-router';
 import { FormProps } from 'antd/lib/form';
@@ -49,7 +48,6 @@ class Login extends React.Component<LoginProps> {
                 <div className="login-form">
                     <div className="login-logo">
                         <span>PCN&CAD服务器管理系统</span>
-                        <PwaInstaller />
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{ maxWidth: '300px' }}>
                         <FormItem>
