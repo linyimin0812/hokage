@@ -2,11 +2,11 @@
  * Created by hao.cheng on 2017/4/13.
  */
 import React, { Component } from 'react';
-import { Layout, Icon } from 'antd';
+import { Layout, Row, Col } from 'antd';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import routes from '../routes/config';
 import SiderMenu from './SiderMenu';
-import Emoji from './ui/emoji'
+import { ApartmentOutlined, HddOutlined } from '@ant-design/icons'
 
 const { Sider } = Layout;
 
@@ -94,11 +94,19 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
             >
                 <div className="logo">
                   {
-                    collapsed ? null : (
-                      <span>服务器管理系统</span>
-                    )
+                    collapsed ? (
+                      <ApartmentOutlined translate style={{fontSize: '24px', color: 'blue', paddingRight: '8px'}} />
+                    ) : (
+                      <Row>
+                        <Col span={6} >
+                          <HddOutlined translate style={{fontSize:'24px', color:' blue', paddingRight: '8px'}} />
+                        </Col>
+                        <Col span={18}>
+                          <span style={{fontSize:'18px', paddingLeft:'8px', textShadow: '0 0 2px black'}}>Hotage UI</span>
+                        </Col>
+                      </Row>
+                    )                      
                   }
-                  <Emoji type="emoji-1"/>
                 </div>
                 <SiderMenu
                     menus={routes.menus}
