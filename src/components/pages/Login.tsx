@@ -42,7 +42,6 @@ class Login extends React.Component<LoginProps> {
         });
     };
     render() {
-        const { getFieldDecorator } = this.props.form!;
         return (
             <div className="login">
                 <div className="login-form">
