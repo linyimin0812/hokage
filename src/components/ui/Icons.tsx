@@ -3,8 +3,9 @@
  */
 import React from 'react';
 import Emoji from './emoji';
-import { Row, Col, Card, Icon } from 'antd';
+import { Row, Col, Card } from 'antd';
 import BreadcrumbCustom from '../BreadcrumbCustom';
+import Icon from '@ant-design/icons';
 
 const emojiList = () => {
     let _elements = [];
@@ -276,7 +277,7 @@ const icons = {
 const iconsList = Object.keys(icons).map(v =>
     (icons as any)[v].map((icon: any, i: number) => (
         <li key={i}>
-            <Icon type={icon} style={{ fontSize: 15 }} />
+            <Icon translate type={icon} style={{ fontSize: 15 }} />
             <span>{icon}</span>
         </li>
     ))

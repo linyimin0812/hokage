@@ -3,9 +3,10 @@ import Routes from './routes';
 import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
-import { Layout, notification, Icon } from 'antd';
+import { Layout, notification } from 'antd';
 import { connectAlita } from 'redux-alita';
 import { checkLogin } from './utils';
+import Icon from '@ant-design/icons';
 
 const { Content, Footer } = Layout;
 
@@ -63,7 +64,7 @@ class App extends Component<AppProps> {
                         </p>
                     </div>
                 ),
-                icon: <Icon type="smile-circle" style={{ color: 'red' }} />,
+                icon: <Icon translate type="smile-circle" style={{ color: 'red' }} />,
                 duration: 0,
             });
             localStorage.setItem('isFirst', JSON.stringify(true));
