@@ -27,8 +27,8 @@ const menus: {
             title: '用户管理',
             icon: 'user',
             subs: [
-                { key: '/app/user/operator', title: '服务器管理员', icon: 'team', component: 'Buttons' },
-                { key: '/app/user/ordinary', title: '服务器使用者', icon: 'team', component: 'Icons' }
+                { key: '/app/user/operator', title: '服务器管理员', icon: 'team', component: 'Operator' },
+                { key: '/app/user/ordinary', title: '服务器使用者', icon: 'team', component: 'OrdinaryUser' }
             ],
         },
         {

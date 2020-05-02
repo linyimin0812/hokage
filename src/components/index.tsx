@@ -1,7 +1,9 @@
-import Icons from './ui/Icons';
-import Dashboard from './dashboard/Dashboard';
+import Dashboard from './dashboard/Dashboard'
+import Operator from './user/view/Operator'
+import OrdinaryUser from './user/view/OrdinaryUser'
 
 export default {
-    Icons,
     Dashboard,
+    Operator,
+    OrdinaryUser
 } as any;

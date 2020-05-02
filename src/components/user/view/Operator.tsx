@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table } from 'antd'
-import { OrdinaryUser } from './OrdinaryUser'
+import OrdinaryUser from './OrdinaryUser'
 
 const columns = [
   { title: 'id', dataIndex: 'id', key: 'id' },
@@ -10,7 +10,7 @@ const columns = [
   { title: '操作', dataIndex: 'action', key: 'action' }
 ]
 
-export class Operator extends React.Component {
+export default class Operator extends React.Component {
   expandedRowRender = () => {
     const columns = [
     {title: '主机名', dataIndex: 'hostname', key: 'hostname'},

@@ -6,7 +6,7 @@ import HeaderCustom from './components/HeaderCustom';
 import { Layout, notification } from 'antd';
 import { connectAlita } from 'redux-alita';
 import { checkLogin } from './utils';
-import Icon from '@ant-design/icons';
+import { Icon } from '@ant-design/compatible';
 
 const { Content, Footer } = Layout;
 
@@ -64,7 +64,7 @@ class App extends Component<AppProps> {
                         </p>
                     </div>
                 ),
-                icon: <Icon translate type="smile-circle" style={{ color: 'red' }} />,
+                icon: <Icon type="smile-circle" style={{ color: 'red' }} />,
                 duration: 0,
             });
             localStorage.setItem('isFirst', JSON.stringify(true));

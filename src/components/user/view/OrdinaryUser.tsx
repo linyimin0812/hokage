@@ -9,7 +9,7 @@ const columns = [
   {title: '状态', dataIndex: 'status', key: 'status'},
 ]
 
-export class OrdinaryUser extends React.Component {
+export default class OrdinaryUser extends React.Component {
   render() {
     return (
       <Table

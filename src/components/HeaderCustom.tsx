@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 import screenfull from 'screenfull';
 import { Menu, Layout, Avatar, Row, Col, Carousel } from 'antd';
-import Icon, { 
+import { 
   FullscreenOutlined,
   FullscreenExitOutlined,
 } from '@ant-design/icons'
@@ -12,6 +12,7 @@ import { gitOauthToken, gitOauthInfo } from '../axios';
 import { queryString } from '../utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connectAlita } from 'redux-alita';
+import { Icon } from '@ant-design/compatible'
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
 
@@ -91,7 +92,6 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
               <Row>
                 <Col span={1}>
                   <Icon
-                    translate 
                     className="header_trigger custom-trigger"
                     type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
                     onClick={this.props.toggle} 
