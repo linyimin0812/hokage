@@ -116,9 +116,9 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                 >
                     {
                       isFullScreen ? (
-                        <FullscreenExitOutlined translate='true' onClick={this.exitFullScreen} style={{paddingRight: '64px'}} />
+                        <FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px'}} />
                       ) : (
-                        <FullscreenOutlined translate='true' onClick={this.screenFull} style={{paddingRight: '64px'}}/>
+                        <FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px'}} />
                       )
                     }
                     <SubMenu
@@ -144,7 +144,8 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
                         style={{
                           position: 'absolute',
                           backgroundColor: '#FFFFFF',
-                        }}>
+                        }} 
+                      >
                         <span onClick={this.logout}>退出登录</span>
                       </Menu.Item>
                   </SubMenu>

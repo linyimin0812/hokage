@@ -1,6 +1,3 @@
-/**
- * Created by hao.cheng on 2017/4/13.
- */
 import React, { Component } from 'react';
 import { Layout, Row, Col } from 'antd';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
@@ -95,11 +92,11 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 <div className="logo">
                   {
                     collapsed ? (
-                      <ApartmentOutlined translate='true' style={{fontSize: '24px', color: 'blue'}} />
+                      <ApartmentOutlined translate="true" style={{fontSize: '24px', color: 'blue'}} />
                     ) : (
                       <Row>
                         <Col span={6} >
-                          <HddOutlined translate='true' style={{fontSize:'24px', color:' blue', paddingRight: '8px'}} />
+                          <HddOutlined translate="true" style={{fontSize:'24px', color:' blue', paddingRight: '8px'}} />
                         </Col>
                         <Col span={18}>
                           <span style={{fontSize:'18px', paddingLeft:'8px', textShadow: '0 0 2px black'}}>Hotage UI</span>

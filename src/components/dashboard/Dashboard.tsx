@@ -18,10 +18,11 @@ const data = [
   {
     actions: [<span key="comment-list-reply-to-0">Reply to</span>],
     author: 'Han Solo',
-    avatar: <Avatar
-      style={{ backgroundColor: '#F56A00', verticalAlign: 'middle' }}
-      size='large'
-    >
+    avatar: 
+      <Avatar
+        style={{ backgroundColor: '#F56A00', verticalAlign: 'middle' }}
+        size="large"
+      >
       {'banzhe'}
     </Avatar>,
     content: (
