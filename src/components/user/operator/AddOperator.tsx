@@ -24,9 +24,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, {
     return (
       <Modal
         title="批量添加管理员"
-        okText="添加"
         visible={isModalVisible}
-        cancelText="取消"
         footer={null}
       >
         <Form
@@ -48,7 +46,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, {
             <Col span={9}>
               <Form.Item>
                 <Button type="primary" htmlType="submit">
-                  Search
+                  添加
                 </Button>
                 <Button
                   style={{
@@ -58,7 +56,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, {
                     this.props.onModalCancel();
                   }}
                 >
-                  Clear
+                  取消
                 </Button>
               </Form.Item>
             </Col>

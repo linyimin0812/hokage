@@ -1,5 +1,5 @@
 import React, { ReactNode, ReactText } from 'react'
-import { Table, Row, Col, Button, Tag } from 'antd'
+import { Table, Row, Col, Button, Tag, message } from 'antd'
 import BreadcrumbCustom from '../../BreadcrumbCustom'
 import Search from './Search'
 import {
@@ -233,10 +233,15 @@ export default class Operator extends React.Component<any, OperatorState> {
   onModalOk = (value: any) => {
     console.log(value)
     this.setState({ ...this.state, isModalVisible: false })
+    message.loading({ content: 'Loading...', key: 'addUser' });
+    setTimeout(() => {
+      message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
+    }, 2000);
   }
 
   onModalCancel = () => {
     this.setState({ ...this.state, isModalVisible: false })
+    message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
   }
 
   render() {
