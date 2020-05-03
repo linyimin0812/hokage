@@ -25,21 +25,21 @@ const menus: {
         {
             key: '/app/user',
             title: '用户管理',
-            icon: 'user',
+            icon: 'team',
             subs: [
-                { key: '/app/user/operator', title: '服务器管理员', icon: 'team', component: 'Operator' },
+                { key: '/app/user/operator', title: '服务器管理员', icon: 'user', component: 'Operator' },
                 { key: '/app/user/ordinary', title: '服务器使用者', icon: 'team', component: 'OrdinaryUser' }
             ],
         },
         {
             key: '/app/server',
             title: '我的服务器',
-            icon: 'desktop',
+            icon: 'hdd',
             subs: [
                 {
                   key: '/app/server/all',
                     title: '所有的服务器',
-                    icon: 'desktop',
+                    icon: 'laptop',
                     component: 'BasicAnimations',
                 },
                 {
@@ -51,7 +51,7 @@ const menus: {
                 {
                     key: '/app/server/use',
                     title: '我使用的服务器',
-                    icon: 'desktop',  
+                    icon: 'tablet',  
                     component: 'ExampleAnimations',
                 },
             ],
@@ -59,18 +59,18 @@ const menus: {
         {
             key: '/app/file',
             title: '文件管理',
-            icon: 'file',
+            icon: 'folder',
             component: 'ExampleAnimations'
         },
         {
             key: '/app/monitor',
             title: '资源监控',
-            icon: 'edit',
+            icon: 'picture',
             subs: [
               { 
                 key: '/app/monitor/server', 
                 title: '服务器资源监控', 
-                icon: 'line-chart',
+                icon: 'eye',
                 component: 'BasicForm' 
               },
               { 
@@ -84,7 +84,7 @@ const menus: {
         {
           key: '/app/penetration',
           title: '内网穿透',
-          icon: 'link',
+          icon: 'cloud',
           component: 'BasicForm',
         },
     ],
