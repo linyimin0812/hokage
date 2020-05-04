@@ -40,19 +40,19 @@ const menus: {
                   key: '/app/server/all',
                     title: '所有的服务器',
                     icon: 'laptop',
-                    component: 'BasicAnimations',
+                    component: 'AllServers',
                 },
                 {
                     key: '/app/server/manage',
                     title: '我管理的服务器',
                     icon: 'desktop',
-                    component: 'BasicAnimations',
+                    component: 'OperatorServers',
                 },
                 {
                     key: '/app/server/use',
                     title: '我使用的服务器',
                     icon: 'tablet',  
-                    component: 'ExampleAnimations',
+                    component: 'MyServers',
                 },
             ],
         },
@@ -60,7 +60,7 @@ const menus: {
             key: '/app/file',
             title: '文件管理',
             icon: 'folder',
-            component: 'ExampleAnimations'
+            component: 'FileManagement'
         },
         {
             key: '/app/monitor',
@@ -71,13 +71,13 @@ const menus: {
                 key: '/app/monitor/server', 
                 title: '服务器资源监控', 
                 icon: 'eye',
-                component: 'BasicForm' 
+                component: 'ServerResourceManagement' 
               },
               { 
                 key: '/app/monitor/process', 
                 title: '进程监控', 
                 icon: 'line-chart',
-                component: 'BasicForm' 
+                component: 'ProcessManagement' 
               },
             ],
         },
@@ -85,7 +85,7 @@ const menus: {
           key: '/app/penetration',
           title: '内网穿透',
           icon: 'cloud',
-          component: 'BasicForm',
+          component: 'InverseNetworkProxy',
         },
     ],
     others: [], // 非菜单相关路由
