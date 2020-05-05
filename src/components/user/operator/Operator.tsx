@@ -10,12 +10,7 @@ import {
 } from '@ant-design/icons'
 import AddOperator from './AddOperator';
 
-interface Expandable {
-  expandedRowKeys: string[],
-  expandedRowRender: () => ReactNode,
-  onExpand: (expanded: boolean, record: any) => void
-}
-
+import { TableExtendable } from '../../common/TableExtendable'
 interface NestedTableDataSource {
   key: string,
   hostname: string,
@@ -93,7 +88,7 @@ const columns = [
 
 
 type OperatorState = {
-  expandable: Expandable,
+  expandable: TableExtendable,
   nestedTableDataSource: NestedTableDataSource[],
   selectedRowKeys: ReactText[],
   isModalVisible: boolean
@@ -124,12 +119,12 @@ export default class Operator extends React.Component<any, OperatorState> {
             }
             datasources.push(data)
           }
-          const expandable: Expandable = this.state.expandable
+          const expandable: TableExtendable = this.state.expandable
           expandable.expandedRowKeys = expandedRowKeys
 
           this.setState({ ...this.state, nestedTableDataSource: datasources, expandable })
         } else {
-          const expandable: Expandable = this.state.expandable
+          const expandable: TableExtendable = this.state.expandable
           expandable.expandedRowKeys = []
 
           this.setState({ ...this.state, expandable })
