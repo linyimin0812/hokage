@@ -17,7 +17,8 @@ interface NestedTableDataSource {
   domainName: string,
   serverTags: string[],
   numberOfUser: number,
-  status: string
+  status: string,
+  action: string
 }
 
 // 嵌套表 
@@ -82,8 +83,30 @@ const columns = [
   { 
     title: '状态',
     dataIndex: 'status',
-    key: 'status'
+    key: 'status',
+    render: (text: string, _: any, __: any) => {
+      let color: string = ''
+      switch(text) {
+        case '在线':
+          color = 'green'
+          break;
+        case '掉线':
+          color = 'red'
+          break
+        default:
+          color = 'red'
+          break
+      }
+      return (
+        <Tag color = {color}> { text } </Tag>
+      )
+    }
   },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    key: 'action'
+  }
 ]
 
 
@@ -115,7 +138,8 @@ export default class Operator extends React.Component<any, OperatorState> {
               domainName: record.name,
               serverTags: [colors[i], colors[i+1]],
               numberOfUser: 3,
-              status: 'online'
+              status: '在线',
+              action: '删除'
             }
             datasources.push(data)
           }
@@ -152,7 +176,7 @@ export default class Operator extends React.Component<any, OperatorState> {
       key: 'numOfServer'
     },
     {
-      title: '标签',
+      title: '服务器标签',
       dataIndex: 'serverTags',
       key: 'serverTags',
       render: (serverTags: any, _: any, __: any) => {
@@ -248,7 +272,8 @@ export default class Operator extends React.Component<any, OperatorState> {
         name: 'name_' + i + ".pcncad.club",
         serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
         numOfServer: i + 1,
-        status: "online"
+        status: "online",
+        action: '查看 | 修改 | 添加服务器 | 删除'
       }
       data.push(value)
     }
