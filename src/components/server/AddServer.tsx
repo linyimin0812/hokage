@@ -27,6 +27,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
         title="添加服务器"
         visible={isModalVisible}
         footer={null}
+        onCancel={this.props.onModalCancel}
       >
         <Form
           name="server-add"
@@ -64,7 +65,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
               },
               () => ({
                 validator(_, value) {
-                  if (isIP(value)) {
+                  if (value === '' || value === undefined || isIP(value)) {
                     return Promise.resolve();
                   }
 
@@ -86,7 +87,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
               },
               () => ({
                 validator(_, value) {
-                  if (/^\d+$/.test(value)) {
+                  if (value === '' || value === undefined || /^\d+$/.test(value)) {
                     return Promise.resolve();
                   }
                   return Promise.reject('端口号只能是数字哦!');
@@ -104,20 +105,12 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
             rules={[
               {
                 required: true,
-                message: '请输入账号,此账号用于系统操作服务器',
-              },
-              () => ({
-                validator(_, value) {
-                  if (value === 'root') {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject('请确保输入的账号具有root权限!');
-                },
-              }),
+                message: '此账号用于系统操作服务器, 请保证此账号具有root权限',
+              }
             ]}
             hasFeedback
           >
-            <Input placeholder="请输入账号,此账号用于系统操作服务器" />
+            <Input placeholder="此账号用于系统操作服务器, 请保证此账号具有root权限" />
           </Form.Item>
           <Form.Item
             name="password"
@@ -145,7 +138,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
+                  if (value === '' || value === undefined || getFieldValue('password') === value) {
                     return Promise.resolve();
                   }
                   return Promise.reject('密码不一致, 请重新输入');
