@@ -164,7 +164,24 @@ export default class AllServer extends React.Component {
     { 
       title: '状态',
       dataIndex: 'status',
-      key: 'status'
+      key: 'status',
+      render: (text: string, _: any, __: any) => {
+        let color: string = ''
+        switch(text) {
+          case '在线':
+            color = 'green'
+            break;
+          case '掉线':
+            color = 'red'
+            break
+          default:
+            color = 'red'
+            break
+        }
+        return (
+          <Tag color = {color}> { text } </Tag>
+        )
+      }
     },
     { 
       title: '操作',
@@ -223,7 +240,7 @@ export default class AllServer extends React.Component {
         serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
         admin: 'banzhe',
         numOfUser: i + 1,
-        status: "online",
+        status: "在线",
         action: '指定管理员 | 申请 | 撤销管理员 | 修改管理员'
       }
       data.push(value)
