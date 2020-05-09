@@ -208,5 +208,5 @@
     "less-loader": "^5.0.0",
     "standard-version": "^7.0.0"
   },
-  "description": "PCN&CAD服务器集群管理系统"
+  "description": "服务器集群管理系统"
 }

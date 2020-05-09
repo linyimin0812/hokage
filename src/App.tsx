@@ -107,7 +107,7 @@ class App extends Component<AppProps> {
                             <Routes auth={auth} />
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
-                            PCN&CAD server Manage ©{new Date().getFullYear()} Created by github@linyimin-bupt
+                            server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt
                         </Footer>
                     </Layout>
                 </Layout>
