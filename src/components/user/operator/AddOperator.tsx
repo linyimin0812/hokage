@@ -26,6 +26,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, {
         title="批量添加管理员"
         visible={isModalVisible}
         footer={null}
+        onCancel={this.props.onModalCancel}
       >
         <Form
            name="operator-add"
