@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactText } from 'react'
-import { Table, Row, Col, Button, Tag, Alert, message } from 'antd'
-import BreadcrumbCustom from '../../BreadcrumbCustom'
+import { Table, Row, Col, Button, Tag, message } from 'antd'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import Search from './Search'
 import {
   UserAddOutlined,
@@ -98,6 +98,15 @@ type OrdinaryUserState = {
   selectedRowKeys: ReactText[],
   isModalVisible: boolean,
 }
+
+const breadcrumProps: BreadcrumbPrpos[] = [
+  {
+    name: '用户管理'
+  },
+  {
+    name: '服务器管理员'
+  }
+]
 
 export default class OrdinaryUser extends React.Component<any, OrdinaryUserState> {
 
@@ -268,7 +277,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 
     return (
       <div>
-        <BreadcrumbCustom first="用户管理" second="服务器使用者" />
+        <BreadcrumbCustom breadcrumProps={breadcrumProps} />
         <Search onFinish={this.onFinish} clear={this.resetFields} />
         <div style={{ backgroundColor: '#FFFFFF', padding: '8px 12px' }}>
           <Row

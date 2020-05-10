@@ -1,13 +1,13 @@
 import React, { ReactText } from 'react'
 import { Tag, message, Table, Row, Col, Button } from 'antd';
-import BreadcrumbCustom from '../BreadcrumbCustom';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { TableExtendable } from '../common/TableExtendable';
 import Search from './Search';
 import AddServer from './AddServer';
 
 // 嵌套表 
-const columns = [
+const nestedColumns = [
   { 
     title: 'id',
     dataIndex: 'id',
@@ -19,7 +19,7 @@ const columns = [
     key: 'name'
   },
   { 
-    title: '用户名',    // 服务器登录用户名
+    title: '用户名', // 服务器登录用户名
     dataIndex: 'loginName',
     key: 'loginName'
   },
@@ -33,6 +33,103 @@ const columns = [
     dataIndex: 'lastLoginTime',
     key: 'lastLoginTime'
   },
+]
+
+const columns = [
+  { 
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id' 
+  },
+  { 
+    title: '主机名',
+    dataIndex: 'hostname',
+    key: 'hostname'
+  },
+  { 
+    title: '域名',
+    dataIndex: 'domainName',
+    key: 'domainName'
+  },
+  {
+    title: '标签',
+    dataIndex: 'serverTags',
+    key: 'serverTags',
+    render: (serverTags: any, _: any, __: any) => {
+      return (
+      <span>
+        {
+          serverTags.map((tag: any )=> {
+            let color = ''
+            let name = ''
+            switch (tag) {
+              case 'ordinaryServer':
+                color = 'magenta'
+                name = 'X86'
+                break
+              case 'gpuServer':
+                color = 'red'
+                name = 'GPU'
+                break
+              case 'intranetServer':
+                color = 'green'
+                name = '内网'
+                break
+              case 'publicNetworkServer':
+                color = 'purple'
+                name = '公网'
+                break
+              default:
+                color = '#f50'
+                name = '未知'
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {name}
+              </Tag>
+            );
+          })
+        }
+      </span>)
+    }
+  },
+  { 
+    title: '管理员',
+    dataIndex: 'admin',
+    key: 'admin'
+  },
+  { 
+    title: '使用人数',
+    dataIndex: 'numOfUser',
+    key: 'numOfUser'
+  },
+  { 
+    title: '状态',
+    dataIndex: 'status',
+    key: 'status',
+    render: (text: string, _: any, __: any) => {
+      let color: string = ''
+      switch(text) {
+        case '在线':
+          color = 'green'
+          break;
+        case '掉线':
+          color = 'red'
+          break
+        default:
+          color = 'red'
+          break
+      }
+      return (
+        <Tag color = {color}> { text } </Tag>
+      )
+    }
+  },
+  { 
+    title: '操作',
+    dataIndex: 'action',
+    key: 'action'
+  }
 ]
 
 interface NestedTableDataSource {
@@ -51,20 +148,29 @@ type AllServerState = {
   isModalVisible: boolean
 }
 
+const breadcrumProps: BreadcrumbPrpos[] = [
+  {
+    name: '我的服务器'
+  },
+  {
+    name: '所有的服务器'
+  }
+]
+
 export default class AllServer extends React.Component {
   
   state: AllServerState = {
     expandable: {
       expandedRowKeys: [],
       expandedRowRender: () => {
-        return <Table columns={columns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
+        return <Table columns={nestedColumns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
       },
       onExpand: (expanded: boolean, record: any) => {
         if (expanded) {
           // TODO: 这里替换成接口,请求真实的数据
           const expandedRowKeys: string[] = [record.key]
           const datasources: NestedTableDataSource[] = []
-          const colors = ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"]
+          // const colors = ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"]
           for (let i = 0; i < 3; i++) {
             const data: NestedTableDataSource = {
               key: record.key + '_' + i,
@@ -93,103 +199,6 @@ export default class AllServer extends React.Component {
     isModalVisible: false
   }
   
-  columns = [
-    { 
-      title: 'id',
-      dataIndex: 'id',
-      key: 'id' 
-    },
-    { 
-      title: '主机名',
-      dataIndex: 'hostname',
-      key: 'hostname'
-    },
-    { 
-      title: '域名',
-      dataIndex: 'domainName',
-      key: 'domainName'
-    },
-    {
-      title: '标签',
-      dataIndex: 'serverTags',
-      key: 'serverTags',
-      render: (serverTags: any, _: any, __: any) => {
-        return (
-        <span>
-          {
-            serverTags.map((tag: any )=> {
-              let color = ''
-              let name = ''
-              switch (tag) {
-                case 'ordinaryServer':
-                  color = 'magenta'
-                  name = 'X86'
-                  break
-                case 'gpuServer':
-                  color = 'red'
-                  name = 'GPU'
-                  break
-                case 'intranetServer':
-                  color = 'green'
-                  name = '内网'
-                  break
-                case 'publicNetworkServer':
-                  color = 'purple'
-                  name = '公网'
-                  break
-                default:
-                  color = '#f50'
-                  name = '未知'
-              }
-              return (
-                <Tag color={color} key={tag}>
-                  {name}
-                </Tag>
-              );
-            })
-          }
-        </span>)
-      }
-    },
-    { 
-      title: '管理员',
-      dataIndex: 'admin',
-      key: 'admin'
-    },
-    { 
-      title: '使用人数',
-      dataIndex: 'numOfUser',
-      key: 'numOfUser'
-    },
-    { 
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      render: (text: string, _: any, __: any) => {
-        let color: string = ''
-        switch(text) {
-          case '在线':
-            color = 'green'
-            break;
-          case '掉线':
-            color = 'red'
-            break
-          default:
-            color = 'red'
-            break
-        }
-        return (
-          <Tag color = {color}> { text } </Tag>
-        )
-      }
-    },
-    { 
-      title: '操作',
-      dataIndex: 'action',
-      key: 'action'
-    }
-  ]
-
   onFinish = (value: any) => {
     console.log(value)
   }
@@ -257,7 +266,7 @@ export default class AllServer extends React.Component {
 
     return (
       <div>
-        <BreadcrumbCustom first="我的服务器" second="所有服务器" />
+        <BreadcrumbCustom breadcrumProps={breadcrumProps} />
         <Search onFinish={this.onFinish} clear={this.resetFields} />
         <div style={{ backgroundColor: '#FFFFFF', padding: '8px 12px' }}>
           <Row
@@ -306,7 +315,7 @@ export default class AllServer extends React.Component {
           </Row>
           <Table
             rowSelection={rowSelection}
-            columns={this.columns}
+            columns={columns}
             dataSource={data}
             expandable={this.state.expandable}
           />

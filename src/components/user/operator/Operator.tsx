@@ -1,6 +1,6 @@
-import React, { ReactNode, ReactText } from 'react'
+import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, Tag, message } from 'antd'
-import BreadcrumbCustom from '../../BreadcrumbCustom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import Search from './Search'
 import {
   UserAddOutlined,
@@ -116,6 +116,15 @@ type OperatorState = {
   selectedRowKeys: ReactText[],
   isModalVisible: boolean
 }
+
+const breadcrumProps: BreadcrumbPrpos[] = [
+  {
+    name: '用户管理'
+  },
+  {
+    name: '服务器管理员'
+  }
+]
 
 export default class Operator extends React.Component<any, OperatorState> {
 
@@ -289,7 +298,7 @@ export default class Operator extends React.Component<any, OperatorState> {
 
     return (
       <div>
-        <BreadcrumbCustom first="用户管理" second="服务器管理员" />
+        <BreadcrumbCustom breadcrumProps= {breadcrumProps} />
         <Search onFinish={this.onFinish} clear={this.resetFields} />
         <div style={{ backgroundColor: '#FFFFFF', padding: '8px 12px' }}>
           <Row
