@@ -31,7 +31,7 @@ class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
     
     return (
       <span>
-        <Breadcrumb style={{ margin: '12px 0' }}>
+        <Breadcrumb style={{ margin: '12px 0', display:'inline-block' }}>
           {this.subBreadcrumb()}
         </Breadcrumb>
       </span>
