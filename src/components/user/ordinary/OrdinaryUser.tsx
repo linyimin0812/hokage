@@ -101,6 +101,10 @@ type OrdinaryUserState = {
 
 const breadcrumProps: BreadcrumbPrpos[] = [
   {
+    name: '首页',
+    link: '/app/index'
+  },
+  {
     name: '用户管理'
   },
   {

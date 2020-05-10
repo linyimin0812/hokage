@@ -32,9 +32,6 @@ class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
     return (
       <span>
         <Breadcrumb style={{ margin: '12px 0' }}>
-          <Breadcrumb.Item>
-            <Link to={'/app/index'}>首页</Link>
-          </Breadcrumb.Item>
           {this.subBreadcrumb()}
         </Breadcrumb>
       </span>

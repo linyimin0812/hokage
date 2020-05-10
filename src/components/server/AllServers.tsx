@@ -150,6 +150,10 @@ type AllServerState = {
 
 const breadcrumProps: BreadcrumbPrpos[] = [
   {
+    name: '首页',
+    link: '/app/index'
+  },
+  {
     name: '我的服务器'
   },
   {
