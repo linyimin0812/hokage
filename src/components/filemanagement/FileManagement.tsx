@@ -1,16 +1,18 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Divider, Button } from 'antd'
 import './index.less'
-import { FolderOutlined, FileOutlined } from '@ant-design/icons';
+import { FolderOutlined, FileOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
 import Search from 'antd/lib/input/Search';
+import Action, { ActionProps } from './Action'
 interface FileManagementState {
   expandable: TableExtendable,
   currentDir: string, // 当前目录
-
+  isActionVisible: boolean, // 是否需要显示右键菜单
+  actionProps: ActionProps
 }
 
-interface Record {
+export interface Record {
   key: string,
   fileName: string,
   size: string | number,
@@ -25,20 +27,6 @@ const columns = [
     key: 'fileName',
     title: '文件名',
     dataIndex: 'fileName',
-    render: (fileName: string, _: any, __: any) => {
-      let icon;
-      if (fileName.includes('/')) {
-        icon = <FolderOutlined translate="false" />
-      } else {
-        icon = <FileOutlined translate="false" />
-      }
-      return (
-        <span>
-          {icon}
-          {`  ${fileName}`}
-        </span>
-      )
-    }
   },
   {
     key: 'size',
@@ -64,7 +52,7 @@ const columns = [
 
 const datas: Record[] = [
   {
-    key: '/home/linyimin/',
+    key: '/home/linyimin/./',
     fileName: './',
     size: '4096',
     owner: 'linyimin',
@@ -72,7 +60,7 @@ const datas: Record[] = [
     modifiedTime: '20200421 04:21'
   },
   {
-    key: '/home/linyimin/',
+    key: '/home/linyimin/../',
     fileName: '../',
     size: '4096',
     owner: 'linyimin',
@@ -80,7 +68,7 @@ const datas: Record[] = [
     modifiedTime: '20200421 04:21'
   },
   {
-    key: '/home/linyimin/',
+    key: '/home/linyimin/CHANGELOG.md',
     fileName: 'CHANGELOG.md',
     size: '5441',
     owner: 'root',
@@ -88,7 +76,7 @@ const datas: Record[] = [
     modifiedTime: '20200421 04:21'
   },
   {
-    key: '/home/linyimin/',
+    key: '/home/linyimin/public/',
     fileName: 'public/',
     size: '4096',
     owner: 'linyimin',
@@ -96,7 +84,7 @@ const datas: Record[] = [
     modifiedTime: '20200421 04:21',
     children: [
       {
-        key: '/home/linyimin/public/',
+        key: '/home/linyimin/public/images/',
         fileName: 'images/',
         size: '807',
         owner: 'linyimin',
@@ -104,7 +92,7 @@ const datas: Record[] = [
         modifiedTime: '20200421 04:27',
         children: [
           {
-            key: '7',
+            key: '/home/linyimin/public/images/index.html',
             fileName: 'index.html',
             size: '807',
             owner: 'linyimin',
@@ -112,7 +100,7 @@ const datas: Record[] = [
             modifiedTime: '20200421 04:27'
           },
           {
-            key: '/home/linyimin/public/',
+            key: '/home/linyimin/public/images/theme.less',
             fileName: 'theme.less',
             size: '234663',
             owner: 'linyimin',
@@ -122,7 +110,7 @@ const datas: Record[] = [
         ]
       },
       {
-        key: '/home/linyimin',
+        key: '/home/linyimin/theme.less',
         fileName: 'theme.less',
         size: '234663',
         owner: 'linyimin',
@@ -133,28 +121,67 @@ const datas: Record[] = [
   },
 ]
 
+interface ExpandIconProps {
+  expanded: boolean,
+  onExpand: Function,
+  record: Record
+}
 
 interface TableExtendable {
   expandedRowKeys: Array<ReactText>,
+  expandIcon: (iconProps: ExpandIconProps) => JSX.Element
 }
-
-const breadcrumProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: '文件管理'
-  }
-]
 
 export default class FileManagement extends React.Component<any, FileManagementState> {
 
   state = {
     expandable: {
-      expandedRowKeys: new Array<ReactText>()
+      expandedRowKeys: new Array<ReactText>(),
+      expandIcon: (iconProps: ExpandIconProps) => {
+        const { expanded, onExpand, record } = iconProps
+        return expanded ? (
+          <span>
+            <FolderOpenOutlined
+              translate="true" 
+              onClick={(e: React.MouseEvent) => onExpand(record, e)}
+            />
+            &nbsp;&nbsp;
+          </span>
+        ) : (
+          <span>
+            <FolderOutlined
+              translate="true" 
+              onClick={(e: React.MouseEvent) => onExpand(record, e)}
+            />
+            &nbsp;&nbsp;
+          </span>
+        )
+      }
     },
-    currentDir: '/home/linyimin/'
+    currentDir: '/home/linyimin/',
+    isActionVisible: false,
+    actionProps: {
+      left: undefined,
+      top: undefined,
+      record: undefined
+    }
+  }
+  
+  componentWillMount = () => {
+    // 左键按下时
+    window.addEventListener("mousedown", (event) => {
+      let { actionProps } = this.state
+      if (event.which === 1 && actionProps.left !== undefined) {
+        actionProps = {
+          left: undefined,
+          top: undefined,
+          record: undefined
+        }
+        this.setState({
+          actionProps
+        })
+      }
+    })
   }
 
   retriveBreadcrumbProps = () => {
@@ -168,15 +195,44 @@ export default class FileManagement extends React.Component<any, FileManagementS
     })
     return breadcrumProps
   }
+  
+  getActionPosition = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    const left = event.clientX
+    const top = event.clientY
+    const ww = document.documentElement.clientWidth
+    const wh = document.documentElement.clientHeight
+    
+    return {
+      top: ((wh - top > 300) ? top : (top - 330)) + 'px',
+      left: ((ww - left > 100) ? left : (left - 100)) + 'px'
+    }
+  }
+  
+  retrieveBreadcrumbProps = () => {
+    const { currentDir } = this.state
+    const breadcrumProps: BreadcrumbPrpos[] = new Array()
+    currentDir.split('/').forEach((name: string) => {
+      const prop: BreadcrumbPrpos = {
+        name: name
+      }
+      breadcrumProps.push(prop)
+    })
+    return breadcrumProps
+  }
 
   render() {
 
-    const { expandable } = this.state
+    const { expandable, actionProps } = this.state
 
     return (
       <div>
-        <BreadcrumbCustom breadcrumProps={breadcrumProps} />
-
+        {
+          actionProps.left !== undefined
+          ?
+          <Action left={actionProps.left} top={actionProps.top} record={actionProps.record} />
+          :
+          null
+        }
         <Row
           gutter={24}
           align="middle"
@@ -257,7 +313,7 @@ export default class FileManagement extends React.Component<any, FileManagementS
             (record: Record) => {
               const { expandable } = this.state
               return {
-                onDoubleClick: _ => {
+                onClick: _ => {
 
                   const keys = new Array<ReactText>()
                   const index: number = expandable.expandedRowKeys.indexOf(record.key)
@@ -276,6 +332,12 @@ export default class FileManagement extends React.Component<any, FileManagementS
                   } else {
                     // TODO: 打开文件
                   }
+                },
+                onContextMenu: event => {
+                  event.preventDefault()
+                  const { left, top } = this.getActionPosition(event)
+                  const actionProps: ActionProps = { left, top, record }
+                  this.setState({ actionProps })
                 }
               }
             }

@@ -1,11 +1,13 @@
 import React from 'react'
 import { Menu } from 'antd'
-export interface ActiomProps {
+import { Record } from './FileManagement';
+export interface ActionProps {
   left: string | undefined,
-  top: string | undefined
+  top: string | undefined,
+  record: Record | undefined
 }
 
-export default class Action extends React.Component<ActiomProps> {
+export default class Action extends React.Component<ActionProps> {
   render() {
     const { left, top } = this.props
     return (
