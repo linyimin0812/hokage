@@ -60,7 +60,7 @@ const menus: {
             key: '/app/file',
             title: '文件管理',
             icon: 'folder',
-            component: 'FileManagement'
+            component: 'FileManagementHome'
         },
         {
             key: '/app/monitor',

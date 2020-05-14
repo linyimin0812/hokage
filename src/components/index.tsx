@@ -2,11 +2,11 @@ import Home from './home/Home'
 import Operator from './user/operator/Operator'
 import OrdinaryUser from './user/ordinary/OrdinaryUser'
 import AllServers from './server/AllServers'
-import FileManagement from './filemanagement/FileManagement'
+import FileManagementHome from './filemanagement/Home'
 export default {
     Home,
     Operator,
     OrdinaryUser,
     AllServers,
-    FileManagement
+    FileManagementHome
 } as any;
