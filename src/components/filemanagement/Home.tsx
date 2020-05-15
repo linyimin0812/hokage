@@ -110,7 +110,7 @@ export default class FileManagementHome extends React.Component<any, FileManagem
       <Tabs
         onChange={this.onChange}
         activeKey={activeKey}
-        type='editable-card'
+        type="editable-card"
         hideAdd
         onEdit={this.onEdit}
       >

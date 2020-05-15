@@ -1,7 +1,7 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Divider, Button } from 'antd'
 import './index.less'
-import { FolderOutlined, FileOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
 import Search from 'antd/lib/input/Search';
 import Action, { ActionProps } from './Action'
@@ -210,7 +210,7 @@ export default class FileManagement extends React.Component<any, FileManagementS
   
   retrieveBreadcrumbProps = () => {
     const { currentDir } = this.state
-    const breadcrumProps: BreadcrumbPrpos[] = new Array()
+    const breadcrumProps: BreadcrumbPrpos[] = []
     currentDir.split('/').forEach((name: string) => {
       const prop: BreadcrumbPrpos = {
         name: name
