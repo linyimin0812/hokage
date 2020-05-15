@@ -57,10 +57,28 @@ const menus: {
             ],
         },
         {
+          key: '/app/webssh',
+          title: 'Web终端',
+          icon: 'code',
+          component: 'FileManagementHome'
+        },
+        {
             key: '/app/file',
             title: '文件管理',
             icon: 'folder',
             component: 'FileManagementHome'
+        },
+        {
+          key: '/app/bat',
+          title: '批量命令',
+          icon: 'file-text',
+          component: 'FileManagementHome'
+        },
+        {
+          key: '/app/security',
+          title: '安全组',
+          icon: 'file-text',
+          component: 'FileManagementHome'
         },
         {
             key: '/app/monitor',
