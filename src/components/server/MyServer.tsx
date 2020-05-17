@@ -1,6 +1,24 @@
 import React from 'react'
-import { Table, Result, Button } from 'antd';
+import { Table, Result, Button, Tag } from 'antd';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
+
+const renderStatus = (text: string, _: any, __: any) => {
+  let color: string = ''
+  switch (text) {
+    case '在线':
+    case '登录':
+      color = 'green'
+      break;
+    case '掉线':
+    case '退出':
+      color = 'red'
+      break
+    default:
+      color = 'red'
+      break
+  }
+  return <Tag color={color}> {text} </Tag>
+}
 
 const columns = [
   {
@@ -24,6 +42,18 @@ const columns = [
     key: "account"
   },
   {
+    title: '服务器状态',
+    dataIndex: 'serverStatus',
+    key: 'serverStatue',
+    render: renderStatus
+  },
+  {
+    title: '我的状态',
+    dataIndex: 'myStatus',
+    key: 'myStatus',
+    render: renderStatus
+  },
+  {
     title: "备注",
     dataIndex: "remark",
     key: "remark"
@@ -34,8 +64,21 @@ const columns = [
     key: "action"
   },
 ]
-
 const datas: any[] = []
+for (let i = 0; i < 5; i++) {
+  const data = {
+    key: i + 1,
+    id: 'id_' + i,
+    hostname: 'master_' + i + ".pcncad.club",
+    domainName: 'name_' + i + ".pcncad.club",
+    account: "banzhe_" + i,
+    serverStatus: i % 2 == 0 ? '掉线' : '在线',
+    myStatus: i % 2 == 0 ? '退出' : '登录',
+    action: 'Web SSH | 文件管理 | 远程命令 | 更多'
+  }
+  datas.push(data) 
+}
+
 
 
 const breadcrumProps: BreadcrumbPrpos[] = [
