@@ -5,36 +5,6 @@ import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@
 import { TableExtendable } from '../common/TableExtendable';
 import Search from './Search';
 import AddServer from './AddServer';
-
-// 嵌套表 
-const nestedColumns = [
-  { 
-    title: 'id',
-    dataIndex: 'id',
-    key: 'id'
-  },
-  { 
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name'
-  },
-  { 
-    title: '用户名', // 服务器登录用户名
-    dataIndex: 'loginName',
-    key: 'loginName'
-  },
-  { 
-    title: '申请时间',
-    dataIndex: 'applyTime',
-    key: 'applyTime'
-  },
-  { 
-    title: '最近登录时间',
-    dataIndex: 'lastLoginTime',
-    key: 'lastLoginTime'
-  },
-]
-
 const columns = [
   { 
     title: 'id',
@@ -131,19 +101,7 @@ const columns = [
     key: 'action'
   }
 ]
-
-interface NestedTableDataSource {
-  key: string,
-  id: string,
-  name: string,
-  loginName: string,
-  applyTime: string,
-  lastLoginTime: string
-}
-
 type AllServerState = {
-  expandable: TableExtendable,
-  nestedTableDataSource: NestedTableDataSource[],
   selectedRowKeys: ReactText[],
   isModalVisible: boolean
 }
@@ -164,41 +122,6 @@ const breadcrumProps: BreadcrumbPrpos[] = [
 export default class AllServer extends React.Component {
   
   state: AllServerState = {
-    expandable: {
-      expandedRowKeys: [],
-      expandedRowRender: () => {
-        return <Table columns={nestedColumns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
-      },
-      onExpand: (expanded: boolean, record: any) => {
-        if (expanded) {
-          // TODO: 这里替换成接口,请求真实的数据
-          const expandedRowKeys: string[] = [record.key]
-          const datasources: NestedTableDataSource[] = []
-          // const colors = ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"]
-          for (let i = 0; i < 3; i++) {
-            const data: NestedTableDataSource = {
-              key: record.key + '_' + i,
-              id: i.toString(),
-              name: 'banzhe',
-              loginName: 'banzhe',
-              applyTime: new Date().toString(),
-              lastLoginTime: new Date().toString()
-            }
-            datasources.push(data)
-          }
-          const expandable: TableExtendable = this.state.expandable
-          expandable.expandedRowKeys = expandedRowKeys
-
-          this.setState({ ...this.state, nestedTableDataSource: datasources, expandable })
-        } else {
-          const expandable: TableExtendable = this.state.expandable
-          expandable.expandedRowKeys = []
-
-          this.setState({ ...this.state, expandable })
-        }
-      }
-    },
-    nestedTableDataSource: [],
     selectedRowKeys: [],
     isModalVisible: false
   }
@@ -321,7 +244,6 @@ export default class AllServer extends React.Component {
             rowSelection={rowSelection}
             columns={columns}
             dataSource={data}
-            expandable={this.state.expandable}
           />
         </div>
       </div>
