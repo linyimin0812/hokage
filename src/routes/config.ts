@@ -46,7 +46,7 @@ const menus: {
                     key: '/app/server/manage',
                     title: '我管理的服务器',
                     icon: 'desktop',
-                    component: 'OperatorServers',
+                    component: 'MyOperateServer',
                 },
                 {
                     key: '/app/server/use',
