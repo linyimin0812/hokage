@@ -52,7 +52,7 @@ const menus: {
                     key: '/app/server/use',
                     title: '我使用的服务器',
                     icon: 'tablet',  
-                    component: 'MyServers',
+                    component: 'MyServer',
                 },
             ],
         },
