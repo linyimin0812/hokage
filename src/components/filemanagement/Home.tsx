@@ -1,8 +1,8 @@
-import ServerInfo from "./Header";
 import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
 import FileManagement from "./FileManagement";
 import { Tabs } from "antd";
+import MyServer from "../server/MyServer";
 interface PanesType {
   title: string,
   content: JSX.Element,
@@ -13,8 +13,8 @@ interface PanesType {
 const panes = [
   {
     key: '1',
-    content: <ServerInfo />,
-    title: '服务器基本信息',
+    content: <MyServer />,
+    title: '我的服务器',
     closable: false
   },
   {

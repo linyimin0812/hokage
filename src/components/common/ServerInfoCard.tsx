@@ -2,6 +2,9 @@ import React from 'react'
 import { Card, Descriptions, Tag, Divider, Progress } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, CodeOutlined } from '@ant-design/icons';
 
+/**
+ * 服务器基本信息卡片
+ */
 export default class ServerInfoCard extends React.Component {
   render() {
     return (
