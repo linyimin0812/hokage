@@ -1,0 +1,73 @@
+@import "variables";
+@import "global";
+@import "scroll";
+@import "login";
+@import "icons";
+@import "menu";
+@import "card";
+@import "img";
+@import "utils-text";
+@import "utils-color";
+@import "utils-size";
+@import "utils-border";
+@import "utils-spacing";
+@import "carousel";
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+#root{
+  height: 100%;
+}
+.ant-layout{
+  height: 100%;
+  .logo{
+    height: 40px;
+    background: #ffffff;
+    border-radius: 6px;
+    margin: 12px;
+    display: flex;
+    display: -webkit-flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .ant-layout-sider-collapsed{
+    .anticon{
+      font-size: 16px;
+      // margin-left: 8px;
+    }
+    .nav-text{
+      display: none;
+    }
+    .ant-menu-submenu-vertical > .ant-menu-submenu-title:after{
+      display: none;
+    }
+    .ant-menu-dark:not(.ant-menu-inline) .ant-menu-submenu-open {
+      color: inherit;
+    }
+  }
+  p {
+    margin: 10px 0 10px 0;
+  }
+}
+.gutter-example{
+  .ant-row{
+    //margin-left: 0 !important;
+    //margin-right: 0 !important;
+    >div{
+      background: transparent;
+      border: 0;
+    }
+  }
+}
+.gutter-box {
+  padding: 5px 0;
+}
+
+:global {
+  .ant-card-head-title {
+    font-size: 14px !important;
+  }
+}
