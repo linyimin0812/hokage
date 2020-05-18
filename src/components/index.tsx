@@ -5,6 +5,7 @@ import AllServers from './server/AllServers'
 import MyServer from './server/MyServer'
 import MyOperateServer from './server/MyOperateServer'
 import FileManagementHome from './filemanagement/Home'
+import WebSshHome from './webssh/Home'
 export default {
     Home,
     Operator,
@@ -12,5 +13,6 @@ export default {
     AllServers,
     FileManagementHome,
     MyServer,
-    MyOperateServer
+    MyOperateServer,
+    WebSshHome
 } as any;

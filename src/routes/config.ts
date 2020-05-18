@@ -60,7 +60,7 @@ const menus: {
           key: '/app/webssh',
           title: 'Web终端',
           icon: 'code',
-          component: 'FileManagementHome'
+          component: 'WebSshHome'
         },
         {
             key: '/app/file',
