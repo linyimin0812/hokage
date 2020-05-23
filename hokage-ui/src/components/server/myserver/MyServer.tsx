@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Result, Button, Tag } from 'antd';
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
 
 const renderStatus = (text: string, _: any, __: any) => {
   let color: string = ''

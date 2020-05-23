@@ -1,9 +1,9 @@
 import Home from './home/Home'
 import Operator from './user/operator/Operator'
 import OrdinaryUser from './user/ordinary/OrdinaryUser'
-import AllServers from './server/AllServers'
-import MyServer from './server/MyServer'
-import MyOperateServer from './server/MyOperateServer'
+import AllServers from './server/allserver/AllServers'
+import MyServer from './server/myserver/MyServer'
+import MyOperateServer from './server/myoperatorserver/MyOperateServer'
 import FileManagementHome from './filemanagement/Home'
 import WebSshHome from './webssh/Home'
 export default {

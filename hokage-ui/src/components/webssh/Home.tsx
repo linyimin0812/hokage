@@ -1,7 +1,7 @@
 import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
 import { Tabs } from "antd";
-import MyServer from "../server/MyServer";
+import MyServer from "../server/myserver/MyServer";
 import WebSsh from "./WebSsh";
 interface PanesType {
   title: string,

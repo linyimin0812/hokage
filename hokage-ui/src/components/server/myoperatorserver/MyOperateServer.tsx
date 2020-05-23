@@ -1,9 +1,9 @@
 import React, { ReactText } from 'react'
 import { Tag, message, Table, Row, Col, Button, Result } from 'antd';
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
-import { TableExtendable } from '../common/TableExtendable';
-import Search from './Search';
+import { TableExtendable } from '../../common/TableExtendable';
+import Search from '../allserver/Search';
 import OperatorApplyServer from './OperatorApplyServer';
 
 // 嵌套表 
@@ -259,7 +259,7 @@ export default class MyOperateServer extends React.Component {
         serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
         numOfUser: i + 1,
         status: "在线",
-        action: '申请 | 删除'
+        action: '添加用户 | 删除服务器 | 服务器信息'
       }
       data.push(value)
     }
