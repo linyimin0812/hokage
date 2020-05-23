@@ -1,5 +1,5 @@
 import React, { ReactText } from 'react'
-import { Tag, message, Table, Row, Col, Button } from 'antd';
+import { Tag, message, Table, Row, Col, Button, Divider } from 'antd';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import Search from './Search';
@@ -183,11 +183,7 @@ export default class AllServer extends React.Component {
     const { selectedRowKeys, isModalVisible } = this.state
     const rowSelection = {
       selectedRowKeys,
-      onChange: this.onSelectChange,
-      selections: [
-        Table.SELECTION_ALL,
-        Table.SELECTION_INVERT,
-      ],
+      onChange: this.onSelectChange
     };
 
     return (
@@ -211,18 +207,17 @@ export default class AllServer extends React.Component {
             <Col span={12} >
               <span style={{ float: 'right' }}>
                 {
-                  selectedRowKeys.length > 0 ? (
-                    <span style={{ paddingRight: '64px' }}>
-                      <Button
-                        icon={<MinusOutlined translate="true" />}
-                        onClick={this.delete}
-                      >
-                        批量删除
-                      </Button>
-                    </span>
-                  ) : (
+                  selectedRowKeys.length > 0 ? ([
+                    <Button
+                      icon={<MinusOutlined translate="true" />}
+                      onClick={this.delete}
+                    >
+                      批量删除
+                    </Button>,
+                    <Divider type="vertical" />
+                  ]) : (
                       null
-                    )
+                  )
                 }
                 <Button
                   icon={<PlusOutlined translate="true" />}

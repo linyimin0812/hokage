@@ -1,10 +1,10 @@
 import React, { ReactText } from 'react'
-import { Tag, message, Table, Row, Col, Button, Result } from 'antd';
+import { Tag, message, Table, Row, Col, Button, Result, Divider } from 'antd';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons';
 import { TableExtendable } from '../../common/TableExtendable';
-import Search from '../allserver/Search';
-import OperatorApplyServer from './OperatorApplyServer';
+import Search from './Search';
+import OperatorApplyServer from '../OperatorApplyServer';
 
 // 嵌套表 
 const nestedColumns = [
@@ -267,10 +267,6 @@ export default class MyOperateServer extends React.Component {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-      selections: [
-        Table.SELECTION_ALL,
-        Table.SELECTION_INVERT,
-      ],
     };
   
     return (
@@ -280,7 +276,7 @@ export default class MyOperateServer extends React.Component {
           (data === undefined || data.length === 0)
             ?
             <Result
-              title="你还没有可用服务器哦,请点击申请按钮进行申请"
+              title="你还没有可管理的服务器哦,请点击申请按钮进行申请"
               extra={
                 <Button type="primary" onClick={this.applyServer}>
                   申请
@@ -307,31 +303,30 @@ export default class MyOperateServer extends React.Component {
                   <Col span={12} >
                     <span style={{ float: 'right' }}>
                       {
-                        selectedRowKeys.length > 0 ? (
-                          <span style={{ paddingRight: '64px' }}>
-                            <Button
-                              icon={<MinusOutlined translate="true" />}
-                              onClick={this.delete}
-                            >
-                              批量删除
-                            </Button>
-                                </span>
-                              ) : (
-                                  null
-                                )
-                            }
-                            <Button
-                              icon={<PlusOutlined translate="true" />}
-                              onClick={this.add}
-                            >
-                              申请
-                            </Button>
-                        <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-                        <span style={{ paddingLeft: '64px' }} >
+                        selectedRowKeys.length > 0 ? ([
+                          <Button
+                            icon={<MinusOutlined translate="true" />}
+                            onClick={this.delete}
+                          >
+                            批量删除
+                          </Button>,
+                          <Divider type="vertical" />
+                        ]) : (
+                          null
+                        )
+                      }
+                      <Button
+                        icon={<PlusOutlined translate="true" />}
+                        onClick={this.add}
+                      >
+                        申请
+                      </Button>
+                      <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                      <span style={{ paddingLeft: '64px' }} >
                         <SyncOutlined
                           translate="true" onClick={this.sync}
                         />
-                        </span>
+                      </span>
                     </span>
                   </Col>
                 </Row>
