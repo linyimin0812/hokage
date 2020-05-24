@@ -1,6 +1,3 @@
-/**
- * Created by hao.cheng on 2017/4/13.
- */
 import React, { Component } from 'react';
 import screenfull from 'screenfull';
 import { Menu, Layout, Avatar, Row, Col, Carousel } from 'antd';
@@ -8,8 +5,6 @@ import {
   FullscreenOutlined,
   FullscreenExitOutlined,
 } from '@ant-design/icons'
-import { gitOauthToken, gitOauthInfo } from '../axios';
-import { queryString } from '../utils';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connectAlita } from 'redux-alita';
 import { Icon } from '@ant-design/compatible'
@@ -24,38 +19,15 @@ type HeaderCustomProps = RouteComponentProps<any> & {
     path?: string;
 };
 type HeaderCustomState = {
-    user: any,
     visible: boolean,
     isFullScreen: boolean,
 };
 
 class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
     state = {
-        user: '',
         visible: false,
         isFullScreen: false
     };
-    componentDidMount() {
-        const QueryString = queryString() as any;
-        let _user,
-            storageUser = localStorage.getItem('user');
-
-        _user = (storageUser && JSON.parse(storageUser)) || '测试';
-        if (!_user && QueryString.hasOwnProperty('code')) {
-            gitOauthToken(QueryString.code).then((res: any) => {
-                gitOauthInfo(res.access_token).then((info: any) => {
-                    this.setState({
-                        user: info,
-                    });
-                    localStorage.setItem('user', JSON.stringify(info));
-                });
-            });
-        } else {
-            this.setState({
-                user: _user,
-            });
-        }
-    }
     screenFull = () => {
         if (screenfull.isEnabled) {
             screenfull.request();

@@ -1,39 +1,15 @@
-/**
- * Created by 叶子 on 2017/8/13.
- */
 import React, { Component } from 'react';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 import AllComponents from '../components';
 import routesConfig, { IFMenuBase, IFMenu } from './config';
 import queryString from 'query-string';
-import { checkLogin } from '../utils';
 
 type CRouterProps = {
     auth: any;
 };
 
 export default class CRouter extends Component<CRouterProps> {
-    getPermits = (): any[] | null => {
-        const { auth } = this.props;
-        return auth ? auth.data.permissions : null;
-    };
-
-    requireAuth = (permit: any, component: React.ReactElement) => {
-        const permits = this.getPermits();
-        // const { auth } = store.getState().httpData;
-        if (!permits || !permits.includes(permit)) return <Redirect to={'404'} />;
-        return component;
-    };
-    requireLogin = (component: React.ReactElement, permit: any) => {
-        const permits = this.getPermits();
-        if (!checkLogin(permits)) {
-            // 线上环境判断是否登录
-            return <Redirect to={'/login'} />;
-        }
-        return permit ? this.requireAuth(permit, component) : component;
-    };
-
     createRoute = (key: string) => {
         return routesConfig[key].map((r: IFMenu) => {
             const route = (r: IFMenuBase) => {
@@ -63,9 +39,7 @@ export default class CRouter extends Component<CRouterProps> {
                                     <Component {...merge} />
                                 </DocumentTitle>
                             );
-                            return r.login
-                                ? wrappedComponent
-                                : this.requireLogin(wrappedComponent, r.requireAuth);
+                            return wrappedComponent
                         }}
                     />
                 );
@@ -77,7 +51,6 @@ export default class CRouter extends Component<CRouterProps> {
             return r.component ? route(r) : subRoute(r);
         });
     };
-
     render() {
         return (
             <Switch>
