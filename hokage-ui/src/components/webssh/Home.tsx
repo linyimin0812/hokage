@@ -1,8 +1,8 @@
 import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
 import { Tabs } from "antd";
-import MyServer from "../server/myserver/MyServer";
 import WebSsh from "./WebSsh";
+import SshInfo from "./SshInfo";
 interface PanesType {
   title: string,
   content: JSX.Element,
@@ -13,7 +13,7 @@ interface PanesType {
 const panes = [
   {
     key: '1',
-    content: <MyServer />,
+    content: <SshInfo />,
     title: '我的服务器',
     closable: false
   },
