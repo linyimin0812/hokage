@@ -1,8 +1,8 @@
 import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
 import { Tabs } from "antd";
-import WebSsh from "./WebSsh";
 import SshInfo from "./SshInfo";
+import Xterm from "./Xterm";
 interface PanesType {
   title: string,
   content: JSX.Element,
@@ -19,7 +19,7 @@ const panes = [
   },
   {
     key: '2',
-    content: <WebSsh />,
+    content: <Xterm id="terminal" />,
     title: 'Web ssh 连接'
   }
 ]
@@ -62,7 +62,7 @@ export default class FileManagementHome extends React.Component<any, WebSshState
     const { panes } = this.state
     const pane: PanesType = {
       key: key,
-      content: <WebSsh />,
+      content: <Xterm id="terminal" />,
       title: key
     }
     panes.push(pane)
