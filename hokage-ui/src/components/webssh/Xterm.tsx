@@ -12,12 +12,6 @@ interface XtermStateType {
 }
 
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
-  private prompt: string
-  
-  constructor (props: XtermPropsType) {
-    super(props)
-    this.prompt = "Hello from \x1B[1;3;31mxterm.js\x1B[0m $ "
-  }
   
   componentDidMount = ()=> {
     const { id } = this.props
@@ -27,7 +21,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     terminal.open(document.getElementById(id)!)
     fitAddon.fit()
     // TODO: 获取服务器prompt
-    terminal.write(this.prompt)
+    terminal.write("Hello from \x1B[1;3;31mxterm.js\x1B[0m $ ")
     terminal.onData((text: string, _void) => {
       terminal.write(text)
     })

@@ -3,7 +3,7 @@ import Routes from './routes';
 import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
-import { Layout, notification } from 'antd';
+import { Layout } from 'antd';
 import { connectAlita } from 'redux-alita';
 
 const { Content, Footer } = Layout;

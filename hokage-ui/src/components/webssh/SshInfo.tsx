@@ -1,8 +1,6 @@
 import React, { ReactText } from 'react'
 import { Tag, Result, Button, message, Row, Col, Divider, Table, Input } from 'antd';
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
-import Search from '../server/myoperatorserver/Search';
-import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import AddServer from '../server/AddServer';
 
 
@@ -150,7 +148,8 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
                 <Button
                   key="1"
                   icon={<PlusOutlined translate="true" />}
-                  onClick={this.applyServer}>
+                  onClick={this.applyServer}
+                >
                   申请
                 </Button>,
                 <Divider type="vertical" />,

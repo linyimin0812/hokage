@@ -3,7 +3,6 @@ import { Table, Result, Button, Tag, Row, Col, message, Divider } from 'antd';
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
 import Search from './Search';
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons';
-import OperatorApplyServer from '../OperatorApplyServer';
 import AddServer from '../AddServer';
 
 const renderStatus = (text: string, _: any, __: any) => {
