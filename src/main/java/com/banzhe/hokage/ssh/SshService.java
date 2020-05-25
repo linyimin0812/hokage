@@ -57,7 +57,7 @@ public class SshService {
      */
     public void handleMsgFromXterm(String payload, WebSocketSession session) {
         try {
-            WebSocketMessage<String> message = JSON.parseObject(payload, new TypeReference<WebSocketMessage>(){});
+            WebSocketMessage<String> message = JSON.parseObject(payload, new TypeReference<WebSocketMessage<String>>(){});
 
             // xterm发起连接请求信息
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_INIT.getValue())) {
