@@ -2,7 +2,7 @@ import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
 import FileManagement from "./FileManagement";
 import { Tabs } from "antd";
-import MyServer from "../server/myserver/MyServer";
+import FileServer from "./FileServer";
 interface PanesType {
   title: string,
   content: JSX.Element,
@@ -13,7 +13,7 @@ interface PanesType {
 const panes = [
   {
     key: '1',
-    content: <MyServer />,
+    content: <FileServer />,
     title: '我的服务器',
     closable: false
   },
