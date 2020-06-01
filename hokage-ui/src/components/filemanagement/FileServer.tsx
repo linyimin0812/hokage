@@ -1,20 +1,11 @@
 import React from 'react'
-import { Tag, Result, Button, message, Row, Col, Divider, Table, Input, List, Avatar } from 'antd';
-import { PlusOutlined, FolderFilled } from '@ant-design/icons';
+import { Result, Button, message, Row, Col, Divider, Input } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import AddServer from '../server/AddServer';
+import ServerCard from '../common/ServerCard';
 
-const datas: any[] = []
-for (let i = 0; i < 11; i++) {
-  const data = {
-    hostname: 'master_' + i,
-    serverIp: '10.108.210.' + (i + 5),
-    account: "banzhe_" + i,
-    status: (i % 2 === 0) ? '掉线' : '在线',
-    remark: '测试',
-    action: '进入文件管理',
-  }
-  datas.push(data)
-}
+const datas: any[] = [1,2,3,4,5,6,7,8,9,10]
+
 
 type FileServerState = {
   isModalVisible: boolean
@@ -69,6 +60,17 @@ export default class FileServer extends React.Component<any, FileServerState> {
   enterFileManagement = () => {
     alert('enter file management')
   } 
+  
+  renderServerCards = () => {
+    return datas.map(value => {
+      console.log(value)
+      return (
+        <Col span={8}>
+          <ServerCard serverType="test" serverIp={"192.182.92." + value} description="测试" action="文件管理" />
+        </Col>
+      )
+    })
+  }
 
   render() {
 
@@ -100,74 +102,42 @@ export default class FileServer extends React.Component<any, FileServerState> {
               ]}
             />
             :
-            <>
-              <div style={{ backgroundColor: '#FFFFFF' }}>
-                <Row
-                  gutter={24}
-                  style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
-                >
-                  <Col span={12} />
-                  <Col span={12} >
-                    <span style={{ float: 'right' }}>
-                      <Button
-                        key="3"
-                        icon={<PlusOutlined translate="true" />}
-                        onClick={this.applyServer}
-                      >
-                        申请服务器
-                      </Button>
-                      <Divider type="vertical" />
-                      <Button
-                        key="4"
-                        icon={<PlusOutlined translate="true" />}
-                        onClick={this.add}
-                      >
-                        添加服务器
-                      </Button>
-                      <Divider type="vertical" />
-                      <Input.Search
-                        placeholder="服务器地址"
-                        onSearch={value => console.log(value)}
-                        style={{ width: "280px" }}
-                      />
-                    </span>
-                  </Col>
-                </Row>
-                <List
-                  grid={{ column: 2}}
-                  itemLayout="vertical"
-                  dataSource={[
-                    {
-                      name: '10.108.210.194',
-                      id: '1'
-                    },
-                    {
-                      name: '10.108.210.136',
-                      id: '2'
-                    },
-                  ]}
-                  bordered
-                  renderItem={item => (
-                    <List.Item
-                      key={item.id}
-                      actions={[
-                        <a onClick={this.enterFileManagement} key={`a-${item.id}`}>
-                          查看
-                        </a>,
-                      ]}
+            <div style={{ backgroundColor: '#FFFFFF' }}>
+              <Row
+                gutter={24}
+                style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', padding: '4px 0px' }}
+              >
+                <Col span={12} />
+                <Col span={12} >
+                  <span style={{ float: 'right' }}>
+                    <Button
+                      key="3"
+                      icon={<PlusOutlined translate="true" />}
+                      onClick={this.applyServer}
                     >
-                      <List.Item.Meta
-                        avatar={
-                          <Avatar> <FolderFilled translate="true" /> </Avatar>
-                        }
-                        title={<a href="https://ant.design/index-cn">{item.name}</a>}
-                        description="Progresser XTech"
-                      />
-                    </List.Item>
-                  )}
-                />
-              </div>
-            </>
+                      申请服务器
+                    </Button>
+                    <Divider type="vertical" />
+                    <Button
+                      key="4"
+                      icon={<PlusOutlined translate="true" />}
+                      onClick={this.add}
+                    >
+                      添加服务器
+                    </Button>
+                    <Divider type="vertical" />
+                    <Input.Search
+                      placeholder="服务器地址"
+                      onSearch={value => console.log(value)}
+                      style={{ width: "280px" }}
+                    />
+                  </span>
+                </Col>
+              </Row>
+              <Row gutter={24} style={{ paddingTop: '4px' }}>
+                {this.renderServerCards()}
+              </Row>
+            </div>
         }
 
         <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
