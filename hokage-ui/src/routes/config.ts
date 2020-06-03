@@ -70,15 +70,15 @@ const menus: {
         },
         {
           key: '/app/bat',
-          title: '批量命令',
+          title: 'code',
           icon: 'file-text',
-          component: 'FileManagementHome'
+          component: 'BatCommandHome'
         },
         {
           key: '/app/security',
           title: '安全组',
-          icon: 'file-text',
-          component: 'FileManagementHome'
+          icon: 'safety',
+          component: 'SecurityGroupHome'
         },
         {
             key: '/app/monitor',
