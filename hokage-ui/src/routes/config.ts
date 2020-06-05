@@ -70,8 +70,8 @@ const menus: {
         },
         {
           key: '/app/bat',
-          title: 'code',
-          icon: 'file-text',
+          title: '批量命令',
+          icon: 'code',
           component: 'BatCommandHome'
         },
         {
