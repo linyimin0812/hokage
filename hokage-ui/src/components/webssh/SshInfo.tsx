@@ -1,7 +1,8 @@
 import React, { ReactText } from 'react'
-import { Tag, Result, Button, message, Row, Col, Divider, Table, Input } from 'antd';
-import { InfoCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { Tag, message, Table } from 'antd';
 import AddServer from '../server/AddServer';
+import ApplyServerPrompt from '../common/ApplyServerPrompt';
+import ApplyAndSearchServer from '../common/ApplyAndSearchServer';
 
 
 const renderStatus = (text: string, _: any, __: any) => {
@@ -81,11 +82,7 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
     selectedRowKeys: [],
     isModalVisible: false
   }
-  
-  applyServer = () => {
-    window.location.href = "/#/app/server/all"
-  }
-  
+
   onFinish = (value: any) => {
     console.log(value)
   }
@@ -98,33 +95,8 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
     this.setState({ selectedRowKeys })
     // TODO: 从selectRows中获取选择的目标数据,然后进行相关操作
   }
-
-  add = () => {
-    console.log(this.state)
-    this.setState({ ...this.state, isModalVisible: true })
-    console.log('hahahahaha')
-  }
-
-  delete = () => {
-    alert("delete operators bat")
-  }
-
   sync = () => {
     alert("sync operator")
-  }
-
-  onModalOk = (value: any) => {
-    console.log(value)
-    this.setState({ ...this.state, isModalVisible: false })
-    message.loading({ content: 'Loading...', key: 'addUser' });
-    setTimeout(() => {
-      message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-    }, 2000);
-  }
-
-  onModalCancel = () => {
-    this.setState({ ...this.state, isModalVisible: false })
-    message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
   }
   
   render() {
@@ -141,82 +113,11 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
       <>
         {
           (datas === undefined || datas.length === 0)
-            ?
-            <Result
-              title="你还没有可用服务器哦,请点击申请按钮进行申请,或者点击添加按钮进行添加"
-              extra={[
-                <Button
-                  key="1"
-                  icon={<PlusOutlined translate="true" />}
-                  onClick={this.applyServer}
-                >
-                  申请
-                </Button>,
-                <Divider type="vertical" />,
-                <Button
-                  key="2"
-                  icon={<PlusOutlined translate="true" />}
-                  onClick={this.add}
-                >
-                  添加
-                </Button>
-              ]}
-            />
+            ? <ApplyServerPrompt />
             :
             <>
               <div style={{ backgroundColor: '#FFFFFF' }}>
-                <Row
-                  gutter={24}
-                  style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
-                >
-                  <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
-                    <span>
-                      <InfoCircleOutlined
-                        translate="true"
-                        style={{ color: "#1890ff" }}
-                      />
-                      已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
-                    </span>
-                  </Col>
-                  <Col span={12} >
-                    <span style={{ float: 'right' }}>
-                      {
-                        selectedRowKeys.length > 0 ? ([
-                          <Button
-                            icon={<MinusOutlined translate="true" />}
-                            onClick={this.delete}
-                          >
-                            批量删除
-                          </Button>,
-                          <Divider type="vertical" />
-                        ]) : (
-                            null
-                          )
-                      }
-                      <Button
-                        key="3"
-                        icon={<PlusOutlined translate="true" />}
-                        onClick={this.applyServer}
-                      >
-                        申请服务器
-                      </Button>
-                      <Divider type="vertical" />
-                      <Button
-                        key="4"
-                        icon={<PlusOutlined translate="true" />}
-                        onClick={this.add}
-                      >
-                        添加SSH信息
-                      </Button>
-                      <Divider type="vertical" />
-                      <Input.Search
-                        placeholder="服务器地址"
-                        onSearch={value => console.log(value)}
-                        style={{ width: "280px" }}
-                      />
-                    </span>
-                  </Col>
-                </Row>
+                <ApplyAndSearchServer selectionKeys={selectedRowKeys} />
                 <Table
                   columns={column}
                   dataSource={datas}
@@ -225,9 +126,6 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
               </div>
             </>
         }
-        
-        <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />                      
-        
       </>
     )
   }
