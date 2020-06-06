@@ -6,6 +6,7 @@ import MyServer from './server/myserver/MyServer'
 import MyOperateServer from './server/myoperatorserver/MyOperateServer'
 import FileManagementHome from './filemanagement/Home'
 import WebSshHome from './webssh/Home'
+import BatCommandHome from './BatCommand/Home'
 export default {
     Home,
     Operator,
@@ -14,5 +15,6 @@ export default {
     FileManagementHome,
     MyServer,
     MyOperateServer,
-    WebSshHome
+    WebSshHome,
+    BatCommandHome
 } as any;
