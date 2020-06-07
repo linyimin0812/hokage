@@ -1,6 +1,5 @@
 import React, { ReactText } from 'react'
-import { Tag, message, Table } from 'antd';
-import AddServer from '../server/AddServer';
+import { Tag, Table } from 'antd';
 import ApplyServerPrompt from '../common/ApplyServerPrompt';
 import ApplyAndSearchServer from '../common/ApplyAndSearchServer';
 
@@ -72,15 +71,13 @@ for (let i = 0; i < 11; i++) {
 }
 
 type SshInfoState = {
-  selectedRowKeys: ReactText[],
-  isModalVisible: boolean
+  selectedRowKeys: ReactText[]
 }
 
 export default class SshInfo extends React.Component<any, SshInfoState> {
   
   state = {
     selectedRowKeys: [],
-    isModalVisible: false
   }
 
   onFinish = (value: any) => {
@@ -101,7 +98,7 @@ export default class SshInfo extends React.Component<any, SshInfoState> {
   
   render() {
     
-    const { selectedRowKeys, isModalVisible } = this.state
+    const { selectedRowKeys } = this.state
     
     const rowSelection = {
       selectedRowKeys,
