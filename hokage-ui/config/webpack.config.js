@@ -133,7 +133,15 @@ module.exports = function(webpackEnv) {
           options: {
             sourceMap: true,
           },
-        }
+        },
+          {
+            options: {
+              lessOptions: {
+                javascriptEnabled: true
+              }
+            },
+            loader: require.resolve('less-loader'),
+          }
       );
     }
     return loaders;
@@ -526,7 +534,7 @@ module.exports = function(webpackEnv) {
                   getLocalIdent: getCSSModuleLocalIdent,
                 },
                 'less-loader'
-              ),
+),
             },
             // "file" loader makes sure those assets get served by WebpackDevServer.
             // When you `import` an asset, you get its (virtual) filename.
