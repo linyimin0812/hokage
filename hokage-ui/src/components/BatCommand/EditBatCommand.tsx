@@ -25,8 +25,9 @@ const formDataInitValue: FormDataType = {
 }
 
 interface EditBatCommandPropsType {
-    isVisible: boolean,
-    onChange: Function,
+    isVisible: boolean, // 显示弹窗
+    onChange: Function, // 关闭弹窗
+    isEdit: boolean, // 是否编辑
 }
 
 interface EditBatCommandStateType {
@@ -99,7 +100,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
     }
 
     render() {
-        const { isVisible } = this.props
+        const { isVisible, isEdit } = this.props
         const { isTiming, isPeriod } = this.state
         return (
             <Modal
@@ -122,13 +123,13 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                         rules={[{ required: true, message: "任务名称不能为空" }]}
 
                     >
-                        <Input style={{width: "50%"}} />
+                        <Input style={{width: "50%"}} disabled={!isEdit} />
                     </Form.Item>
                     <Form.Item
                         name="type"
                         label="任务类型"
                     >
-                        <Select style={{width: "50%"}}>
+                        <Select style={{width: "50%"}} disabled={!isEdit} >
                             <Select.Option value="shell">shell</Select.Option>
                         </Select>
                     </Form.Item>
@@ -136,7 +137,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                         name="execType"
                         label="执行类型"
                     >
-                        <Select style={{width: "50%"}} >
+                        <Select style={{width: "50%"}} disabled={!isEdit} >
                             <Select.Option value="timing">定时</Select.Option>
                             <Select.Option value="period">周期</Select.Option>
                         </Select>
@@ -147,7 +148,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                                 name="execTime"
                                 label="执行时间"
                             >
-                                <Input placeholder="时间单位为分钟" style={{width: "50%"}} />
+                                <Input placeholder="时间单位为分钟" style={{width: "50%"}} disabled={!isEdit} />
                             </Form.Item>
                         ) : null
                     }
@@ -157,13 +158,13 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                                 name="execTime"
                                 label="执行周期"
                             >
-                                <Input placeholder="cron表达式" style={{width: "50%"}} />
+                                <Input placeholder="cron表达式" style={{width: "50%"}} disabled={!isEdit} />
                             </Form.Item>,
                             <Form.Item
                                 name="useCron"
                                 label="使用Cron"
                             >
-                                <Switch onChange={(value: boolean) => { this.setState({ isUseCron: value }) }} />
+                                <Switch onChange={(value: boolean) => { this.setState({ isUseCron: value }) }} disabled={!isEdit} />
                                 <span>&nbsp;<span style={{color: "red"}}>*</span>&nbsp;开启Cron,会直接把命令放到crontab中进行周期控制, 不会返回任务结果</span>
                             </Form.Item>
                         ]) : null
@@ -178,6 +179,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                             mode="multiple"
                             style={{ width: '50%' }}
                             placeholder={"请选择服务器(支持多选)"}
+                            disabled={!isEdit}
                         >
                             {[1,2,3,4,5,6].map(value => {return <Select.Option key={value} value={`10.108.210.2${value}`}>{`10.108.210.2${value}`}</Select.Option>})}
                         </Select>
@@ -192,17 +194,23 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                             theme="vs-dark"
                             height="200px"
                             editorDidMount={ (getEditorValue: () => string): void => { this.setState({ getEditorText: getEditorValue }) }}
+                            options={{readOnly: !isEdit}}
+
                         />
                     </Form.Item>
-                    <Form.Item style={{textAlign: "center"}} >
-                        <Button type="primary" htmlType="submit">
-                            保存
-                        </Button>
-                        <Divider type="vertical" />
-                        <Button type="primary" onClick={this.onCancel}>
-                            取消
-                        </Button>
-                    </Form.Item>
+                    {
+                        isEdit ? (
+                            <Form.Item style={{textAlign: "center"}} >
+                                <Button type="primary" htmlType="submit">
+                                    保存
+                                </Button>
+                                <Divider type="vertical" />
+                                <Button type="primary" onClick={this.onCancel}>
+                                    取消
+                                </Button>
+                            </Form.Item>
+                        ) : null
+                    }
                 </Form>
             </Modal>
         )

@@ -22,7 +22,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
             <div>
                 <Button type="primary" onClick={this.createBatCommand}>创建批量任务</Button>
                 <Divider style={{margin: "8px 0px"}} />
-                <EditBatCommand isVisible={isCreate} onChange={(value: boolean) => {this.setState({isCreate: value})}} />
+                <EditBatCommand isVisible={isCreate} isEdit onChange={(value: boolean) => {this.setState({isCreate: value})}} />
                 <Table dataSource={[]}>
                     <Table.Column title="任务名称" dataIndex="name" />
                     <Table.Column title="任务类型" dataIndex="type" />
