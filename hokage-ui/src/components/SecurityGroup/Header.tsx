@@ -17,7 +17,6 @@ export default class Header extends React.Component<HeaderPropsType> {
                 >
                     <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
                         <Button
-                            style={{ float: 'right' }}
                             onClick={this.props.onClick}
                         >
                             添加安全组

@@ -1,6 +1,7 @@
 import React from 'react'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
-import EnterSecurity from './EnterSecurity';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom'
+import EnterSecurity from './EnterSecurity'
+import Header from './Header'
 
 const breadcrumProps: BreadcrumbPrpos[] = [
   {
@@ -12,12 +13,34 @@ const breadcrumProps: BreadcrumbPrpos[] = [
   }
 ]
 
-export default class SecurityGroupHome extends React.Component {
+interface SecurityGroupHomeSateType {
+  isAddNew: boolean
+}
+
+export default class SecurityGroupHome extends React.Component<{}, SecurityGroupHomeSateType> {
+
+  state = {
+    isAddNew: false
+  }
+
+  onClick = () => {
+    this.setState({ isAddNew: true })
+  }
+
+  onSearch = (address: string) => {
+    this.setState({ isAddNew: true })
+  }
+
+  cancelAddNew = () => {
+    this.setState({ isAddNew: false })
+  }
+
   render() {
     return (
         <div>
           <BreadcrumbCustom breadcrumProps={breadcrumProps} />
-          <EnterSecurity />
+            <Header onClick={this.onClick} onSearch={this.onSearch} />
+            <EnterSecurity isAddNew={this.state.isAddNew} cancelAddNew={this.cancelAddNew} />
         </div>
     )
   }
