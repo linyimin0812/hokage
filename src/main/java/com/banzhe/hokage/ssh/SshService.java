@@ -18,6 +18,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -128,7 +129,8 @@ public class SshService {
             while (true) {
                 int length = input.read(buf);
                 if (length < 0) {
-                    throw new Exception("读取数据出错");
+                    sendToWebSocket(session, "ssh链接已断开".getBytes(Charset.forName("UTF-8")));
+                    break;
                 }
                 sendToWebSocket(session, Arrays.copyOfRange(buf, 0, length));
             }
