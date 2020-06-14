@@ -60,6 +60,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
 
     expandedRowRender = (record: any) => {
         const id: string | number = record.id
+        console.log(id)
         // TODO:根据id获取所有机器的任务执行信息
 
         const data = [1,2,3,4,5,6].map(value => {
