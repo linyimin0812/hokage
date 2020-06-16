@@ -89,7 +89,7 @@ const menus: {
                 key: '/app/monitor/server', 
                 title: '服务器资源监控', 
                 icon: 'eye',
-                component: 'ServerResourceManagement' 
+                component: 'ServerResourceManagementHome'
               },
               { 
                 key: '/app/monitor/process', 
