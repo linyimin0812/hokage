@@ -1,6 +1,5 @@
 import React from 'react'
-import { Col } from 'antd';
-import ReactEcharts from 'echarts-for-react';
+import ReactEcharts from 'echarts-for-react'
 
 export default class RamUsage extends React.Component<any, any>{
     state = {
@@ -48,9 +47,7 @@ export default class RamUsage extends React.Component<any, any>{
     }
     render() {
         return (
-            <Col span={8} >
-                <ReactEcharts option={this.state.RamUsageOption as any} style={{width: "400px"}} />
-            </Col>
+            <ReactEcharts option={this.state.RamUsageOption as any} style={{width: "400px"}} />
         )
     }
 }
