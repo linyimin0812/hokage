@@ -24,7 +24,7 @@ export default class CpuProcess extends React.Component<any, any>{
 
     render() {
         return (
-            <Table dataSource={data} pagination={false}>
+            <Table dataSource={data} pagination={false} scroll={{y: 350}} >
                 <Table.Column title="PID" dataIndex="pid" />
                 <Table.Column title="USER" dataIndex="user" />
                 <Table.Column title="CPU%" dataIndex="cpu" />

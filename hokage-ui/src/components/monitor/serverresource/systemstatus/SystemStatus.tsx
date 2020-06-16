@@ -25,8 +25,8 @@ export default class SystemStatus extends React.Component<any, any>{
                         <RamUsage />
                     </Col>
                 </Row>
-                <Divider style={{padding: "0px 4px"}} />
-                <Row gutter={24} align="middle" justify={"center"} >
+                <Divider />
+                <Row gutter={24} >
                     <Col span={8}>
                         <CpuProcess />
                     </Col>

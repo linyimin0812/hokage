@@ -20,7 +20,7 @@ export default class DiskPartition extends React.Component<any, any>{
 
     render() {
         return (
-            <Table dataSource={data} pagination={false}>
+            <Table dataSource={data} pagination={false} scroll={{y: 350}} >
                 <Table.Column title="NAME" dataIndex="name" />
                 {/*渲染进度条*/}
                 <Table.Column title="STATUS" dataIndex="status" />
