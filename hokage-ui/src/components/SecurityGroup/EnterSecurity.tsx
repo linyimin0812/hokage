@@ -19,7 +19,6 @@ interface IsEditType {
 }
 interface EnterSecurityStateType {
     isEdit: IsEditType,
-    serverType: string,
     servers: string[],
     authStrategy: string,
     protocolType: string,
@@ -35,7 +34,6 @@ export default class EnterSecurity extends React.Component<EnterSecurityPropsTyp
     state = {
         isEdit: {} as IsEditType, // 保存各行是否需要编辑的状态
         servers: [], // 选择的服务器(组)
-        serverType: "", // 服务器类型(单机服务器, 服务器组)
         protocolType: "", // 协议类型: tcp, udp, ICMP(ipv4), 全部
         authStrategy: "", // 拒绝, 允许
         portRange: "", // 服务端口范围
@@ -59,10 +57,6 @@ export default class EnterSecurity extends React.Component<EnterSecurityPropsTyp
             return false
         }
         return true
-    }
-
-    onSeverTypeChange = (value: string) => {
-        this.setState({ serverType: value })
     }
 
     onServersChange = (value: string[]) => {
@@ -102,16 +96,10 @@ export default class EnterSecurity extends React.Component<EnterSecurityPropsTyp
         const id = record.id as string
         return (
             this.state.isEdit[id] ? <div>
-                <Input.Group compact key={id}>
-                    <Select style={{width: "120px"}} onChange={this.onSeverTypeChange} placeholder="请选择类型" value={this.state.serverType || undefined} >
-                        <Select.Option value="standalone">单机服务器</Select.Option>
-                        <Select.Option value="cluster">服务器组</Select.Option>
-                    </Select>
-                    <Select mode="multiple" style={{width: "150px"}} onChange={this.onServersChange} placeholder="请选择服务器(组)" value={this.state.servers} >
-                        <Select.Option value="10.108.210.194">10.108.210.194</Select.Option>
-                        <Select.Option value="daily">日常环境组</Select.Option>
-                    </Select>
-                </Input.Group>
+                <Select mode="multiple" style={{width: "150px"}} onChange={this.onServersChange} placeholder="请选择服务器(组)" value={this.state.servers} >
+                    <Select.Option value="10.108.210.194">10.108.210.194</Select.Option>
+                    <Select.Option value="daily">日常环境组</Select.Option>
+                </Select>
             </div> : <span>{value}</span>
         )
     }
