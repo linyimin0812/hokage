@@ -8,7 +8,7 @@ export default class BasicInfoHome extends React.Component<any, any>{
     render() {
         return (
             <div>
-                <Row>
+                <Row gutter={12}>
                     <Col span={8}>
                         <BasicInfo title={"基本信息"} />
                     </Col>
@@ -22,7 +22,7 @@ export default class BasicInfoHome extends React.Component<any, any>{
 
                 <Divider />
 
-                <Row>
+                <Row gutter={12}>
                     <Col span={8}>
                         <BasicInfo title={"CPU信息"} />
                     </Col>

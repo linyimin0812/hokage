@@ -10,7 +10,7 @@ export default class NetworkHome extends React.Component<any, any>{
     render() {
         return (
             <div>
-                <Row>
+                <Row gutter={12}>
                     <Col span={8}>
                         <InterfaceInfo />
                     </Col>

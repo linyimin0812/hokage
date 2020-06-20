@@ -14,7 +14,7 @@ export default class SystemStatus extends React.Component<any, any>{
     render() {
         return (
             <div>
-                <Row gutter={24} align="middle" justify={"center"} >
+                <Row gutter={12} align="middle" justify={"center"} >
                     <Col span={8}>
                         <AverageLoad />
                     </Col>
@@ -26,7 +26,7 @@ export default class SystemStatus extends React.Component<any, any>{
                     </Col>
                 </Row>
                 <Divider />
-                <Row gutter={24} >
+                <Row gutter={12} >
                     <Col span={8}>
                         <CpuProcess />
                     </Col>
