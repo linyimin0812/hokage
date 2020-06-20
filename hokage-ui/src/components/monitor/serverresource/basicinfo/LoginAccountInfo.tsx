@@ -23,7 +23,7 @@ export default class LoginAccountInfo extends React.Component<any, any> {
     render() {
         return (
             <Card title="登录账户信息">
-                <Table dataSource={data} pagination={false}>
+                <Table dataSource={data} pagination={false} scroll={{y: 350}}>
                     <Table.Column title="类型" dataIndex="type" />
                     <Table.Column title="用户名" dataIndex="username" />
                     <Table.Column title="登录时间" dataIndex="loginTime" />

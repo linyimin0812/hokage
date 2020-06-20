@@ -28,7 +28,7 @@ export default class BasicInfo extends React.Component<BasicInfoPropsType, any> 
     render() {
         return (
             <Card title={this.props.title}>
-                <Table dataSource={data} pagination={false} showHeader={false}>
+                <Table dataSource={data} pagination={false} showHeader={false} scroll={{y: 350}}>
                     <Table.Column dataIndex="name" />
                     <Table.Column dataIndex="value" />
                 </Table>
