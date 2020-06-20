@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 
 const data: any[] = [
     {
@@ -33,14 +33,16 @@ export default class RamProcess extends React.Component<any, any>{
 
     render() {
         return (
-            <Table dataSource={data} pagination={false} scroll={{y: 350}} >
-                <Table.Column title="PID" dataIndex="pid" />
-                <Table.Column title="USER" dataIndex="user" />
-                <Table.Column title="MEM%" dataIndex="memory" />
-                <Table.Column title="RSS" dataIndex="rss" />
-                <Table.Column title="VSZ" dataIndex="vsz" />
-                <Table.Column title="CMD" dataIndex="cmd" />
-            </Table>
+            <Card title="内存使用率">
+                <Table dataSource={data} pagination={false} scroll={{y: 350}} >
+                    <Table.Column title="PID" dataIndex="pid" />
+                    <Table.Column title="USER" dataIndex="user" />
+                    <Table.Column title="MEM%" dataIndex="memory" />
+                    <Table.Column title="RSS" dataIndex="rss" />
+                    <Table.Column title="VSZ" dataIndex="vsz" />
+                    <Table.Column title="CMD" dataIndex="cmd" />
+                </Table>
+            </Card>
         );
     }
 }
