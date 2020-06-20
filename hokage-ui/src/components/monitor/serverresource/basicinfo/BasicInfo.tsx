@@ -20,10 +20,14 @@ const data: {[key: string]: any}[] = [
     }
 ]
 
-export default class BasicInfo extends React.Component<any, any> {
+interface BasicInfoPropsType {
+    title: string
+}
+
+export default class BasicInfo extends React.Component<BasicInfoPropsType, any> {
     render() {
         return (
-            <Card title="基本信息">
+            <Card title={this.props.title}>
                 <Table dataSource={data} pagination={false} showHeader={false}>
                     <Table.Column dataIndex="name" />
                     <Table.Column dataIndex="value" />
