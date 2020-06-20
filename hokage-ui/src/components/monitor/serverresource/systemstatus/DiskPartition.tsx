@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 
 const data: any[] = [
     {
@@ -20,13 +20,15 @@ export default class DiskPartition extends React.Component<any, any>{
 
     render() {
         return (
-            <Table dataSource={data} pagination={false} scroll={{y: 350}} >
-                <Table.Column title="NAME" dataIndex="name" />
-                {/*渲染进度条*/}
-                <Table.Column title="STATUS" dataIndex="status" />
-                <Table.Column title="USED%" dataIndex="used" />
-                <Table.Column title="MOUNT" dataIndex="mount" />
-            </Table>
+            <Card title="磁盘使用率">
+                <Table dataSource={data} pagination={false} scroll={{y: 350}} >
+                    <Table.Column title="NAME" dataIndex="name" />
+                    {/*渲染进度条*/}
+                    <Table.Column title="STATUS" dataIndex="status" />
+                    <Table.Column title="USED%" dataIndex="used" />
+                    <Table.Column title="MOUNT" dataIndex="mount" />
+                </Table>
+            </Card>
         );
     }
 }
