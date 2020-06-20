@@ -9,7 +9,6 @@ import WebSshHome from './webssh/Home'
 import BatCommandHome from './BatCommand/Home'
 import SecurityGroupHome from './SecurityGroup/SerurityGroupHome'
 import ServerResourceManagementHome from './monitor/serverresource/ServerResourceManagementHome'
-import ProcessManagement from './monitor/ProcessManagement'
 export default {
     Home,
     Operator,
@@ -22,5 +21,4 @@ export default {
     BatCommandHome,
     SecurityGroupHome,
     ServerResourceManagementHome,
-    ProcessManagement
 } as any;

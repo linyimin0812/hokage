@@ -84,20 +84,7 @@ const menus: {
             key: '/app/monitor',
             title: '资源监控',
             icon: 'picture',
-            subs: [
-              { 
-                key: '/app/monitor/server', 
-                title: '服务器资源监控', 
-                icon: 'eye',
-                component: 'ServerResourceManagementHome'
-              },
-              { 
-                key: '/app/monitor/process', 
-                title: '进程监控', 
-                icon: 'line-chart',
-                component: 'ProcessManagement' 
-              },
-            ],
+            component: 'ServerResourceManagementHome'
         },
         {
           key: '/app/penetration',
