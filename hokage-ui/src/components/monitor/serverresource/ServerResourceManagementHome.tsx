@@ -17,7 +17,7 @@ const breadcrumbProps: BreadcrumbPrpos[] = [
 const initPanes = [
     {
         title: "我的服务器",
-        content: <FileServer />,
+        content: <FileServer action="资源监控" />,
         key: "1",
     },
     {

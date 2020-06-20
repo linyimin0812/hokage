@@ -6,84 +6,87 @@ import ApplyAndSearchServer from '../common/ApplyAndSearchServer';
 
 const datas: any[] = [1,2,3,4,5,6,7,8,9,10]
 
-
-type FileServerState = {
-  isModalVisible: boolean
+type FileServerPropsType = {
+    action?: string
 }
 
-export default class FileServer extends React.Component<any, FileServerState> {
+type FileServerState = {
+    isModalVisible: boolean
+}
 
-  state = {
-    isModalVisible: false
-  }
+export default class FileServer extends React.Component<FileServerPropsType, FileServerState> {
 
-  applyServer = () => {
-    window.location.href = "/#/app/server/all"
-  }
+    state = {
+        isModalVisible: false
+    }
 
-  onFinish = (value: any) => {
-    console.log(value)
-  }
+    applyServer = () => {
+        window.location.href = "/#/app/server/all"
+    }
 
-  resetFields = () => {
-    console.log("reset")
-  }
+    onFinish = (value: any) => {
+        console.log(value)
+    }
 
-  delete = () => {
-    alert("delete operators bat")
-  }
+    resetFields = () => {
+        console.log("reset")
+    }
 
-  sync = () => {
-    alert("sync operator")
-  }
+    delete = () => {
+        alert("delete operators bat")
+    }
 
-  onModalOk = (value: any) => {
-    console.log(value)
-    this.setState({ ...this.state, isModalVisible: false })
-    message.loading({ content: 'Loading...', key: 'addUser' });
-    setTimeout(() => {
-      message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-    }, 2000);
-  }
+    sync = () => {
+        alert("sync operator")
+    }
 
-  onModalCancel = () => {
-    this.setState({ ...this.state, isModalVisible: false })
-    message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
-  }
-  
-  enterFileManagement = () => {
-    alert('enter file management')
-  } 
-  
-  renderServerCards = () => {
-    return datas.map(value => {
-      console.log(value)
-      return (
-        <Col span={8}>
-          <ServerCard serverType="test" serverIp={"192.182.92." + value} description="测试" action="文件管理" />
-        </Col>
-      )
-    })
-  }
+    onModalOk = (value: any) => {
+        console.log(value)
+        this.setState({ ...this.state, isModalVisible: false })
+        message.loading({ content: 'Loading...', key: 'addUser' });
+        setTimeout(() => {
+            message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
+        }, 2000);
+    }
 
-  render() {
+    onModalCancel = () => {
+        this.setState({ ...this.state, isModalVisible: false })
+        message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
+    }
 
-    return (
-      <>
-        {
-          (datas === undefined || datas.length === 0)
-            ?
-            <ApplyServerPrompt />
-            :
-            <div style={{ backgroundColor: '#FFFFFF' }}>
-              <ApplyAndSearchServer />
-              <Row gutter={24} style={{ paddingTop: '4px' }}>
-                {this.renderServerCards()}
-              </Row>
-            </div>
-        }
+    enterFileManagement = () => {
+        alert('enter file management')
+    }
 
-      </>
-    )
-  }
+    renderServerCards = () => {
+        return datas.map(value => {
+            console.log(value)
+            return (
+                <Col span={8}>
+                    <ServerCard serverType="test" serverIp={"192.182.92." + value} description="测试" action={this.props.action || "文件管理"} />
+                </Col>
+            )
+        })
+    }
+
+    render() {
+
+        return (
+            <>
+                {
+                    (datas === undefined || datas.length === 0)
+                        ?
+                        <ApplyServerPrompt />
+                        :
+                        <div style={{ backgroundColor: '#FFFFFF' }}>
+                            <ApplyAndSearchServer />
+                            <Row gutter={24} style={{ paddingTop: '4px' }}>
+                                {this.renderServerCards()}
+                            </Row>
+                        </div>
+                }
+
+            </>
+        )
+    }
 }
