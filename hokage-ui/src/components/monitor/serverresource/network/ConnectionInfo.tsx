@@ -26,7 +26,7 @@ export default class ConnectionInfo extends React.Component<any, any>{
 
     render() {
         return (
-            <Card title="ARP缓存表">
+            <Card title="网络连接信息表">
                 <Table dataSource={data} pagination={false} scroll={{y: "350px"}}>
                     <Table.Column title="本地地址" dataIndex="localAddress" />
                     <Table.Column title="连接地址" dataIndex="foreignAddress" />
