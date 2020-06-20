@@ -10,16 +10,16 @@ export default class ServerResourceManagement extends React.Component<any, any>{
             <div>
                 <Tabs defaultActiveKey="2" tabPosition="left" >
                     <Tabs.TabPane
-                        tab={ <span>系统状态</span> }
+                        tab={ <span>基本信息</span> }
                         key="1"
                     >
-                        <SystemStatus />
+                        <BasicInfoHome />
                     </Tabs.TabPane>
                     <Tabs.TabPane
-                        tab={ <span>基本信息</span> }
+                        tab={ <span>系统状态</span> }
                         key="2"
                     >
-                        <BasicInfoHome />
+                        <SystemStatus />
                     </Tabs.TabPane>
                     <Tabs.TabPane
                         tab={ <span>网络信息</span> }
