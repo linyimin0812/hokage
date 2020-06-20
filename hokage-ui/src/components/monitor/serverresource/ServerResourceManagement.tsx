@@ -27,12 +27,6 @@ export default class ServerResourceManagement extends React.Component<any, any>{
                     >
                         Tab 3
                     </Tabs.TabPane>
-                    <Tabs.TabPane
-                        tab={ <span>账号信息</span> }
-                        key="4"
-                    >
-                        Tab 4
-                    </Tabs.TabPane>
                 </Tabs>
             </div>
         )
