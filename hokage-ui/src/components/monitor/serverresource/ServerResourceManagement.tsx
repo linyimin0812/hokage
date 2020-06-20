@@ -1,6 +1,7 @@
 import React from 'react'
 import { Tabs } from 'antd';
 import SystemStatus from './systemstatus/SystemStatus';
+import BasicInfoHome from './basicinfo/BasicInfoHome';
 
 export default class ServerResourceManagement extends React.Component<any, any>{
 
@@ -18,7 +19,7 @@ export default class ServerResourceManagement extends React.Component<any, any>{
                         tab={ <span>基本信息</span> }
                         key="2"
                     >
-                        Tab 2
+                        <BasicInfoHome />
                     </Tabs.TabPane>
                     <Tabs.TabPane
                         tab={ <span>网络信息</span> }
