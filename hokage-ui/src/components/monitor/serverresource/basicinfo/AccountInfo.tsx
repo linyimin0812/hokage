@@ -23,7 +23,7 @@ export default class AccountInfo extends React.Component<any, any> {
     render() {
         return (
             <Card title="账户信息">
-                <Table dataSource={data} >
+                <Table dataSource={data} pagination={false}>
                     <Table.Column title="类型" dataIndex="type" />
                     <Table.Column title="用户名" dataIndex="username" />
                     <Table.Column title="工作目录" dataIndex="homeDir" />
