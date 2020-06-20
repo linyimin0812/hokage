@@ -90,7 +90,7 @@ const menus: {
           key: '/app/penetration',
           title: '内网穿透',
           icon: 'cloud',
-          component: 'InverseNetworkProxy',
+          component: 'Penetration',
         },
     ],
     others: [], // 非菜单相关路由

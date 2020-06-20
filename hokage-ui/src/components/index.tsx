@@ -9,6 +9,8 @@ import WebSshHome from './webssh/Home'
 import BatCommandHome from './BatCommand/Home'
 import SecurityGroupHome from './SecurityGroup/SerurityGroupHome'
 import ServerResourceManagementHome from './monitor/serverresource/ServerResourceManagementHome'
+import Penetration from './penetration/Penetration'
+
 export default {
     Home,
     Operator,
@@ -21,4 +23,5 @@ export default {
     BatCommandHome,
     SecurityGroupHome,
     ServerResourceManagementHome,
+    Penetration
 } as any;
