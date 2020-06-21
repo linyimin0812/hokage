@@ -4,43 +4,18 @@ import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
 import { Layout } from 'antd';
-import { connectAlita } from 'redux-alita';
 
 const { Content, Footer } = Layout;
 
 type AppProps = {
-    setAlitaState: (param: any) => void;
     auth: any;
     responsive: any;
 };
 
-class App extends Component<AppProps> {
+export default class App extends Component<AppProps> {
     state = {
         collapsed: false,
         title: '',
-    };
-    componentWillMount() {
-        const { setAlitaState } = this.props;
-        let user,
-            storageUser = localStorage.getItem('user');
-        user = storageUser && JSON.parse(storageUser);
-        // user && receiveData(user, 'auth');
-        user && setAlitaState({ stateName: 'auth', data: user });
-        // receiveData({a: 213}, 'auth');
-        // fetchData({funcName: 'admin', stateName: 'auth'});
-        this.getClientWidth();
-        window.onresize = () => {
-            console.log('屏幕变化了');
-            this.getClientWidth();
-        };
-    }
-    getClientWidth = () => {
-        // 获取当前浏览器宽度并设置responsive管理响应式
-        const { setAlitaState } = this.props;
-        const clientWidth = window.innerWidth;
-        console.log(clientWidth);
-        setAlitaState({ stateName: 'responsive', data: { isMobile: clientWidth <= 992 } });
-        // receiveData({isMobile: clientWidth <= 992}, 'responsive');
     };
     toggle = () => {
         this.setState({
@@ -75,4 +50,3 @@ class App extends Component<AppProps> {
     }
 }
 
-export default connectAlita(['auth', 'responsive'])(App);

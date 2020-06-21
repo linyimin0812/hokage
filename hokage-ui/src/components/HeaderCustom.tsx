@@ -6,7 +6,6 @@ import {
 	FullscreenExitOutlined,
 } from '@ant-design/icons'
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { connectAlita } from 'redux-alita';
 import { Icon } from '@ant-design/compatible'
 const { Header } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -133,6 +132,6 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 const HeaderCustomConnect: React.ComponentClass<
 	HeaderCustomProps,
 	HeaderCustomState
-	> = connectAlita(['responsive'])(HeaderCustom);
+	> = HeaderCustom;
 
 export default withRouter(HeaderCustomConnect);
