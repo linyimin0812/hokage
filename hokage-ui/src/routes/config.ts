@@ -16,7 +16,6 @@ export interface IFMenu extends IFMenuBase {
 
 const menus: {
     menus: IFMenu[];
-    others: IFMenu[] | [];
     [index: string]: any;
 } = {
     menus: [
@@ -93,7 +92,6 @@ const menus: {
           component: 'Penetration',
         },
     ],
-    others: [], // 非菜单相关路由
 };
 
 export default menus;
