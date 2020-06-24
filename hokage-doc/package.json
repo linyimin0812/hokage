@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "vuepress": "^1.5.2"
+    "@vuepress/shared-utils": "^1.5.2",
+    "vuepress": "^1.5.2",
+    "vuepress-theme-antdocs": "^1.1.1"
   }
 }
