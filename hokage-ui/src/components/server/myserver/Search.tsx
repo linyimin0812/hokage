@@ -9,7 +9,7 @@ type SearchPropTypes = {
 export default class Search extends React.Component<SearchPropTypes> {
     render() {
         return (
-            <div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
+            <div style={{ backgroundColor: '#FFFFFF' }}>
                 <Divider orientation="left">服务器信息查询</Divider>
                 <Form
                     name="operator-search"

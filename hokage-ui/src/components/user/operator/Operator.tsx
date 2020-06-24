@@ -304,7 +304,7 @@ export default class Operator extends React.Component<any, OperatorState> {
             <div>
                 <BreadcrumbCustom breadcrumProps= {breadcrumProps} />
                 <Search onFinish={this.onFinish} clear={this.resetFields} />
-                <div style={{ backgroundColor: '#FFFFFF', padding: '8px 12px' }}>
+                <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}
                         style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
