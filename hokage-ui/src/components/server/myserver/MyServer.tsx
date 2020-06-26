@@ -185,7 +185,7 @@ export default class MyServer extends React.Component<any, MyServerState> {
                                     gutter={24}
                                     style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
                                 >
-                                    <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Col span={12} style={{ display: 'flex', alignItems: 'center' }}> 
                     <span>
                       <InfoCircleOutlined
                           translate="true"

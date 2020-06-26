@@ -10,6 +10,10 @@ type CRouterProps = {
 };
 
 export default class CRouter extends Component<CRouterProps> {
+
+    // TODO: 如果已经登录, 根据修改routesConfig
+    // TODO: 如果没有登录, 跳转到登录页面
+
     createRoute = (key: string) => {
         return routesConfig[key].map((r: IFMenu) => {
             const route = (r: IFMenuBase) => {
