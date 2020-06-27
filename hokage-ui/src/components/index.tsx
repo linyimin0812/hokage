@@ -24,4 +24,4 @@ export default {
     SecurityGroupHome,
     ServerResourceManagementHome,
     Penetration
-} as any;
+} as any

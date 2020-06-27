@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd'
 
 const formItemLayout = {
 	labelCol: {
@@ -160,7 +160,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 					</Form>
 				</div>
 			</div>
-		);
+		)
 	}
 
 }

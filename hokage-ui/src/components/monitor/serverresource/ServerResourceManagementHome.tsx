@@ -2,7 +2,7 @@ import React from 'react'
 import { Tabs } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import FileServer from '../../filemanagement/FileServer'
-import ServerResourceManagement from './ServerResourceManagement';
+import ServerResourceManagement from './ServerResourceManagement'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
     {

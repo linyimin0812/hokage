@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Form, Row, Col, Select, Button } from 'antd';
+import { Modal, Form, Row, Col, Select, Button } from 'antd'
 
 type AddOperatorPropTypes = {
     onModalOk: (value: any) => void,

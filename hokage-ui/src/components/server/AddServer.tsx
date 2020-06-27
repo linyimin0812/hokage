@@ -1,6 +1,6 @@
 import React from 'react'
-import { Modal, Form, Select, Button, Input, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Modal, Form, Select, Button, Input, Tooltip } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import isIP from 'is-ip'
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,

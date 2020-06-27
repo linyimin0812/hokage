@@ -1,6 +1,6 @@
-import React from 'react';
-import { Breadcrumb } from 'antd';
-import { Link } from 'react-router-dom';
+import React from 'react'
+import { Breadcrumb } from 'antd'
+import { Link } from 'react-router-dom'
 
 export interface BreadcrumbPrpos {
 	name: string,

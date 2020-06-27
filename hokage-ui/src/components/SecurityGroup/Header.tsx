@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Col, Input, Row } from 'antd';
+import React from 'react'
+import { Button, Col, Input, Row } from 'antd'
 
 interface HeaderPropsType {
     onClick: () => void,

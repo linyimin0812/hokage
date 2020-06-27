@@ -1,7 +1,7 @@
-import React, { ReactNode, ReactText } from 'react';
-import { Table, Row, Col, Button, Tag, message } from 'antd';
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom';
-import Search from './Search';
+import React, { ReactNode, ReactText } from 'react'
+import { Table, Row, Col, Button, Tag, message } from 'antd'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
+import Search from './Search'
 import {
 	UserAddOutlined,
 	InfoCircleOutlined,

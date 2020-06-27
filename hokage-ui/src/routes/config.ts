@@ -1,22 +1,22 @@
 export interface IFMenuBase {
-    key: string;
-    title: string;
-    icon?: string;
-    component?: string;
-    query?: string;
-    requireAuth?: string;
-    route?: string;
+    key: string
+    title: string
+    icon?: string
+    component?: string
+    query?: string
+    requireAuth?: string
+    route?: string
     /** 是否登录校验，true不进行校验（访客） */
-    login?: boolean;
+    login?: boolean
 }
 
 export interface IFMenu extends IFMenuBase {
-    subs?: IFMenu[];
+    subs?: IFMenu[]
 }
 
 const menus: {
-    menus: IFMenu[];
-    [index: string]: any;
+    menus: IFMenu[]
+    [index: string]: any
 } = {
     menus: [
         // 菜单相关路由
@@ -92,6 +92,6 @@ const menus: {
           component: 'Penetration',
         },
     ],
-};
+}
 
-export default menus;
+export default menus

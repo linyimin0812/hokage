@@ -1,6 +1,6 @@
-import React, { ChangeEvent, ReactElement } from 'react';
-import { Select, Table, Input, Tooltip } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons/lib';
+import React, { ChangeEvent, ReactElement } from 'react'
+import { Select, Table, Input, Tooltip } from 'antd'
+import { QuestionCircleOutlined } from '@ant-design/icons/lib'
 const data: any[] = [
     {id: "1", servers: "banzhe_test", authStrategy: "禁止", protocolType: "TCP", portRange: "8080", authType: "IPv4地址段访问", authObject: "0.0.0.0/0", description: "System created rule.", createTime: "", action: "保存 | 编辑 | 删除 | 启用 | 暂停" },
     {id: "2", servers: "banzhe_test", authStrategy: "禁止", protocolType: "TCP", portRange: "8080", authType: "IPv4地址段访问", authObject: "0.0.0.0/0", description: "System created rule.", createTime: "", action: "保存 | 编辑 | 删除" },

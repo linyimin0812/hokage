@@ -1,8 +1,8 @@
 import React from 'react'
-import { Tabs } from 'antd';
-import SystemStatus from './systemstatus/SystemStatus';
-import BasicInfoHome from './basicinfo/BasicInfoHome';
-import NetworkHome from './network/NetworkHome';
+import { Tabs } from 'antd'
+import SystemStatus from './systemstatus/SystemStatus'
+import BasicInfoHome from './basicinfo/BasicInfoHome'
+import NetworkHome from './network/NetworkHome'
 
 export default class ServerResourceManagement extends React.Component<any, any>{
 

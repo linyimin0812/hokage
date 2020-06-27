@@ -1,7 +1,7 @@
 import React, { ReactText } from 'react'
-import { Tag, Table } from 'antd';
-import ApplyServerPrompt from '../common/ApplyServerPrompt';
-import ApplyAndSearchServer from '../common/ApplyAndSearchServer';
+import { Tag, Table } from 'antd'
+import ApplyServerPrompt from '../common/ApplyServerPrompt'
+import ApplyAndSearchServer from '../common/ApplyAndSearchServer'
 
 
 const renderStatus = (text: string, _: any, __: any) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import {
 	Row,
 	Col,
@@ -10,10 +10,10 @@ import {
 	Descriptions,
 	Divider,
 	Avatar
-} from 'antd';
+} from 'antd'
 import moment from 'moment'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
-import ServerInfo from './ServerInfo';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom'
+import ServerInfo from './ServerInfo'
 
 const data = [
 	{
@@ -72,7 +72,7 @@ const data = [
 			</Tooltip>
 		),
 	},
-];
+]
 
 const breadcrumProps: BreadcrumbPrpos[] = [
 	{

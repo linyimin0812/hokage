@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import screenfull from 'screenfull';
-import { Menu, Layout, Avatar, Row, Col, Carousel } from 'antd';
+import React, { Component } from 'react'
+import screenfull from 'screenfull'
+import { Menu, Layout, Avatar, Row, Col, Carousel } from 'antd'
 import {
 	FullscreenOutlined,
 	FullscreenExitOutlined,
 } from '@ant-design/icons'
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Icon } from '@ant-design/compatible'
-const { Header } = Layout;
-const SubMenu = Menu.SubMenu;
+const { Header } = Layout
+const SubMenu = Menu.SubMenu
 
 type HeaderCustomProps = RouteComponentProps<any> & {
 	toggle: () => void;

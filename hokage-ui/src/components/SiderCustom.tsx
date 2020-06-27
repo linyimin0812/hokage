@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { Layout, Row, Col } from 'antd';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import routes from '../routes/config';
-import SiderMenu from './SiderMenu';
+import React, { Component } from 'react'
+import { Layout, Row, Col } from 'antd'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
+import routes from '../routes/config'
+import SiderMenu from './SiderMenu'
 import { ApartmentOutlined, HddOutlined } from '@ant-design/icons'
 
 const { Sider } = Layout;

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Menu } from 'antd';
-import { Link } from 'react-router-dom';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { IFMenu } from '../routes/config';
-import { MenuProps } from 'antd/lib/menu';
-import { Icon } from '@ant-design/compatible';
+import React, { useState } from 'react'
+import { Menu } from 'antd'
+import { Link } from 'react-router-dom'
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
+import { IFMenu } from '../routes/config'
+import { MenuProps } from 'antd/lib/menu'
+import { Icon } from '@ant-design/compatible'
 
 const renderMenuItem = (
 	item: IFMenu // item.route 菜单单独跳转的路由

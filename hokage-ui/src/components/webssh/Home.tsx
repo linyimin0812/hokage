@@ -1,8 +1,8 @@
-import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
+import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom"
 import React from 'react'
-import { Tabs } from "antd";
-import SshInfo from "./SshInfo";
-import Xterm from "./Xterm";
+import { Tabs } from "antd"
+import SshInfo from "./SshInfo"
+import Xterm from "./Xterm"
 interface PanesType {
   title: string,
   content: JSX.Element,
