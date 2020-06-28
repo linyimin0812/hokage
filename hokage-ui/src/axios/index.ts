@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'
 
 export const npmDependencies = () =>
     axios
@@ -10,5 +10,5 @@ export const weibo = () =>
     axios
         .get('./weibo.json')
         .then(res => res.data)
-        .catch(err => console.log(err));
+        .catch(err => console.log(err))
         
