@@ -71,26 +71,26 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
 						}
 					</Col>
 					<Col span={12}>
-						  <span style={{ float: 'right' }}>
-							  {
-								  (selectionKeys || []).length > 0 ? ([
-									  <Button
-										  icon={<MinusOutlined translate="true" />}
-										  onClick={this.delete}
-									  >
-										  批量删除
-									  </Button>,
-									  <Divider type="vertical" />,
+						<span style={{ float: 'right' }}>
+							{
+								(selectionKeys || []).length > 0 ? ([
+									<Button
+										icon={<MinusOutlined translate="true" />}
+										onClick={this.delete}
+									>
+										批量删除
+									</Button>,
+									<Divider type="vertical" />,
 								  ]) : (
 									  null
-								  )
-							  }
-							  <Button
-								  key="3"
-								  icon={<PlusOutlined translate="true" />}
-								  onClick={this.applyServer}
-							  >
-							  申请服务器
+								)
+							}
+							<Button
+								key="3"
+								icon={<PlusOutlined translate="true" />}
+								onClick={this.applyServer}
+							>
+								申请服务器
 							</Button>
 							<Divider type="vertical" />
 							<Button
