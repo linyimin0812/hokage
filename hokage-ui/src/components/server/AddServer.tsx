@@ -1,7 +1,8 @@
 import React from 'react'
-import { Modal, Form, Select, Button, Input, Tooltip } from 'antd'
+import { Modal, Form, Select, Button, Input, Tooltip, Divider, message } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import isIP from 'is-ip'
+import { PlusOutlined } from '@ant-design/icons/lib';
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,
     onModalCancel: () => void,
@@ -17,11 +18,26 @@ for (let i = 10; i < 36; i++) {
 export default class AddServer extends React.Component<AddServerPropTypes, {}> {
 
     state = {
-        isModalVisible: false
+        isModalVisible: false,
+        isAddGroup: false,
+        data: ordianryUser
+    }
+
+    onGroupModalOk = (value: any) => {
+        console.log(value)
+        this.setState({
+            isAddGroup: false,
+            data: this.state.data.concat(<Select.Option key={value.groupName} value={value.groupName}>{`${value.groupName}(${value.groupDes})`}</Select.Option>)
+        })
+        message.loading({ content: 'Loading...', key: 'addUser' });
+        setTimeout(() => {
+            message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
+        }, 2000);
     }
 
     render() {
         const { isModalVisible } = this.props
+        const { isAddGroup, data } = this.state
         return (
             <Modal
                 title="添加服务器"
@@ -38,11 +54,11 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                     <Form.Item
                         label={
                             <span>
-                二级域名&nbsp;
+                                二级域名&nbsp;
                                 <Tooltip title="指定服务器域名, 如: master.pcncad.club, 请填写master. 若不填写,默认使用主机名作为二级域名.">
-                  <QuestionCircleOutlined translate="true" />
-                </Tooltip>
-              </span>
+                                    <QuestionCircleOutlined translate="true" />
+                                </Tooltip>
+                            </span>
                         }
                     >
                         <Form.Item
@@ -52,8 +68,8 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                             <Input style={{ width: '75%' }} placeholder="请指定服务器域名" />
                         </Form.Item>
                         <span>
-              .pcncad.club
-            </span>
+                            .pcncad.club
+                        </span>
                     </Form.Item>
                     <Form.Item
                         name="IP"
@@ -151,6 +167,34 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
 
                     <Form.Item
                         name="operator"
+                        label="指定分组"
+                        hasFeedback
+                    >
+                        <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder={"请选择管分组(支持多选)"}
+                            dropdownRender={menu => (
+                                <div>
+                                    {menu}
+                                    <Divider style={{ margin: '1px 0' }} />
+                                    <div style={{textAlign: "center"}}>
+                                        <span
+                                            style={{color:"#5072D1", cursor: "pointer", padding: "8px 0px"}}
+                                            onClick={() => { this.setState({isAddGroup: true}) }}
+                                        >
+                                            <PlusOutlined translate /> 添加分组
+                                        </span>
+                                    </div>
+                                </div>
+                            )}
+                        >
+                            {data}
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item
+                        name="operator"
                         label="指定管理员"
                         hasFeedback
                     >
@@ -159,7 +203,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                             style={{ width: '100%' }}
                             placeholder={"请选择管理员(支持多选)"}
                         >
-                            {ordianryUser}
+                            {data}
                         </Select>
                     </Form.Item>
 
@@ -181,6 +225,64 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                         </div>
                     </Form.Item>
                 </Form>
+
+                <Modal
+                    title="添加服务器分组"
+                    visible={isAddGroup}
+                    footer={null}
+                    onCancel={() => { this.setState({isAddGroup: false}) }}
+                >
+                    <Form
+                        name="server-group-add"
+                        onFinish={this.onGroupModalOk}
+                        labelCol={{ span: 6 }}
+                        wrapperCol={{ span: 18 }}
+                    >
+                        <Form.Item
+                            name="groupName"
+                            label="分组名称"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: '请输入分组名称',
+                                },
+                                () => ({
+                                    validator(_, value) {
+                                        if (value === '' || value === undefined || /^[0-9a-zA-Z]+/.test(value)) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject('分组名称只能是字母或者数字哦!');
+                                    },
+                                }),
+                            ]}
+                            hasFeedback
+                        >
+                            <Input placeholder="请输入分组名称" />
+                        </Form.Item>
+                        <Form.Item
+                            name="groupDes"
+                            label="分组描述"
+                        >
+                            <Input placeholder="请输入分组描述" />
+                        </Form.Item>
+                        <Form.Item wrapperCol={{ span: 24 }}>
+                            <div style={{textAlign: 'center'}}>
+                                <Button type="primary" htmlType="submit">
+                                    添加
+                                </Button>
+                                <Button
+                                    style={{
+                                        margin: '0 8px',
+                                    }}
+                                    onClick={() => {this.setState({isAddGroup: false})}}
+                                >
+                                    取消
+                                </Button>
+                            </div>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+
             </Modal>
         )
     }
