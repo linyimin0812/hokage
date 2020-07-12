@@ -33,6 +33,8 @@
 6. 内网穿透
 
 ![](./hokage-doc/framework.png)
+
+![](./hokage-doc/data-model.png)
    
 ## 启动
 
