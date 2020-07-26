@@ -13,8 +13,8 @@ CREATE TABLE IF NOT EXISTS `hokage_user` (
 
 CREATE TABLE IF NOT EXISTS `hokage_supervisor_subordinate` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `supervisor` bigint NOT NULL COMMENT '管理员id',
-  `subordinate` bigint NOT NULL COMMENT '普通用户id',
+  `supervisor_id` bigint NOT NULL COMMENT '管理员id',
+  `subordinate_id` bigint NOT NULL COMMENT '普通用户id',
   PRIMARY KEY (`id`)
 )
   COMMENT = '管理员与用户关系映射表';
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `hokage_supvisor_server` (
   `server_id` bigint NOT NULL COMMENT '服务器id',
   PRIMARY KEY (`id`)
 )
-  COMMENT = '普通用户和服务器颖映射表';
+  COMMENT = '管理员和服务器颖映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_task` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `hokage_task` (
   `task_name` varchar(128) NOT NULL COMMENT '任务名称',
   `task_type` tinyint ZEROFILL NOT NULL COMMENT '任务类型: 0: 默认为shell',
   `exec_type` tinyint NOT NULL COMMENT '执行类型: 0: 定时, 1: cron周期',
-  `exec_time` varchar(32) NOT NULL COMMENT '执行时间',
+  `exec_time` bigint NOT NULL COMMENT '执行时间',
   `exec_servers` varchar(1024) NOT NULL COMMENT '执行服务器(服务器IP或者服务器分组)',
   `exec_command` varchar(0) NOT NULL COMMENT '执行命令',
   `description` varchar(1024) NULL COMMENT '任务描述',
@@ -75,8 +75,8 @@ CREATE TABLE IF NOT EXISTS `hokage_task_result` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `task_id` bigint NOT NULL COMMENT '任务id',
   `task_status` tinyint NOT NULL COMMENT '任务执行状态: 0: 执行完成, 1: 正在执行, 2: 未知',
-  `start_time` varchar(32) NOT NULL COMMENT '任务开始执行时间',
-  `exec_last_time` datetime NULL ON UPDATE CURRENT_TIMESTAMP,
+  `start_time` bigint NOT NULL COMMENT '任务开始执行时间',
+  `end_time` bigint NULL COMMENT '执行结束时间',
   `exit_code` tinyint NULL COMMENT '任务返回状态码',
   `exec_server` varchar(128) NULL COMMENT '执行机器',
   `exec_result` text NULL COMMENT '执行返回内容',
@@ -88,10 +88,10 @@ CREATE TABLE IF NOT EXISTS `hokage_security_group` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `user_id` bigint NOT NULL COMMENT '用户id',
   `servers` varchar(1024) NOT NULL COMMENT '指定服务器(IP或者分组)',
-  `auth_strgety` tinyint NOT NULL COMMENT '授权策略: 0-禁止, 1-允许',
+  `auth_strategy` tinyint NOT NULL COMMENT '授权策略: 0-禁止, 1-允许',
   `protocol_type` tinyint NOT NULL COMMENT '协议类型: 0-tcp, 1-udp, 2-icmp, 3-all',
   `port_range` varchar(64) NOT NULL COMMENT '端口范围',
-  `auth_object` varchar(0) NOT NULL COMMENT '授权对象',
+  `auth_object` varchar(1024) NOT NULL COMMENT '授权对象',
   `status` tinyint NOT NULL COMMENT '0-禁用, 1-在线',
   `description` varchar(1024) NULL COMMENT '安全组描述',
   PRIMARY KEY (`id`)
