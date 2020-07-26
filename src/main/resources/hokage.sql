@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS `hokage` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
-
+USE `hokage`;
 CREATE TABLE IF NOT EXISTS `hokage_user` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
