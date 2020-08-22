@@ -1,4 +1,4 @@
-package com.banzhe.hokage.dao.dataobject;
+package com.banzhe.hokage.dataobject;
 
 /**
  * @author linyimin

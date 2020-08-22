@@ -1,6 +1,6 @@
 package com.banzhe.hokage.dao;
 
-import com.banzhe.hokage.dao.dataobject.HokageServerGroupDO;
+import com.banzhe.hokage.dataobject.HokageServerGroupDO;
 
 import java.util.List;
 

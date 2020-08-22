@@ -1,6 +1,6 @@
 package com.banzhe.hokage.dao;
 
-import com.banzhe.hokage.dao.dataobject.HokageTaskResultDO;
+import com.banzhe.hokage.dataobject.HokageTaskResultDO;
 
 import java.util.List;
 
