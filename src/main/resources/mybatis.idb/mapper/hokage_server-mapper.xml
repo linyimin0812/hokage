@@ -1,0 +1,176 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageServerMapper">
+    <resultMap id="HokageServerMapper" type="HokageServerDO">
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="id" column="id"/>
+        <result property="description" column="description"/>
+        <result property="account" column="account"/>
+        <result property="domain" column="domain"/>
+        <result property="group" column="group"/>
+        <result property="hostname" column="hostname"/>
+        <result property="ip" column="ip"/>
+        <result property="passwd" column="passwd"/>
+        <result property="sshPort" column="ssh_port"/>
+        <result property="type" column="type"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        id,
+        gmt_create,
+        gmt_modified,
+        description,
+        account,
+        domain,
+        group,
+        hostname,
+        ip,
+        passwd,
+        ssh_port,
+        type
+    </sql>
+
+    <sql id="tableNme">
+        hokage_server
+    </sql>
+
+    <sql id="baseSql">
+        <where>
+            <if test="description != null and description != '' ">
+                and description = #{description}
+            </if>
+            <if test="account != null and account != '' ">
+                and account = #{account}
+            </if>
+            <if test="domain != null and domain != '' ">
+                and domain = #{domain}
+            </if>
+            <if test="group != null and group != '' ">
+                and group = #{group}
+            </if>
+            <if test="hostname != null and hostname != '' ">
+                and hostname = #{hostname}
+            </if>
+            <if test="ip != null and ip != '' ">
+                and ip = #{ip}
+            </if>
+            <if test="passwd != null and passwd != '' ">
+                and passwd = #{passwd}
+            </if>
+            <if test="sshPort != null and sshPort != '' ">
+                and ssh_port = #{sshPort}
+            </if>
+            <if test="type != null and type != '' ">
+                and type = #{type}
+            </if>
+        </where>
+    </sql>
+    <insert id="insert" parameterType="HokageServerDO">
+        INSERT INTO
+        <include refid="tableNme"/>
+        <include refid="allColumns"/>
+        VALUES (
+            #{id},
+            now(),
+            now(),
+            #{description},
+            #{account},
+            #{domain},
+            #{group},
+            #{hostname},
+            #{ip},
+            #{passwd},
+            #{sshPort},
+            #{type}
+        )
+    </insert>
+    <update id="update" parameterType="HokageServerDO">
+        UPDATE
+        <include refid="tableNme"/>
+        <set>
+            gmt_modified = now()
+            <if test="description != null and description != '' ">
+                ,description = #{description}
+            </if>
+            <if test="account != null and account != '' ">
+                ,account = #{account}
+            </if>
+            <if test="domain != null and domain != '' ">
+                ,domain = #{domain}
+            </if>
+            <if test="group != null and group != '' ">
+                ,group = #{group}
+            </if>
+            <if test="hostname != null and hostname != '' ">
+                ,hostname = #{hostname}
+            </if>
+            <if test="ip != null and ip != '' ">
+                ,ip = #{ip}
+            </if>
+            <if test="passwd != null and passwd != '' ">
+                ,passwd = #{passwd}
+            </if>
+            <if test="sshPort != null and sshPort != '' ">
+                ,ssh_port = #{sshPort}
+            </if>
+            <if test="type != null and type != '' ">
+                ,type = #{type}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="selectAll" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"></include>
+    </select>
+
+    <select id="selectByIds" parameterType="java.util.List" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"/>
+        <where>
+            id IN
+            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"/>
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <select id="selectByType" parameterType="java.lang.String" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"/>
+        <where>
+            type=#{type}
+        </where>
+    </select>
+
+    <select id="selectByGroup" parameterType="java.lang.String" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"/>
+        <where>
+            group=#{group}
+        </where>
+    </select>
+</mapper>

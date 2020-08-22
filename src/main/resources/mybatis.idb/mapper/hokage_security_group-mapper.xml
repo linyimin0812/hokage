@@ -1,0 +1,132 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageSecurityGroupMapper">
+    <resultMap id="HokageSecurityGroupMapper" type="HokageSecurityGroupDO">
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="id" column="id"/>
+        <result property="authObject" column="auth_object"/>
+        <result property="authStrategy" column="auth_strategy"/>
+        <result property="description" column="description"/>
+        <result property="portRange" column="port_range"/>
+        <result property="protocolType" column="protocol_type"/>
+        <result property="servers" column="servers"/>
+        <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        id,
+        gmt_create,
+        gmt_modified,
+        auth_object,
+        auth_strategy,
+        description,
+        port_range,
+        protocol_type,
+        servers,
+        status,
+        user_id
+    </sql>
+
+    <sql id="tableName">
+        hokage_security_group
+    </sql>
+
+    <sql id="baseSql">
+        <where>
+            <if test="authObject != null and authObject != '' ">
+                and auth_object = #{authObject}
+            </if>
+            <if test="authStrategy != null and authStrategy != '' ">
+                and auth_strategy = #{authStrategy}
+            </if>
+            <if test="description != null and description != '' ">
+                and description = #{description}
+            </if>
+            <if test="portRange != null and portRange != '' ">
+                and port_range = #{portRange}
+            </if>
+            <if test="protocolType != null and protocolType != '' ">
+                and protocol_type = #{protocolType}
+            </if>
+            <if test="protocolType != null and protocolType != '' ">
+                and auth_object = #{protocolType}
+            </if>
+            <if test="servers != null and servers != '' ">
+                and servers = #{servers}
+            </if>
+            <if test="status != null and status != '' ">
+                and status = #{status}
+            </if>
+            <if test="userId != null and userId != '' ">
+                and user_id = #{userId}
+            </if>
+        </where>
+    </sql>
+    <insert id="insert" parameterType="HokageSecurityGroupDO">
+        INSERT INTO
+        <include refid="tableName"/>
+        <include refid="allColumns"/>
+        VALUES (
+            #{id},
+            now(),
+            now(),
+            #{authObject},
+            #{authStrategy},
+            #{description},
+            #{portRange},
+            #{protocolType},
+            #{servers},
+            #{status},
+            #{userId},
+        )
+    </insert>
+    <update id="update" parameterType="HokageSecurityGroupDO">
+        UPDATE
+        <include refid="tableName"/>
+        <set>
+            gmt_modified = now()
+            <if test="authObject != null and authObject != '' ">
+                ,auth_object = #{authObject}
+            </if>
+            <if test="authStrategy != null and authStrategy != '' ">
+                ,auth_strategy = #{authStrategy}
+            </if>
+            <if test="description != null and description != '' ">
+                ,description = #{description}
+            </if>
+            <if test="portRange != null and portRange != '' ">
+                ,port_range = #{portRange}
+            </if>
+            <if test="protocolType != null and protocolType != '' ">
+                ,protocol_type = #{protocolType}
+            </if>
+            <if test="protocolType != null and protocolType != '' ">
+                ,auth_object = #{protocolType}
+            </if>
+            <if test="servers != null and servers != '' ">
+                ,servers = #{servers}
+            </if>
+            <if test="status != null and status != '' ">
+                ,status = #{status}
+            </if>
+            <if test="userId != null and userId != '' ">
+                ,user_id = #{userId}
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+    <select id="selectAll" parameterType="HokageSecurityGroupDO" resultMap="HokageSecurityGroupMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="baseSql"/>
+    </select>
+
+</mapper>

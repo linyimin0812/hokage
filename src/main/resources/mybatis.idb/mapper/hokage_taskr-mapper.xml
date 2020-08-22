@@ -1,0 +1,158 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageTaskMapper">
+    <resultMap id="HokageTaskMapper" type="HokageTaskDO">
+        <result property="id" column="id" />
+        <result property="gmtCreate" column="gmt_create" />
+        <result property="gmtModified" column="gmt_modified" />
+        <result property="userId" column="user_id" />
+        <result property="taskName" column="task_name" />
+        <result property="taskType" column="task_type" />
+        <result property="execType" column="exec_type" />
+        <result property="execTime" column="exec_time" />
+        <result property="execServers" column="exec_servers" />
+        <result property="execCommand" column="exec_command" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <sql id="allColumns">
+        id,
+        gmt_create,
+        gmt_modified,
+        user_id,
+        task_name,
+        task_type,
+        exec_type,
+        exec_time,
+        exec_servers,
+        exec_command,
+        description
+    </sql>
+
+    <sql id="baseSql">
+        <where>
+            <if test="userId != null and userId !='' ">
+                and user_id=#{userId}
+            </if>
+            <if test="taskName != null and taskName !='' ">
+                and task_name=#{taskName}
+            </if>
+            <if test="taskType != null and taskType !='' ">
+                and task_type=#{taskType}
+            </if>
+            <if test="execType != null and execType !='' ">
+                and exec_type=#{execType}
+            </if>
+            <if test="execTime != null and execTime !='' ">
+                and exec_time=#{execTime}
+            </if>
+            <if test="execServers != null and execServers !='' ">
+                and exec_servers=#{execServers}
+            </if>
+            <if test="execCommand != null and execCommand !='' ">
+                and exec_command=#{execCommand}
+            </if>
+            <if test="description != null and description !='' ">
+                and description=#{description}
+            </if>
+        </where>
+    </sql>
+
+    <sql id="tableName">hokage_task</sql>
+
+    <insert id="insert" parameterType="HokageUserDO">
+        INSERT INTO
+        <include refid="allColumns"/>
+        <include refid="allColumns"/>
+        VALUES (
+        #{id},
+        now(),
+        now(),
+        #{userId},
+        #{taskName},
+        #{taskType},
+        #{execType},
+        #{execTime},
+        #{execServers},
+        #{execCommand},
+        #{description}
+        );
+    </insert>
+
+    <update id="update" parameterType="HokageUserDO">
+        UPDATE
+        <include refid="tableName" />
+        <set>
+            gmt_modified = now()
+            <if test="userId != null and userId !='' ">
+                ,user_id=#{userId}
+            </if>
+            <if test="taskName != null and taskName !='' ">
+                ,task_name=#{taskName}
+            </if>
+            <if test="taskType != null and taskType !='' ">
+                ,task_type=#{taskType}
+            </if>
+            <if test="execType != null and execType !='' ">
+                ,exec_type=#{execType}
+            </if>
+            <if test="execTime != null and execTime !='' ">
+                ,exec_time=#{execTime}
+            </if>
+            <if test="execServers != null and execServers !='' ">
+                ,exec_servers=#{execServers}
+            </if>
+            <if test="execCommand != null and execCommand !='' ">
+                ,exec_command=#{execCommand}
+            </if>
+            <if test="description != null and description !='' ">
+                ,description=#{description}
+            </if>
+        </set>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+    <select id="findById" parameterType="java.lang.Long" resultMap="HokageTaskMapper"
+            resultType="com.banzhe.hokage.persistence.dataobject.HokageTaskDO">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <select id="findByName" parameterType="java.lang.String" resultMap="HokageTaskMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            task_name=#{name}
+        </where>
+    </select>
+
+    <select id="findAll" parameterType="HokageTaskDO" resultMap="HokageTaskMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <include refid="baseSql"/>
+    </select>
+
+    <select id="findByType" parameterType="java.lang.Integer" resultMap="HokageTaskMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            task_type=#{type}
+        </where>
+    </select>
+
+</mapper>

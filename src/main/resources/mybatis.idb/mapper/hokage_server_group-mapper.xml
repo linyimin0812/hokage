@@ -1,0 +1,59 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageServerGroupMapper">
+    <resultMap id="HokageServerGroupMapper" type="HokageServerGroupDO">
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+    </resultMap>
+
+    <sql id="allColumns">
+        id,
+        gmt_create,
+        gmt_modified,
+        name,
+        description
+    </sql>
+
+    <sql id="tableName">
+        hokage_server_group
+    </sql>
+    <insert id="insert" parameterType="HokageServerGroupDO">
+        INSERT TABLE
+        <include refid="tableName"/>
+        <include refid="allColumns"/>
+        VALUES (
+            #{id},
+            now(),
+            now(),
+            #{name},
+            #{description}
+        )
+    </insert>
+    <update id="update" parameterType="HokageServerGroupDO">
+        UPDATE
+        <include refid="tableName"/>
+        <set>
+            gmt_modified=now(),
+            <if test="name != null and name != '' ">
+                name = #{name}
+            </if>
+            <if test="description != null and description != '' ">
+                description = #{description}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+
+    <select id="selectAll" resultMap="HokageServerGroupMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+    </select>
+</mapper>
