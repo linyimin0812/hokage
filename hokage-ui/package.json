@@ -113,11 +113,6 @@
             "path": "node_modules/cz-conventional-changelog"
         }
     },
-    "husky": {
-        "hooks": {
-            "commit-msg": "commitlint -e $GIT_PARAMS"
-        }
-    },
     "eslintConfig": {
         "extends": "react-app"
     },
@@ -204,7 +199,6 @@
         "babel-plugin-import": "^1.12.2",
         "commitizen": "^4.0.3",
         "cz-conventional-changelog": "^3.0.2",
-        "husky": "^3.0.5",
         "less": "^2.7.x",
         "less-loader": "^6.1.0",
         "standard-version": "^8.0.1"
