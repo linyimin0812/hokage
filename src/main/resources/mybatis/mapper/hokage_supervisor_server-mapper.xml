@@ -23,14 +23,16 @@
     <insert id="insert" parameterType="HokageSupervisorServerDO">
         INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumns"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
             now(),
             #{serverId},
             #{supervisorId}
-        )
+        );
     </insert>
     <update id="update" parameterType="HokageSupervisorServerDO">
         UPDATE
@@ -48,6 +50,8 @@
     <select id="selectByServerId" parameterType="java.lang.Long" resultMap="HokageSupervisorServerMapper">
         SELECT
         <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
         <where>
             server_id = #{serverId}
         </where>
@@ -55,6 +59,8 @@
     <select id="selectBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorServerMapper">
         SELECT
         <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
         <where>
             supervisor_id = #{supervisorId}
         </where>

@@ -9,7 +9,7 @@
         <result property="description" column="description"/>
         <result property="account" column="account"/>
         <result property="domain" column="domain"/>
-        <result property="group" column="group"/>
+        <result property="serverGroup" column="server_group"/>
         <result property="hostname" column="hostname"/>
         <result property="ip" column="ip"/>
         <result property="passwd" column="passwd"/>
@@ -24,7 +24,7 @@
         description,
         account,
         domain,
-        group,
+        server_group,
         hostname,
         ip,
         passwd,
@@ -47,8 +47,8 @@
             <if test="domain != null and domain != '' ">
                 and domain = #{domain}
             </if>
-            <if test="group != null and group != '' ">
-                and group = #{group}
+            <if test="serverGroup != null and serverGroup != '' ">
+                and server_group = #{serverGroup}
             </if>
             <if test="hostname != null and hostname != '' ">
                 and hostname = #{hostname}
@@ -70,7 +70,9 @@
     <insert id="insert" parameterType="HokageServerDO">
         INSERT INTO
         <include refid="tableNme"/>
-        <include refid="allColumns"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
@@ -78,13 +80,13 @@
             #{description},
             #{account},
             #{domain},
-            #{group},
+            #{serverGroup},
             #{hostname},
             #{ip},
             #{passwd},
             #{sshPort},
             #{type}
-        )
+        );
     </insert>
     <update id="update" parameterType="HokageServerDO">
         UPDATE
@@ -100,8 +102,8 @@
             <if test="domain != null and domain != '' ">
                 ,domain = #{domain}
             </if>
-            <if test="group != null and group != '' ">
-                ,group = #{group}
+            <if test="serverGroup != null and serverGroup != '' ">
+                ,server_group = #{serverGroup}
             </if>
             <if test="hostname != null and hostname != '' ">
                 ,hostname = #{hostname}
@@ -154,7 +156,7 @@
         </where>
     </select>
 
-    <select id="selectByType" parameterType="java.lang.String" resultMap="HokageServerMapper">
+    <select id="selectByType" parameterType="java.lang.Integer" resultMap="HokageServerMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -170,7 +172,7 @@
         FROM
         <include refid="tableNme"/>
         <where>
-            group=#{group}
+            server_group=#{group}
         </where>
     </select>
 </mapper>

@@ -18,5 +18,5 @@ public class HokageTaskResultDO extends HokageBaseDO {
     private Long endTime;       // 任务执行结束时间戳
     private Integer exitCode;   // 任务返回状态码
     private String execServer;  // 任务执行机器ip
-    private String result;      // 执行返回内容
+    private String execResult;      // 执行返回内容
 }

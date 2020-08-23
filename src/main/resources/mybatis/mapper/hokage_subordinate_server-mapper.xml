@@ -25,29 +25,33 @@
     <insert id="insert" parameterType="HokageSubordinateServerDO">
         INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumn"/>
+        (
+            <include refid="allColumn"/>
+        )
         VALUES (
             #{id},
             now(),
             now(),
             #{serverId},
             #{subordinateId}
-        )
+        );
     </insert>
 
     <update id="update" parameterType="HokageSubordinateServerDO">
         UPDATE
         <include refid="tableName"/>
-        <include refid="allColumn"/>
         <set>
             gmt_modified = now()
             <if test="serverId != null and serverId != '' ">
                 ,server_id = #{serverId}
             </if>
             <if test="subordinateId != null and subordinateId != '' ">
-                ,subordinateId = #{subordinateId}
+                ,subordinate_id = #{subordinateId}
             </if>
         </set>
+        <where>
+            id = #{id}
+        </where>
     </update>
 
     <select id="selectByServerId" parameterType="java.lang.Long" resultMap="HokageSubordinateServerMapper">
@@ -56,7 +60,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            id = #{id}
+            server_id = #{id}
         </where>
     </select>
 
@@ -67,6 +71,16 @@
         <include refid="tableName"/>
         <where>
             subordinate_id = #{subordinate_id}
+        </where>
+    </select>
+
+    <select id="selectById" parameterType="java.lang.Long" resultMap="HokageSubordinateServerMapper">
+        SELECT
+        <include refid="allColumn"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            id = #{id}
         </where>
     </select>
 

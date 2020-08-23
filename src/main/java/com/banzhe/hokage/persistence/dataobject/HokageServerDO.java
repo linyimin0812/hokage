@@ -18,7 +18,7 @@ public class HokageServerDO extends HokageBaseDO {
     private String sshPort;     // ssh端口
     private String account;     // ssh远程登录账号
     private String passwd;      // ssh远程登录密码
-    private String group;       // 服务器所属组
-    private String type;        // 服务器类型, 内网、外网、X86、GPU等
+    private String serverGroup;       // 服务器所属组
+    private Integer type;        // 服务器类型, 内网、外网、X86、GPU等
     private String description; // 服务器描述信息
 }

@@ -9,7 +9,7 @@
         <result property="execServer" column="exec_server"/>
         <result property="exitCode" column="exit_code"/>
         <result property="id" column="id"/>
-        <result property="result" column="result"/>
+        <result property="execResult" column="exec_result"/>
         <result property="startTime" column="start_time"/>
         <result property="taskId" column="task_id"/>
         <result property="taskStatus" column="task_status"/>
@@ -21,7 +21,7 @@
         gmt_modified,
         exec_server,
         exit_code,
-        result,
+        exec_result,
         start_time,
         end_time,
         task_id,
@@ -40,8 +40,8 @@
             <if test="exitCode != null and exitCode != '' ">
                 and exit_code = #{exitCode}
             </if>
-            <if test="result != null and result != '' ">
-                and result = #{result}
+            <if test="execResult != null and execResult != '' ">
+                and exec_result = #{execResult}
             </if>
             <if test="startTime != null and startTime != '' ">
                 and start_time = #{startTime}
@@ -60,33 +60,35 @@
     <insert id="insert" parameterType="HokageTaskResultDO">
         INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumns"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
             now(),
-            ${execServer},
-            ${exitCode},
-            ${result},
-            ${startTime},
-            ${endTime},
-            ${taskId},
-            ${taskStatus}
-        )
+            #{execServer},
+            #{exitCode},
+            #{execResult},
+            #{startTime},
+            #{endTime},
+            #{taskId},
+            #{taskStatus}
+        );
     </insert>
     <update id="update" parameterType="HokageTaskResultDO">
         UPDATE
         <include refid="tableName"/>
         <set>
             gmt_modified = now()
-            <if test="execServer != null and exec_server != '' ">
+            <if test="execServer != null and execServer != '' ">
                 ,exec_server = #{execServer}
             </if>
             <if test="exitCode != null and exitCode != '' ">
                 ,exit_code = #{exitCode}
             </if>
-            <if test="result != null and result != '' ">
-                ,result = #{result}
+            <if test="execResult != null and execResult != '' ">
+                ,exec_result = #{execResult}
             </if>
             <if test="startTime != null and startTime != '' ">
                 ,start_time = #{startTime}

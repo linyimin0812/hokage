@@ -20,14 +20,14 @@ public interface HokageTaskMapper {
      * @param hokageTaskDO
      * @return
      */
-    Integer insert(HokageTaskDO hokageTaskDO);
+    Long insert(HokageTaskDO hokageTaskDO);
 
     /**
      * 更新一条记录
      * @param hokageTaskDO
      * @return
      */
-    Integer update(HokageTaskDO hokageTaskDO);
+    Long update(HokageTaskDO hokageTaskDO);
 
     /**
      * 根据id查找任务信息

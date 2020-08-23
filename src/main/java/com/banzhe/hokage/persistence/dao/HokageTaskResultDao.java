@@ -16,14 +16,14 @@ public interface HokageTaskResultDao {
      * @param hokageTaskResultDO
      * @return
      */
-    Integer insert(HokageTaskResultDO hokageTaskResultDO);
+    Long insert(HokageTaskResultDO hokageTaskResultDO);
 
     /**
      * 更新一条任务执行结果
      * @param hokageTaskResultDO
      * @return
      */
-    Integer update(HokageTaskResultDO hokageTaskResultDO);
+    Long update(HokageTaskResultDO hokageTaskResultDO);
 
     /**
      * 根据id主键查找任务执行结果

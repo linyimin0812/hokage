@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, Switch } from 'antd';
 
 const formItemLayout = {
 	labelCol: {
@@ -113,29 +113,38 @@ export default class Login extends React.Component<any, LoginStateType>{
 							?
 							null
 							:
-							<Form.Item
-								name="confirm"
-								label="确认密码"
-								dependencies={['password']}
-								hasFeedback
-								rules={[
-									{
-										required: true,
-										message: '请输入确认密码',
-									},
-									({ getFieldValue }) => ({
-										validator(rule, value) {
-											if (!value || getFieldValue('password') === value) {
-												return Promise.resolve();
-											}
-
-											return Promise.reject('密码不一致');
+							<>
+								<Form.Item
+									name="confirm"
+									label="确认密码"
+									dependencies={['password']}
+									hasFeedback
+									rules={[
+										{
+											required: true,
+											message: '请输入确认密码',
 										},
-									}),
-								]}
-							>
-								<Input.Password placeholder="请输入确认密码" />
-							</Form.Item>
+										({ getFieldValue }) => ({
+											validator(rule, value) {
+												if (!value || getFieldValue('password') === value) {
+													return Promise.resolve();
+												}
+
+												return Promise.reject('密码不一致');
+											},
+										}),
+									]}
+								>
+									<Input.Password placeholder="请输入确认密码" />
+								</Form.Item>
+								<Form.Item name="email" label="邮箱">
+									<Input placeholder={"请输入邮箱"} />
+								</Form.Item>
+								<Form.Item name="isSubScribed" label="是否订阅">
+									<Switch />
+									<span>&nbsp;<span style={{color: "red"}}>*</span>&nbsp;开启订阅,服务器IP变化时会发送邮件通知</span>
+								</Form.Item>
+							</>
 						}
 
 						<Form.Item {...tailFormItemLayout}>

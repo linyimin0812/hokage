@@ -21,14 +21,14 @@ public interface HokageUserMapper {
      * @param hokageUserDO
      * @return
      */
-    Integer insert(HokageUserDO hokageUserDO);
+    Long insert(HokageUserDO hokageUserDO);
 
     /**
      * 更新一条记录
      * @param hokageUserDO
      * @return
      */
-    Integer update(HokageUserDO hokageUserDO);
+    Long update(HokageUserDO hokageUserDO);
 
     /**
      * 根据id查找用户信息

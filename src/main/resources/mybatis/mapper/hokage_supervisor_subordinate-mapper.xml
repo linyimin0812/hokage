@@ -14,7 +14,7 @@
         id,
         gmt_create,
         gmt_modified,
-        server_id,
+        subordinate_id,
         supervisor_id
     </sql>
     <sql id="tableName">
@@ -23,14 +23,16 @@
     <insert id="insert" parameterType="HokageSupervisorSubordinateDO">
         INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumns"/>
-        VALUES (
-        #{id},
-        now(),
-        now(),
-        #{supervisorId},
-        #{subordinateId}
+        (
+            <include refid="allColumns"/>
         )
+        VALUES (
+            #{id},
+            now(),
+            now(),
+            #{subordinateId},
+            #{supervisorId}
+        );
     </insert>
     <update id="update" parameterType="HokageSupervisorServerDO">
         UPDATE
@@ -48,13 +50,17 @@
     <select id="selectBySubordinateId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
         <where>
-            subordinate_id = #{SubordinateId}
+            subordinate_id = #{subordinateId}
         </where>
     </select>
     <select id="selectBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
         <where>
             supervisor_id = #{supervisorId}
         </where>
@@ -62,9 +68,17 @@
     <select id="selectById" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
         <where>
             id = #{id}
         </where>
+    </select>
+    <select id="selectAll" resultMap="HokageSupervisorSubordinateMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
     </select>
 
 </mapper>

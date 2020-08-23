@@ -4,6 +4,7 @@ import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
 import { Layout } from 'antd';
+import Login from './components/Login';
 
 const { Content, Footer } = Layout;
 
@@ -38,7 +39,9 @@ export default class App extends Component<AppProps> {
                             user={auth.data || {}}
                         />
                         <Content style={{ margin: '0 16px', overflow: 'initial', flex: '1 1 0' }}>
-                            <Routes auth={auth} />
+                            {
+                                auth === true ? <Routes auth={auth} /> : <Login />
+                            }
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
                             server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt

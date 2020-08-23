@@ -17,14 +17,14 @@ public interface HokageSupervisorSubordinateDao {
      * @param supervisorSubordinateDO
      * @return
      */
-    Integer Insert(HokageSupervisorSubordinateDO supervisorSubordinateDO);
+    Long insert(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
      * 更新一条记录
      * @param supervisorSubordinateDO
      * @return
      */
-    Integer update(HokageSupervisorSubordinateDO supervisorSubordinateDO);
+    Long update(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
      * 根据id查找管理员与用户的关系映射信息

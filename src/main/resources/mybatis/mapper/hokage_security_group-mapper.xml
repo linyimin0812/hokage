@@ -68,7 +68,9 @@
     <insert id="insert" parameterType="HokageSecurityGroupDO">
         INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumns"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
@@ -80,8 +82,8 @@
             #{protocolType},
             #{servers},
             #{status},
-            #{userId},
-        )
+            #{userId}
+        );
     </insert>
     <update id="update" parameterType="HokageSecurityGroupDO">
         UPDATE
@@ -102,9 +104,6 @@
             </if>
             <if test="protocolType != null and protocolType != '' ">
                 ,protocol_type = #{protocolType}
-            </if>
-            <if test="protocolType != null and protocolType != '' ">
-                ,auth_object = #{protocolType}
             </if>
             <if test="servers != null and servers != '' ">
                 ,servers = #{servers}

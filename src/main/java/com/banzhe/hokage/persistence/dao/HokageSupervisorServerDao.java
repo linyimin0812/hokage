@@ -11,20 +11,20 @@ import java.util.List;
  * @email linyimin520812@gmail.com
  * @description
  */
-public interface HokageSupvisorServer {
+public interface HokageSupervisorServerDao {
     /**
      * 插入一条新纪录
      * @param supervisorServerDO
      * @return
      */
-    Integer insert(HokageSupervisorServerDO supervisorServerDO);
+    Long insert(HokageSupervisorServerDO supervisorServerDO);
 
     /**
      * 更新一条记录
      * @param supervisorServerDO
      * @return
      */
-    Integer update(HokageSupervisorServerDO supervisorServerDO);
+    Long update(HokageSupervisorServerDO supervisorServerDO);
 
     /**
      * 查找服务器的管理者id
@@ -38,5 +38,5 @@ public interface HokageSupvisorServer {
      * @param id
      * @return
      */
-    List<HokageSubordinateServerDO> selectBySupervisorId(Long id);
+    List<HokageSupervisorServerDO> selectBySupervisorId(Long id);
 }

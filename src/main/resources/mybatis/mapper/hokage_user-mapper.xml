@@ -7,7 +7,7 @@
         <result property="id" column="id" />
         <result property="gmtCreate" column="gmt_create" />
         <result property="gmtModified" column="gmt_modified" />
-        <result property="name" column="name" />
+        <result property="username" column="username" />
         <result property="passwd" column="passwd" />
         <result property="role" column="role" />
         <result property="email" column="email" />
@@ -18,7 +18,7 @@
         id,
         gmt_create,
         gmt_modified,
-        name,
+        username,
         passwd,
         role,
         email,
@@ -27,8 +27,8 @@
 
     <sql id="baseSql">
         <where>
-            <if test="name != null and name !='' ">
-                and name=#{name}
+            <if test="username != null and username !='' ">
+                and username=#{username}
             </if>
             <if test="passwd != null and passwd !='' ">
                 and passwd=#{passwd}
@@ -46,19 +46,23 @@
     </sql>
 
     <sql id="tableName">hokage_user</sql>
+
+
     <insert id="insert" parameterType="HokageUserDO">
         INSERT INTO
-        <include refid="allColumns"/>
-        <include refid="allColumns"/>
+        <include refid="tableName"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
             now(),
-            ${name},
-            ${passwd},
-            ${role},
-            ${email},
-            ${isSubscribed}
+            #{username},
+            #{passwd},
+            #{role},
+            #{email},
+            #{isSubscribed}
         );
     </insert>
     <update id="update" parameterType="HokageUserDO">
@@ -66,8 +70,8 @@
         <include refid="tableName" />
         <set>
             gmt_modified = now()
-            <if test="name != null and name !='' ">
-                ,name=#{name}
+            <if test="username != null and username !='' ">
+                ,username=#{username}
             </if>
             <if test="passwd != null and passwd !='' ">
                 ,passwd=#{passwd}
@@ -101,7 +105,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            name=#{name}
+            username =#{username}
         </where>
     </select>
     <select id="findByRole" parameterType="java.lang.String" resultMap="HokageUserMapper">

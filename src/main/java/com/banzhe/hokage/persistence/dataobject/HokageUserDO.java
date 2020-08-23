@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 public class HokageUserDO extends HokageBaseDO {
     private Long id;                // 用户id
-    private String name;            // 用户名称
+    private String username;        // 用户名称
     private String passwd;          // 用户密码
     private Integer role;           // 用户角色： 0: 超级管理员, 1 管理员, 2普通用户
     private String email;           // 用户邮箱

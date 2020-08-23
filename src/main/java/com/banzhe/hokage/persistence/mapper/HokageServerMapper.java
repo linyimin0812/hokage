@@ -20,14 +20,14 @@ public interface HokageServerMapper {
      * @param serverDO
      * @return
      */
-    Integer insert(HokageServerDO serverDO);
+    Long insert(HokageServerDO serverDO);
 
     /**
      * 更新一条记录
      * @param serverDO
      * @return
      */
-    Integer update(HokageServerDO serverDO);
+    Long update(HokageServerDO serverDO);
 
     /**
      * 获取所有服务器信息
@@ -54,7 +54,7 @@ public interface HokageServerMapper {
      * @param type
      * @return
      */
-    List<HokageServerDO> selectByType(String type);
+    List<HokageServerDO> selectByType(Integer type);
 
     /**
      * 根据服务器组查找服务器信息

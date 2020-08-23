@@ -17,14 +17,14 @@ public interface HokageUserDao {
      * @param hokageUserDO
      * @return
      */
-    Integer insert(HokageUserDO hokageUserDO);
+    Long insert(HokageUserDO hokageUserDO);
 
     /**
      * 更新一条记录
      * @param hokageUserDO
      * @return
      */
-    Integer update(HokageUserDO hokageUserDO);
+    Long update(HokageUserDO hokageUserDO);
 
     /**
      * 根据id查找用户信息
@@ -45,12 +45,12 @@ public interface HokageUserDao {
      * @param role
      * @return
      */
-    List<HokageUserDao> findByRole(Integer role);
+    List<HokageUserDO> findByRole(Integer role);
 
     /**
      * 根据其他条件查找用户信息
      * @param hokageUserDO
      * @return
      */
-    List<HokageUserDao> findAll(HokageUserDO hokageUserDO);
+    List<HokageUserDO> findAll(HokageUserDO hokageUserDO);
 }

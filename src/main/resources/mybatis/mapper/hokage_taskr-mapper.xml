@@ -64,20 +64,22 @@
 
     <insert id="insert" parameterType="HokageUserDO">
         INSERT INTO
-        <include refid="allColumns"/>
-        <include refid="allColumns"/>
+        <include refid="tableName"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
-        #{id},
-        now(),
-        now(),
-        #{userId},
-        #{taskName},
-        #{taskType},
-        #{execType},
-        #{execTime},
-        #{execServers},
-        #{execCommand},
-        #{description}
+            #{id},
+            now(),
+            now(),
+            #{userId},
+            #{taskName},
+            #{taskType},
+            #{execType},
+            #{execTime},
+            #{execServers},
+            #{execCommand},
+            #{description}
         );
     </insert>
 

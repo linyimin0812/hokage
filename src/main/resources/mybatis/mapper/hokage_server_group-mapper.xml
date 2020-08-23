@@ -22,27 +22,29 @@
         hokage_server_group
     </sql>
     <insert id="insert" parameterType="HokageServerGroupDO">
-        INSERT TABLE
+        INSERT INTO
         <include refid="tableName"/>
-        <include refid="allColumns"/>
+        (
+            <include refid="allColumns"/>
+        )
         VALUES (
             #{id},
             now(),
             now(),
             #{name},
             #{description}
-        )
+        );
     </insert>
     <update id="update" parameterType="HokageServerGroupDO">
         UPDATE
         <include refid="tableName"/>
         <set>
-            gmt_modified=now(),
+            gmt_modified=now()
             <if test="name != null and name != '' ">
-                name = #{name}
+                ,name = #{name}
             </if>
             <if test="description != null and description != '' ">
-                description = #{description}
+                ,description = #{description}
             </if>
         </set>
         <where>
