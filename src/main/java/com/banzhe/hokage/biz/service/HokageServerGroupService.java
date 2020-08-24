@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dataobject.HokageServerGroupDO;
 
@@ -16,7 +16,7 @@ public interface HokageServerGroupService {
      * @param serverGroupDO
      * @return
      */
-    Integer insert(HokageServerGroupDO serverGroupDO);
+    Long insert(HokageServerGroupDO serverGroupDO);
 
     /**
      * 返回所有服务器组信息
@@ -29,6 +29,6 @@ public interface HokageServerGroupService {
      * @param serverGroupDO
      * @return
      */
-    Integer update(HokageServerGroupDO serverGroupDO);
+    Long update(HokageServerGroupDO serverGroupDO);
 
 }

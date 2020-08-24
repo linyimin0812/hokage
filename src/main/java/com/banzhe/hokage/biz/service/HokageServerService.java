@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
 
@@ -16,14 +16,14 @@ public interface HokageServerService {
      * @param serverDO
      * @return
      */
-    Integer insert(HokageServerDO serverDO);
+    Long insert(HokageServerDO serverDO);
 
     /**
      * 更新一条记录
      * @param serverDO
      * @return
      */
-    Integer update(HokageServerDO serverDO);
+    Long update(HokageServerDO serverDO);
 
     /**
      * 获取所有服务器信息

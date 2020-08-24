@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dataobject.HokageTaskResultDO;
 
@@ -16,14 +16,14 @@ public interface HokageTaskResultService {
      * @param hokageTaskResultDO
      * @return
      */
-    Integer insert(HokageTaskResultDO hokageTaskResultDO);
+    Long insert(HokageTaskResultDO hokageTaskResultDO);
 
     /**
      * 更新一条任务执行结果
      * @param hokageTaskResultDO
      * @return
      */
-    Integer update(HokageTaskResultDO hokageTaskResultDO);
+    Long update(HokageTaskResultDO hokageTaskResultDO);
 
     /**
      * 根据id主键查找任务执行结果

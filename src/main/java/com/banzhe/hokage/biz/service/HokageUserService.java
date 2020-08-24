@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
@@ -18,14 +18,14 @@ public interface HokageUserService {
      * @param hokageUserDO
      * @return
      */
-    Integer insert(HokageUserDO hokageUserDO);
+    Long insert(HokageUserDO hokageUserDO);
 
     /**
      * 更新一条记录
      * @param hokageUserDO
      * @return
      */
-    Integer update(HokageUserDO hokageUserDO);
+    Long update(HokageUserDO hokageUserDO);
 
     /**
      * 根据id查找用户信息

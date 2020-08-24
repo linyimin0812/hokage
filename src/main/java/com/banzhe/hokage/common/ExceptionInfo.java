@@ -15,5 +15,5 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface ExceptionInfo {
     String code();
-    String msg();
+    String msg() default "";
 }

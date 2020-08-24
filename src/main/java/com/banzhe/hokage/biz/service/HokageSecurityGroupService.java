@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSecurityGroupDO;
 
@@ -16,14 +16,14 @@ public interface HokageSecurityGroupService {
      * @param securityGroupDO
      * @return
      */
-    Integer insert(HokageSecurityGroupDO securityGroupDO);
+    Long insert(HokageSecurityGroupDO securityGroupDO);
 
     /**
      * 更新服务器安全组信息
      * @param securityGroupDO
      * @return
      */
-    Integer update(HokageSecurityGroupDO securityGroupDO);
+    Long update(HokageSecurityGroupDO securityGroupDO);
 
     /**
      * 获取所有安全组信息

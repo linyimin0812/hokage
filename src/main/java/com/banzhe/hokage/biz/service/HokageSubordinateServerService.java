@@ -1,4 +1,4 @@
-package com.banzhe.hokage.service;
+package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 
@@ -17,14 +17,14 @@ public interface HokageSubordinateServerService {
      * @param subordinateServerDO
      * @return
      */
-    Integer insert(HokageSubordinateServerDO subordinateServerDO);
+    Long insert(HokageSubordinateServerDO subordinateServerDO);
 
     /**
      * 更新一条记录
      * @param subordinateServerDO
      * @return
      */
-    Integer update(HokageSubordinateServerDO subordinateServerDO);
+    Long update(HokageSubordinateServerDO subordinateServerDO);
 
     /**
      * 查找服务器的使用者id
