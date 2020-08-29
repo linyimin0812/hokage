@@ -1,11 +1,14 @@
 package com.banzhe.hokage.common;
 
+import lombok.Data;
+
 /**
  * @author linyimin
  * @date 2020/8/23 1:12 上午
  * @email linyimin520812@gmail.com
  * @description 自定义统一响应体
  */
+@Data
 public class ResultVO<T> {
     /**
      * 状态码(A/B/C)-(0000-9999)
