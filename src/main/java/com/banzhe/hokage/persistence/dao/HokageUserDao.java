@@ -31,26 +31,33 @@ public interface HokageUserDao {
      * @param id
      * @return
      */
-    HokageUserDO findById(Long id);
+    HokageUserDO getUserById(Long id);
 
     /**
      * 根据用户名查找用户信息
      * @param name
      * @return
      */
-    HokageUserDO findByName(String name);
+    List<HokageUserDO> ListUserByName(String name);
 
     /**
      * 根据角色查找用户信息
      * @param role
      * @return
      */
-    List<HokageUserDO> findByRole(Integer role);
+    List<HokageUserDO> ListUserByRole(Integer role);
 
     /**
      * 根据其他条件查找用户信息
      * @param hokageUserDO
      * @return
      */
-    List<HokageUserDO> findAll(HokageUserDO hokageUserDO);
+    List<HokageUserDO> listAll(HokageUserDO hokageUserDO);
+
+    /**
+     * 根据邮箱获取用户信息
+     * @param email
+     * @return
+     */
+    HokageUserDO getUserByEmail(String email);
 }

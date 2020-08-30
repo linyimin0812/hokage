@@ -90,7 +90,7 @@
             id=#{id}
         </where>
     </update>
-    <select id="findById" parameterType="java.lang.Long" resultMap="HokageUserMapper">
+    <select id="getUserById" parameterType="java.lang.Long" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -99,7 +99,7 @@
             id=#{id}
         </where>
     </select>
-    <select id="findByName" parameterType="java.lang.String" resultMap="HokageUserMapper">
+    <select id="listUserByName" parameterType="java.lang.String" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -108,7 +108,7 @@
             username =#{username}
         </where>
     </select>
-    <select id="findByRole" parameterType="java.lang.String" resultMap="HokageUserMapper">
+    <select id="listUserByRole" parameterType="java.lang.String" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -117,12 +117,21 @@
             role=#{role}
         </where>
     </select>
-    <select id="findAll" parameterType="HokageUserDO" resultMap="HokageUserMapper">
+    <select id="listAll" parameterType="HokageUserDO" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
         <include refid="tableName"/>
         <include refid="baseSql"/>
+    </select>
+    <select id="getUserByEmail" parameterType="java.lang.String" resultMap="HokageUserMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            email=#{email}
+        </where>
     </select>
 
 </mapper>

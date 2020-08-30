@@ -1,4 +1,4 @@
-package com.banzhe.hokage.controller;
+package com.banzhe.hokage.biz.controller;
 
 import com.banzhe.hokage.common.BaseController;
 

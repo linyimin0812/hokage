@@ -23,6 +23,7 @@ public class HokageUserRegisterForm {
     @ExceptionInfo(code = "A-0002")
     private String passwd;          // 用户密码
     private Integer role;           // 用户角色： 0: 超级管理员, 1 管理员, 2普通用户
+    @NotNull(message = "邮箱不能为空")
     @Email(message = "邮箱格式不正确")
     @ExceptionInfo(code = "A-0003")
     private String email;           // 用户邮箱

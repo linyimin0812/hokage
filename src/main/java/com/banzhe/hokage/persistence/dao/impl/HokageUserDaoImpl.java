@@ -50,8 +50,8 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @return
      */
     @Override
-    public HokageUserDO findById(Long id) {
-        return userMapper.findById(id);
+    public HokageUserDO getUserById(Long id) {
+        return userMapper.getUserById(id);
     }
 
     /**
@@ -60,8 +60,8 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @return
      */
     @Override
-    public HokageUserDO findByName(String name) {
-        return userMapper.findByName(name);
+    public List<HokageUserDO> ListUserByName(String name) {
+        return userMapper.listUserByName(name);
     }
 
     /**
@@ -69,8 +69,8 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @param role
      * @return
      */
-    public List<HokageUserDO> findByRole(Integer role) {
-        return userMapper.findByRole(role);
+    public List<HokageUserDO> ListUserByRole(Integer role) {
+        return userMapper.listUserByRole(role);
     }
 
     /**
@@ -79,7 +79,12 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @return
      */
     @Override
-    public List<HokageUserDO> findAll(HokageUserDO hokageUserDO) {
-        return userMapper.findAll(hokageUserDO);
+    public List<HokageUserDO> listAll(HokageUserDO hokageUserDO) {
+        return userMapper.listAll(hokageUserDO);
+    }
+
+    @Override
+    public HokageUserDO getUserByEmail(String email) {
+        return userMapper.getUserByEmail(email);
     }
 }

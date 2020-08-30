@@ -10,7 +10,9 @@ public enum UserErrorCodeEnum {
 
     USERNAME_NULL_ERROR("A-0001", "用户名不能为空"),
 
-    USERNAME_DUPLICATE_ERROR("A-0002", "用户名已存在");
+    USERNAME_DUPLICATE_ERROR("A-0002", "用户邮箱已存在"),
+
+    USER_REGISTER_FAIL("A-0003", "用户注册失败");
 
     private String code;
     private String msg;

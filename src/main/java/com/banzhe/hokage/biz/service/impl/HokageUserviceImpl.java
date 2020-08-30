@@ -1,10 +1,108 @@
 package com.banzhe.hokage.biz.service.impl;
 
+import com.banzhe.hokage.biz.enums.SequenceNameEnum;
+import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
+import com.banzhe.hokage.biz.enums.UserRoleEnum;
+import com.banzhe.hokage.biz.service.HokageSequenceService;
+import com.banzhe.hokage.biz.service.HokageUserService;
+import com.banzhe.hokage.common.ServiceResponse;
+import com.banzhe.hokage.persistence.dao.HokageUserDao;
+import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+
 /**
  * @author linyimin
  * @date 2020/8/30 2:18 下午
  * @email linyimin520812@gmail.com
  * @description
  */
-public class HokageUserviceImpl {
+@Service
+public class HokageUserviceImpl implements HokageUserService {
+
+    private HokageUserDao userDao;
+    private BCryptPasswordEncoder passwordEncoder;
+    private HokageSequenceService sequenceService;
+
+    @Autowired
+    public void setUserDao(HokageUserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setSequenceService(HokageSequenceService sequenceService) {
+        this.sequenceService = sequenceService;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<HokageUserDO> register(HokageUserDO hokageUserDO) {
+
+        ServiceResponse res = new ServiceResponse<>();
+
+        // 1. 先判断邮箱是否已经存在
+        HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
+        if (Objects.nonNull(userDO)) {
+            return res.fail(UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
+        }
+        // 2. 对密码进行加密
+        hokageUserDO.setPasswd(passwordEncoder.encode(hokageUserDO.getPasswd()));
+        // 3. 用户已注册默认是普通用户
+        hokageUserDO.setRole(UserRoleEnum.subordinate.getValue());
+
+        // 获取用户id
+        ServiceResponse<Long> sequence = sequenceService.nextValue(SequenceNameEnum.hokage_user.name());
+
+        if (sequence.getSucceeded()) {
+            hokageUserDO.setId(sequence.getData());
+        } else {
+            return res.fail(sequence.getCode(), sequence.getMsg());
+        }
+
+        Long result = userDao.insert(hokageUserDO);
+        if (result > 0) {
+            return res.success(hokageUserDO);
+        }
+        return res.fail(UserErrorCodeEnum.USER_REGISTER_FAIL.getCode(), UserErrorCodeEnum.USER_REGISTER_FAIL.getMsg());
+    }
+
+    @Override
+    public Long update(HokageUserDO hokageUserDO) {
+        return null;
+    }
+
+    @Override
+    public HokageUserDO getUserById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<HokageUserDO> listByName(String name) {
+        return userDao.ListUserByName(name);
+    }
+
+    @Override
+    public List<HokageUserDao> listByRole(Integer role) {
+        return null;
+    }
+
+    @Override
+    public List<HokageUserDao> listAll(HokageUserDO hokageUserDO) {
+        return null;
+    }
+
+    @Override
+    public HokageUserDO getUserByEmail(String Email) {
+        return null;
+    }
 }

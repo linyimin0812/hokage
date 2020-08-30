@@ -1,12 +1,33 @@
 DROP DATABASE `hokage`;
 CREATE DATABASE IF NOT EXISTS `hokage` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 USE `hokage`;
+
+CREATE TABLE IF NOT EXISTS `hokage_sequence` (
+ `id` bigint NOT NULL AUTO_INCREMENT,
+ `gmt_create` DATETIME NOT NULL,
+ `gmt_modified` DATETIME NOT NULL,
+ `name` varchar(128) NOT NULL UNIQUE COMMENT '序列名称，一般对应表名',
+ `value` bigint NOT NULL comment 'sequence值',
+ PRIMARY KEY (`id`)
+)
+COMMENT 'hokage用户信息表';
+
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_user', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_supervisor_subordinate', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_server', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_server_group', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_subordinate_server', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_supervisor_server', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_task_result', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_security_group', '1000');
+INSERT INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_task', '1000');
+
 CREATE TABLE IF NOT EXISTS `hokage_user` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `username` varchar(32) NOT NULL,
-  `passwd` varchar(32) NOT NULL,
+  `passwd` varchar(128) NOT NULL,
   `role` tinyint NOT NULL COMMENT '用户角色标识: 0: 超级管理员, 1 管理员, 2普通用户',
   `email` varchar(128) NULL,
   `is_subscribed` tinyint ZEROFILL NULL COMMENT '是否订阅, 0: 不订阅, 1: 订阅, 发送消息邮件',
@@ -15,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `hokage_user` (
   COMMENT 'hokage用户信息表';
 
 CREATE TABLE IF NOT EXISTS `hokage_supervisor_subordinate` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `supervisor_id` bigint NOT NULL COMMENT '管理员id',
@@ -25,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `hokage_supervisor_subordinate` (
   COMMENT = '管理员与用户关系映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_server` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `hostname` varchar(128) NULL COMMENT '服务器主机名',
@@ -42,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server` (
   COMMENT = '服务器信息表';
 
 CREATE TABLE IF NOT EXISTS `hokage_server_group` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `name` varchar(128) NOT NULL COMMENT '分组名称(只能是字母或者数字)',
@@ -52,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_group` (
   COMMENT = '服务器分组配置信息表';
 
 CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `subordinate_id` bigint NOT NULL COMMENT '普通用户id',
@@ -62,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
   COMMENT = '普通用户和服务器颖映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `supervisor_id` bigint NOT NULL COMMENT '管理员id',
@@ -72,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
   COMMENT = '管理员和服务器颖映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_task` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `user_id` bigint NOT NULL COMMENT '创建用户',
@@ -88,7 +109,7 @@ CREATE TABLE IF NOT EXISTS `hokage_task` (
   COMMENT 'hokage批量任务表';
 
 CREATE TABLE IF NOT EXISTS `hokage_task_result` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `task_id` bigint NOT NULL COMMENT '任务id',
@@ -103,7 +124,7 @@ CREATE TABLE IF NOT EXISTS `hokage_task_result` (
   COMMENT = '批量任务结果表';
 
 CREATE TABLE IF NOT EXISTS `hokage_security_group` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `user_id` bigint NOT NULL COMMENT '用户id',

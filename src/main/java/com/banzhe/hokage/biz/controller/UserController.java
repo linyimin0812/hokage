@@ -1,10 +1,14 @@
-package com.banzhe.hokage.controller;
+package com.banzhe.hokage.biz.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.banzhe.hokage.biz.converter.UserConverter;
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
+import com.banzhe.hokage.common.ServiceResponse;
+import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +29,7 @@ public class UserController extends BaseController {
 
     private HokageUserService userService;
 
+    @Autowired
     public void setUserService(HokageUserService userService) {
         this.userService = userService;
     }
@@ -32,15 +37,21 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     public ResultVO<HokageUserRegisterForm> register(@RequestBody @Valid HokageUserRegisterForm userForm, HttpSession session) {
 
-        // 先判断用户名是否已经存在
+        // 入库并返回已经登录
+        HokageUserDO userDO = UserConverter.registerFormToDO(userForm);
 
+        ServiceResponse<HokageUserDO> res = userService.register(userDO);
 
-
-        return success(userForm);
+        if (res.getSucceeded()) {
+            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
+            return success(UserConverter.DOToRegisterForm(res.getData()));
+        }
+        return fail(res.getCode(), res.getMsg());
     }
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
-    public ResultVO<HokageUserLoginForm> login(@RequestBody @Valid HokageUserLoginForm userForm) {
+    public ResultVO<HokageUserLoginForm> login(@RequestBody @Valid HokageUserLoginForm userForm, HttpSession session) {
+        System.out.printf(session.toString());
         return success(userForm);
     }
 
