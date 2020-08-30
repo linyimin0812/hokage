@@ -1,0 +1,65 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageSequenceMapper">
+    <resultMap id="HokageSequenceMapper" type="com.banzhe.hokage.persistence.dataobject.HokageSequenceDO">
+        <result property="id" column="id"/>
+        <result property="gmtCreate" column="gmt_create" />
+        <result property="gmtModified" column="gmt_modified" />
+        <result property="name" column="name" />
+        <result property="value" column="value" />
+    </resultMap>
+
+    <sql id="tableName">
+        hokage_sequence
+    </sql>
+
+    <sql id="allColumns">
+        id,
+        gmt_create,
+        gmt_modified,
+        name,
+        value
+    </sql>
+
+    <select id="getSequenceByName" parameterType="java.lang.String" resultMap="HokageSequenceMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            name = #{name}
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="HokageSequenceDO">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+            <include refid="allColumns"/>
+        )
+        VALUES (
+            #{id},
+            now(),
+            now(),
+            #{name},
+            #{value}
+        )
+    </insert>
+
+    <update id="update" parameterType="HokageSequenceDO">
+        UPDATE
+        <include refid="tableName"/>
+        <set>
+            <if test="name != null and name != '' ">
+                ,name = #{name}
+            </if>
+            <if test="value != null and value != '' ">
+                ,value = #{value}
+            </if>
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </update>
+</mapper>

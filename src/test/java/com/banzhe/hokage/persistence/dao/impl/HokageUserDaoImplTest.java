@@ -41,13 +41,13 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void update() {
         this.insert();
-        List<HokageUserDO> userDOList = userDao.findAll(new HokageUserDO());
+        List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
             hokageUserDO.setUsername("linyimin");
             userDao.update(hokageUserDO);
         });
 
-        userDOList = userDao.findAll(new HokageUserDO());
+        userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
             Assert.assertEquals("linyimin", hokageUserDO.getUsername());
         });
@@ -57,9 +57,9 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void findById() {
         this.insert();
-        List<HokageUserDO> userDOList = userDao.findAll(new HokageUserDO());
+        List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
-            HokageUserDO userDO = userDao.findById(hokageUserDO.getId());
+            HokageUserDO userDO = userDao.getUserById(hokageUserDO.getId());
             Assert.assertNotEquals(userDO, null);
         });
     }
@@ -68,10 +68,10 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void findByName() {
         this.insert();
-        List<HokageUserDO> userDOList = userDao.findAll(new HokageUserDO());
+        List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
-            HokageUserDO userDO = userDao.findByName(hokageUserDO.getUsername());
-            Assert.assertNotEquals(userDO, null);
+            List<HokageUserDO> userDOs = userDao.ListUserByName(hokageUserDO.getUsername());
+            Assert.assertNotEquals(userDOs, null);
         });
     }
 
@@ -79,9 +79,9 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void findByRole() {
         this.insert();
-        List<HokageUserDO> userDOList = userDao.findAll(new HokageUserDO());
+        List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
-            List<HokageUserDO> userDOs = userDao.findByRole(hokageUserDO.getRole());
+            List<HokageUserDO> userDOs = userDao.ListUserByRole(hokageUserDO.getRole());
             Assert.assertEquals(true, userDOs.size() > 0);
         });
     }
@@ -96,7 +96,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         userDO.setPasswd("123456");
         userDO.setEmail("banzhe@gmail.com");
         userDO.setUsername("banzhe");
-        List<HokageUserDO> userDOList = userDao.findAll(userDO);
+        List<HokageUserDO> userDOList = userDao.listAll(userDO);
 
         Assert.assertEquals(true, userDOList.size() > 0);
     }

@@ -2,13 +2,16 @@ package com.banzhe.hokage.controller;
 
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;
+import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 /**
@@ -20,8 +23,19 @@ import javax.validation.Valid;
 @RestController
 public class UserController extends BaseController {
 
+    private HokageUserService userService;
+
+    public void setUserService(HokageUserService userService) {
+        this.userService = userService;
+    }
+
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
-    public ResultVO<HokageUserRegisterForm> register(@RequestBody @Valid HokageUserRegisterForm userForm) {
+    public ResultVO<HokageUserRegisterForm> register(@RequestBody @Valid HokageUserRegisterForm userForm, HttpSession session) {
+
+        // 先判断用户名是否已经存在
+
+
+
         return success(userForm);
     }
 
