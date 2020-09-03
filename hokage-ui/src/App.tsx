@@ -9,15 +9,35 @@ import Login from './components/Login';
 const { Content, Footer } = Layout;
 
 type AppProps = {
-    auth: any;
     responsive: any;
 };
 
-export default class App extends Component<AppProps> {
+type AppState = {
+    auth: {
+        login: boolean, // 是否登录
+        role: number, // 用户角色
+        data: {}
+    }
+    title: string,
+    collapsed: boolean,
+}
+
+export default class App extends Component<AppProps, AppState> {
     state = {
         collapsed: false,
         title: '',
+        auth: {
+            login: true,
+            role: 2,
+            data: {
+                name: 'banzhe'
+            }
+        }
     };
+
+    componentDidMount() {
+        console.log('teta');
+    }
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
@@ -25,7 +45,8 @@ export default class App extends Component<AppProps> {
     };
     render() {
         const { title } = this.state;
-        const { auth = { data: {} }, responsive = { data: {} } } = this.props;
+        const { responsive = { data: {} } } = this.props;
+        const { auth } = this.state;
         return (
             <DocumentTitle title={title}>
                 <Layout>
@@ -40,7 +61,7 @@ export default class App extends Component<AppProps> {
                         />
                         <Content style={{ margin: '0 16px', overflow: 'initial', flex: '1 1 0' }}>
                             {
-                                auth === true ? <Routes auth={auth} /> : <Login />
+                                auth.login === true ? <Routes auth={auth} /> : <Login />
                             }
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
