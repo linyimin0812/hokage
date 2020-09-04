@@ -43,7 +43,7 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.register(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
+            session.setAttribute("userInfo", JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
