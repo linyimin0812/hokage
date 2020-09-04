@@ -1,6 +1,9 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
+import com.banzhe.hokage.biz.service.HokageSequenceService;
+import com.banzhe.hokage.biz.service.impl.HokageSequenceServiceImpl;
 import com.banzhe.hokage.persistence.dao.HokageSecurityGroupDao;
+import com.banzhe.hokage.persistence.dao.HokageSequenceDao;
 import com.banzhe.hokage.persistence.dataobject.HokageSecurityGroupDO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,16 +19,24 @@ import java.util.List;
  * @email linyimin520812@gmail.com
  * @description
  */
-@Import(HokageSecurityGroupDaoImpl.class)
+@Import({
+        HokageSecurityGroupDaoImpl.class,
+        HokageSequenceServiceImpl.class,
+        HokageSequenceDaoImpl.class
+})
 public class HokageSecurityGroupDaoImplTest extends HokageBaseDaoTest {
 
     @Autowired
     private HokageSecurityGroupDao securityGroupDao;
 
+    @Autowired
+    private HokageSequenceService sequenceService;
+
     @Test
     @Rollback
     public void insert() {
         HokageSecurityGroupDO securityGroupDO = new HokageSecurityGroupDO();
+        securityGroupDO.setId(sequenceService.nextValue("hokage_security_group").getData());
         securityGroupDO.setAuthObject("0.0.0,0/0");
         securityGroupDO.setAuthStrategy(1);
         securityGroupDO.setDescription("test");
