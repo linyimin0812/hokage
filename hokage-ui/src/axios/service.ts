@@ -9,7 +9,7 @@ import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { ServiceConfig } from './service-config'
 
-export const Service: {[name: string]: Function} = {}
+export const Service: {[name: string]: (data?: any, config?: AxiosRequestConfig)=> AxiosPromise<ServiceResult>} = {}
 
 interface ServiceResult {
     code: string,

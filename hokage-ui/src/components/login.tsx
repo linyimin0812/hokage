@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, Form, Input, Switch } from 'antd';
+import { Button, Form, Input, Switch } from 'antd'
+import { Service } from '../axios/service';
 
 const formItemLayout = {
 	labelCol: {
@@ -60,7 +61,11 @@ export default class Login extends React.Component<any, LoginStateType>{
 	}
 
 	save = () => {
-		console.log(this.state.formData)
+		const { isLogin } = this.state
+		if (isLogin) {
+			Service.register()
+		}
+		// Service.
 	}
 
 	render() {
@@ -101,7 +106,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 							rules={[
 								{
 									required: true,
-									message: '请输入密码',
+									message: '请输入你好',
 								},
 							]}
 							hasFeedback

@@ -1,19 +1,12 @@
 import React, { Component } from 'react'
-import { Route, Redirect, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 import AllComponents from '../components'
 import routesConfig, { IFMenuBase, IFMenu } from './config'
 import queryString from 'query-string'
 
-type CRouterProps = {
-    auth: any
-};
 
-export default class CRouter extends Component<CRouterProps> {
-
-    // TODO: 如果已经登录, 根据修改routesConfig
-    // TODO: 如果没有登录, 跳转到登录页面
-
+export default class CRouter extends Component {
     createRoute = (key: string) => {
         return routesConfig[key].map((r: IFMenu) => {
             const route = (r: IFMenuBase) => {
@@ -59,7 +52,6 @@ export default class CRouter extends Component<CRouterProps> {
         return (
             <Switch>
                 {Object.keys(routesConfig).map(key => this.createRoute(key))}
-                <Route render={() => <Redirect to="/404" />} />
             </Switch>
         );
     }
