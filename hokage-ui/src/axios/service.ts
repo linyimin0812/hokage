@@ -17,6 +17,7 @@ interface ServiceResult {
     data?: any
 }
 
+// 将API封装成http访问方法
 Object.keys(ServiceConfig).forEach((name: string) => {
     Service[name] = (data?: any, config?: AxiosRequestConfig): AxiosPromise<ServiceResult> => {
         return axios({
