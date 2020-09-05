@@ -21,8 +21,8 @@ interface ServiceResult {
 Object.keys(ServiceConfig).forEach((name: string) => {
     Service[name] = (data?: any, config?: AxiosRequestConfig): AxiosPromise<ServiceResult> => {
         return axios({
-            ... ServiceConfig[name],
-            ... config,
+            ...ServiceConfig[name],
+            ...config,
             data: data
         })
     }
