@@ -108,3 +108,6 @@ build
 .idea/
 
 hokage-ui/.idea/
+hokage-ui/.build
+
+target
