@@ -141,8 +141,8 @@ export default class ExecedBatCommandInfo extends React.Component<ExecedBatComma
                             height="200px"
                             options={{readOnly: true}}
                             value={`jdk
-jdk1.8.0_251
-test.sh`
+                                jdk1.8.0_251
+                                test.sh`
                             }
                         />
                     </Tabs.TabPane>

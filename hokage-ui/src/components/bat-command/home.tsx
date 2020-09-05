@@ -1,8 +1,8 @@
 import React from 'react'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
-import MyBatCommand from './MyBatCommand';
+import MyBatCommand from './my-bat-command';
 import { Tabs } from 'antd';
-import ExecutedBatCommand from './ExecutedBatCommand';
+import ExecutedBatCommand from './executed-bat-command';
 
 const breadcrumProps: BreadcrumbPrpos[] = [
 	{

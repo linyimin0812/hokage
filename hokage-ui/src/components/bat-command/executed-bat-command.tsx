@@ -1,7 +1,7 @@
 import React from 'react'
 import { Table, Tag } from 'antd';
-import EditBatCommand from './EditBatCommand';
-import ExecedBatCommandInfo from './ExecedBatCommandInfo';
+import EditBatCommand from './edit-bat-command';
+import ExecedBatCommandInfo from './execed-bat-commandInfo';
 
 interface ExecutedBatCommandStateType {
     isModalVisible: boolean, // 弹窗显示任务信息

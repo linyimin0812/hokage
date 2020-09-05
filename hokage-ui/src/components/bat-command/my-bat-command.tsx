@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Divider, Table } from 'antd';
-import EditBatCommand from './EditBatCommand';
+import EditBatCommand from './edit-bat-command';
 
 interface MyBatCommandStateType {
     isCreate: boolean// 创建新的批量任务
