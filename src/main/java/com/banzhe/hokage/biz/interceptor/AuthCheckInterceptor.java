@@ -30,8 +30,7 @@ public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
         /**
          * 用户未登录
          */
-        response.setStatus(response.SC_UNAUTHORIZED);
-        response.sendRedirect("/#/app/index");
+        response.sendRedirect("/app/login");
         return false;
     }
 }
