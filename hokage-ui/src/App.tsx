@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Routes from './routes';
 import DocumentTitle from 'react-document-title';
-import SiderCustom from './components/SiderCustom';
+import SiderCustom from './components/sider-custom';
 import HeaderCustom from './components/HeaderCustom';
 import { Layout } from 'antd';
 
