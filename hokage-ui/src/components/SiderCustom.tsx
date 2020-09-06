@@ -111,7 +111,7 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
 					mode="inline"
 					selectedKeys={[selectedKey]}
 					openKeys={firstHide ? [] : openKeys}
-					onOpenChange={this.openMenu}
+					onOpenChange={this.openMenu as any}
 				/>
 				<style>
 					{`

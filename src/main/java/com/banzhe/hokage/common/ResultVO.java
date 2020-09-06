@@ -10,6 +10,9 @@ import lombok.Data;
  */
 @Data
 public class ResultVO<T> {
+
+    // 表示响应成功
+    private boolean success;
     /**
      * 状态码(A/B/C)-(0000-9999)
      * A类状态码：来源于用户
@@ -29,7 +32,8 @@ public class ResultVO<T> {
      */
     private T data;
 
-    public ResultVO(String code, String msg, T data) {
+    public ResultVO(boolean success, String code, String msg, T data) {
+        this.success = success;
         this.code = code;
         this.msg = msg;
         this.data = data;

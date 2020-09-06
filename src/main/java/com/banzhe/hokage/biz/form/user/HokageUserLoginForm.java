@@ -15,8 +15,8 @@ import javax.validation.constraints.Size;
 @Data
 public class HokageUserLoginForm {
     @NotNull
-    @ExceptionInfo(code = "A-0001", msg = "用户名不能为空")
-    private String username;        // 用户名称
+    @ExceptionInfo(code = "A-0001", msg = "登录邮箱不能为空")
+    private String email;        // 用户名称
     @NotNull
     @Size(min = 6, max = 11, message = "密码长度必须是6-16个字符")
     @ExceptionInfo(code = "A-0002")

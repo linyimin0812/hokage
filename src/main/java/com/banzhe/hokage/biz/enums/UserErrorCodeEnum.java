@@ -12,7 +12,9 @@ public enum UserErrorCodeEnum {
 
     USERNAME_DUPLICATE_ERROR("A-0002", "用户邮箱已存在"),
 
-    USER_REGISTER_FAIL("A-0003", "用户注册失败");
+    USER_REGISTER_FAIL("A-0003", "用户注册失败"),
+
+    USER_PASSWD_ERROR("A-0004", "用户或密码不正确");
 
     private String code;
     private String msg;

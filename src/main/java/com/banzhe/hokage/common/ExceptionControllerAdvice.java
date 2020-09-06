@@ -35,9 +35,9 @@ public class ExceptionControllerAdvice {
         message = StringUtils.isEmpty(exceptionInfo.msg()) ? message : exceptionInfo.msg();
 
         if (Objects.nonNull(exceptionInfo)) {
-            return new ResultVO<>(exceptionInfo.code(), message, null);
+            return new ResultVO<>(false, exceptionInfo.code(), message, null);
         }
         // 获取第一个错误(A-XXXX表示没有定义错误码)
-        return new ResultVO<>("A-XXXX", message, null);
+        return new ResultVO<>(false, "A-XXXX", message, null);
     }
 }

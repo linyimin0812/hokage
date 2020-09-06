@@ -23,39 +23,9 @@ public interface HokageUserService {
     ServiceResponse<HokageUserDO> register(HokageUserDO hokageUserDO);
 
     /**
-     * 更新一条记录
+     * 用户登录
      * @param hokageUserDO
      * @return
      */
-    Long update(HokageUserDO hokageUserDO);
-
-    /**
-     * 根据id查找用户信息
-     * @param id
-     * @return
-     */
-    HokageUserDO getUserById(Long id);
-
-    /**
-     * 根据用户名查找用户信息
-     * @param name
-     * @return
-     */
-    List<HokageUserDO> listByName(String name);
-
-    /**
-     * 根据角色查找用户信息
-     * @param role
-     * @return
-     */
-    List<HokageUserDao> listByRole(Integer role);
-
-    /**
-     * 根据其他条件查找用户信息
-     * @param hokageUserDO
-     * @return
-     */
-    List<HokageUserDao> listAll(HokageUserDO hokageUserDO);
-
-    HokageUserDO getUserByEmail(String Email);
+    ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO);
 }

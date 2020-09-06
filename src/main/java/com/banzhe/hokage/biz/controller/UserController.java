@@ -1,6 +1,7 @@
 package com.banzhe.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.banzhe.hokage.biz.Constant;
 import com.banzhe.hokage.biz.converter.UserConverter;
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Objects;
 
 /**
  * @author linyimin
@@ -43,16 +45,22 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.register(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute("userInfo", JSON.toJSONString(userDO));
+            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
     }
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
-    public ResultVO<HokageUserLoginForm> login(@RequestBody @Valid HokageUserLoginForm userForm, HttpSession session) {
-        System.out.printf(session.toString());
-        return success(userForm);
+    public ResultVO<HokageUserRegisterForm> login(@RequestBody @Valid HokageUserLoginForm userForm, HttpSession session) {
+        HokageUserDO userDO = UserConverter.loginFormToDO(userForm);
+        ServiceResponse<HokageUserDO> res = userService.login(userDO);
+
+        if (res.getSucceeded()) {
+            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
+            return success(UserConverter.DOToRegisterForm(res.getData()));
+        }
+        return fail(res.getCode(), res.getMsg());
     }
 
     @RequestMapping(value = "/user/modify", method = RequestMethod.POST)

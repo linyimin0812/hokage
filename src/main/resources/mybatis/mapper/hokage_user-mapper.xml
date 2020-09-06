@@ -11,7 +11,7 @@
         <result property="passwd" column="passwd" />
         <result property="role" column="role" />
         <result property="email" column="email" />
-        <result property="isSubscribed" column="is_subscribed" />
+        <result property="subscribed" column="is_subscribed" />
     </resultMap>
 
     <sql id="allColumns">
@@ -39,8 +39,8 @@
             <if test="email != null and email !='' ">
                 and email=#{email}
             </if>
-            <if test="isSubscribed != null and isSubscribed !='' ">
-                and is_subscribed=#{isSubscribed}
+            <if test="subscribed != null and subscribed !='' ">
+                and is_subscribed=#{subscribed}
             </if>
         </where>
     </sql>
@@ -62,7 +62,7 @@
             #{passwd},
             #{role},
             #{email},
-            #{isSubscribed}
+            #{subscribed}
         );
     </insert>
     <update id="update" parameterType="HokageUserDO">
@@ -82,8 +82,8 @@
             <if test="email != null and email !='' ">
                 ,email=#{email}
             </if>
-            <if test="isSubscribed != null and isSubscribed !='' ">
-                ,is_subscribed=#{isSubscribed}
+            <if test="subscribed != null and subscribed !='' ">
+                ,is_subscribed=#{subscribed}
             </if>
         </set>
         <where>

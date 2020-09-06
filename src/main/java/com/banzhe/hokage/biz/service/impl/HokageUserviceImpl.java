@@ -77,32 +77,23 @@ public class HokageUserviceImpl implements HokageUserService {
     }
 
     @Override
-    public Long update(HokageUserDO hokageUserDO) {
-        return null;
+    public ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO) {
+
+        ServiceResponse res = new ServiceResponse<>();
+
+        res.fail(UserErrorCodeEnum.USER_PASSWD_ERROR.getCode(), UserErrorCodeEnum.USER_PASSWD_ERROR.getMsg());
+
+        // 1. 先判断邮箱是否已经存在
+        HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
+        if (Objects.isNull(userDO)) {
+            return res;
+        }
+
+        // 密码校验
+        boolean isMatch = passwordEncoder.matches(hokageUserDO.getPasswd(), userDO.getPasswd());
+
+        return isMatch ? res.success(userDO) : res;
     }
 
-    @Override
-    public HokageUserDO getUserById(Long id) {
-        return null;
-    }
 
-    @Override
-    public List<HokageUserDO> listByName(String name) {
-        return userDao.ListUserByName(name);
-    }
-
-    @Override
-    public List<HokageUserDao> listByRole(Integer role) {
-        return null;
-    }
-
-    @Override
-    public List<HokageUserDao> listAll(HokageUserDO hokageUserDO) {
-        return null;
-    }
-
-    @Override
-    public HokageUserDO getUserByEmail(String Email) {
-        return null;
-    }
 }

@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, Form, Input, Switch } from 'antd'
-import { Service } from '../axios/service';
+import { Button, Form, Input, message, Switch } from 'antd'
+import { Service } from '../axios/service'
+import { Models } from '../utils/model'
 
 const formItemLayout = {
 	labelCol: {
@@ -36,14 +37,16 @@ const tailFormItemLayout = {
 
 interface LoginStateType {
 	isLogin: boolean,
-	formData: {[key: string]: string}
+	formData: {[key: string]: string | number},
+	subscribed: number	// 不知道为什么不能通过表单获取switch的值, 所以一个字段单独标识
 }
 
 export default class Login extends React.Component<any, LoginStateType>{
 
 	state = {
-		isLogin: true, // 默认是注册
-		formData: {}
+		isLogin: true, // 默认是登录
+		formData: {} as any,
+		subscribed: 0
 	}
 
 	register = () => {
@@ -54,23 +57,49 @@ export default class Login extends React.Component<any, LoginStateType>{
 		this.setState({isLogin: true})
 	}
 
-	onValuesChange = (changedValues: any, allValues: any) => {
-		console.log(changedValues)
-		console.log(allValues)
-		this.setState({ formData: allValues })
-	}
-
 	save = () => {
-		const { isLogin } = this.state
+		const { isLogin, formData, subscribed } = this.state
+		formData.subscribed = subscribed
+		const { history } = this.props
 		if (isLogin) {
-			Service.register()
+			// 用户登录
+			Service.login(formData).then(value => {
+				if (value.success) {
+					// 存储用户信息
+					Models.set(value.data.email, value.data)
+					// 跳转到首页
+					history.push('/app/index')
+					return
+				}
+				message.error(value.msg, 5)
+				console.log("Service.login: " + JSON.stringify(value))
+			}).catch(err => {
+				message.error("登录失败，请稍后重试", 5)
+				console.log("Service.login catch: ", JSON.stringify(err))
+			})
+		} else {
+			// 用户注册
+			console.log(formData)
+			Service.register(formData).then(value => {
+				if (value.success) {
+					// 存储用户信息
+					Models.set(value.data.email, value.data)
+					// 跳转到首页
+					history.push('/app/index')
+					return
+				}
+				message.error(value.msg, 5)
+				console.log("Service.register: " + JSON.stringify(value))
+			}).catch(err => {
+				message.error("注册失败，请稍后重试", 5)
+				console.log("Service.register catch: ", JSON.stringify(err))
+			})
 		}
-		// Service.
 	}
 
 	render() {
 
-		const { isLogin } = this.state
+		const { isLogin, subscribed } = this.state
 
 		return (
 			<div className="login">
@@ -81,32 +110,49 @@ export default class Login extends React.Component<any, LoginStateType>{
 					<Form
 						{ ...formItemLayout }
 						onFinish={this.save}
-						onValuesChange={this.onValuesChange}
+						onValuesChange={(_: any, allValues: any) => this.setState({ formData: allValues })}
 					>
+						{ isLogin ? null :
+							<Form.Item
+								name="username"
+								label="昵称"
+								rules={[
+									{
+										required: true,
+										message: '请输入昵称',
+									},
+								]}
+							>
+								<Input placeholder="昵称不能为空" />
+							</Form.Item>
+						}
+
 						<Form.Item
-							name="username"
-							label={
-								<span>
-									用户名
-								</span>
-							}
+							name="email"
+							label="邮箱"
 							rules={[
 								{
 									required: true,
-									message: '请输入用户名',
+									message: '邮箱不能为空',
 								},
 							]}
 						>
-							<Input placeholder="请输入用户名" />
-						</Form.Item>
+							<Input placeholder={"请输入邮箱"} />
 
+						</Form.Item>
+						{ isLogin ? null :
+							<Form.Item name="subscribed" label="是否订阅">
+								<Switch onChange={ value => this.setState({ subscribed: value ? 1 : 0 }) } checked={subscribed === 1} />
+								<span>&nbsp;<span style={{color: "red"}}>*</span>&nbsp;开启订阅,服务器IP变化时会发送邮件通知</span>
+							</Form.Item>
+						}
 						<Form.Item
-							name="password"
+							name="passwd"
 							label="密码"
 							rules={[
 								{
 									required: true,
-									message: '请输入你好',
+									message: '请输入密码',
 								},
 							]}
 							hasFeedback
@@ -122,7 +168,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 								<Form.Item
 									name="confirm"
 									label="确认密码"
-									dependencies={['password']}
+									dependencies={['passwd']}
 									hasFeedback
 									rules={[
 										{
@@ -131,7 +177,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 										},
 										({ getFieldValue }) => ({
 											validator(rule, value) {
-												if (!value || getFieldValue('password') === value) {
+												if (!value || getFieldValue('passwd') === value) {
 													return Promise.resolve();
 												}
 
@@ -142,13 +188,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 								>
 									<Input.Password placeholder="请输入确认密码" />
 								</Form.Item>
-								<Form.Item name="email" label="邮箱">
-									<Input placeholder={"请输入邮箱"} />
-								</Form.Item>
-								<Form.Item name="isSubScribed" label="是否订阅">
-									<Switch />
-									<span>&nbsp;<span style={{color: "red"}}>*</span>&nbsp;开启订阅,服务器IP变化时会发送邮件通知</span>
-								</Form.Item>
+
 							</>
 						}
 

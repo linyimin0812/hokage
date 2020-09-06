@@ -26,7 +26,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageUserDO userDO = new HokageUserDO();
-        userDO.setIsSubscribed(1);
+        userDO.setSubscribed(1);
         userDO.setRole(1);
         userDO.setPasswd("123456");
         userDO.setEmail("banzhe@gmail.com");
@@ -91,7 +91,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     public void findAll() {
         this.insert();
         HokageUserDO userDO = new HokageUserDO();
-        userDO.setIsSubscribed(1);
+        userDO.setSubscribed(1);
         userDO.setRole(1);
         userDO.setPasswd("123456");
         userDO.setEmail("banzhe@gmail.com");

@@ -4,7 +4,6 @@ import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/SiderCustom';
 import HeaderCustom from './components/HeaderCustom';
 import { Layout } from 'antd';
-import Login from './components/login';
 
 const { Content, Footer } = Layout;
 

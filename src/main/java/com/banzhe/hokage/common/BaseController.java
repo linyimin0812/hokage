@@ -14,7 +14,7 @@ public class BaseController {
      * @return
      */
     protected  <T> ResultVO<T> success(T data) {
-        ResultVO<T> resultVO = new ResultVO<>("00000", null, data);
+        ResultVO<T> resultVO = new ResultVO<>(true, "00000", null, data);
         return resultVO;
     }
 
@@ -26,7 +26,7 @@ public class BaseController {
      * @return
      */
     protected <T> ResultVO<T> fail(String code, String msg) {
-        ResultVO<T> resultVO = new ResultVO<>(code, msg, null);
+        ResultVO<T> resultVO = new ResultVO<>(false, code, msg, null);
         return resultVO;
     }
 

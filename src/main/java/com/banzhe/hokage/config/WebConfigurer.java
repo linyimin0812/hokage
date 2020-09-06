@@ -20,16 +20,23 @@ public class WebConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthCheckInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/app/login")
-                .excludePathPatterns("/static/**")
-                .excludePathPatterns("/index")
-                .excludePathPatterns("/index.html")
-                .excludePathPatterns("/**/*.png")
-                .excludePathPatterns("/**/*.js")
-                .excludePathPatterns("/**/*.css")
-                .excludePathPatterns("/**/*.json")
-                .excludePathPatterns("/**/*.ico")
-                .excludePathPatterns("/**/*.txt");
+                .excludePathPatterns(Arrays.asList( // 静态资源不需要拦截
+                        "/static/**",
+                        "/index",
+                        "/index.html",
+                        "/**/*.png",
+                        "/**/*.js",
+                        "/**/*.css",
+                        "/**/*.json",
+                        "/**/*.ico",
+                        "/**/*.txt",
+                        "/error"                    // springboot默认的异常处理机制，发送/error请求，所以不能拦截
+                ))
+                .excludePathPatterns(Arrays.asList( // 用户的登录注册不需要拦截
+                        "/user/register",
+                        "/user/login",
+                        "/user/status"
+                ));
     }
     // TODO: 为什么配了ResourceHandler，就不能访问了
     /**

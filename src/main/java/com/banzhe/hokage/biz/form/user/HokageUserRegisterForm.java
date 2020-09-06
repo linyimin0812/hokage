@@ -27,5 +27,5 @@ public class HokageUserRegisterForm {
     @Email(message = "邮箱格式不正确")
     @ExceptionInfo(code = "A-0003")
     private String email;           // 用户邮箱
-    private Integer isSubscribed;   // 是否订阅, 0: 不订阅, 1: 订阅, 发送消息邮件
+    private Integer subscribed;   // 是否订阅, 0: 不订阅, 1: 订阅, 发送消息邮件
 }

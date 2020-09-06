@@ -18,9 +18,22 @@ public class UserConverter {
         BeanUtils.copyProperties(userRegisterForm, userDO);
         return userDO;
     }
+
     public static HokageUserRegisterForm DOToRegisterForm(HokageUserDO userDO) {
         HokageUserRegisterForm form = new HokageUserRegisterForm();
         BeanUtils.copyProperties(userDO, form);
         return form;
+    }
+
+    public static HokageUserDO loginFormToDO(HokageUserLoginForm loginForm) {
+        HokageUserDO userDO = new HokageUserDO();
+        BeanUtils.copyProperties(loginForm, userDO);
+        return userDO;
+    }
+
+    public static HokageUserLoginForm DOToLoginForm(HokageUserDO userDO) {
+        HokageUserLoginForm loginForm = new HokageUserLoginForm();
+        BeanUtils.copyProperties(loginForm, userDO);
+        return loginForm;
     }
 }
