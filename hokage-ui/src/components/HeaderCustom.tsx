@@ -97,18 +97,20 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 							</div>
 						</Carousel>
 					</Col>
-					<Col span={6}>
+					<Col span={3}>
+						{
+							isFullScreen ? (
+								<FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
+							) : (
+								<FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
+							)
+						}
+					</Col>
+					<Col span={3}>
 						<Menu
 							mode="horizontal"
-							style={{ lineHeight: '64px', float: 'right' }}
+							style={{textAlign: 'center'}}
 						>
-							{
-								isFullScreen ? (
-									<FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
-								) : (
-									<FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
-								)
-							}
 							<SubMenu
 								title={
 									<Avatar
@@ -121,17 +123,13 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 										{"banzhe"}
 									</Avatar>
 								}
-								style={{
-									paddingLeft: '40px',
-									paddingRight: '40px',
-								}}
-
+								popupOffset={[-60,1]}
 							>
 								<Menu.Item
 									key="logout"
 									style={{
-										position: 'absolute',
 										backgroundColor: '#FFFFFF',
+										textAlign: 'center'
 									}}
 								>
 									<span onClick={this.logout}>退出登录</span>
