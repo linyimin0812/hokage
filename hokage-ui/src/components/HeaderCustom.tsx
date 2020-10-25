@@ -95,7 +95,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 									斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
 								</span>
 							</div>
-						</Carousel>,
+						</Carousel>
 					</Col>
 					<Col span={6}>
 						<Menu
