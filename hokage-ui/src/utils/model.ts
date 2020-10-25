@@ -14,7 +14,7 @@ interface StoreType {
 export const Models = {
     _store:  {} as StoreType,
 
-    get: (key: string): object => {
+    get: (key: string): any => {
         return _.get(Models._store, key)
     },
 

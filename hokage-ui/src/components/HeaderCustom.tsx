@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import screenfull from 'screenfull'
-import { Menu, Layout, Avatar, Row, Col, Carousel } from 'antd'
+import { Menu, Layout, Avatar, Row, Col, Carousel, message } from 'antd'
 import {
 	FullscreenOutlined,
 	FullscreenExitOutlined,
 } from '@ant-design/icons'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Icon } from '@ant-design/compatible'
+
+import { Models } from '../utils/model'
+import { Service } from '../axios/service'
+
+
 const { Header } = Layout
 const SubMenu = Menu.SubMenu
 
@@ -45,17 +50,29 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 		}
 	}
 	logout = () => {
-		localStorage.removeItem('user');
-		this.props.history.push('/login');
-	};
+		const userInfo = Models.get('userInfo')
+		Service.logout({email: userInfo.email}).then(value => {
+			if (value.success) {
+				// 跳转到登录页
+				this.props.history.push('/app/login')
+				Models.remove('userInfo')
+				message.success(`${userInfo.username}已退出`)
+				return
+			}
+			message.error(value.msg, 5)
+		}).catch(err => {
+			message.error("退出失败，请稍后重试", 5)
+			console.log("Service.register catch: ", JSON.stringify(err))
+		})
+	}
 	popoverHide = () => {
 		this.setState({
 			visible: false,
-		});
-	};
+		})
+	}
 	handleVisibleChange = (visible: boolean) => {
 		this.setState({ visible });
-	};
+	}
 	
 	render() {
 		const { isFullScreen } = this.state
@@ -147,6 +164,6 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 const HeaderCustomConnect: React.ComponentClass<
 	HeaderCustomProps,
 	HeaderCustomState
-	> = HeaderCustom;
+	> = HeaderCustom
 
-export default withRouter(HeaderCustomConnect);
+export default withRouter(HeaderCustomConnect)

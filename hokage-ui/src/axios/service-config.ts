@@ -24,5 +24,10 @@ export const ServiceConfig: { [name: string]: ServiceParam} = {
     'modifyUserInfo': {
         url: '/user/modify',
         method: 'POST'
-    }
+    },
+
+    'logout': {
+        url: '/user/logout',
+        method: 'POST'
+    },
 }

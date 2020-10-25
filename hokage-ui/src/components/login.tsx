@@ -66,7 +66,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 			Service.login(formData).then(value => {
 				if (value.success) {
 					// 存储用户信息
-					Models.set(value.data.email, value.data)
+					Models.set('userInfo', value.data)
 					// 跳转到首页
 					history.push('/app/index')
 					return
@@ -83,7 +83,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 			Service.register(formData).then(value => {
 				if (value.success) {
 					// 存储用户信息
-					Models.set(value.data.email, value.data)
+					Models.set('userInfo', value.data)
 					// 跳转到首页
 					history.push('/app/index')
 					return
