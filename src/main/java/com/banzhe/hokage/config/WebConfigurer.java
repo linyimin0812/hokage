@@ -35,6 +35,7 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .excludePathPatterns(Arrays.asList( // 用户的登录注册不需要拦截
                         "/user/register",
                         "/user/login",
+                        "/user/logout",
                         "/user/status"
                 ));
     }

@@ -14,7 +14,9 @@ public enum UserErrorCodeEnum {
 
     USER_REGISTER_FAIL("A-0003", "用户注册失败"),
 
-    USER_PASSWD_ERROR("A-0004", "用户或密码不正确");
+    USER_PASSWD_ERROR("A-0004", "用户或密码不正确"),
+
+    USER_NO_LOGIN("A-005", "用户未登录");
 
     private String code;
     private String msg;

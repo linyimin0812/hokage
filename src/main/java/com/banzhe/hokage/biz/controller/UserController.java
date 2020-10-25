@@ -3,7 +3,9 @@ package com.banzhe.hokage.biz.controller;
 import com.alibaba.fastjson.JSON;
 import com.banzhe.hokage.biz.Constant;
 import com.banzhe.hokage.biz.converter.UserConverter;
+import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
+import com.banzhe.hokage.biz.form.user.HokageUserLogoutForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
@@ -11,13 +13,11 @@ import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
@@ -45,7 +45,7 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.register(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
+            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
@@ -57,7 +57,7 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.login(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
+            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
@@ -66,5 +66,15 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user/modify", method = RequestMethod.POST)
     public ResultVO<HokageUserRegisterForm> modify(@RequestBody @Valid HokageUserRegisterForm userForm) {
         return success(userForm);
+    }
+
+    @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
+    public ResultVO<Boolean> logout(@RequestBody @Valid HokageUserLogoutForm form, HttpSession session) {
+        if (Objects.isNull(session.getAttribute(form.getEmail()))) {
+            return fail(UserErrorCodeEnum.USER_NO_LOGIN.getCode(), UserErrorCodeEnum.USER_NO_LOGIN.getMsg());
+        }
+        session.removeAttribute(form.getEmail());
+
+        return success(true);
     }
 }
