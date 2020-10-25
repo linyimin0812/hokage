@@ -52,7 +52,7 @@ export default class App extends Component<AppProps, AppState> {
                     {!responsive.data.isMobile && (
                         <SiderCustom collapsed={this.state.collapsed} />
                     )}
-                    <Layout style={{ flexDirection: 'column' }}>
+                    <Layout className="layout" style={{ flexDirection: 'column' }}>
                         <HeaderCustom
                             toggle={this.toggle}
                             collapsed={this.state.collapsed}

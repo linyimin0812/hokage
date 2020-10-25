@@ -56,29 +56,47 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 	handleVisibleChange = (visible: boolean) => {
 		this.setState({ visible });
 	};
+	
 	render() {
 		const { isFullScreen } = this.state
 		return (
-			<Header className="custom-theme header">
+			<Header className="custom-theme header" style={{backgroundColor: '#e9e9e9'}}>
 				<Row>
 					<Col span={1}>
 						<Icon
 							className="header_trigger custom-trigger"
 							type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
 							onClick={this.props.toggle}
-							style={{color: 'white'}}
+							style={{color: 'black'}}
 						/>
 					</Col>
 
 					<Col span={17} style={{justifyContent: 'center'}}>
+
 						<Carousel dots={false} autoplay autoplaySpeed={10 * 1000} speed={3000}>
-                    <span>
-                      服务器node1.pcncad.com的IP发生了变化,由原来的`10.108.210.194`变成了`10.108.211.136`, 由于域名存在缓存,可能会短暂不可用.
-                    </span>
-							<span>
-                      斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
-                    </span>
-						</Carousel>
+							<div>
+								<span style={{
+									height: '40px',
+									color: '#fff',
+									lineHeight: '40px',
+									textAlign: 'center',
+									background: '#364d79',
+								}}>
+									服务器node1.pcncad.com的IP发生了变化,由原来的`10.108.210.194`变成了`10.108.211.136`, 由于域名存在缓存,可能会短暂不可用.
+								</span>
+							</div>
+							<div>
+								<span style={{
+									height: '40px',
+									color: '#fff',
+									lineHeight: '40px',
+									textAlign: 'center',
+									background: '#364d79',
+								}}>
+									斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
+								</span>
+							</div>
+						</Carousel>,
 					</Col>
 					<Col span={6}>
 						<Menu
@@ -87,9 +105,9 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 						>
 							{
 								isFullScreen ? (
-									<FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px'}} />
+									<FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
 								) : (
-									<FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px'}} />
+									<FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
 								)
 							}
 							<SubMenu
