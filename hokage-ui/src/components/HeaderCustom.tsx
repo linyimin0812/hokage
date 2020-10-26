@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import screenfull from 'screenfull'
-import { Menu, Layout, Avatar, Row, Col, Carousel, message } from 'antd'
+import { Menu, Layout, Avatar, Row, Col, message } from 'antd'
 import {
 	FullscreenOutlined,
 	FullscreenExitOutlined,
@@ -9,7 +9,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Icon } from '@ant-design/compatible'
 
 import { Models } from '../utils/model'
-import { Service } from '../axios/service'
+import { UserAction } from '../axios/action'
 
 
 const { Header } = Layout
@@ -51,15 +51,15 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 	}
 	logout = () => {
 		const userInfo = Models.get('userInfo')
-		Service.logout({email: userInfo.email}).then(value => {
-			if (value.success) {
+
+		UserAction.logout({email: userInfo.email}).then(value => {
+			if (value) {
 				// 跳转到登录页
 				this.props.history.push('/app/login')
 				Models.remove('userInfo')
 				message.success(`${userInfo.username}已退出`)
 				return
 			}
-			message.error(value.msg, 5)
 		}).catch(err => {
 			message.error("退出失败，请稍后重试", 5)
 			console.log("Service.register catch: ", JSON.stringify(err))
@@ -89,7 +89,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 					</Col>
 
 					<Col span={17} style={{ height: '65px'}}>
-						<Carousel dots={false} autoplay autoplaySpeed={10 * 1000} speed={3000} style={{textAlign: 'center', marginTop: '9px'}}>
+						{/* <Carousel dots={false} autoplay autoplaySpeed={10 * 1000} speed={3000} style={{textAlign: 'center', marginTop: '9px'}}>
 							<div>
 								<span style={{
 									height: '40px',
@@ -112,7 +112,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 									斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
 								</span>
 							</div>
-						</Carousel>
+						</Carousel> */}
 					</Col>
 					<Col span={3}>
 						{

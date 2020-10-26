@@ -4,15 +4,10 @@
  * @email linyimin520812@gmail.com
  * @description 后端接口
  */
+import { ServiceParam } from './common'
+import { serviceConfig } from './service-wrap'
 
-import { Method } from 'axios'
-
-export interface ServiceParam {
-    url: string,
-    method: Method
-}
-
-export const ServiceConfig: { [name: string]: ServiceParam} = {
+const serviceInfo: { [name: string]: ServiceParam} = {
     'register': {
         url: '/user/register',
         method: 'POST'
@@ -31,3 +26,5 @@ export const ServiceConfig: { [name: string]: ServiceParam} = {
         method: 'POST'
     },
 }
+
+export const UserService = serviceConfig(serviceInfo)

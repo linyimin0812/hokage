@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Form, Input, message, Switch } from 'antd'
-import { Service } from '../axios/service'
 import { Models } from '../utils/model'
+import { UserAction } from '../axios/action'
 
 const formItemLayout = {
 	labelCol: {
@@ -63,7 +63,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 		const { history } = this.props
 		if (isLogin) {
 			// 用户登录
-			Service.login(formData).then(value => {
+			UserAction.login(formData).then(value => {
 				if (value.success) {
 					// 存储用户信息
 					Models.set('userInfo', value.data)
@@ -71,8 +71,6 @@ export default class Login extends React.Component<any, LoginStateType>{
 					history.push('/app/index')
 					return
 				}
-				message.error(value.msg, 5)
-				console.log("Service.login: " + JSON.stringify(value))
 			}).catch(err => {
 				message.error("登录失败，请稍后重试", 5)
 				console.log("Service.login catch: ", JSON.stringify(err))
@@ -80,7 +78,7 @@ export default class Login extends React.Component<any, LoginStateType>{
 		} else {
 			// 用户注册
 			console.log(formData)
-			Service.register(formData).then(value => {
+			UserAction.register(formData).then(value => {
 				if (value.success) {
 					// 存储用户信息
 					Models.set('userInfo', value.data)
