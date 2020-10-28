@@ -1,7 +1,6 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
 import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
-import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.banzhe.hokage.persistence.mapper.HokageSupervisorServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,7 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
      * @return
      */
     @Override
-    public List<HokageSupervisorServerDO> selectByServerId(Long id) {
+    public List<HokageSupervisorServerDO> listByServerId(Long id) {
         return supervisorServerMapper.selectByServerId(id);
     }
 
@@ -61,7 +60,7 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
      * @return
      */
     @Override
-    public List<HokageSupervisorServerDO> selectBySupervisorId(Long id) {
-        return supervisorServerMapper.selectBySupervisorId(id);
+    public List<HokageSupervisorServerDO> listByIds(List<Long> id) {
+        return supervisorServerMapper.listByIds(id);
     }
 }

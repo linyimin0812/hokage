@@ -3,9 +3,11 @@ package com.banzhe.hokage.biz.service.impl;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;
+import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageSequenceService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
+import com.banzhe.hokage.persistence.dao.HokageServerDao;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author linyimin
@@ -28,6 +31,7 @@ public class HokageUserviceImpl implements HokageUserService {
     private HokageUserDao userDao;
     private BCryptPasswordEncoder passwordEncoder;
     private HokageSequenceService sequenceService;
+    private HokageServerDao serverDao;
 
     @Autowired
     public void setUserDao(HokageUserDao userDao) {
@@ -93,6 +97,16 @@ public class HokageUserviceImpl implements HokageUserService {
         boolean isMatch = passwordEncoder.matches(hokageUserDO.getPasswd(), userDO.getPasswd());
 
         return isMatch ? res.success(userDO) : res;
+    }
+
+    @Override
+    public ServiceResponse<List<HokageUserVO>> listSupervisors() {
+        List<HokageUserDO> users = userDao.ListUserByRole(1);
+
+//        return users.stream().map(user -> {
+//
+//        }).collect(Collectors.toList());
+        return null;
     }
 
 

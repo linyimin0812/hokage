@@ -1,5 +1,6 @@
 package com.banzhe.hokage.biz.service;
 
+import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
@@ -28,4 +29,10 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO);
+
+    /**
+     * 获取所有管理员信息
+     * @return
+     */
+    ServiceResponse<List<HokageUserVO>> listSupervisors();
 }

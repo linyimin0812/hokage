@@ -31,12 +31,12 @@ public interface HokageSupvisorServer {
      * @param id
      * @return
      */
-    List<HokageSupervisorServerDO> selectByServerId(Long id);
+    List<HokageSupervisorServerDO> listByServerId(Long id);
 
     /**
      * 查找管理员id下的服务器id
      * @param id
      * @return
      */
-    List<HokageSubordinateServerDO> selectBySupervisorId(Long id);
+    List<HokageSubordinateServerDO> listByIds(List<Long> id);
 }

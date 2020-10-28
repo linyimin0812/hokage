@@ -56,7 +56,7 @@
             server_id = #{serverId}
         </where>
     </select>
-    <select id="selectBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorServerMapper">
+    <select id="listByIds" parameterType="java.lang.Long" resultMap="HokageSupervisorServerMapper">
         SELECT
         <include refid="allColumns"/>
         FROM

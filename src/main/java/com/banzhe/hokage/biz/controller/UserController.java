@@ -1,12 +1,12 @@
 package com.banzhe.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.banzhe.hokage.biz.Constant;
 import com.banzhe.hokage.biz.converter.UserConverter;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
 import com.banzhe.hokage.biz.form.user.HokageUserLogoutForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;
+import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -76,5 +76,10 @@ public class UserController extends BaseController {
         session.removeAttribute(form.getEmail());
 
         return success(true);
+    }
+
+    @RequestMapping(value = "/user/supervisor/list", method = RequestMethod.GET)
+    public List<HokageUserVO> listSupervisor() {
+        return null;
     }
 }

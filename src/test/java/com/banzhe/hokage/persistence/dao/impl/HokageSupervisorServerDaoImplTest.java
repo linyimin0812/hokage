@@ -1,7 +1,6 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
 import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
-import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,8 +9,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author linyimin
@@ -40,14 +37,14 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void update() {
         this.insert();
 
-        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.selectByServerId(12L);
+        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerId(12L);
 
         supervisorServerDOS.forEach(item -> {
             item.setServerId(1L);
             supervisorServerDao.update(item);
         });
 
-        supervisorServerDOS = supervisorServerDao.selectByServerId(1L);
+        supervisorServerDOS = supervisorServerDao.listByServerId(1L);
         Assert.assertNotEquals(supervisorServerDOS, null);
         Assert.assertEquals(true, supervisorServerDOS.size() > 0);
     }
@@ -57,13 +54,13 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void selectByServerId() {
 
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.selectByServerId(12L).size() > 0);
+        Assert.assertEquals(true, supervisorServerDao.listByServerId(12L).size() > 0);
     }
 
     @Test
     @Rollback
     public void selectBySupervisorId() {
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.selectBySupervisorId(56L).size() > 0);
+        Assert.assertEquals(true, supervisorServerDao.listByIds(56L).size() > 0);
     }
 }

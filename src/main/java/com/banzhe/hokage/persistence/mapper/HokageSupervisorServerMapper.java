@@ -42,5 +42,5 @@ public interface HokageSupervisorServerMapper {
      * @param id
      * @return
      */
-    List<HokageSupervisorServerDO> selectBySupervisorId(Long id);
+    List<HokageSupervisorServerDO> listByIds(List<Long> id);
 }
