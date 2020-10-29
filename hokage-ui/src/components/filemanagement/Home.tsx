@@ -1,8 +1,8 @@
 import BreadcrumbCustom, { BreadcrumbPrpos } from "../BreadcrumbCustom";
 import React from 'react'
-import FileManagement from "./FileManagement";
+import FileManagement from "./file-management";
 import { Tabs } from "antd";
-import FileServer from "./FileServer";
+import FileServer from "./fiile-server";
 interface PanesType {
 	title: string,
 	content: JSX.Element,

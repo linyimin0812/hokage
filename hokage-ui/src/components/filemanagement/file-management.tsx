@@ -4,7 +4,7 @@ import './index.less'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom'
 import Search from 'antd/lib/input/Search'
-import Action, { ActionProps } from './Action'
+import Action, { ActionProps } from './action'
 interface FileManagementState {
 	expandable: TableExtendable,
 	currentDir: string, // 当前目录

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Menu } from 'antd'
-import { Record } from './FileManagement';
+import { Record } from './file-management';
 export interface ActionProps {
 	left: string | undefined,
 	top: string | undefined,
