@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -61,6 +62,6 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void selectBySupervisorId() {
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.listByIds(56L).size() > 0);
+        Assert.assertEquals(true, supervisorServerDao.listByIds(Arrays.asList(56L)).size() > 0);
     }
 }

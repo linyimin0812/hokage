@@ -10,8 +10,6 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 /**
  * @author linyimin
  * @date 2020/8/23 4:55 下午
@@ -41,14 +39,14 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
     public void update() {
         this.insert();
 
-        List<HokageSubordinateServerDO> subordinateServerDOS = subordinateServerDao.selectByServerId(12312L);
+        List<HokageSubordinateServerDO> subordinateServerDOS = subordinateServerDao.listByServerId(12312L);
 
         subordinateServerDOS.forEach(item -> {
             item.setServerId(1L);
             subordinateServerDao.update(item);
         });
 
-        subordinateServerDOS = subordinateServerDao.selectByServerId(1L);
+        subordinateServerDOS = subordinateServerDao.listByServerId(1L);
         Assert.assertNotEquals(subordinateServerDOS, null);
     }
 
@@ -56,13 +54,13 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void selectByServerId() {
         this.insert();
-        Assert.assertEquals(true, subordinateServerDao.selectByServerId(12312L).size() > 0);
+        Assert.assertEquals(true, subordinateServerDao.listByServerId(12312L).size() > 0);
     }
 
     @Test
     @Rollback
     public void selectByOrdinateId() {
         this.insert();
-        Assert.assertEquals(true, subordinateServerDao.selectByOrdinateId(2L).size() > 0);
+        Assert.assertEquals(true, subordinateServerDao.listByOrdinateId(2L).size() > 0);
     }
 }

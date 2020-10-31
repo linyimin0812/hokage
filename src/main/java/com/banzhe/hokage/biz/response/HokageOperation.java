@@ -1,5 +1,6 @@
 package com.banzhe.hokage.biz.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @description 操作类型
  */
 @Data
+@AllArgsConstructor
 public class HokageOperation {
     private String operationType;   // 操作类型
     private String operationName;   // 操作名称

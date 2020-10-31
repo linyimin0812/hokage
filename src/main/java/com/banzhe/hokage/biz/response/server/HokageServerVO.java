@@ -18,7 +18,8 @@ public class HokageServerVO {
     private String domain;                          // 域名
     private List<String> labels;                    // 标签
     private String supervisor;                      // 管理员
+    private Long supervisorId;                      // 管理员id
     private Integer userNum;                        // 用户数量
     private String status;                          // 状态
-    private List<HokageOperation> operationList;    //  操作
+    private List<HokageOperation> operationList;    // 操作
 }

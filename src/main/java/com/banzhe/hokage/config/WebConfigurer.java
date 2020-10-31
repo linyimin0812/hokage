@@ -30,7 +30,10 @@ public class WebConfigurer implements WebMvcConfigurer {
                         "/**/*.json",
                         "/**/*.ico",
                         "/**/*.txt",
-                        "/error"                    // springboot默认的异常处理机制，发送/error请求，所以不能拦截
+                        "/error", // springboot默认的异常处理机制，发送/error请求，所以不能拦截
+                        "/**/*.html",
+                        "/v3/api-docs",
+                        "/v3/api-docs/**"
                 ))
                 .excludePathPatterns(Arrays.asList( // 用户的登录注册不需要拦截
                         "/user/register",

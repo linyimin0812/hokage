@@ -152,7 +152,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                             serverTags: [colors[i], colors[i+1]],
                             numberOfUser: 3,
                             status: '在线',
-                            action: '删除'
+                            action: '回收'
                         }
                         datasources.push(data)
                     }

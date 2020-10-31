@@ -30,19 +30,19 @@ public interface HokageSubordinateServerDao {
      * @param id
      * @return
      */
-    List<HokageSubordinateServerDO> selectByServerId(Long id);
+    List<HokageSubordinateServerDO> listByServerId(Long id);
 
     /**
      * 查找使用者id下的服务器id
      * @param id
      * @return
      */
-    List<HokageSubordinateServerDO> selectByOrdinateId(Long id);
+    List<HokageSubordinateServerDO> listByOrdinateId(Long id);
 
     /**
      * 使用id查找记录
      * @param id
      * @return
      */
-    HokageSubordinateServerDO selectById(Long id);
+    HokageSubordinateServerDO getById(Long id);
 }

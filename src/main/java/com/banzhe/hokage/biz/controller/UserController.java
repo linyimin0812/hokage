@@ -79,7 +79,12 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/user/supervisor/list", method = RequestMethod.GET)
-    public List<HokageUserVO> listSupervisor() {
-        return null;
+    public ResultVO<List<HokageUserVO>> listSupervisor() {
+        ServiceResponse<List<HokageUserVO>> res = userService.listSupervisors();
+
+        if (res.getSucceeded()) {
+            return success(res.getData());
+        }
+        return fail(res.getCode(), res.getMsg());
     }
 }

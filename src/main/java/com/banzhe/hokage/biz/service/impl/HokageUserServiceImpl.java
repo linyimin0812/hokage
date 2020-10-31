@@ -11,8 +11,10 @@ import com.banzhe.hokage.biz.service.HokageSequenceService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageServerDao;
+import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
+import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +34,14 @@ import java.util.stream.Collectors;
  * @description
  */
 @Service
-public class HokageUserviceImpl implements HokageUserService {
+public class HokageUserServiceImpl implements HokageUserService {
 
     private HokageUserDao userDao;
     private BCryptPasswordEncoder passwordEncoder;
     private HokageSequenceService sequenceService;
     private HokageSupervisorServerDao supervisorServerDao;
     private HokageServerDao serverDao;
+    private HokageSubordinateServerDao subordinateServerDao;
 
     @Autowired
     public void setUserDao(HokageUserDao userDao) {
@@ -58,6 +61,11 @@ public class HokageUserviceImpl implements HokageUserService {
     @Autowired
     public void setSupervisorServerDao(HokageSupervisorServerDao supervisorServerDao) {
         this.supervisorServerDao = supervisorServerDao;
+    }
+
+    @Autowired
+    public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
+        this.subordinateServerDao = subordinateServerDao;
     }
 
     @Autowired
@@ -127,6 +135,7 @@ public class HokageUserviceImpl implements HokageUserService {
 
             HokageUserVO userVO = new HokageUserVO();
 
+            // 管理员信息
             userVO.setId(user.getId());
             userVO.setEmail(user.getEmail());
             userVO.setRole(user.getRole());
@@ -153,8 +162,12 @@ public class HokageUserviceImpl implements HokageUserService {
 
                 // 操作信息
                 List<HokageOperation> operations = Arrays.asList(
-                    new HokageOperation(OperationTypeEnum.supervisor.name(), "")
+                    new HokageOperation(OperationTypeEnum.supervisor.name(), "recycle", "/server/recycle")
                 );
+
+                // 该服务器的使用人数
+                List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerId(serverDO.getId());
+                serverVO.setUserNum(subordinateServerDOList.size());
 
                 return serverVO;
             }).collect(Collectors.toList());
@@ -164,6 +177,14 @@ public class HokageUserviceImpl implements HokageUserService {
             userVO.setServerLabel(serverLabels);
             userVO.setServerNum(serverVOList.size());
             userVO.setServerVOList(serverVOList);
+
+
+            // 操作信息
+            List<HokageOperation> operations = Arrays.asList(
+                new HokageOperation(OperationTypeEnum.supervisor.name(), "view", "/user/view"),
+                new HokageOperation(OperationTypeEnum.supervisor.name(), "addServer", "/server/add"),
+                new HokageOperation(OperationTypeEnum.supervisor.name(), "recycleServer", "/server/recycle")
+            );
 
             return userVO;
 

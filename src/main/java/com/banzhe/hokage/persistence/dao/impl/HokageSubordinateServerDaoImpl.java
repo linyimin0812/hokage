@@ -50,7 +50,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
      * @return
      */
     @Override
-    public List<HokageSubordinateServerDO> selectByServerId(Long id) {
+    public List<HokageSubordinateServerDO> listByServerId(Long id) {
         return subordinateServerMapper.selectByServerId(id);
     }
 
@@ -60,7 +60,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
      * @return
      */
     @Override
-    public List<HokageSubordinateServerDO> selectByOrdinateId(Long id) {
+    public List<HokageSubordinateServerDO> listByOrdinateId(Long id) {
         return subordinateServerMapper.selectByOrdinateId(id);
     }
 
@@ -70,7 +70,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
      * @return
      */
     @Override
-    public HokageSubordinateServerDO selectById(Long id) {
+    public HokageSubordinateServerDO getById(Long id) {
         return subordinateServerMapper.selectById(id);
     }
 }
