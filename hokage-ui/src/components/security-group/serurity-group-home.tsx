@@ -1,7 +1,7 @@
 import React from 'react'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../bread-crumb-custom'
-import EnterSecurity from './EnterSecurity'
-import Header from './Header'
+import EnterSecurity from './enter-security'
+import Header from './header'
 
 const breadcrumProps: BreadcrumbPrpos[] = [
     {

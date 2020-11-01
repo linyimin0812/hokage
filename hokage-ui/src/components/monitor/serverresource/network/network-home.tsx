@@ -1,10 +1,10 @@
 import React from 'react'
 import { Col, Divider, Row } from 'antd'
-import InterfaceInfo from './InterfaceInfo'
-import DownloadSpeed from './DownloadSpeed'
-import UploadSpeed from './UploadSpeed'
-import ARPCacheTable from './ARPCacheTable'
-import ConnectionInfo from './ConnectionInfo'
+import InterfaceInfo from './interface-info'
+import DownloadSpeed from './download-speed'
+import UploadSpeed from './upload-speed'
+import ARPCacheTable from './arpc-cache-table'
+import ConnectionInfo from './connection-info'
 
 export default class NetworkHome extends React.Component<any, any>{
     render() {

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Col, Row } from 'antd'
-import ServerInfoCard from '../common/ServerInfoCard'
+import ServerInfoCard from '../common/server-info-card'
 
 export default class ServerInfo extends React.Component {
 	renderServerInfoCards = () => {

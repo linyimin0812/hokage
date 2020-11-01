@@ -1,11 +1,11 @@
 import React from 'react'
 import { Col, Divider, Row } from 'antd'
-import AverageLoad from './AverageLoad'
-import CpuUtilization from './CpuUtilization'
-import RamUsage from './RamUsage'
-import CpuProcess from './CpuProcess'
-import RamProcess from './RamProcess'
-import DiskPartition from './DiskPartition'
+import AverageLoad from './average-load'
+import CpuUtilization from './cpu-utilization'
+import RamUsage from './ram-usage'
+import CpuProcess from './cpu-process'
+import RamProcess from './ram-process'
+import DiskPartition from './disk-partition'
 
 export default class SystemStatus extends React.Component<any, any>{
     state = {

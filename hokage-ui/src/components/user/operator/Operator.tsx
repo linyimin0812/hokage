@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons'
 import AddOperator from './add-operator';
 
-import { TableExtendable } from '../../common/TableExtendable'
+import { TableExtendable } from '../../common/table-extendable'
 interface NestedTableDataSource {
     key: string,
     hostname: string,

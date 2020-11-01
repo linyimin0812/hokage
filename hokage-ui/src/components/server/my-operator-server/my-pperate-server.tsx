@@ -2,7 +2,7 @@ import React, { ReactText } from 'react'
 import { Tag, message, Table, Row, Col, Button, Result, Divider } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import { TableExtendable } from '../../common/TableExtendable'
+import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
 import OperatorApplyServer from '../operator-apply-server'
 

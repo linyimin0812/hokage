@@ -1,4 +1,4 @@
-import Home from './home/Home'
+import Home from './home/home'
 import Operator from './user/operator/operator'
 import OrdinaryUser from './user/ordinary/ordinary-user'
 import AllServers from './server/all-server/all-servers'
@@ -7,9 +7,9 @@ import MyOperateServer from './server/my-operator-server/my-pperate-server'
 import FileManagementHome from './filemanagement/home'
 import WebSshHome from './webssh/home'
 import BatCommandHome from './bat-command/home'
-import SecurityGroupHome from './security-group/SerurityGroupHome'
-import ServerResourceManagementHome from './monitor/serverresource/ServerResourceManagementHome'
-import Penetration from './penetration/Penetration'
+import SecurityGroupHome from './security-group/serurity-group-home'
+import ServerResourceManagementHome from './monitor/serverresource/server-resource-management-home'
+import Penetration from './penetration/penetration'
 
 export default {
     Home,

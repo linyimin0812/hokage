@@ -1,8 +1,8 @@
 import React from 'react'
 import { message, Row, Col } from 'antd';
-import ServerCard from '../common/ServerCard';
-import ApplyServerPrompt from '../common/ApplyServerPrompt';
-import ApplyAndSearchServer from '../common/ApplyAndSearchServer';
+import ServerCard from '../common/server-card';
+import ApplyServerPrompt from '../common/apply-server-prompt';
+import ApplyAndSearchServer from '../common/apply-and-search-server';
 
 const datas: any[] = [1,2,3,4,5,6,7,8,9,10]
 

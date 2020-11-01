@@ -1,8 +1,8 @@
 import React from 'react'
 import { Col, Divider, Row } from 'antd';
-import AccountInfo from './AccountInfo'
-import BasicInfo from './BasicInfo'
-import LoginAccountInfo from './LoginAccountInfo';
+import AccountInfo from './account-info'
+import BasicInfo from './basic-info'
+import LoginAccountInfo from './login-account-info';
 
 export default class BasicInfoHome extends React.Component<any, any>{
     render() {
