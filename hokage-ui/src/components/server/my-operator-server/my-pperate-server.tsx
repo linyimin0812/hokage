@@ -3,7 +3,7 @@ import { Tag, message, Table, Row, Col, Button, Result, Divider } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/TableExtendable'
-import Search from './Search'
+import Search from './search'
 import OperatorApplyServer from '../operator-apply-server'
 
 // 嵌套表 
