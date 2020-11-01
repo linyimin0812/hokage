@@ -1,6 +1,7 @@
 package com.banzhe.hokage.biz.form.server;
 
 import com.banzhe.hokage.biz.enums.ServerLabel;
+import com.banzhe.hokage.common.PageQuery;
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
  * @description
  */
 @Data
-public class ServerSearchForm {
+public class ServerSearchForm extends PageQuery {
     private String hostname;            // 主机名
     private String supervisorName;      // 管理员姓名
     private String label;               // 服务器标签
