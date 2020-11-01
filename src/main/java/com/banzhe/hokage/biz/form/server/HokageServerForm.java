@@ -18,5 +18,5 @@ public class HokageServerForm {
     private String account;             // 登录账号
     private String passwd;              // 登录密码
     private String serverGroup;         // 服务器分组
-    private List<Long> supervisors;   // 服务器管理员
+    private List<Long> supervisors;     // 服务器管理员
 }
