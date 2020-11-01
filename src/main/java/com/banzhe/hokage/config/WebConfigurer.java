@@ -2,6 +2,7 @@ package com.banzhe.hokage.config;
 
 import com.banzhe.hokage.biz.interceptor.AuthCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -15,6 +16,7 @@ import java.util.Arrays;
  * @description
  */
 @Configuration
+@Profile("prod")
 public class WebConfigurer implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
