@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-import Page from './Page';
+import Page from './page';
 import './style/antd/index.less';
 import './style/index.less';
 
