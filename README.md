@@ -39,7 +39,6 @@
 ## 启动
 
 ```shell
-npm i
-npm start
+mvn package -Dmaven.test.skip=true
 ```
 
