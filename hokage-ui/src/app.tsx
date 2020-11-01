@@ -34,9 +34,6 @@ export default class App extends Component<AppProps, AppState> {
         }
     };
 
-    componentDidMount() {
-        console.log('teta');
-    }
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
