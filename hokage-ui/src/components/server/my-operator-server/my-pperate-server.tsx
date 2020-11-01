@@ -4,7 +4,7 @@ import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/TableExtendable'
 import Search from './Search'
-import OperatorApplyServer from '../OperatorApplyServer'
+import OperatorApplyServer from '../operator-apply-server'
 
 // 嵌套表 
 const nestedColumns = [

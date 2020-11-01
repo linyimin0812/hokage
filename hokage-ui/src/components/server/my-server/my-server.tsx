@@ -3,7 +3,7 @@ import { Table, Result, Button, Tag, Row, Col, message, Divider } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
 import Search from './Search'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
-import AddServer from '../AddServer'
+import AddServer from '../add-server'
 
 const renderStatus = (text: string, _: any, __: any) => {
     let color: string = ''
