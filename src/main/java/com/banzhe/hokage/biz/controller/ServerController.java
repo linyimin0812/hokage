@@ -9,10 +9,7 @@ import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -69,6 +66,45 @@ public class ServerController extends BaseController {
     // TODO: 撤销管理员
     @RequestMapping(value = "/server/supervisor/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServerSupervisor(@RequestBody ServerOperateForm form) {
+        return success(Boolean.TRUE);
+    }
+
+    /**
+     * 我管理的服务器
+     */
+    // TODO: 列举我管理的服务器信息
+    @RequestMapping(value = "/supervisor/server/list", method = RequestMethod.GET)
+    public ResultVO<List<HokageServerVO>> listSupervisorServer(@RequestParam Long id) {
+        return success(Collections.emptyList());
+    }
+
+    // TODO: 搜索服务器信息
+    @RequestMapping(value = "/supervisor/server/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageUserVO>> searchSupervisorServer(@RequestBody ServerSearchForm form) {
+        return success(Collections.emptyList());
+    }
+
+    // TODO: 申请服务器
+    @RequestMapping(value = "/supervisor/server/apply", method = RequestMethod.POST)
+    public ResultVO<HokageServerVO> addServer(@RequestBody ServerOperateForm form) {
+        return success(new HokageServerVO());
+    }
+
+    // TODO: 删除服务器
+    @RequestMapping(value = "/supervisor/server/delete", method = RequestMethod.POST)
+    public ResultVO<Boolean> delSupervisorServer(@RequestBody ServerOperateForm form) {
+        return success(Boolean.TRUE);
+    }
+
+    // TODO: 添加用户
+    @RequestMapping(value = "/server/subordinate/add", method = RequestMethod.POST)
+    public ResultVO<Boolean> addServerSubordinate(@RequestBody ServerOperateForm form) {
+        return success(Boolean.TRUE);
+    }
+
+    // TODO: 撤销用户
+    @RequestMapping(value = "/server/subordinate/delete", method = RequestMethod.POST)
+    public ResultVO<Boolean> delServerSubordinate(@RequestBody ServerOperateForm form) {
         return success(Boolean.TRUE);
     }
 }
