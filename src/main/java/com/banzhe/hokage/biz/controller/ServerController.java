@@ -86,7 +86,7 @@ public class ServerController extends BaseController {
 
     // TODO: 申请服务器
     @RequestMapping(value = "/supervisor/server/apply", method = RequestMethod.POST)
-    public ResultVO<HokageServerVO> addServer(@RequestBody ServerOperateForm form) {
+    public ResultVO<HokageServerVO> applyServer(@RequestBody ServerOperateForm form) {
         return success(new HokageServerVO());
     }
 
@@ -105,6 +105,40 @@ public class ServerController extends BaseController {
     // TODO: 撤销用户
     @RequestMapping(value = "/server/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServerSubordinate(@RequestBody ServerOperateForm form) {
+        return success(Boolean.TRUE);
+    }
+
+
+    /**
+     * 我使用的服务器
+     */
+    // TODO: 列举我管理的服务器信息
+    @RequestMapping(value = "/my/server/list", method = RequestMethod.GET)
+    public ResultVO<List<HokageServerVO>> listMyServer(@RequestParam Long id) {
+        return success(Collections.emptyList());
+    }
+
+    // TODO: 搜索服务器信息
+    @RequestMapping(value = "/my/server/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageUserVO>> searchMyServer(@RequestBody ServerSearchForm form) {
+        return success(Collections.emptyList());
+    }
+
+    // TODO: 申请服务器
+    @RequestMapping(value = "/my/server/apply", method = RequestMethod.POST)
+    public ResultVO<HokageServerVO> applyMyServer(@RequestBody ServerOperateForm form) {
+        return success(new HokageServerVO());
+    }
+
+    // TODO: 删除服务器
+    @RequestMapping(value = "/my/server/delete", method = RequestMethod.POST)
+    public ResultVO<Boolean> delMyServer(@RequestBody ServerOperateForm form) {
+        return success(Boolean.TRUE);
+    }
+
+    // TODO: 添加服务器
+    @RequestMapping(value = "/my/server/add", method = RequestMethod.POST)
+    public ResultVO<Boolean> addMyServer(@RequestBody HokageServerForm form) {
         return success(Boolean.TRUE);
     }
 }
