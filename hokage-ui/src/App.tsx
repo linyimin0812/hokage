@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Routes from './routes';
 import DocumentTitle from 'react-document-title';
 import SiderCustom from './components/sider-custom';
-import HeaderCustom from './components/HeaderCustom';
+import HeaderCustom from './components/header-custom';
 import { Layout } from 'antd';
 
 const { Content, Footer } = Layout;

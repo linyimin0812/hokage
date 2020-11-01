@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, Tag, message } from 'antd'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
 import Search from './search'
 import {
 	UserAddOutlined,

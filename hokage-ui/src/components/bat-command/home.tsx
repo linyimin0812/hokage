@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../BreadcrumbCustom';
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../bread-crumb-custom';
 import MyBatCommand from './my-bat-command';
 import { Tabs } from 'antd';
 import ExecutedBatCommand from './executed-bat-command';
