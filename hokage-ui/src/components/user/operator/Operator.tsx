@@ -1,14 +1,14 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, Tag, message } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
-import Search from './Search'
+import Search from './search'
 import {
     UserAddOutlined,
     InfoCircleOutlined,
     SyncOutlined,
     UsergroupDeleteOutlined
 } from '@ant-design/icons'
-import AddOperator from './AddOperator';
+import AddOperator from './add-operator';
 
 import { TableExtendable } from '../../common/TableExtendable'
 interface NestedTableDataSource {

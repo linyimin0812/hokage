@@ -1,14 +1,14 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, Tag, message } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../BreadcrumbCustom'
-import Search from './Search'
+import Search from './search'
 import {
 	UserAddOutlined,
 	InfoCircleOutlined,
 	SyncOutlined,
 	UsergroupDeleteOutlined,
 } from '@ant-design/icons';
-import AddUser from './AddUser';
+import AddUser from './add-user';
 
 interface Expandable {
 	expandedRowKeys: string[],
