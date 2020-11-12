@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 public class ServerOperateForm {
-    private Long id;                //   操作者id
+    private Long id;                // 操作者id
     private List<Long> userIds;     // 用户id
     private List<Long> serverIds;   // 服务器id
 }
