@@ -38,7 +38,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user/register", method = RequestMethod.POST)
     public ResultVO<HokageUserRegisterForm> register(@RequestBody @Valid HokageUserRegisterForm userForm, HttpSession session) {
 
-        // 入库并返回已经登录
+        // persistent and return logged status
         HokageUserDO userDO = UserConverter.registerFormToDO(userForm);
 
         ServiceResponse<HokageUserDO> res = userService.register(userDO);
