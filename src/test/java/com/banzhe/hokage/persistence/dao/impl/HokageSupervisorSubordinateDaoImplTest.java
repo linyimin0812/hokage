@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:55 下午
+ * @date 2020/8/23 16:55
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageSupervisorSubordinateDaoImplTest
  */
 @Import(HokageSupervisorSubordinateDaoImpl.class)
 public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
@@ -27,6 +27,7 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageSupervisorSubordinateDO supervisorSubordinateDO = new HokageSupervisorSubordinateDO();
+        supervisorSubordinateDO.setId(hokageSequenceService.nextValue("hokage_supervisor_subordinate").getData());
         supervisorSubordinateDO.setSubordinateId(12L);
         supervisorSubordinateDO.setSupervisorId(56L);
 

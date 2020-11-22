@@ -13,9 +13,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:55 下午
+ * @date 2020/8/23 16:55
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageSupervisorServerDaoImplTest
  */
 @Import(HokageSupervisorServerDaoImpl.class)
 public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
@@ -27,6 +27,7 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageSupervisorServerDO supervisorServerDO = new HokageSupervisorServerDO();
+        supervisorServerDO.setId(hokageSequenceService.nextValue("hokage_supervisor_server").getData());
         supervisorServerDO.setServerId(12L);
         supervisorServerDO.setSupervisorId(56L);
         Long result = supervisorServerDao.insert(supervisorServerDO);

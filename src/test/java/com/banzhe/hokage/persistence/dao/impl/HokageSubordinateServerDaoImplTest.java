@@ -1,5 +1,7 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
+import com.banzhe.hokage.biz.service.HokageSequenceService;
+import com.banzhe.hokage.biz.service.impl.HokageSequenceServiceImpl;
 import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import org.junit.Assert;
@@ -12,9 +14,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:55 下午
+ * @date 2020/8/23 16:55
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageSubordinateServerDaoImplTest
  */
 @Import(HokageSubordinateServerDaoImpl.class)
 public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
@@ -26,6 +28,7 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
     public void insert() {
         HokageSubordinateServerDO subordinateServerDO = new HokageSubordinateServerDO();
 
+        subordinateServerDO.setId(hokageSequenceService.nextValue("hokage_subordinate_server").getData());
         subordinateServerDO.setServerId(12312L);
         subordinateServerDO.setSubordinateId(2L);
 

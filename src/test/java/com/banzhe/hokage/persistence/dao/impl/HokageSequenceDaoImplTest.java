@@ -12,9 +12,9 @@ import static org.junit.Assert.*;
 
 /**
  * @author linyimin
- * @date 2020/8/30 4:59 下午
+ * @date 2020/8/30 16:59
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageSequenceDaoImplTest
  */
 @Import(HokageSequenceDaoImpl.class)
 public class HokageSequenceDaoImplTest extends HokageBaseDaoTest{

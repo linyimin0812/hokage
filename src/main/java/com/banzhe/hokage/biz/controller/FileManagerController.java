@@ -4,7 +4,7 @@ import com.banzhe.hokage.common.BaseController;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:51 上午
+ * @date 2020/8/23 1:51
  * @email linyimin520812@gmail.com
  * @description
  */

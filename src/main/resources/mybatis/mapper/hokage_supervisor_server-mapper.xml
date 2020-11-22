@@ -56,13 +56,16 @@
             server_id = #{serverId}
         </where>
     </select>
-    <select id="listByIds" parameterType="java.lang.Long" resultMap="HokageSupervisorServerMapper">
+    <select id="listByIds" parameterType="java.util.List" resultMap="HokageSupervisorServerMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
         <include refid="tableName"/>
         <where>
-            supervisor_id = #{supervisorId}
+            supervisor_id IN
+            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
         </where>
     </select>
 </mapper>

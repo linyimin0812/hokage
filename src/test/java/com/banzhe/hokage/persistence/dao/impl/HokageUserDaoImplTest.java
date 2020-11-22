@@ -12,9 +12,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:56 下午
+ * @date 2020/8/23 16:56
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageUserDaoImplTest
  */
 @Import(HokageUserDaoImpl.class)
 public class HokageUserDaoImplTest extends HokageBaseDaoTest {
@@ -26,6 +26,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageUserDO userDO = new HokageUserDO();
+        userDO.setId(hokageSequenceService.nextValue("hokage_user").getData());
         userDO.setSubscribed(1);
         userDO.setRole(1);
         userDO.setPasswd("123456");

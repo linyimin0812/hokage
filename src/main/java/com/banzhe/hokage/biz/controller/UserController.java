@@ -21,9 +21,9 @@ import java.util.Objects;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:32 上午
+ * @date 2020/8/23 1:32
  * @email linyimin520812@gmail.com
- * @description 处理用户对应的controller
+ * @description user controller
  */
 @RestController
 public class UserController extends BaseController {

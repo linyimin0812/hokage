@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:35 下午
+ * @date 2020/8/23 16:35
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageServerDaoImplTest
  */
 
 @Import(HokageServerDaoImpl.class)
@@ -29,6 +29,7 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
     public void insert() {
 
         HokageServerDO serverDO = new HokageServerDO();
+        serverDO.setId(hokageSequenceService.nextValue("hokage_server").getData());
         serverDO.setAccount("banzhe");
         serverDO.setDescription("My Server");
         serverDO.setDomain("node1.pcncad.cn");

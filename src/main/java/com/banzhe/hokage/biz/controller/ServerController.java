@@ -16,9 +16,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:50 上午
+ * @date 2020/8/23 1:50
  * @email linyimin520812@gmail.com
- * @description 服务器controller
+ * @description server controller
  */
 @RestController
 public class ServerController extends BaseController {

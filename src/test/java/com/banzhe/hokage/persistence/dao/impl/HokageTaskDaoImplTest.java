@@ -16,9 +16,9 @@ import static org.junit.Assert.*;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:56 下午
+ * @date 2020/8/23 16:56
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageTaskDaoImplTest
  */
 @Import(HokageTaskDaoImpl.class)
 public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
@@ -31,12 +31,13 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
     public void insert() {
 
         HokageTaskDO taskDO = new HokageTaskDO();
-        taskDO.setDescription("测试任务");
+        taskDO.setId(hokageSequenceService.nextValue("hokage_task").getData());
+        taskDO.setDescription("test task");
         taskDO.setExecCommand("ls -l");
         taskDO.setExecServers("10.108.210.102, 10.108.210.106");
         taskDO.setExecTime(1576866660000L);
         taskDO.setExecType(1);
-        taskDO.setTaskName("查看文件目录");
+        taskDO.setTaskName("look file directory");
         taskDO.setTaskType(1);
         taskDO.setUserId(12L);
 
@@ -103,12 +104,12 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
         this.insert();
 
         HokageTaskDO taskDO = new HokageTaskDO();
-        taskDO.setDescription("测试任务");
+        taskDO.setDescription("test task");
         taskDO.setExecCommand("ls -l");
         taskDO.setExecServers("10.108.210.102, 10.108.210.106");
         taskDO.setExecTime(1576866660000L);
         taskDO.setExecType(1);
-        taskDO.setTaskName("查看文件目录");
+        taskDO.setTaskName("look file directory");
         taskDO.setTaskType(1);
         taskDO.setUserId(12L);
 

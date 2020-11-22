@@ -14,9 +14,9 @@ import static org.junit.Assert.*;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:55 下午
+ * @date 2020/8/23 16:55
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageServerGroupDaoImplTest
  */
 @Import(HokageServerGroupDaoImpl.class)
 public class HokageServerGroupDaoImplTest extends HokageBaseDaoTest {
@@ -28,6 +28,7 @@ public class HokageServerGroupDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageServerGroupDO serverGroupDO = new HokageServerGroupDO();
+        serverGroupDO.setId(hokageSequenceService.nextValue("hokage_server_group").getData());
         serverGroupDO.setDescription("开发测试");
         serverGroupDO.setName("dev");
         Long id = hokageServerGroupDao.insert(serverGroupDO);

@@ -12,9 +12,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/23 4:56 下午
+ * @date 2020/8/23 16:56
  * @email linyimin520812@gmail.com
- * @description
+ * @description HokageTaskResultDaoImplTest
  */
 @Import(HokageTaskResultDaoImpl.class)
 public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
@@ -26,6 +26,7 @@ public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void insert() {
         HokageTaskResultDO taskResultDO = new HokageTaskResultDO();
+        taskResultDO.setId(hokageSequenceService.nextValue("hokage_task_result").getData());
         taskResultDO.setEndTime(System.currentTimeMillis());
         taskResultDO.setStartTime(System.currentTimeMillis());
         taskResultDO.setExecServer("10.108.210.102");
