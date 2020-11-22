@@ -46,5 +46,5 @@ mvn package -Dmaven.test.skip=true
 ## swagger
 
 ```
-127.0.0.1:8080/swagger-ui/index.html
+127.0.0.1:8080/swagger-ui/index.html?url=/v3/api-docs
 ```
