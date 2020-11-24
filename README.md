@@ -49,3 +49,8 @@ mvn package -Dmaven.test.skip=true
 ```
 127.0.0.1:8080/swagger-ui/index.html?url=/v3/api-docs
 ```
+
+## need to fix 
+
+打包成jar后，运行会提示/mysql路径不存在
+
