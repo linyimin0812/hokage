@@ -22,7 +22,8 @@ public class WebConfigurer implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new AuthCheckInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns(Arrays.asList( // 静态资源不需要拦截
+                .excludePathPatterns(Arrays.asList(
+                        // 静态资源不需要拦截
                         "/static/**",
                         "/index",
                         "/index.html",
@@ -32,12 +33,14 @@ public class WebConfigurer implements WebMvcConfigurer {
                         "/**/*.json",
                         "/**/*.ico",
                         "/**/*.txt",
-                        "/error", // springboot默认的异常处理机制，发送/error请求，所以不能拦截
+                        // springboot默认的异常处理机制，发送/error请求，所以不能拦截
+                        "/error",
                         "/**/*.html",
                         "/v3/api-docs",
                         "/v3/api-docs/**"
                 ))
-                .excludePathPatterns(Arrays.asList( // 用户的登录注册不需要拦截
+                .excludePathPatterns(Arrays.asList(
+                        // 用户的登录注册不需要拦截
                         "/user/register",
                         "/user/login",
                         "/user/logout",
