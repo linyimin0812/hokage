@@ -15,8 +15,13 @@ import org.springframework.util.ResourceUtils;
 
 import javax.sql.DataSource;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Objects;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -31,6 +36,8 @@ public class SqlScriptInitRunner implements CommandLineRunner {
 
     private final String DDL = "schema";
     private final String DML = "data";
+
+    private final String PROTOCOL = "jar";
 
     @Value("${spring.datasource.schema}")
     private String sqlScriptPath;
@@ -48,48 +55,74 @@ public class SqlScriptInitRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         ScriptRunner runner = new ScriptRunner(dataSource.getConnection());
-
         runner.setLogWriter(new PrintWriter(new LogPrintWriter(logger, Level.INFO)));
+
+        List<String> paths = new ArrayList<>();
+
+        Consumer<String> consumer;
 
         if (!StringUtils.isBlank(sqlScriptPath)) {
 
-            File file = ResourceUtils.getFile(sqlScriptPath);
+            try {
+                File file = ResourceUtils.getFile(sqlScriptPath);
+
+                List<String> fileNames = Arrays.stream(Objects.requireNonNull(file.listFiles()))
+                        .filter(File::isFile)
+                        .map(File::getAbsolutePath).collect(Collectors.toList());
+
+                paths.addAll(fileNames);
+
+                consumer = fileName -> {
+                    try {
+                        runner.runScript(new BufferedReader(new FileReader(fileName)));
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                };
+
+            } catch (FileNotFoundException e) {
+                URL urlDir = this.getClass().getResource("/");
+
+                if (Objects.nonNull(urlDir) && StringUtils.equals(urlDir.getProtocol(), PROTOCOL)) {
+                    final String jarPath = urlDir.getPath().substring(5, urlDir.getPath().indexOf("!"));
+                    final JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+                    final Enumeration<JarEntry> entries = jar.entries();
+                    while (entries.hasMoreElements()) {
+                        JarEntry entry = entries.nextElement();
+                        if (!entry.isDirectory()) {
+                            paths.add(entry.getName());
+                        }
+                    }
+
+                    paths = paths.stream()
+                            .filter(sqlScriptName ->
+                                    StringUtils.contains(sqlScriptName, "/mysql/") && StringUtils.endsWith(sqlScriptName, ".sql"))
+                            .map(sqlScriptName -> sqlScriptName.substring(sqlScriptName.indexOf("/mysql/")))
+                            .collect(Collectors.toList());
+
+                    consumer = fileName -> runner.runScript(new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(fileName))));
+
+                    jar.close();
+                } else {
+                    throw new UnsupportedOperationException("Cannot list files for dir " + sqlScriptPath);
+                }
+            }
 
             // run the DDL script first
-            Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                    .filter(File::isFile)
-                    .filter(sqlScriptFile -> StringUtils.contains(sqlScriptFile.getName(), DDL))
-                    .forEach(sqlScriptFile -> {
-                        try {
-                            runner.runScript(new BufferedReader(new FileReader(sqlScriptFile)));
-                        } catch (FileNotFoundException ignored) {
-                            // The Exception will never be triggered
-                        }
-                    });
+            paths.stream()
+                    .filter(sqlScriptFile -> StringUtils.contains(sqlScriptFile, DDL))
+                    .forEach(consumer);
 
             // Then run the DML script
-            Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                    .filter(File::isFile)
-                    .filter(sqlScriptFile -> StringUtils.contains(sqlScriptFile.getName(), DML))
-                    .forEach(sqlScriptFile -> {
-                        try {
-                            runner.runScript(new BufferedReader(new FileReader(sqlScriptFile)));
-                        } catch (FileNotFoundException ignored) {
-                            // The Exception will never be triggered
-                        }
-                    });
+            paths.stream()
+                    .filter(sqlScriptFile -> StringUtils.contains(sqlScriptFile, DML))
+                    .forEach(consumer);
 
             // Last run the remaining scripts
-            Arrays.stream(Objects.requireNonNull(file.listFiles()))
-                    .filter(File::isFile)
-                    .filter(sqlScriptFile -> !StringUtils.containsAny(sqlScriptFile.getName(), DDL, DML))
-                    .forEach(sqlScriptFile -> {
-                        try {
-                            runner.runScript(new BufferedReader(new FileReader(sqlScriptFile)));
-                        } catch (FileNotFoundException ignored) {
-                            // The Exception will never be triggered
-                        }
-                    });
+            paths.stream()
+                    .filter(sqlScriptFile -> !StringUtils.containsAny(sqlScriptFile, DDL, DML))
+                    .forEach(consumer);
+
         }
     }
     @Data
