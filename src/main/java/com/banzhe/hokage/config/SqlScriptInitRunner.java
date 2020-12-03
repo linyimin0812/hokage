@@ -38,6 +38,10 @@ public class SqlScriptInitRunner implements CommandLineRunner {
     private final String DML = "data";
 
     private final String PROTOCOL = "jar";
+    private final String SCRIPT_ROOT = "/mysql/";
+    private final String SQL_SUFFIX = ".sql";
+    private final String CHAR_ENCODING = "UTF-8";
+    private final String ROOT = "/";
 
     @Value("${spring.datasource.schema}")
     private String sqlScriptPath;
@@ -81,11 +85,11 @@ public class SqlScriptInitRunner implements CommandLineRunner {
                 };
 
             } catch (FileNotFoundException e) {
-                URL urlDir = this.getClass().getResource("/");
+                URL urlDir = this.getClass().getResource(ROOT);
 
                 if (Objects.nonNull(urlDir) && StringUtils.equals(urlDir.getProtocol(), PROTOCOL)) {
                     final String jarPath = urlDir.getPath().substring(5, urlDir.getPath().indexOf("!"));
-                    final JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
+                    final JarFile jar = new JarFile(URLDecoder.decode(jarPath, CHAR_ENCODING));
                     final Enumeration<JarEntry> entries = jar.entries();
                     while (entries.hasMoreElements()) {
                         JarEntry entry = entries.nextElement();
@@ -96,8 +100,8 @@ public class SqlScriptInitRunner implements CommandLineRunner {
 
                     paths = paths.stream()
                             .filter(sqlScriptName ->
-                                    StringUtils.contains(sqlScriptName, "/mysql/") && StringUtils.endsWith(sqlScriptName, ".sql"))
-                            .map(sqlScriptName -> sqlScriptName.substring(sqlScriptName.indexOf("/mysql/")))
+                                    StringUtils.contains(sqlScriptName, SCRIPT_ROOT) && StringUtils.endsWith(sqlScriptName, SQL_SUFFIX))
+                            .map(sqlScriptName -> sqlScriptName.substring(sqlScriptName.indexOf(SCRIPT_ROOT)))
                             .collect(Collectors.toList());
 
                     consumer = fileName -> runner.runScript(new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(fileName))));
@@ -157,9 +161,6 @@ public class SqlScriptInitRunner implements CommandLineRunner {
 
         private void log(String mem) {
             switch (level) {
-                case INFO:
-                    logger.info(mem);
-                    break;
                 case TRACE:
                     logger.trace(mem);
                     break;
