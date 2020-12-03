@@ -79,17 +79,17 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         ServiceResponse<HokageUserDO> res = new ServiceResponse<>();
 
-        // 1. 先判断邮箱是否已经存在
+        // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.nonNull(userDO)) {
             return res.fail(UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
         }
-        // 2. 对密码进行加密
+        // 2. encrypt the password
         hokageUserDO.setPasswd(passwordEncoder.encode(hokageUserDO.getPasswd()));
-        // 3. 用户已注册默认是普通用户
+        // 3. the registering user is ordinary as default
         hokageUserDO.setRole(UserRoleEnum.subordinate.getValue());
 
-        // 获取用户id
+        // retrieve user id
         ServiceResponse<Long> sequence = sequenceService.nextValue(SequenceNameEnum.hokage_user.name());
 
         if (sequence.getSucceeded()) {
@@ -112,13 +112,13 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         res.fail(UserErrorCodeEnum.USER_PASSWD_ERROR.getCode(), UserErrorCodeEnum.USER_PASSWD_ERROR.getMsg());
 
-        // 1. 先判断邮箱是否已经存在
+        // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.isNull(userDO)) {
             return res;
         }
 
-        // 密码校验
+        // 2. verify password
         boolean isMatch = passwordEncoder.matches(hokageUserDO.getPasswd(), userDO.getPasswd());
 
         return isMatch ? res.success(userDO) : res;
@@ -135,37 +135,37 @@ public class HokageUserServiceImpl implements HokageUserService {
 
             HokageUserVO userVO = new HokageUserVO();
 
-            // 管理员信息
+            // supervisor info
             userVO.setId(user.getId());
             userVO.setEmail(user.getEmail());
             userVO.setRole(user.getRole());
             userVO.setUsername(user.getUsername());
 
-            // 获取管理员管理的服务器信息
+            // server information which managed by the supervisor
             List<Long> serverIds = supervisorServerDao.listByServerId(user.getId()).stream()
                     .map(HokageSupervisorServerDO::getServerId).collect(Collectors.toList());
 
             List<HokageServerVO> serverVOList = serverDao.selectByIds(serverIds).stream().map(serverDO -> {
                 HokageServerVO serverVO = new HokageServerVO();
 
-                // 服务器信息
+                // server information
                 serverVO.setId(serverDO.getId());
                 serverVO.setDomain(serverDO.getDomain());
                 serverVO.setHostname(serverDO.getHostname());
                 serverVO.setLabels(Arrays.asList(serverDO.getType().split(",")));
 
-                // TODO: 从ssh获取服务状态
+                // TODO: retrieve server status from ssh
 
-                // 管理员信息
+                // supervisor info
                 serverVO.setSupervisor(user.getUsername());
                 serverVO.setSupervisorId(user.getId());
 
-                // 操作信息
+                // action information
                 List<HokageOperation> operations = Arrays.asList(
                     new HokageOperation(OperationTypeEnum.supervisor.name(), "recycle", "/server/recycle")
                 );
 
-                // 该服务器的使用人数
+                // number of users of the server
                 List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerId(serverDO.getId());
                 serverVO.setUserNum(subordinateServerDOList.size());
 
@@ -179,7 +179,7 @@ public class HokageUserServiceImpl implements HokageUserService {
             userVO.setServerVOList(serverVOList);
 
 
-            // 操作信息
+            // action info
             List<HokageOperation> operations = Arrays.asList(
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "view", "/user/view"),
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "addServer", "/server/add"),
@@ -194,5 +194,11 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         return res;
     }
+
+    @Override
+    public ServiceResponse<List<HokageUserVO>> searchSupervisors() {
+        return null;
+    }
+
 
 }

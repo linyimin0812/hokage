@@ -17,22 +17,28 @@ import java.util.List;
 public interface HokageUserService {
 
     /**
-     * 用户注册
+     * user register
      * @param hokageUserDO
      * @return
      */
     ServiceResponse<HokageUserDO> register(HokageUserDO hokageUserDO);
 
     /**
-     * 用户登录
+     * user login
      * @param hokageUserDO
      * @return
      */
     ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO);
 
     /**
-     * 获取所有管理员信息
+     * retrieve all supervisor
      * @return
      */
     ServiceResponse<List<HokageUserVO>> listSupervisors();
+
+    /**
+     * search supervisor
+     * @return
+     */
+    ServiceResponse<List<HokageUserVO>> searchSupervisors();
 }

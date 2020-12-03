@@ -108,7 +108,7 @@
             username =#{username}
         </where>
     </select>
-    <select id="listUserByRole" parameterType="java.lang.String" resultMap="HokageUserMapper">
+    <select id="listUserByRole" parameterType="java.lang.Integer" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns"/>
         FROM

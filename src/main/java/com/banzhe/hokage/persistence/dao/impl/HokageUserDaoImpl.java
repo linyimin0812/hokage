@@ -69,6 +69,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @param role
      * @return
      */
+    @Override
     public List<HokageUserDO> ListUserByRole(Integer role) {
         return userMapper.listUserByRole(role);
     }

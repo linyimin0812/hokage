@@ -13,8 +13,17 @@ import java.util.List;
  */
 @Data
 public class UserServerSearchForm extends PageQuery {
-    private Long id;                // 用户id
-    private String username;        // 用户名
-    private String label;           // 服务器标签
+    /**
+     * user id
+     */
+    private Long id;
+    /**
+     * user name
+     */
+    private String username;
+    /**
+     * server label
+     */
+    private String label;
 
 }
