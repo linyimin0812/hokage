@@ -14,7 +14,7 @@
         <result property="ip" column="ip"/>
         <result property="passwd" column="passwd"/>
         <result property="sshPort" column="ssh_port"/>
-        <result property="type" column="type"/>
+        <result property="label" column="label"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -29,7 +29,7 @@
         ip,
         passwd,
         ssh_port,
-        type
+        label
     </sql>
 
     <sql id="tableNme">
@@ -62,8 +62,8 @@
             <if test="sshPort != null and sshPort != '' ">
                 and ssh_port = #{sshPort}
             </if>
-            <if test="type != null and type != '' ">
-                and type = #{type}
+            <if test="label != null ">
+                and label = #{label}
             </if>
         </where>
     </sql>
@@ -85,7 +85,7 @@
             #{ip},
             #{passwd},
             #{sshPort},
-            #{type}
+            #{label}
         );
     </insert>
     <update id="update" parameterType="HokageServerDO">
@@ -117,8 +117,8 @@
             <if test="sshPort != null and sshPort != '' ">
                 ,ssh_port = #{sshPort}
             </if>
-            <if test="type != null and type != '' ">
-                ,type = #{type}
+            <if test="label != null ">
+                ,label = #{label}
             </if>
         </set>
         <where>
@@ -156,13 +156,13 @@
         </where>
     </select>
 
-    <select id="selectByType" parameterType="java.lang.Integer" resultMap="HokageServerMapper">
+    <select id="selectByType" parameterType="java.lang.String" resultMap="HokageServerMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
         <include refid="tableNme"/>
         <where>
-            type=#{type}
+            label=#{label}
         </where>
     </select>
 

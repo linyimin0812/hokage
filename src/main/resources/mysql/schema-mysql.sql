@@ -1,3 +1,4 @@
+drop database hokage;
 # 创建数据库及相关数据表
 CREATE DATABASE IF NOT EXISTS `hokage` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 USE `hokage`;
@@ -46,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server` (
   `account` varchar(32) NOT NULL COMMENT '登录账户',
   `passwd` varchar(32) NOT NULL COMMENT '登录密码',
   `server_group` varchar(128) NULL COMMENT '服务器分组',
-  `type`  varchar(32) NULL COMMENT '服务器类型, 0-内网、1-外网、3-X86、4-GPU',
+  `label`  varchar(32) NULL COMMENT '服务器类型, 0-内网、1-外网、3-X86、4-GPU',
   `description` varchar(1024) NULL COMMENT '服务器描述',
   PRIMARY KEY (`id`)
 )

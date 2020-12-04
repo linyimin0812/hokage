@@ -54,7 +54,7 @@ public interface HokageServerMapper {
      * @param type
      * @return
      */
-    List<HokageServerDO> selectByType(Integer type);
+    List<HokageServerDO> selectByType(String type);
 
     /**
      * 根据服务器组查找服务器信息

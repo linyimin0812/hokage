@@ -38,7 +38,7 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         serverDO.setIp("10.108.210.102");
         serverDO.setPasswd("123456");
         serverDO.setSshPort("22");
-        serverDO.setType("1");
+        serverDO.setLabel("1");
         Long result = serverDao.insert(serverDO);
 
         Assert.assertEquals(true, result > 0);
@@ -107,11 +107,11 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void selectByType() {
         this.insert();
-        List<HokageServerDO> serverDOS = serverDao.selectByType(1);
+        List<HokageServerDO> serverDOS = serverDao.listByType("1");
         Assert.assertEquals(1, serverDOS.size());
 
         this.insert();
-        serverDOS = serverDao.selectByType(1);
+        serverDOS = serverDao.listByType("1");
         Assert.assertEquals(2, serverDOS.size());
 
     }

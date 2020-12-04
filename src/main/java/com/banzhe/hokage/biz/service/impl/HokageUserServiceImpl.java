@@ -4,6 +4,7 @@ import com.banzhe.hokage.biz.enums.OperationTypeEnum;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;
+import com.banzhe.hokage.biz.form.user.UserServerSearchForm;
 import com.banzhe.hokage.biz.response.HokageOperation;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;
@@ -14,15 +15,18 @@ import com.banzhe.hokage.persistence.dao.HokageServerDao;
 import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
+import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -152,7 +156,7 @@ public class HokageUserServiceImpl implements HokageUserService {
                 serverVO.setId(serverDO.getId());
                 serverVO.setDomain(serverDO.getDomain());
                 serverVO.setHostname(serverDO.getHostname());
-                serverVO.setLabels(Arrays.asList(serverDO.getType().split(",")));
+                serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
 
                 // TODO: retrieve server status from ssh
 
@@ -196,7 +200,21 @@ public class HokageUserServiceImpl implements HokageUserService {
     }
 
     @Override
-    public ServiceResponse<List<HokageUserVO>> searchSupervisors() {
+    public ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form) {
+
+        List<HokageUserDO>  supervisorList = Collections.EMPTY_LIST;
+        if (Objects.nonNull(form.getId()) && form.getId() > 0) {
+            HokageUserDO userDO = userDao.getUserById(form.getId());
+            supervisorList = Arrays.asList(userDO);
+        } else if (StringUtils.isNoneBlank(form.getLabel())) {
+            List<HokageServerDO> serverDOList = serverDao.listByType(form.getLabel());
+        } else {
+            HokageUserDO hokageUserDO = new HokageUserDO();
+            hokageUserDO.setUsername(form.getUsername());
+            supervisorList = userDao.listAll(hokageUserDO);
+        }
+
+
         return null;
     }
 

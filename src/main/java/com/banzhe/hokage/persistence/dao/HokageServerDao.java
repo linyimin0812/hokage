@@ -50,7 +50,7 @@ public interface HokageServerDao {
      * @param type
      * @return
      */
-    List<HokageServerDO> selectByType(Integer type);
+    List<HokageServerDO> listByType(String type);
 
     /**
      * 根据服务器组查找服务器信息

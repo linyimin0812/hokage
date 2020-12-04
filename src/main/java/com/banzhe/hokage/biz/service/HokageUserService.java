@@ -1,5 +1,6 @@
 package com.banzhe.hokage.biz.service;
 
+import com.banzhe.hokage.biz.form.user.UserServerSearchForm;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
@@ -40,5 +41,5 @@ public interface HokageUserService {
      * search supervisor
      * @return
      */
-    ServiceResponse<List<HokageUserVO>> searchSupervisors();
+    ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form);
 }

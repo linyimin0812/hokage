@@ -79,7 +79,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
      * @return
      */
     @Override
-    public List<HokageServerDO> selectByType(Integer type) {
+    public List<HokageServerDO> listByType(String type) {
         return serverMapper.selectByType(type);
     }
 

@@ -13,13 +13,40 @@ import java.util.List;
  */
 @Data
 public class HokageServerVO {
-    private Long id;                                // 服务器对应id
-    private String hostname;                        // 主机名
-    private String domain;                          // 域名
-    private List<String> labels;                    // 标签
-    private String supervisor;                      // 管理员
-    private Long supervisorId;                      // 管理员id
-    private Integer userNum;                        // 用户数量
-    private String status;                          // 状态
-    private List<HokageOperation> operationList;    // 操作
+    /**
+     * server id
+     */
+    private Long id;
+    /**
+     * server hostname
+     */
+    private String hostname;
+    /**
+     * server domain
+     */
+    private String domain;
+    /**
+     * server labels
+     */
+    private List<String> labels;
+    /**
+     * supervisor name
+     */
+    private String supervisor;
+    /**
+     * supervisor id
+     */
+    private Long supervisorId;
+    /**
+     * number of user
+     */
+    private Integer userNum;
+    /**
+     * status of server
+     */
+    private String status;
+    /**
+     * operations
+     */
+    private List<HokageOperation> operationList;
 }

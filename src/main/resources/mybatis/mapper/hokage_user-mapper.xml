@@ -27,6 +27,9 @@
 
     <sql id="baseSql">
         <where>
+            <if test="id != null and id > 0 ">
+                and id=#{id}
+            </if>
             <if test="username != null and username !='' ">
                 and username=#{username}
             </if>
