@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * @author linyimin
  * @date: 2020/8/30 2:18pm
@@ -173,6 +175,9 @@ public class HokageUserServiceImpl implements HokageUserService {
     }
 
     private HokageUserVO userDO2UserVO(HokageUserDO userDO) {
+
+        checkNotNull(userDO, "userDO can't be null");
+
         HokageUserVO userVO = new HokageUserVO();
 
         // supervisor info
@@ -224,6 +229,8 @@ public class HokageUserServiceImpl implements HokageUserService {
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "addServer", "/server/add"),
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "recycleServer", "/server/recycle")
         );
+
+        userVO.setOperationList(operations);
 
         return userVO;
     }
