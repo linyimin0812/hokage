@@ -11,9 +11,9 @@ import java.util.Objects;
 
 /**
  * @author linyimin
- * @date 2020/9/3 8:48 下午
+ * @date 2020/9/3 8:48pm
  * @email linyimin520812@gmail.com
- * @description 登录校验拦截器
+ * @description login status verify interceptor
  */
 public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
     @Override
@@ -23,7 +23,7 @@ public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
         String path = request.getRequestURI();
 
         /**
-         * 用户已经登录
+         * user had login
          */
         if (Objects.nonNull(session)) {
             Object user = session.getAttribute(Constant.USER_SESSION_KEY);
@@ -40,7 +40,7 @@ public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
         }
 
         /**
-         * 用户未登录
+         * user hadn't login yet
          */
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.sendRedirect(Constant.LOGIN_PAGE_URL);
