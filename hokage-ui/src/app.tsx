@@ -59,7 +59,7 @@ export default class App extends Component<AppProps, AppState> {
                             <Routes />
                         </Content>
                         <Footer style={{ textAlign: 'center' }}>
-                            server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt
+                            Server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt
                         </Footer>
                     </Layout>
                 </Layout>

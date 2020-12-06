@@ -9,7 +9,7 @@ features:
   details: 支持Web终端, 文件管理, 批量任务, 安全组, 资源监控, 让您随时了解服务器状态, 快速操作服务器
 - title: IP自动上报
   details: 服务器IP地址变化时, 自动上报绑定域名, 无须感知IP变化
-footer: server Management ©2020 Created by github@linyimin-bupt
+footer: Server Management ©2020 Created by github@linyimin-bupt
 ---
 
 ## 启动
