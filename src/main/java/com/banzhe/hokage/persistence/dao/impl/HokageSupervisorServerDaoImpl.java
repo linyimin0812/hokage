@@ -45,22 +45,22 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
     }
 
     /**
-     * 查找服务器的管理者id
-     * @param id
+     * retrieve supervisor id by server ids
+     * @param ids: server ids
      * @return
      */
     @Override
-    public List<HokageSupervisorServerDO> listByServerId(Long id) {
-        return supervisorServerMapper.selectByServerId(id);
+    public List<HokageSupervisorServerDO> listByServerIds(List<Long> ids) {
+        return supervisorServerMapper.listByServerIds(ids);
     }
 
     /**
-     * 查找管理员id下的服务器id
-     * @param id
+     * retrieve server id by supervisor ids
+     * @param ids: supervisor ids
      * @return
      */
     @Override
-    public List<HokageSupervisorServerDO> listByIds(List<Long> id) {
-        return supervisorServerMapper.listByIds(id);
+    public List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> ids) {
+        return supervisorServerMapper.listBySupervisorIds(ids);
     }
 }

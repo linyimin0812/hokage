@@ -25,7 +25,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 插入一条新的记录
+     * insert a new record
      * @param hokageUserDO
      * @return
      */
@@ -35,7 +35,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 更新一条记录
+     * update a record
      * @param hokageUserDO
      * @return
      */
@@ -45,7 +45,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 根据id查找用户信息
+     * retrieve user info by id
      * @param id
      * @return
      */
@@ -55,7 +55,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 根据用户名查找用户信息
+     * retrieve user info by username
      * @param name
      * @return
      */
@@ -65,7 +65,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 根据角色查找用户信息
+     * retrieve user info by role
      * @param role
      * @return
      */
@@ -75,7 +75,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     /**
-     * 根据其他条件查找用户信息
+     * retrieve user info by email
      * @param hokageUserDO
      * @return
      */
@@ -87,5 +87,15 @@ public class HokageUserDaoImpl implements HokageUserDao {
     @Override
     public HokageUserDO getUserByEmail(String email) {
         return userMapper.getUserByEmail(email);
+    }
+
+    /**
+     * list user info by user ids
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<HokageUserDO> listUserByIds(List<Long> ids) {
+        return userMapper.listUserByIds(ids);
     }
 }

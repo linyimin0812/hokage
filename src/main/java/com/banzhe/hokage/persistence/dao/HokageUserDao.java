@@ -6,58 +6,65 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/7/26 9:59 下午
+ * @date 2020/7/26 9:59pm
  * @email linyimin520812@gmail.com
- * @description 定义用户表操作接口
+ * @description define user dao interface
  */
 public interface HokageUserDao {
 
     /**
-     * 插入一条新的记录
+     * insert a new record
      * @param hokageUserDO
      * @return
      */
     Long insert(HokageUserDO hokageUserDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param hokageUserDO
      * @return
      */
     Long update(HokageUserDO hokageUserDO);
 
     /**
-     * 根据id查找用户信息
+     * retrieve user info by user id
      * @param id
      * @return
      */
     HokageUserDO getUserById(Long id);
 
     /**
-     * 根据用户名查找用户信息
+     * retrieve user info by username
      * @param name
      * @return
      */
     List<HokageUserDO> ListUserByName(String name);
 
     /**
-     * 根据角色查找用户信息
+     * retrieve user info by role
      * @param role
      * @return
      */
     List<HokageUserDO> ListUserByRole(Integer role);
 
     /**
-     * 根据其他条件查找用户信息
+     * retrieve user info by hokageUserDO
      * @param hokageUserDO
      * @return
      */
     List<HokageUserDO> listAll(HokageUserDO hokageUserDO);
 
     /**
-     * 根据邮箱获取用户信息
+     * retrieve user info by email
      * @param email
      * @return
      */
     HokageUserDO getUserByEmail(String email);
+
+    /**
+     * list user info by user ids
+     * @param ids
+     * @return
+     */
+    List<HokageUserDO> listUserByIds(List<Long> ids);
 }

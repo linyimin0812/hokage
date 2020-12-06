@@ -27,16 +27,16 @@ public interface HokageSupervisorServerDao {
     Long update(HokageSupervisorServerDO supervisorServerDO);
 
     /**
-     * 查找服务器的管理者id
-     * @param id
+     * retrieve supervisor id by server ids
+     * @param ids
      * @return
      */
-    List<HokageSupervisorServerDO> listByServerId(Long id);
+    List<HokageSupervisorServerDO> listByServerIds(List<Long> ids);
 
     /**
      * 查找管理员id下的服务器id
      * @param id
      * @return
      */
-    List<HokageSupervisorServerDO> listByIds(List<Long> id);
+    List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> id);
 }

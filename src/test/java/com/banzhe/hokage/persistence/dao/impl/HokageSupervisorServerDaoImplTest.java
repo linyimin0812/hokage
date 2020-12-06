@@ -39,14 +39,14 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void update() {
         this.insert();
 
-        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerId(12L);
+        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Arrays.asList(12L));
 
         supervisorServerDOS.forEach(item -> {
             item.setServerId(1L);
             supervisorServerDao.update(item);
         });
 
-        supervisorServerDOS = supervisorServerDao.listByServerId(1L);
+        supervisorServerDOS = supervisorServerDao.listByServerIds(Arrays.asList(1L));
         Assert.assertNotEquals(supervisorServerDOS, null);
         Assert.assertEquals(true, supervisorServerDOS.size() > 0);
     }
@@ -56,13 +56,13 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void selectByServerId() {
 
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.listByServerId(12L).size() > 0);
+        Assert.assertEquals(true, supervisorServerDao.listByServerIds(Arrays.asList(12L)).size() > 0);
     }
 
     @Test
     @Rollback
     public void selectBySupervisorId() {
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.listByIds(Arrays.asList(56L)).size() > 0);
+        Assert.assertEquals(true, supervisorServerDao.listBySupervisorIds(Arrays.asList(56L)).size() > 0);
     }
 }

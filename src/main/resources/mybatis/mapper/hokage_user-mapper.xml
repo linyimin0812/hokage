@@ -137,4 +137,17 @@
         </where>
     </select>
 
+    <select id="listUserByIds" parameterType="java.util.List" resultMap="HokageUserMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            id IN
+            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
+    </select>
+
 </mapper>
