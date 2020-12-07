@@ -71,7 +71,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
-            List<HokageUserDO> userDOs = userDao.ListUserByName(hokageUserDO.getUsername());
+            List<HokageUserDO> userDOs = userDao.listUserByName(hokageUserDO.getUsername());
             Assert.assertNotEquals(userDOs, null);
         });
     }
@@ -82,7 +82,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
-            List<HokageUserDO> userDOs = userDao.ListUserByRole(hokageUserDO.getRole());
+            List<HokageUserDO> userDOs = userDao.listUserByRole(hokageUserDO.getRole());
             Assert.assertEquals(true, userDOs.size() > 0);
         });
     }

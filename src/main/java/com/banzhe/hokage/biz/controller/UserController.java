@@ -87,22 +87,37 @@ public class UserController extends BaseController {
         return fail(res.getCode(), res.getMsg());
     }
 
-    // TODO: 管理员信息搜索
     @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserServerSearchForm form) {
-        return success(Collections.emptyList());
+        ServiceResponse<List<HokageUserVO>> response = userService.searchSupervisors(form);
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
     }
 
-    // TODO: 添加管理员
     @RequestMapping(value = "/user/supervisor/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addSupervisors(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+
+        ServiceResponse<Boolean> response = userService.addSupervisor(form.getUserIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
-    // TODO: 删除管理员
+
     @RequestMapping(value = "/user/supervisor/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delSupervisors(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+        ServiceResponse<Boolean> response = userService.deleteSupervisor(form.getUserIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
 

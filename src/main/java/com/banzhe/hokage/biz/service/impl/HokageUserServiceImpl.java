@@ -1,5 +1,6 @@
 package com.banzhe.hokage.biz.service.impl;
 
+import com.banzhe.hokage.biz.Constant;
 import com.banzhe.hokage.biz.enums.OperationTypeEnum;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
@@ -135,7 +136,7 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         ServiceResponse<List<HokageUserVO>> res = new ServiceResponse<>();
 
-        List<HokageUserDO> users = userDao.ListUserByRole(UserRoleEnum.supervisor.getValue());
+        List<HokageUserDO> users = userDao.listUserByRole(UserRoleEnum.supervisor.getValue());
 
         List<HokageUserVO> userVOList = users.stream().map(this::userDO2UserVO).collect(Collectors.toList());
 
@@ -172,6 +173,40 @@ public class HokageUserServiceImpl implements HokageUserService {
         res.success(userVOList);
 
         return res;
+    }
+
+    @Override
+    public ServiceResponse<Boolean> addSupervisor(List<Long> ids) {
+        checkNotNull(ids, "supervisor ids can't be null");
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        boolean isSucceed = ids.stream().map(id -> {
+            HokageUserDO userDO = new HokageUserDO();
+            userDO.setId(id);
+            userDO.setRole(UserRoleEnum.supervisor.getValue());
+            return userDao.update(userDO) > 0;
+        }).allMatch(Boolean::booleanValue);
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> deleteSupervisor(List<Long> ids) {
+        checkNotNull(ids, "supervisor ids can't be null");
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        boolean isSucceed = ids.stream().map(id -> {
+            HokageUserDO userDO = new HokageUserDO();
+            userDO.setId(id);
+            userDO.setRole(UserRoleEnum.subordinate.getValue());
+            return userDao.update(userDO) > 0;
+        }).allMatch(Boolean::booleanValue);
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO deleteSupervisor error");
     }
 
     private HokageUserVO userDO2UserVO(HokageUserDO userDO) {

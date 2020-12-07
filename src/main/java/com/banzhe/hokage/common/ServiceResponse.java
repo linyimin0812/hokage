@@ -5,16 +5,28 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/8/30 3:49 下午
+ * @date 2020/8/30 3:49 pm
  * @email linyimin520812@gmail.com
- * @description 服务层返回
+ * @description service layer return
  */
 @Data
 public class ServiceResponse<T> {
-    private T data; // 服务返回数据
-    private Boolean succeeded;  // 服务调用是否成功
-    private String msg; // 服务调用失败时返回信息
-    private String code; // 错误码
+    /**
+     * data of service return
+     */
+    private T data;
+    /**
+     * is service success
+     */
+    private Boolean succeeded;
+    /**
+     * error messsage
+     */
+    private String msg;
+    /**
+     * service return code
+     */
+    private String code;
 
     public ServiceResponse<T> success(T data) {
         this.data = data;

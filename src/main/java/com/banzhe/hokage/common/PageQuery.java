@@ -4,9 +4,9 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/11/1 4:56 下午
+ * @date 2020/11/1 4:56 pm
  * @email linyimin520812@gmail.com
- * @description 分页查询
+ * @description page query
  */
 @Data
 public class PageQuery {

@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:59 上午
+ * @date 2020/8/23 1:59 am
  * @email linyimin520812@gmail.com
- * @description 自定义参数校验错误码和错误信息注解
+ * @description custom parameter verification error code and error message annotation
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

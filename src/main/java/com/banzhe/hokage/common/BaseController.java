@@ -2,13 +2,13 @@ package com.banzhe.hokage.common;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:11 上午
+ * @date 2020/8/23 1:11 am
  * @email linyimin520812@gmail.com
  * @description
  */
 public class BaseController {
     /**
-     * 正常响应
+     * normal response
      * @param data
      * @param <T>
      * @return
@@ -19,7 +19,7 @@ public class BaseController {
     }
 
     /**
-     * 失败响应
+     * fail response
      * @param code
      * @param msg
      * @param <T>

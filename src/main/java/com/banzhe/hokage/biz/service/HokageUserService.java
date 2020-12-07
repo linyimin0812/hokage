@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/7/26 9:59 下午
+ * @date 2020/7/26 9:59 pm
  * @email linyimin520812@gmail.com
- * @description 定义用户表操作接口
+ * @description define user service interface
  */
 public interface HokageUserService {
 
@@ -39,7 +39,22 @@ public interface HokageUserService {
 
     /**
      * search supervisor
+     * @param form
      * @return
      */
     ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form);
+
+    /**
+     * add supervisor
+     * @param ids
+     * @return
+     */
+    ServiceResponse<Boolean> addSupervisor(List<Long> ids);
+
+    /**
+     * remove supervisor
+     * @param ids
+     * @return
+     */
+    ServiceResponse<Boolean> deleteSupervisor(List<Long> ids);
 }

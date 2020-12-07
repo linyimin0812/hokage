@@ -8,9 +8,18 @@ package com.banzhe.hokage.biz.enums;
  */
 public enum UserRoleEnum {
 
-    super_operator(0),  // 超级管理员
-    supervisor(1),      // 管理员
-    subordinate(2);     // 普通用户
+    /**
+     * super
+     */
+    super_operator(100),
+    /**
+     * supervisor
+     */
+    supervisor(1),
+    /**
+     * ordinary
+     */
+    subordinate(2);
 
     private Integer value;
 

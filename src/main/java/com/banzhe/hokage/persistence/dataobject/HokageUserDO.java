@@ -6,16 +6,34 @@ import java.util.Date;
 
 /**
  * @author linyimin
- * @date 2020/7/26 9:40 下午
+ * @date 2020/7/26 9:40 pm
  * @email linyimin520812@gmail.com
  */
 
 @Data
 public class HokageUserDO extends HokageBaseDO {
-    private Long id;                // 用户id
-    private String username;        // 用户名称
-    private String passwd;          // 用户密码
-    private Integer role;           // 用户角色： 0: 超级管理员, 1 管理员, 2普通用户
-    private String email;           // 用户邮箱
-    private Integer subscribed;   // 是否订阅, 0: 不订阅, 1: 订阅, 发送消息邮件
+    /**
+     * user id
+     */
+    private Long id;
+    /**
+     * username
+     */
+    private String username;
+    /**
+     * user password
+     */
+    private String passwd;
+    /**
+     * role of user: 100: super , 1: supervisor, 2: ordinary
+     */
+    private Integer role;
+    /**
+     * user email
+     */
+    private String email;
+    /**
+     * subscribe or not: 0: dont subscribe, 1: subscribe, when any change, will send user a eamil
+     */
+    private Integer subscribed;
 }

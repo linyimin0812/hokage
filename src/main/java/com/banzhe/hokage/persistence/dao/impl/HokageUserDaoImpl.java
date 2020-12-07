@@ -60,7 +60,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @return
      */
     @Override
-    public List<HokageUserDO> ListUserByName(String name) {
+    public List<HokageUserDO> listUserByName(String name) {
         return userMapper.listUserByName(name);
     }
 
@@ -70,7 +70,7 @@ public class HokageUserDaoImpl implements HokageUserDao {
      * @return
      */
     @Override
-    public List<HokageUserDO> ListUserByRole(Integer role) {
+    public List<HokageUserDO> listUserByRole(Integer role) {
         return userMapper.listUserByRole(role);
     }
 

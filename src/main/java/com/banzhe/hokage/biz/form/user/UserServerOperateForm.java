@@ -6,13 +6,22 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/11/1 5:10 下午
+ * @date 2020/11/1 5:10 pm
  * @email linyimin520812@gmail.com
- * @description 用户操作信息表单
+ * @description user operation form
  */
 @Data
 public class UserServerOperateForm {
-    private Long id;                // 操作者id
-    private List<Long> serverIds;   // 服务器id
-    private List<Long> userIds;     // 用户id
+    /**
+     * operator id
+     */
+    private Long id;
+    /**
+     * server ids
+     */
+    private List<Long> serverIds;
+    /**
+     * user ids
+     */
+    private List<Long> userIds;
 }

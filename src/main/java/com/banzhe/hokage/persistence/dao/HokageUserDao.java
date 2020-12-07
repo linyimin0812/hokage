@@ -38,14 +38,14 @@ public interface HokageUserDao {
      * @param name
      * @return
      */
-    List<HokageUserDO> ListUserByName(String name);
+    List<HokageUserDO> listUserByName(String name);
 
     /**
      * retrieve user info by role
      * @param role
      * @return
      */
-    List<HokageUserDO> ListUserByRole(Integer role);
+    List<HokageUserDO> listUserByRole(Integer role);
 
     /**
      * retrieve user info by hokageUserDO

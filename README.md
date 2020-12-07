@@ -45,7 +45,7 @@ docker run -itd --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWOR
 ### use the fat jar to start
 
 ```shell script
-mvn clean package -Ddockerfile.build.skip
+mvn clean package -Ddockerfile.build.skip=true
 cd target
 ./hokage-0.0.1-SNAPSHOT
 ```
