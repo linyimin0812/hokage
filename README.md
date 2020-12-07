@@ -38,9 +38,23 @@
    
 ## 启动
 
-```shell
-docker run -itd --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.6
-mvn package -Dmaven.test.skip=true
+```shell script
+docker run -itd --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.6
+```
+
+### use the fat jar to start
+
+```shell script
+mvn clean package -Ddockerfile.build.skip
+cd target
+./hokage-0.0.1-SNAPSHOT
+```
+
+### use docker to start
+
+```shell script
+mvn clean package
+docker run -d --restart=always --name hokage -p 8080:8080 hokage-0.0.1:SNAPSHOT
 ```
 
 
