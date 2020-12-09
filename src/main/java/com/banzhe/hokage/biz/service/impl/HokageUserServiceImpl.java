@@ -238,6 +238,19 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
+    @Override
+    public ServiceResponse<Boolean> grantSupervisor(Long id, List<Long> serverIds) {
+        checkNotNull(id, "supervisor id can't be null");
+        checkNotNull(id, "serverIds can't be null");
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        Boolean isSucceed = supervisorServerDao.addBySupervisorId(id, serverIds) > 0;
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO grantSupervisor error");
+    }
+
     private HokageUserVO userDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");

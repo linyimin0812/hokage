@@ -59,4 +59,12 @@ public interface HokageSupervisorServerMapper {
      * @return
      */
     Integer removeBySupervisorId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
+
+    /**
+     * grant servers to a supervisor
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    Integer addBySupervisorId(@Param("supervisorId") Long id, @Param("serverIds") List<Long> serverIds);
 }

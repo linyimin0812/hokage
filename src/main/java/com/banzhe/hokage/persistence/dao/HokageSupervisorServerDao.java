@@ -54,4 +54,12 @@ public interface HokageSupervisorServerDao {
      * @return
      */
     Integer removeBySupervisorId(Long id, List<Long> serverIds);
+
+    /**
+     * grant servers to a supervisor
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    Integer addBySupervisorId(Long id, List<Long> serverIds);
 }

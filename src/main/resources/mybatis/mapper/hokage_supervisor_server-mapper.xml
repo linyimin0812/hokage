@@ -89,4 +89,18 @@
         </where>
     </delete>
 
+    <insert id="addBySupervisorId" >
+        insert into
+        <include refid="tableName"/>
+        VALUES
+        <foreach collection="list" item="serverId" index="index" separator=",">
+            (
+                #{id},
+                now(),
+                now(),
+                #{serverId},
+                #{supervisorId}
+            )
+        </foreach>
+    </insert>
 </mapper>

@@ -73,4 +73,12 @@ public interface HokageUserService {
      */
     ServiceResponse<Boolean> recycleSupervisor(Long id, List<Long> serverIds);
 
+    /**
+     * grant server to supervisor
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    ServiceResponse<Boolean> grantSupervisor(Long id, List<Long> serverIds);
+
 }
