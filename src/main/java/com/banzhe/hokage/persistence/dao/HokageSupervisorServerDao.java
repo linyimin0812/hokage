@@ -7,20 +7,20 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 12:01 下午
+ * @date 2020/8/22 12:01 pm
  * @email linyimin520812@gmail.com
  * @description
  */
 public interface HokageSupervisorServerDao {
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param supervisorServerDO
      * @return
      */
     Long insert(HokageSupervisorServerDO supervisorServerDO);
 
     /**
-     * 更新一条记录
+     * update a recode
      * @param supervisorServerDO
      * @return
      */
@@ -34,9 +34,16 @@ public interface HokageSupervisorServerDao {
     List<HokageSupervisorServerDO> listByServerIds(List<Long> ids);
 
     /**
-     * 查找管理员id下的服务器id
+     * retrieve server ids by supervisor ids
+     * @param ids
+     * @return
+     */
+    List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> ids);
+
+    /**
+     * recycle server manage right by supervisorId
      * @param id
      * @return
      */
-    List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> id);
+    Integer removeBySupervisorIds(Long id);
 }

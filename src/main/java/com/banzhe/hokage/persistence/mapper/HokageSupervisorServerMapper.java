@@ -9,29 +9,29 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 12:01 下午
+ * @date 2020/8/22 12:01 pm
  * @email linyimin520812@gmail.com
- * @description
+ * @description hokage_supervisor_server table mapper interface
  */
 @Mapper
 @Component
 public interface HokageSupervisorServerMapper {
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param supervisorServerDO
      * @return
      */
     Long insert(HokageSupervisorServerDO supervisorServerDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param supervisorServerDO
      * @return
      */
     Long update(HokageSupervisorServerDO supervisorServerDO);
 
     /**
-     * 查找服务器的管理者id
+     * retrieve servers' supervisor by server ids
      * @param id
      * @return
      */
@@ -43,4 +43,11 @@ public interface HokageSupervisorServerMapper {
      * @return
      */
     List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> id);
+
+    /**
+     * recycle server manage right by supervisorId
+     * @param id
+     * @return
+     */
+    Integer removeBySupervisorIds(Long id);
 }

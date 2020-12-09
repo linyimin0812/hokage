@@ -8,18 +8,43 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/10/28 12:26 上午
+ * @date 2020/10/28 12:26 am
  * @email linyimin520812@gmail.com
- * @description 用户管理
+ * @description user management
  */
 @Data
 public class HokageUserVO {
-    private Long id;                        // 用户id
-    private String username;                // 用户名称
-    private String email;                   // 用户邮箱
-    private Integer role;                   // 角色
-    private Integer serverNum;              // 使用或负责服务器数量
-    private List<String> serverLabel;       // 服务器标签
-    List<HokageOperation> operationList;    // 用户对应的操作
-    List<HokageServerVO> serverVOList;      // 使用或者管理的服务器具体信息
+    /**
+     * user id
+     */
+    private Long id;
+    /**
+     * user name
+     */
+    private String username;
+
+    /**
+     * user email
+     */
+    private String email;
+    /**
+     * user role
+     */
+    private Integer role;
+    /**
+     * number of server the user use or manage
+     */
+    private Integer serverNum;
+    /**
+     * labels of server
+     */
+    private List<String> serverLabel;
+    /**
+     * operation list
+     */
+    List<HokageOperation> operationList;
+    /**
+     * detail of server the user use or manage
+     */
+    List<HokageServerVO> serverVOList;
 }

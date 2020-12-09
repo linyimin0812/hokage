@@ -133,10 +133,14 @@ public class UserController extends BaseController {
         return success(Boolean.TRUE);
     }
 
-    // TODO: 回收管理员服务器权限
     @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSupervisorServer(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+        ServiceResponse<Boolean> response = userService.deleteSupervisor(form.getUserIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
 

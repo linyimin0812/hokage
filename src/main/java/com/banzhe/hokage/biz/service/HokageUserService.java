@@ -57,4 +57,11 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<Boolean> deleteSupervisor(List<Long> ids);
+
+    /**
+     * recycle supervisor right by supervisor id
+     * @param id
+     * @return
+     */
+    ServiceResponse<Boolean> recycleSupervisor(Long id);
 }

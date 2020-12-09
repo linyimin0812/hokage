@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/10/28 12:32 上午
+ * @date 2020/10/28 12:32 am
  * @email linyimin520812@gmail.com
- * @description 服务器具体信息
+ * @description detail of server
  */
 @Data
 public class HokageServerVO {

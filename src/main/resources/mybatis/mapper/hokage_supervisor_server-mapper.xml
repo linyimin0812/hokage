@@ -17,9 +17,11 @@
         server_id,
         supervisor_id
     </sql>
+
     <sql id="tableName">
         hokage_supervisor_server
     </sql>
+
     <insert id="insert" parameterType="HokageSupervisorServerDO">
         INSERT INTO
         <include refid="tableName"/>
@@ -71,4 +73,14 @@
             </foreach>
         </where>
     </select>
+
+    <delete id="removeBySupervisorIds" parameterType="java.lang.Long">
+        delete
+        FROM
+        <include refid="tableName"/>
+        <where>
+            supervisor_id = #{id}
+        </where>
+    </delete>
+
 </mapper>

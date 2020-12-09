@@ -1,6 +1,5 @@
 package com.banzhe.hokage.biz.service.impl;
 
-import com.banzhe.hokage.biz.Constant;
 import com.banzhe.hokage.biz.enums.OperationTypeEnum;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
@@ -201,12 +200,29 @@ public class HokageUserServiceImpl implements HokageUserService {
             HokageUserDO userDO = new HokageUserDO();
             userDO.setId(id);
             userDO.setRole(UserRoleEnum.subordinate.getValue());
-            return userDao.update(userDO) > 0;
+
+            if (userDao.update(userDO) <= 0) {
+                return Boolean.FALSE;
+            }
+
+            return supervisorServerDao.removeBySupervisorIds(id) > 0;
         }).allMatch(Boolean::booleanValue);
         if (isSucceed) {
             return res.success(Boolean.TRUE);
         }
         return res.fail("A-XXX", "HokageUserDO deleteSupervisor error");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> recycleSupervisor(Long id) {
+        checkNotNull(id, "supervisor ids can't be null");
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        Boolean isSucceed = supervisorServerDao.removeBySupervisorIds(id) > 0;
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
     private HokageUserVO userDO2UserVO(HokageUserDO userDO) {
