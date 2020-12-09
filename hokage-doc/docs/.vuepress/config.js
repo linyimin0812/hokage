@@ -5,5 +5,6 @@ module.exports = {
         nav:[
             { text: 'GitHub', link: 'https://github.com/linyimin-bupt/hokage'},
         ]
-    }
+    },
+    port: 3000
 }
