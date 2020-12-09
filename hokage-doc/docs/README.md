@@ -15,12 +15,14 @@ footer: Server Management ©2020 Created by github@linyimin-bupt
 ## 启动
 
 ```shell script
-mvn springboot:run
+mvn clean package -Ddockerfile.build.skip=true
+cd target
+./hokage-0.0.1-SNAPSHOT
 ```
 
 ## Docker启动
 
 ```shell script
-docker build -t hokage .
-docker run -p 8000:3000 hokage
+mvn clean package
+docker run -d --restart=always --name hokage -p 8080:8080 hokage-0.0.1:SNAPSHOT
 ```
