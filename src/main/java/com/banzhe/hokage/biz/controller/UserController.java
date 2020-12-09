@@ -131,7 +131,15 @@ public class UserController extends BaseController {
     // TODO: 授予管理员服务器权限
     @RequestMapping(value = "/user/supervisor/server/grant", method = RequestMethod.POST)
     public ResultVO<Boolean> grantSupervisorServer(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+        List<Long> supervisorIds = form.getUserIds();
+        Preconditions.checkNotNull(supervisorIds);
+
+        ServiceResponse<Boolean> response = userService.grantSupervisor(supervisorIds.get(0), form.getServerIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
     @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
