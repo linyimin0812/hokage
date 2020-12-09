@@ -45,5 +45,13 @@ public interface HokageSupervisorServerDao {
      * @param id
      * @return
      */
-    Integer removeBySupervisorIds(Long id);
+    Integer removeBySupervisorId(Long id);
+
+    /**
+     * recycle server manage right by supervisor Id and server ids
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    Integer removeBySupervisorId(Long id, List<Long> serverIds);
 }

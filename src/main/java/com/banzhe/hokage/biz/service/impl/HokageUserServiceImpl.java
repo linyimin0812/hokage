@@ -205,7 +205,7 @@ public class HokageUserServiceImpl implements HokageUserService {
                 return Boolean.FALSE;
             }
 
-            return supervisorServerDao.removeBySupervisorIds(id) > 0;
+            return supervisorServerDao.removeBySupervisorId(id) > 0;
         }).allMatch(Boolean::booleanValue);
         if (isSucceed) {
             return res.success(Boolean.TRUE);
@@ -218,7 +218,20 @@ public class HokageUserServiceImpl implements HokageUserService {
         checkNotNull(id, "supervisor ids can't be null");
 
         ServiceResponse<Boolean> res = new ServiceResponse<>();
-        Boolean isSucceed = supervisorServerDao.removeBySupervisorIds(id) > 0;
+        Boolean isSucceed = supervisorServerDao.removeBySupervisorId(id) > 0;
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> recycleSupervisor(Long id, List<Long> serverIds) {
+        checkNotNull(id, "supervisor id can't be null");
+        checkNotNull(id, "serverIds can't be null");
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        Boolean isSucceed = supervisorServerDao.removeBySupervisorId(id, serverIds) > 0;
         if (isSucceed) {
             return res.success(Boolean.TRUE);
         }

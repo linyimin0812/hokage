@@ -3,6 +3,7 @@ package com.banzhe.hokage.persistence.mapper;
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -49,5 +50,13 @@ public interface HokageSupervisorServerMapper {
      * @param id
      * @return
      */
-    Integer removeBySupervisorIds(Long id);
+    Integer removeBySupervisorId(@Param("id") Long id);
+
+    /**
+     * recycle server manage right by supervisorId and server ids
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    Integer removeBySupervisorId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
 }

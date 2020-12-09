@@ -65,7 +65,12 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
     }
 
     @Override
-    public Integer removeBySupervisorIds(Long id) {
-        return null;
+    public Integer removeBySupervisorId(Long id) {
+        return supervisorServerMapper.removeBySupervisorId(id);
+    }
+
+    @Override
+    public Integer removeBySupervisorId(Long id, List<Long> serverIds) {
+        return supervisorServerMapper.removeBySupervisorId(id, serverIds);
     }
 }
