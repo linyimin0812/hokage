@@ -6,5 +6,6 @@ module.exports = {
             { text: 'GitHub', link: 'https://github.com/linyimin-bupt/hokage'},
         ]
     },
-    port: 3000
+    port: 3000,
+    base: "/docs"
 }

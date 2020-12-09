@@ -165,7 +165,6 @@
 				<artifactId>frontend-maven-plugin</artifactId>
 				<version>1.10.0</version>
 				<configuration>
-					<workingDirectory>hokage-ui</workingDirectory>
 					<installDirectory>target</installDirectory>
 				</configuration>
 				<executions>
@@ -179,21 +178,45 @@
 							<npmVersion>6.14.7</npmVersion>
 						</configuration>
 					</execution>
+
 					<execution>
-						<id>npm install</id>
+						<id>doc npm install</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
+							<workingDirectory>hokage-doc</workingDirectory>
 							<arguments>install</arguments>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm run build</id>
+						<id>doc npm run build</id>
 						<goals>
 							<goal>npm</goal>
 						</goals>
 						<configuration>
+							<workingDirectory>hokage-doc</workingDirectory>
+							<arguments>run build</arguments>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>front npm install</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>hokage-ui</workingDirectory>
+							<arguments>install</arguments>
+						</configuration>
+					</execution>
+					<execution>
+						<id>front npm run build</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>hokage-ui</workingDirectory>
 							<arguments>run build</arguments>
 						</configuration>
 					</execution>
@@ -203,6 +226,21 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<executions>
 					<execution>
+						<id>copy doc file to template</id>
+						<phase>generate-resources</phase>
+						<configuration>
+							<target>
+								<copy todir="${project.build.directory}/classes/templates/docs/">
+									<fileset dir="${project.basedir}/hokage-doc/docs/.vuepress/dist"/>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>copy front file to template</id>
 						<phase>generate-resources</phase>
 						<configuration>
 							<target>
