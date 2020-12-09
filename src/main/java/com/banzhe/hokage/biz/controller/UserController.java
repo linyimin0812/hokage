@@ -10,6 +10,7 @@ import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
+import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ import java.util.Objects;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:32
+ * @date 2020/8/23 1:32pm
  * @email linyimin520812@gmail.com
  * @description user controller
  */
@@ -135,7 +136,14 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSupervisorServer(@RequestBody UserServerOperateForm form) {
-        ServiceResponse<Boolean> response = userService.deleteSupervisor(form.getUserIds());
+        ServiceResponse<Boolean> response = null;
+        List<Long> supervisorIds = form.getServerIds();
+        Preconditions.checkNotNull(supervisorIds);
+        if (Objects.nonNull(form.getServerIds())) {
+            response = userService.recycleSupervisor(supervisorIds.get(0), form.getServerIds());
+        } else {
+            response = userService.recycleSupervisor(form.getUserIds().get(0));
+        }
 
         if (response.getSucceeded()) {
             return success(response.getData());
