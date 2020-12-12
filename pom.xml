@@ -178,7 +178,7 @@
 							<npmVersion>6.14.7</npmVersion>
 						</configuration>
 					</execution>
-
+					<!-- compile vuepress doc starts -->
 					<execution>
 						<id>doc npm install</id>
 						<goals>
@@ -199,7 +199,9 @@
 							<arguments>run build</arguments>
 						</configuration>
 					</execution>
+					<!-- compile vuepress doc ends -->
 
+					<!-- compile hokage ui starts -->
 					<execution>
 						<id>front npm install</id>
 						<goals>
@@ -220,6 +222,7 @@
 							<arguments>run build</arguments>
 						</configuration>
 					</execution>
+					<!-- compile hokage ui ends -->
 				</executions>
 			</plugin>
 			<plugin>

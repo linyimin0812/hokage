@@ -128,7 +128,6 @@ public class UserController extends BaseController {
         return success(new HokageUserVO());
     }
 
-    // TODO: 授予管理员服务器权限
     @RequestMapping(value = "/user/supervisor/server/grant", method = RequestMethod.POST)
     public ResultVO<Boolean> grantSupervisorServer(@RequestBody UserServerOperateForm form) {
         List<Long> supervisorIds = form.getUserIds();
