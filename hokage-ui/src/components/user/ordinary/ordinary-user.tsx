@@ -20,9 +20,11 @@ interface NestedTableDataSource {
 	key: string,
 	hostname: string,
 	domainName: string,
+	IPAddress: string,
 	serverTags: string[],
 	numberOfUser: number,
-	status: string
+	status: string,
+	action: string
 }
 
 // 嵌套表 
@@ -36,6 +38,11 @@ const columns = [
 		title: '域名',
 		dataIndex: 'domainName',
 		key: 'domainName',
+	},
+	{
+		title: 'IP地址',
+		dataIndex: 'IPAddress',
+		key: 'IPAddress',
 	},
 	{
 		title: '标签',
@@ -85,9 +92,9 @@ const columns = [
 		key: 'status',
 	},
 	{
-		title: '最近在线时间',
-		dataIndex: 'recentOnlineTime',
-		key: 'recentOnlineTime',
+		title: '操作',
+		dataIndex: 'action',
+		key: 'action',
 	},
 
 ];
@@ -131,9 +138,11 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 							key: record.key + '_' + i,
 							hostname: record.name,
 							domainName: record.name,
+							IPAddress: `10.108.210.21${i}`,
 							serverTags: [colors[i], colors[i + 1]],
 							numberOfUser: 3,
 							status: 'online',
+							action: '回收'
 						};
 						datasources.push(data);
 					}
@@ -266,7 +275,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 				name: 'name_' + i + '.pcncad.club',
 				serverTags: ['ordinaryServer', 'gpuServer', 'intranetServer', 'publicNetworkServer'],
 				numOfServer: i + 1,
-				status: 'online',
+				action: '添加服务器 | 删除',
 			};
 			data.push(value);
 		}
