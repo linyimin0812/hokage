@@ -264,6 +264,40 @@ public class HokageUserServiceImpl implements HokageUserService {
         return response;
     }
 
+    /**
+     * search subordinate
+     * @param form
+     * @return
+     */
+    @Override
+    public ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form) {
+        ServiceResponse<List<HokageUserVO>> res = new ServiceResponse<>();
+
+        List<HokageUserDO>  supervisorList = Collections.EMPTY_LIST;
+        if (Objects.nonNull(form.getId()) && form.getId() > 0) {
+            HokageUserDO userDO = userDao.getUserById(form.getId());
+            supervisorList = Arrays.asList(userDO);
+        } else if (StringUtils.isNoneBlank(form.getLabel())) {
+            // 1. retrieve server info by label
+            List<HokageServerDO> serverDOList = serverDao.listByType(form.getLabel());
+            // 2. retrieve subordinate ids by server ids
+            List<Long> serverIds = serverDOList.stream().map(HokageServerDO::getId).collect(Collectors.toList());
+            List<HokageSubordinateServerDO> subordinateServerDOS = subordinateServerDao.listByServerIds(serverIds);
+            // 3. retrieve subordinate info based on subordinate ids
+            List<Long> userIds = subordinateServerDOS.stream().map(HokageSubordinateServerDO::getId).collect(Collectors.toList());
+            supervisorList = userDao.listUserByIds(userIds);
+        } else {
+            HokageUserDO hokageUserDO = new HokageUserDO();
+            hokageUserDO.setUsername(form.getUsername());
+            supervisorList = userDao.listAll(hokageUserDO);
+        }
+
+        List<HokageUserVO> userVOList = supervisorList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
+        res.success(userVOList);
+
+        return res;
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");

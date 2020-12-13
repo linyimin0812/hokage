@@ -89,4 +89,10 @@ public interface HokageUserService {
      */
     ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId);
 
+    /**
+     * search subordinate
+     * @param form
+     * @return
+     */
+    ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form);
 }

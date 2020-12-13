@@ -171,7 +171,6 @@ public class UserController extends BaseController {
         return fail(res.getCode(), res.getMsg());
     }
 
-    // TODO: 普通用户信息搜索
     @RequestMapping(value = "/user/subordinate/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSubordinate(@RequestBody UserServerSearchForm form) {
         return success(Collections.emptyList());
