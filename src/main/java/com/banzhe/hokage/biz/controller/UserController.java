@@ -144,7 +144,7 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSupervisorServer(@RequestBody UserServerOperateForm form) {
-        ServiceResponse<Boolean> response = null;
+        ServiceResponse<Boolean> response;
         List<Long> supervisorIds = form.getServerIds();
         Preconditions.checkNotNull(supervisorIds);
         if (Objects.nonNull(form.getServerIds())) {
@@ -174,7 +174,13 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/user/subordinate/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSubordinate(@RequestBody UserServerSearchForm form) {
-        return success(Collections.emptyList());
+        ServiceResponse<List<HokageUserVO>> response = userService.searchSubordinates(form);
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
     }
 
     @RequestMapping(value = "/user/subordinate/add", method = RequestMethod.POST)
@@ -227,7 +233,6 @@ public class UserController extends BaseController {
         return fail(response.getCode(), response.getMsg());
     }
 
-    // TODO: 回收普通用户服务器权限
     @RequestMapping(value = "/user/subordinate/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSubordinateServer(@RequestBody UserServerOperateForm form) {
 
