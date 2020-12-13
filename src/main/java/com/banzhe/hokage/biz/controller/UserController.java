@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -239,7 +238,7 @@ public class UserController extends BaseController {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()));
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getServerIds()));
 
-        ServiceResponse<Boolean> response = null;
+        ServiceResponse<Boolean> response;
 
         if (Objects.nonNull(form.getServerIds())) {
             response = userService.recycleSubordinate(form.getUserIds().get(0), form.getServerIds());
