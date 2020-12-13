@@ -112,4 +112,12 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<Boolean> deleteSubordinate(@Param("supervisorId") Long supervisorId, @Param("subordinateIds") List<Long> ids);
+
+    /**
+     * grant server to subordinate
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    ServiceResponse<Boolean> grantSubordinate(Long id, List<Long> serverIds);
 }

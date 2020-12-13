@@ -45,4 +45,12 @@ public interface HokageSubordinateServerDao {
      * @return
      */
     HokageSubordinateServerDO getById(Long id);
+
+    /**
+     * grant servers to a subordinate
+     * @param subordinateId
+     * @param serverIds
+     * @return
+     */
+    Long addBySubordinateId(Long subordinateId, List<Long> serverIds);
 }

@@ -192,7 +192,6 @@ public class UserController extends BaseController {
 
     }
 
-    // TODO: 删除普通用户
     @RequestMapping(value = "/user/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delSubordinate(@RequestBody UserServerOperateForm form) {
 
@@ -214,10 +213,18 @@ public class UserController extends BaseController {
         return success(new HokageUserVO());
     }
 
-    // TODO: 授予普通用户服务器权限
     @RequestMapping(value = "/user/subordinate/server/grant", method = RequestMethod.POST)
     public ResultVO<Boolean> grantSubordinateServer(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()));
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = userService.grantSupervisor(form.getUserIds().get(0), form.getServerIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
     // TODO: 回收普通用户服务器权限

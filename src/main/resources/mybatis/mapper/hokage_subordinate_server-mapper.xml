@@ -90,4 +90,19 @@
         </where>
     </select>
 
+    <insert id="addBySubordinateId" >
+        insert into
+        <include refid="tableName"/>
+        VALUES
+        <foreach collection="serverIds" item="serverId" index="index" separator=",">
+            (
+            #{id},
+            now(),
+            now(),
+            #{serverId},
+            #{supervisorId}
+            )
+        </foreach>
+    </insert>
+
 </mapper>

@@ -73,4 +73,15 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     public HokageSubordinateServerDO getById(Long id) {
         return subordinateServerMapper.selectById(id);
     }
+
+    /**
+     * grant servers to a subordinate
+     * @param subordinateId
+     * @param serverIds
+     * @return
+     */
+    @Override
+    public Long addBySubordinateId(Long subordinateId, List<Long> serverIds) {
+        return subordinateServerMapper.addBySubordinateId(subordinateId, serverIds);
+    }
 }

@@ -2,6 +2,7 @@ package com.banzhe.hokage.persistence.mapper;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -51,4 +52,12 @@ public interface HokageSubordinateServerMapper {
      * @return
      */
     HokageSubordinateServerDO selectById(Long id);
+
+    /**
+     * grant servers to a subordinate
+     * @param subordinateId
+     * @param serverIds
+     * @return
+     */
+    Long addBySubordinateId(@Param("subordinateId") Long subordinateId, @Param("serverIds") List<Long> serverIds);
 }
