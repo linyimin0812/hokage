@@ -34,6 +34,26 @@
             #{supervisorId}
         );
     </insert>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="allColumns"/>
+        )
+        VALUES
+
+        <foreach collection="list" item="supervisorSubordinateDO" index="index" separator=",">
+            (
+                #{id},
+                now(),
+                now(),
+                #{supervisorSubordinateDO.subordinateId},
+                #{supervisorSubordinateDO.supervisorId}
+            )
+        </foreach>
+    </insert>
+
     <update id="update" parameterType="HokageSupervisorServerDO">
         UPDATE
         <include refid="tableName"/>

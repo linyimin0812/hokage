@@ -12,6 +12,7 @@ import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -179,7 +180,17 @@ public class UserController extends BaseController {
     // TODO: 添加普通用户
     @RequestMapping(value = "/user/subordinate/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addSubordinate(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+
+        Preconditions.checkNotNull(form.getId(), "operationId can't be null");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be empty");
+
+        ServiceResponse<Boolean> response = userService.addSubordinate(form.getId(), form.getUserIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
+
     }
 
     // TODO: 删除普通用户

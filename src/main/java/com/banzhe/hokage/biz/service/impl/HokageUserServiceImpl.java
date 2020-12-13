@@ -298,6 +298,27 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res;
     }
 
+    @Override
+    public ServiceResponse<Boolean> addSubordinate(Long supervisorId, List<Long> ids) {
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOList = ids.stream().map(id -> {
+            HokageSupervisorSubordinateDO supervisorSubordinateDO  = new HokageSupervisorSubordinateDO();
+
+            supervisorSubordinateDO.setSupervisorId(supervisorId);
+            supervisorSubordinateDO.setSubordinateId(id);
+
+            return supervisorSubordinateDO;
+        }).collect(Collectors.toList());
+
+        Long result = supervisorSubordinateDao.insertBatch(supervisorSubordinateDOList);
+        if (result > 0) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");

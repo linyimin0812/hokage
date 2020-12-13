@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:42 上午
+ * @date 2020/8/22 11:42 am
  * @email linyimin520812@gmail.com
- * @description 管理员与用户关系映射表
+ * @description supervisor and subordinate relationship mapping table Dao interface implementation
  */
 @Repository
 public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubordinateDao {
@@ -32,6 +32,16 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     @Override
     public Long insert(HokageSupervisorSubordinateDO supervisorSubordinateDO) {
         return supervisorSubordinateMapper.insert(supervisorSubordinateDO);
+    }
+
+    /**
+     * insert multiple new records
+     * @param supervisorSubordinateDOS
+     * @return
+     */
+    @Override
+    public Long insertBatch(List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS) {
+        return supervisorSubordinateMapper.insertBatch(supervisorSubordinateDOS);
     }
 
     /**

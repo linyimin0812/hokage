@@ -6,48 +6,55 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:42 上午
+ * @date 2020/8/22 11:42 am
  * @email linyimin520812@gmail.com
- * @description 管理员与用户关系映射表
+ * @description supervisor and subordinate relationship mapping table Dao interface
  */
 public interface HokageSupervisorSubordinateDao {
 
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param supervisorSubordinateDO
      * @return
      */
     Long insert(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
-     * 更新一条记录
+     * insert multiple new records
+     * @param supervisorSubordinateDOS
+     * @return
+     */
+    Long insertBatch(List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS);
+
+    /**
+     * update a new record
      * @param supervisorSubordinateDO
      * @return
      */
     Long update(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
-     * 根据id查找管理员与用户的关系映射信息
+     * retrieve supervisor and subordinate relationship mapping information based on id
      * @param id
      * @return
      */
     HokageSupervisorSubordinateDO listById(Long id);
 
     /**
-     * 查找全部信息
+     * retrieve all supervisor and subordinate relationship mapping information
      * @return
      */
     List<HokageSupervisorSubordinateDO> listAll();
 
     /**
-     * 查找管理员名下的用户id
+     * retrieve subordinate id based on supervisor id
      * @param id
      * @return
      */
     List<HokageSupervisorSubordinateDO> listBySupervisorId(Long id);
 
     /**
-     * 查找用户对应的管理员id
+     * retrieve supervisor id based on subordinate id
      * @param id
      * @return
      */

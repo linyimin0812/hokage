@@ -6,6 +6,7 @@ import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
+import org.apache.ibatis.annotations.Param;
 
 import javax.xml.ws.Service;
 import java.util.List;
@@ -95,4 +96,12 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form);
+
+    /**
+     * add subordinate
+     * @param supervisorId
+     * @param ids
+     * @return
+     */
+    ServiceResponse<Boolean> addSubordinate(@Param("supervisorId") Long supervisorId, @Param("subordinateIds") List<Long> ids);
 }
