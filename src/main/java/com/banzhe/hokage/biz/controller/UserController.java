@@ -219,7 +219,7 @@ public class UserController extends BaseController {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()));
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getServerIds()));
 
-        ServiceResponse<Boolean> response = userService.grantSupervisor(form.getUserIds().get(0), form.getServerIds());
+        ServiceResponse<Boolean> response = userService.grantSubordinate(form.getUserIds().get(0), form.getServerIds());
 
         if (response.getSucceeded()) {
             return success(response.getData());
@@ -230,7 +230,22 @@ public class UserController extends BaseController {
     // TODO: 回收普通用户服务器权限
     @RequestMapping(value = "/user/subordinate/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSubordinateServer(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()));
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = null;
+
+        if (Objects.nonNull(form.getServerIds())) {
+            response = userService.recycleSubordinate(form.getUserIds().get(0), form.getServerIds());
+        } else {
+            response = userService.recycleSubordinate(form.getUserIds().get(0));
+        }
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
 

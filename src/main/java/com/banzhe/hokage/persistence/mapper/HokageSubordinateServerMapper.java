@@ -60,4 +60,20 @@ public interface HokageSubordinateServerMapper {
      * @return
      */
     Long addBySubordinateId(@Param("subordinateId") Long subordinateId, @Param("serverIds") List<Long> serverIds);
+
+    /**
+     * recycle server manage right by subordinateId
+     * @param id
+     * @return
+     */
+    Integer removeBySubordinateId(@Param("id") Long id);
+
+    /**
+     * recycle server manage right by subordinateId and server ids
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    Integer removeBySubordinateId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
+
 }

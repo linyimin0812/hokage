@@ -105,4 +105,19 @@
         </foreach>
     </insert>
 
+    <delete id="removeBySubordinateId">
+        delete
+        FROM
+        <include refid="tableName"/>
+        <where>
+            subordinate_id = #{id}
+            <if test="serverIds != null and serverIds.size > 0">
+                and server_id IN
+                <foreach collection="serverIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
 </mapper>

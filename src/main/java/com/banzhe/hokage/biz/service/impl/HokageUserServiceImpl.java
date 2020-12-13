@@ -341,6 +341,26 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res.fail("A-XXX", "HokageUserDO grantSupervisor error");
     }
 
+    @Override
+    public ServiceResponse<Boolean> recycleSubordinate(Long id) {
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        Boolean isSucceed = subordinateServerDao.removeBySubordinateId(id) > 0;
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> recycleSubordinate(Long id, List<Long> serverIds) {
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+        Boolean isSucceed = subordinateServerDao.removeBySubordinateId(id, serverIds) > 0;
+        if (isSucceed) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");

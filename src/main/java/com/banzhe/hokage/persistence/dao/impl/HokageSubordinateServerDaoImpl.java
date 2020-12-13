@@ -84,4 +84,14 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     public Long addBySubordinateId(Long subordinateId, List<Long> serverIds) {
         return subordinateServerMapper.addBySubordinateId(subordinateId, serverIds);
     }
+
+    @Override
+    public Integer removeBySubordinateId(Long id) {
+        return subordinateServerMapper.removeBySubordinateId(id);
+    }
+
+    @Override
+    public Integer removeBySubordinateId(Long id, List<Long> serverIds) {
+        return subordinateServerMapper.removeBySubordinateId(id, serverIds);
+    }
 }

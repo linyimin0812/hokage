@@ -11,6 +11,13 @@ import lombok.Data;
 @Data
 public class HokageSubordinateServerDO extends HokageBaseDO {
     private Long id;
-    private Long subordinateId; // 普通用户id
-    private Long serverId;      // 服务器id
+    /**
+     * subordinate id
+     */
+    private Long subordinateId;
+    /**
+     * server id
+     */
+    private Long serverId;
+    // TODO: add supervisor id
 }

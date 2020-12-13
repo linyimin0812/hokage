@@ -120,4 +120,21 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<Boolean> grantSubordinate(Long id, List<Long> serverIds);
+
+    /**
+     * recycle all subordinate right by subordinate id
+     * @param id
+     * @return
+     */
+    ServiceResponse<Boolean> recycleSubordinate(Long id);
+
+    /**
+     * recycle all subordinate right by supervisor id and server ids
+     * @param id
+     * @param serverIds
+     * @return
+     */
+    ServiceResponse<Boolean> recycleSubordinate(Long id, List<Long> serverIds);
+
+
 }
