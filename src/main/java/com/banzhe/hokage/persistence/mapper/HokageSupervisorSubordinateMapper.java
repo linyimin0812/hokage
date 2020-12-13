@@ -28,7 +28,7 @@ public interface HokageSupervisorSubordinateMapper {
      * @param supervisorSubordinateDOS
      * @return
      */
-    Long insertBatch(List<HokageSupervisorSubordinateDO> supervisorSubordinateDO);
+    Long insertBatch(List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS);
 
     /**
      * update a record
