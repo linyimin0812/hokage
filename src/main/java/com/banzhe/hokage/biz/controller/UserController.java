@@ -158,11 +158,17 @@ public class UserController extends BaseController {
         return fail(response.getCode(), response.getMsg());
     }
 
-
-    // TODO: 普通用户列表
     @RequestMapping(value = "/user/subordinate/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageUserVO>> listSubordinate() {
-        return success(Collections.emptyList());
+    public ResultVO<List<HokageUserVO>> listSubordinate(@RequestParam UserServerSearchForm form) {
+
+        Preconditions.checkNotNull(form.getId(), "operation id can't be null");
+
+        ServiceResponse<List<HokageUserVO>> res = userService.listOrdinaryUsers(form.getId());
+
+        if (res.getSucceeded()) {
+            return success(res.getData());
+        }
+        return fail(res.getCode(), res.getMsg());
     }
 
     // TODO: 普通用户信息搜索

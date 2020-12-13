@@ -37,6 +37,17 @@ public class HokageServerVO {
      * supervisor id
      */
     private Long supervisorId;
+
+    /**
+     * subordinate name
+     */
+    private String subordinate;
+
+    /**
+     * subordinate id
+     */
+    private Long subordinateId;
+
     /**
      * number of user
      */

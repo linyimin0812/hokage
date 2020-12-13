@@ -25,7 +25,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     }
 
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param subordinateServerDO
      * @return
      */
@@ -35,7 +35,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     }
 
     /**
-     * 更新一条记录
+     * update a record
      * @param subordinateServerDO
      * @return
      */
@@ -45,27 +45,27 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     }
 
     /**
-     * 查找服务器的使用者id
-     * @param id
+     * retrieve subordinate ids based on server ids
+     * @param ids
      * @return
      */
     @Override
-    public List<HokageSubordinateServerDO> listByServerId(Long id) {
-        return subordinateServerMapper.selectByServerId(id);
+    public List<HokageSubordinateServerDO> listByServerIds(List<Long> ids) {
+        return subordinateServerMapper.selectByServerIds(ids);
     }
 
     /**
-     * 查找使用者id下的服务器id
-     * @param id
+     * retrieve server ids based on subordinate ids
+     * @param ids
      * @return
      */
     @Override
-    public List<HokageSubordinateServerDO> listByOrdinateId(Long id) {
-        return subordinateServerMapper.selectByOrdinateId(id);
+    public List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids) {
+        return subordinateServerMapper.selectByOrdinateIds(ids);
     }
 
     /**
-     * 使用id查找记录
+     * retrieve record based on primary key
      * @param id
      * @return
      */

@@ -11,24 +11,16 @@ import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageSequenceService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
-import com.banzhe.hokage.persistence.dao.HokageServerDao;
-import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
-import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
-import com.banzhe.hokage.persistence.dao.HokageUserDao;
-import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
-import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
-import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
-import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
+import com.banzhe.hokage.persistence.dao.*;
+import com.banzhe.hokage.persistence.dataobject.*;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -48,6 +40,7 @@ public class HokageUserServiceImpl implements HokageUserService {
     private HokageSupervisorServerDao supervisorServerDao;
     private HokageServerDao serverDao;
     private HokageSubordinateServerDao subordinateServerDao;
+    private HokageSupervisorSubordinateDao supervisorSubordinateDao;
 
     @Autowired
     public void setUserDao(HokageUserDao userDao) {
@@ -137,7 +130,7 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         List<HokageUserDO> users = userDao.listUserByRole(UserRoleEnum.supervisor.getValue());
 
-        List<HokageUserVO> userVOList = users.stream().map(this::userDO2UserVO).collect(Collectors.toList());
+        List<HokageUserVO> userVOList = users.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
 
         res.success(userVOList);
 
@@ -168,7 +161,7 @@ public class HokageUserServiceImpl implements HokageUserService {
             supervisorList = userDao.listAll(hokageUserDO);
         }
 
-        List<HokageUserVO> userVOList = supervisorList.stream().map(this::userDO2UserVO).collect(Collectors.toList());
+        List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
         res.success(userVOList);
 
         return res;
@@ -251,17 +244,34 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res.fail("A-XXX", "HokageUserDO grantSupervisor error");
     }
 
-    private HokageUserVO userDO2UserVO(HokageUserDO userDO) {
+    @Override
+    public ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId) {
+        ServiceResponse<List<HokageUserVO>> response = new ServiceResponse<>();
+        HokageUserDO userDO = userDao.getUserById(supervisorId);
+        List<HokageUserDO> userDOList = new ArrayList<>();
+        // if supervisorId is a super, list all ordinary user
+        if (userDO.getRole().equals(UserRoleEnum.super_operator.getValue())) {
+            userDOList = userDao.listUserByRole(UserRoleEnum.subordinate.getValue());
+        } else {
+            List<Long> userIdList = supervisorSubordinateDao.listBySupervisorId(supervisorId).stream()
+                    .map(HokageSupervisorSubordinateDO::getSubordinateId)
+                    .collect(Collectors.toList());
+            userDOList = userDao.listUserByIds(userIdList);
+        }
+        List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
+        response.success(userVOList);
+
+        return response;
+    }
+
+    private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");
 
         HokageUserVO userVO = new HokageUserVO();
 
         // supervisor info
-        userVO.setId(userDO.getId());
-        userVO.setEmail(userDO.getEmail());
-        userVO.setRole(userDO.getRole());
-        userVO.setUsername(userDO.getUsername());
+        BeanUtils.copyProperties(userDO, userVO);
 
         // server information which managed by the supervisor
         List<Long> serverIds = supervisorServerDao.listByServerIds(Arrays.asList(userDO.getId())).stream()
@@ -271,9 +281,7 @@ public class HokageUserServiceImpl implements HokageUserService {
             HokageServerVO serverVO = new HokageServerVO();
 
             // server information
-            serverVO.setId(serverDO.getId());
-            serverVO.setDomain(serverDO.getDomain());
-            serverVO.setHostname(serverDO.getHostname());
+            BeanUtils.copyProperties(serverDO, serverVO);
             serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
 
             // TODO: retrieve server status from ssh
@@ -286,9 +294,10 @@ public class HokageUserServiceImpl implements HokageUserService {
             List<HokageOperation> operations = Arrays.asList(
                     new HokageOperation(OperationTypeEnum.supervisor.name(), "recycle", "/server/recycle")
             );
+            serverVO.setOperationList(operations);
 
             // number of users of the server
-            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerId(serverDO.getId());
+            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(Arrays.asList(serverDO.getId()));
             serverVO.setUserNum(subordinateServerDOList.size());
 
             return serverVO;
@@ -305,6 +314,64 @@ public class HokageUserServiceImpl implements HokageUserService {
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "view", "/user/view"),
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "addServer", "/server/add"),
                 new HokageOperation(OperationTypeEnum.supervisor.name(), "recycleServer", "/server/recycle")
+        );
+
+        userVO.setOperationList(operations);
+
+        return userVO;
+    }
+
+
+    private HokageUserVO subordinateUserDO2UserVO(HokageUserDO userDO) {
+
+        checkNotNull(userDO, "userDO can't be null");
+
+        HokageUserVO userVO = new HokageUserVO();
+
+        // subordinate info
+        BeanUtils.copyProperties(userDO, userVO);
+
+        // server information which managed by the supervisor
+        List<Long> serverIds = subordinateServerDao.listByServerIds(Arrays.asList(userDO.getId())).stream()
+                .map(HokageSubordinateServerDO::getServerId).collect(Collectors.toList());
+
+        List<HokageServerVO> serverVOList = serverDao.selectByIds(serverIds).stream().map(serverDO -> {
+            HokageServerVO serverVO = new HokageServerVO();
+
+            // server information
+            BeanUtils.copyProperties(serverDO, serverVO);
+            serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
+
+            // TODO: retrieve server status from ssh
+
+            // supervisor info
+            serverVO.setSubordinate(userDO.getUsername());
+            serverVO.setSubordinateId(userDO.getId());
+
+            // action information
+            List<HokageOperation> operations = Arrays.asList(
+                    new HokageOperation(OperationTypeEnum.subordinate_server.name(), "recycle", "/server/recycle")
+            );
+            serverVO.setOperationList(operations);
+
+            // number of users of the server
+            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(Arrays.asList(serverDO.getId()));
+            serverVO.setUserNum(subordinateServerDOList.size());
+
+            return serverVO;
+        }).collect(Collectors.toList());
+
+        List<String> serverLabels = serverVOList.stream().flatMap(serverVO -> serverVO.getLabels().stream()).distinct().collect(Collectors.toList());
+
+        userVO.setServerLabel(serverLabels);
+        userVO.setServerNum(serverVOList.size());
+        userVO.setServerVOList(serverVOList);
+
+        // action info
+        List<HokageOperation> operations = Arrays.asList(
+                new HokageOperation(OperationTypeEnum.subordinate.name(), "view", "/user/view"),
+                new HokageOperation(OperationTypeEnum.subordinate.name(), "addServer", "/server/add"),
+                new HokageOperation(OperationTypeEnum.subordinate.name(), "recycleServer", "/server/recycle")
         );
 
         userVO.setOperationList(operations);

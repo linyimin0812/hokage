@@ -1,7 +1,5 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
-import com.banzhe.hokage.biz.service.HokageSequenceService;
-import com.banzhe.hokage.biz.service.impl.HokageSequenceServiceImpl;
 import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import org.junit.Assert;
@@ -10,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +34,7 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
 
         Long result = subordinateServerDao.insert(subordinateServerDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -42,14 +42,14 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
     public void update() {
         this.insert();
 
-        List<HokageSubordinateServerDO> subordinateServerDOS = subordinateServerDao.listByServerId(12312L);
+        List<HokageSubordinateServerDO> subordinateServerDOS = subordinateServerDao.listByServerIds(Collections.singletonList(12312L));
 
         subordinateServerDOS.forEach(item -> {
             item.setServerId(1L);
             subordinateServerDao.update(item);
         });
 
-        subordinateServerDOS = subordinateServerDao.listByServerId(1L);
+        subordinateServerDOS = subordinateServerDao.listByServerIds(Collections.singletonList(1L));
         Assert.assertNotEquals(subordinateServerDOS, null);
     }
 
@@ -57,13 +57,13 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void selectByServerId() {
         this.insert();
-        Assert.assertEquals(true, subordinateServerDao.listByServerId(12312L).size() > 0);
+        Assert.assertTrue(subordinateServerDao.listByServerIds(Collections.singletonList(12312L)).size() > 0);
     }
 
     @Test
     @Rollback
     public void selectByOrdinateId() {
         this.insert();
-        Assert.assertEquals(true, subordinateServerDao.listByOrdinateId(2L).size() > 0);
+        Assert.assertTrue(subordinateServerDao.listByOrdinateIds(Collections.singletonList(2L)).size() > 0);
     }
 }

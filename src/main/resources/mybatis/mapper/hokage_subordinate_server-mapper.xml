@@ -54,23 +54,29 @@
         </where>
     </update>
 
-    <select id="selectByServerId" parameterType="java.lang.Long" resultMap="HokageSubordinateServerMapper">
+    <select id="selectByServerIds" parameterType="java.util.List" resultMap="HokageSubordinateServerMapper">
         SELECT
         <include refid="allColumn"/>
         FROM
         <include refid="tableName"/>
         <where>
-            server_id = #{id}
+            server_id IN
+            <foreach collection="list" item="serverId" index="index" open="(" close=")" separator=",">
+                #{serverId}
+            </foreach>
         </where>
     </select>
 
-    <select id="selectByOrdinateId" parameterType="java.lang.Long" resultMap="HokageSubordinateServerMapper" >
+    <select id="selectByOrdinateIds" parameterType="java.util.List" resultMap="HokageSubordinateServerMapper" >
         SELECT
         <include refid="allColumn"/>
         FROM
         <include refid="tableName"/>
         <where>
-            subordinate_id = #{subordinate_id}
+            subordinate_id IN
+            <foreach collection="list" item="subordinateId" index="index" open="(" close=")" separator=",">
+                #{subordinateId}
+            </foreach>
         </where>
     </select>
 

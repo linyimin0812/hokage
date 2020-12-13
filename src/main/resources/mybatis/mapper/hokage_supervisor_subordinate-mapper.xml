@@ -47,7 +47,7 @@
             </if>
         </set>
     </update>
-    <select id="selectBySubordinateId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
+    <select id="listBySubordinateId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -56,7 +56,7 @@
             subordinate_id = #{subordinateId}
         </where>
     </select>
-    <select id="selectBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
+    <select id="listBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -65,7 +65,7 @@
             supervisor_id = #{supervisorId}
         </where>
     </select>
-    <select id="selectById" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
+    <select id="listById" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
         FROM
@@ -74,7 +74,7 @@
             id = #{id}
         </where>
     </select>
-    <select id="selectAll" resultMap="HokageSupervisorSubordinateMapper">
+    <select id="listAll" resultMap="HokageSupervisorSubordinateMapper">
         SELECT
         <include refid="allColumns"/>
         FROM

@@ -31,25 +31,25 @@ public interface HokageSupervisorSubordinateDao {
      * @param id
      * @return
      */
-    HokageSupervisorSubordinateDO selectById(Long id);
+    HokageSupervisorSubordinateDO listById(Long id);
 
     /**
      * 查找全部信息
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectAll();
+    List<HokageSupervisorSubordinateDO> listAll();
 
     /**
      * 查找管理员名下的用户id
      * @param id
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectBySupervisorId(Long id);
+    List<HokageSupervisorSubordinateDO> listBySupervisorId(Long id);
 
     /**
      * 查找用户对应的管理员id
      * @param id
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectBySubordinateId(Long id);
+    List<HokageSupervisorSubordinateDO> listBySubordinateId(Long id);
 }

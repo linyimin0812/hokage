@@ -10,8 +10,6 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 /**
  * @author linyimin
  * @date 2020/8/23 16:55
@@ -40,12 +38,12 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void update() {
         this.insert();
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOs = supervisorSubordinateDao.selectAll();
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOs = supervisorSubordinateDao.listAll();
         supervisorSubordinateDOs.forEach(supervisorSubordinateDO -> {
             supervisorSubordinateDO.setSupervisorId(78L);
             supervisorSubordinateDao.update(supervisorSubordinateDO);
         });
-        supervisorSubordinateDOs = supervisorSubordinateDao.selectBySupervisorId(78L);
+        supervisorSubordinateDOs = supervisorSubordinateDao.listBySupervisorId(78L);
 
         Assert.assertEquals(true, supervisorSubordinateDOs.size() > 0);
     }
@@ -53,28 +51,28 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
     @Test
     @Rollback
     public void selectById() {
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOs = supervisorSubordinateDao.selectAll();
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOs = supervisorSubordinateDao.listAll();
         supervisorSubordinateDOs.forEach(supervisorSubordinateDO -> {
-            Assert.assertNotEquals(null, supervisorSubordinateDao.selectById(supervisorSubordinateDO.getId()));
+            Assert.assertNotEquals(null, supervisorSubordinateDao.listById(supervisorSubordinateDO.getId()));
         });
     }
 
     @Test
     @Rollback
     public void selectAll() {
-        int count = supervisorSubordinateDao.selectAll().size();
+        int count = supervisorSubordinateDao.listAll().size();
         this.insert();
-        Assert.assertEquals(count + 1, supervisorSubordinateDao.selectAll().size());
+        Assert.assertEquals(count + 1, supervisorSubordinateDao.listAll().size());
 
         this.insert();
-        Assert.assertEquals(count + 2, supervisorSubordinateDao.selectAll().size());
+        Assert.assertEquals(count + 2, supervisorSubordinateDao.listAll().size());
     }
 
     @Test
     @Rollback
     public void selectBySupervisorId() {
         this.insert();
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.selectBySupervisorId(56L);
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.listBySupervisorId(56L);
         Assert.assertEquals(true, supervisorSubordinateDOS.size() > 0);
     }
 
@@ -82,8 +80,8 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
     @Rollback
     public void selectBySubordinateId() {
         this.insert();
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.selectBySubordinateId(12L);
-        supervisorSubordinateDao.selectAll();
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.listBySubordinateId(12L);
+        supervisorSubordinateDao.listAll();
         Assert.assertEquals(true, supervisorSubordinateDOS.size() > 0);
     }
 }

@@ -7,6 +7,7 @@ import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 
+import javax.xml.ws.Service;
 import java.util.List;
 
 /**
@@ -80,5 +81,12 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<Boolean> grantSupervisor(Long id, List<Long> serverIds);
+
+    /**
+     * list all ordinary user by supervisor, if supervisorId is a super, list all ordinary user
+     * @param supervisorId
+     * @return
+     */
+    ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId);
 
 }

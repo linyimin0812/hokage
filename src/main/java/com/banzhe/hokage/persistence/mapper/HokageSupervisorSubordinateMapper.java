@@ -8,52 +8,52 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:42 上午
+ * @date 2020/8/22 11:42 am
  * @email linyimin520812@gmail.com
- * @description 管理员与用户关系映射表
+ * @description supervisor and subordinate user relationship mapping table
  */
 @Mapper
 @Component
 public interface HokageSupervisorSubordinateMapper {
 
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param supervisorSubordinateDO
      * @return
      */
     Long insert(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param supervisorSubordinateDO
      * @return
      */
     Long update(HokageSupervisorSubordinateDO supervisorSubordinateDO);
 
     /**
-     * 根据id查找管理员与用户的关系映射信息
+     * retrieve the relationship mapping information between supervisor and subordinate user based on id
      * @param id
      * @return
      */
-    HokageSupervisorSubordinateDO selectById(Long id);
+    HokageSupervisorSubordinateDO listById(Long id);
 
     /**
-     * 查找全部信息
+     * list all mapping information
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectAll();
+    List<HokageSupervisorSubordinateDO> listAll();
 
     /**
-     * 查找管理员名下的用户id
+     * retrieve mapping information based on supervisor id
      * @param id
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectBySupervisorId(Long id);
+    List<HokageSupervisorSubordinateDO> listBySupervisorId(Long id);
 
     /**
-     * 查找用户对应的管理员id
+     * retrieve mapping information based on subordinate id
      * @param id
      * @return
      */
-    List<HokageSupervisorSubordinateDO> selectBySubordinateId(Long id);
+    List<HokageSupervisorSubordinateDO> listBySubordinateId(Long id);
 }

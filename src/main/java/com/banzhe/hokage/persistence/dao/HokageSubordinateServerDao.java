@@ -5,42 +5,42 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:56 上午
+ * @date 2020/8/22 11:56 am
  * @email linyimin520812@gmail.com
  * @description
  */
 public interface HokageSubordinateServerDao {
 
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param subordinateServerDO
      * @return
      */
     Long insert(HokageSubordinateServerDO subordinateServerDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param subordinateServerDO
      * @return
      */
     Long update(HokageSubordinateServerDO subordinateServerDO);
 
     /**
-     * 查找服务器的使用者id
-     * @param id
+     * retrieve subordinate ids based on server ids
+     * @param ids
      * @return
      */
-    List<HokageSubordinateServerDO> listByServerId(Long id);
+    List<HokageSubordinateServerDO> listByServerIds(List<Long> ids);
 
     /**
-     * 查找使用者id下的服务器id
-     * @param id
+     * retrieve server ids based on subordinate ids
+     * @param ids
      * @return
      */
-    List<HokageSubordinateServerDO> listByOrdinateId(Long id);
+    List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids);
 
     /**
-     * 使用id查找记录
+     * retrieve record based on primary key
      * @param id
      * @return
      */

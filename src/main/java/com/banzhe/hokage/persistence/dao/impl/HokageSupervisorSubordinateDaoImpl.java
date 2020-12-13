@@ -25,7 +25,7 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     }
 
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param supervisorSubordinateDO
      * @return
      */
@@ -35,7 +35,7 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     }
 
     /**
-     * 更新一条记录
+     * update a record
      * @param supervisorSubordinateDO
      * @return
      */
@@ -45,39 +45,41 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     }
 
     /**
-     * 根据id查找管理员与用户的关系映射信息
+     * retrieve the relationship mapping information between supervisor and subordinate user based on id
      * @param id
      * @return
      */
     @Override
-    public HokageSupervisorSubordinateDO selectById(Long id) {
-        return supervisorSubordinateMapper.selectById(id);
+    public HokageSupervisorSubordinateDO listById(Long id) {
+        return supervisorSubordinateMapper.listById(id);
     }
 
     /**
-     * 查找全部信息
+     * list all mapping information
      * @return
      */
     @Override
-    public List<HokageSupervisorSubordinateDO> selectAll() {
-        return supervisorSubordinateMapper.selectAll();
+    public List<HokageSupervisorSubordinateDO> listAll() {
+        return supervisorSubordinateMapper.listAll();
     }
 
     /**
-     * 查找管理员名下的用户id
+     * retrieve mapping information based on supervisor id
      * @param id
      * @return
      */
-    public List<HokageSupervisorSubordinateDO> selectBySupervisorId(Long id) {
-        return supervisorSubordinateMapper.selectBySupervisorId(id);
+    @Override
+    public List<HokageSupervisorSubordinateDO> listBySupervisorId(Long id) {
+        return supervisorSubordinateMapper.listBySupervisorId(id);
     }
 
     /**
-     * 查找用户对应的管理员id
+     * retrieve mapping information based on subordinate id
      * @param id
      * @return
      */
-    public List<HokageSupervisorSubordinateDO> selectBySubordinateId(Long id) {
-        return supervisorSubordinateMapper.selectBySubordinateId(id);
+    @Override
+    public List<HokageSupervisorSubordinateDO> listBySubordinateId(Long id) {
+        return supervisorSubordinateMapper.listBySubordinateId(id);
     }
 }
