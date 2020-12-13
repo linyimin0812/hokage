@@ -92,4 +92,15 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     public List<HokageSupervisorSubordinateDO> listBySubordinateId(Long id) {
         return supervisorSubordinateMapper.listBySubordinateId(id);
     }
+
+    /**
+     * delete subordinate based on subordinate ids and supervisor id
+     * @param supervisorId
+     * @param subordinateIds
+     * @return
+     */
+    @Override
+    public Long deleteSubordinate(Long supervisorId, List<Long> subordinateIds) {
+        return supervisorSubordinateMapper.deleteSubordinate(supervisorId, subordinateIds);
+    }
 }

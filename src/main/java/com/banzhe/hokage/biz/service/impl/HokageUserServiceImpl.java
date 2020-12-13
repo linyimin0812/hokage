@@ -319,6 +319,18 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res.fail("A-XXX", "HokageUserDO addSupervisor error");
     }
 
+    @Override
+    public ServiceResponse<Boolean> deleteSubordinate(Long supervisorId, List<Long> ids) {
+
+        ServiceResponse<Boolean> res = new ServiceResponse<>();
+
+        Long result = supervisorSubordinateDao.deleteSubordinate(supervisorId, ids);
+        if (result > 0) {
+            return res.success(Boolean.TRUE);
+        }
+        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
 
         checkNotNull(userDO, "userDO can't be null");

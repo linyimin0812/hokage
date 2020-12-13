@@ -1,6 +1,7 @@
 package com.banzhe.hokage.persistence.dao;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorSubordinateDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -59,4 +60,12 @@ public interface HokageSupervisorSubordinateDao {
      * @return
      */
     List<HokageSupervisorSubordinateDO> listBySubordinateId(Long id);
+
+    /**
+     * delete subordinate based on subordinate ids and supervisor id
+     * @param supervisorId
+     * @param subordinateIds
+     * @return
+     */
+    Long deleteSubordinate(Long supervisorId, List<Long> subordinateIds);
 }

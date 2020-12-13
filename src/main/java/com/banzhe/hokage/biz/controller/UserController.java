@@ -177,7 +177,6 @@ public class UserController extends BaseController {
         return success(Collections.emptyList());
     }
 
-    // TODO: 添加普通用户
     @RequestMapping(value = "/user/subordinate/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addSubordinate(@RequestBody UserServerOperateForm form) {
 
@@ -196,7 +195,16 @@ public class UserController extends BaseController {
     // TODO: 删除普通用户
     @RequestMapping(value = "/user/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delSubordinate(@RequestBody UserServerOperateForm form) {
-        return success(Boolean.TRUE);
+
+        Preconditions.checkNotNull(form.getId(), "operationId can't be null");
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be empty");
+
+        ServiceResponse<Boolean> response = userService.deleteSubordinate(form.getId(), form.getUserIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
     }
 
 

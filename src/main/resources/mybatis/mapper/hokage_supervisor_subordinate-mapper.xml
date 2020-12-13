@@ -101,4 +101,19 @@
         <include refid="tableName"/>
     </select>
 
+    <delete id="deleteSubordinate">
+        DELETE
+        FROM
+        <include refid="tableName"/>
+        <where>
+            supervisor_id = #{id}
+            <if test="subordinateIds != null and subordinateIds.size > 0">
+                and subordinate_id IN
+                <foreach collection="subordinateIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
 </mapper>
