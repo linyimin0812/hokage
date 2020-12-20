@@ -6,11 +6,6 @@ import Search from './search'
 import AddServer from '../add-server'
 const columns = [
     {
-        title: 'id',
-        dataIndex: 'id',
-        key: 'id'
-    },
-    {
         title: '主机名',
         dataIndex: 'hostname',
         key: 'hostname'
@@ -24,6 +19,11 @@ const columns = [
         title: 'IP地址',
         dataIndex: 'ipAddress',
         key: 'IPAddress'
+    },
+    {
+        title: '分组',
+        dataIndex: 'serverGroup',
+        key: 'serverGroup'
     },
     {
         title: '标签',
@@ -174,15 +174,15 @@ export default class AllServer extends React.Component {
         for (let i = 0; i < 5; i++) {
             const value = {
                 key: i + 1,
-                id: 'id_' + i,
                 hostname: 'master_' + i + ".pcncad.club",
                 domainName: 'name_' + i + ".pcncad.club",
+                serverGroup: '默认',
                 ipAddress: `10.108.211.${1 + i}`,
                 serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
                 admin: 'banzhe',
                 numOfUser: i + 1,
                 status: "在线",
-                action: '指定管理员 | 申请 | 撤销管理员 | 修改管理员'
+                action: '指定管理员 | 撤销管理员 | 修改管理员'
             }
             data.push(value)
         }

@@ -32,21 +32,21 @@ public class HokageServerVO {
     /**
      * supervisor name
      */
-    private String supervisor;
+    private List<String> supervisor;
     /**
      * supervisor id
      */
-    private Long supervisorId;
+    private List<Long> supervisorId;
 
     /**
      * subordinate name
      */
-    private String subordinate;
+    private List<String> subordinate;
 
     /**
      * subordinate id
      */
-    private Long subordinateId;
+    private List<Long> subordinateId;
 
     /**
      * number of user

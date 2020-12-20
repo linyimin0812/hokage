@@ -8,19 +8,15 @@ package com.banzhe.hokage.biz.enums;
  */
 public enum OperationTypeEnum {
     /**
-     * supervisor
+     * link: jump link directly
      */
-    supervisor,
+    link,
     /**
-     * supervisor server
+     * confirm
      */
-    supervisor_server,
+    confirm,
     /**
-     * subordinate user
+     * modal
      */
-    subordinate,
-    /**
-     * subordinate server
-     */
-    subordinate_server
+    modal
 }

@@ -5,14 +5,24 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/10/28 12:22 上午
+ * @date 2020/10/28 12:22 am
  * @email linyimin520812@gmail.com
- * @description 操作类型
+ * @description action type
  */
 @Data
 @AllArgsConstructor
 public class HokageOperation {
-    private String operationType;   // 操作类型
-    private String operationName;   // 操作名称
-    private String operationLink;   // 操作链接
+    /**
+     * action type: modal、confirm dialog、link
+     */
+    private String operationType;
+    /**
+     * action name
+     */
+    private String operationName;
+    /**
+     * action link
+     */
+    private String operationLink;
+
 }

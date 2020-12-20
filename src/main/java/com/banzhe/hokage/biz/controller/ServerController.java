@@ -8,6 +8,7 @@ import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
+import com.banzhe.hokage.common.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ import java.util.List;
  */
 @RestController
 public class ServerController extends BaseController {
+
     private HokageServerService serverService;
 
     @Autowired
@@ -30,13 +32,15 @@ public class ServerController extends BaseController {
     }
 
     /**
-     * 所有服务器
+     * list all server
      */
-
-    // TODO: 列举所有服务器信息
     @RequestMapping(value = "/server/list", method = RequestMethod.GET)
     public ResultVO<List<HokageServerVO>> listServer() {
-        return success(Collections.emptyList());
+        ServiceResponse<List<HokageServerVO>> serviceResponse = serverService.selectAll();
+        if (serviceResponse.getSucceeded()) {
+            return success(Collections.emptyList());
+        }
+        return fail(serviceResponse.getCode(), serviceResponse.getMsg());
     }
 
     // TODO: 搜索服务器信息
