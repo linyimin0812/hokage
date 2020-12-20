@@ -21,6 +21,11 @@ const columns = [
         key: 'domainName'
     },
     {
+        title: 'IP地址',
+        dataIndex: 'ipAddress',
+        key: 'IPAddress'
+    },
+    {
         title: '标签',
         dataIndex: 'serverTags',
         key: 'serverTags',
@@ -172,6 +177,7 @@ export default class AllServer extends React.Component {
                 id: 'id_' + i,
                 hostname: 'master_' + i + ".pcncad.club",
                 domainName: 'name_' + i + ".pcncad.club",
+                ipAddress: `10.108.211.${1 + i}`,
                 serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
                 admin: 'banzhe',
                 numOfUser: i + 1,

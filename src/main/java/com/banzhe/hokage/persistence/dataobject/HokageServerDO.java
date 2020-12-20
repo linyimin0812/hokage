@@ -4,9 +4,9 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/7/26 10:12 下午
+ * @date 2020/7/26 10:12 pm
  * @email linyimin520812@gmail.com
- * @description 服务器信息
+ * @description server information
  */
 
 @Data
