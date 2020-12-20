@@ -77,18 +77,35 @@ public class ServerConverter {
 
             // 2. set operation list
             List<HokageOperation> operations = Arrays.asList(
-                new HokageOperation(OperationTypeEnum.modal.name(), "specifySupervisor", "/server/supervisor/add"),
-                new HokageOperation(OperationTypeEnum.confirm.name(), "recycleSupervisor", "/server/supervisor/recycle"),
-                new HokageOperation(OperationTypeEnum.confirm.name(), "modifySupervisor", "/server/supervisor/modify")
+                new HokageOperation(
+                        OperationTypeEnum.modal.name(),
+                        "specifySupervisor",
+                        "/server/supervisor/add"),
+                new HokageOperation(
+                        OperationTypeEnum.confirm.name(),
+                        "recycleSupervisor",
+                        "/server/supervisor/recycle"),
+                new HokageOperation(
+                        OperationTypeEnum.confirm.name(),
+                        "modifySupervisor",
+                        "/server/supervisor/modify")
             );
             hokageServerVO.setOperationList(operations);
 
             // set server supervisors
-            List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
-            List<Long> supervisorIds = supervisorServerDOList.stream().map(HokageSupervisorServerDO::getSupervisorId).collect(Collectors.toList());
+            List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(
+                    Collections.singletonList(serverDO.getId())
+            );
+            List<Long> supervisorIds = supervisorServerDOList.stream()
+                    .map(HokageSupervisorServerDO::getSupervisorId)
+                    .collect(Collectors.toList());
             List<HokageUserDO> supervisorList = hokageUserDao.listUserByIds(supervisorIds);
-            supervisorIds = supervisorList.stream().map(HokageUserDO::getId).collect(Collectors.toList());
-            List<String> supervisorNameList = supervisorList.stream().map(HokageUserDO::getUsername).collect(Collectors.toList());
+            supervisorIds = supervisorList.stream()
+                    .map(HokageUserDO::getId)
+                    .collect(Collectors.toList());
+            List<String> supervisorNameList = supervisorList.stream()
+                    .map(HokageUserDO::getUsername)
+                    .collect(Collectors.toList());
             hokageServerVO.setSupervisor(supervisorNameList);
             hokageServerVO.setSupervisorId(supervisorIds);
 
@@ -112,7 +129,10 @@ public class ServerConverter {
 
             // 2. set operation list
             List<HokageOperation> operations = Collections.singletonList(
-                new HokageOperation(OperationTypeEnum.confirm.name(), "recycle", "/server/recycle")
+                new HokageOperation(
+                        OperationTypeEnum.confirm.name(),
+                        "recycle",
+                        "/server/recycle")
             );
             serverVO.setOperationList(operations);
 
@@ -136,7 +156,9 @@ public class ServerConverter {
         // TODO: retrieve server status from ssh
 
         // number of users of the server
-        List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
+        List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
+                Collections.singletonList(serverDO.getId())
+        );
         serverVO.setUserNum(subordinateServerDOList.size());
 
         return serverVO;

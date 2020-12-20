@@ -162,25 +162,29 @@ public class UserConverter {
             HokageUserVO hokageUserVO = preConverter(hokageUserDO);
 
             // server information which managed by the supervisor
-            List<Long> serverIds = subordinateServerDao.listByServerIds(Collections.singletonList(hokageUserDO.getId())).stream()
-                    .map(HokageSubordinateServerDO::getServerId).collect(Collectors.toList());
+            List<Long> serverIds = subordinateServerDao.listByServerIds(
+                    Collections.singletonList(hokageUserDO.getId())
+            ).stream()
+                    .map(HokageSubordinateServerDO::getServerId)
+                    .collect(Collectors.toList());
 
-            List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream().map(serverDO -> {
+            List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream()
+                    .map(serverDO -> {
 
-                HokageServerVO serverVO = ServerConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
+                        HokageServerVO serverVO = ServerConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
 
-                // supervisor info
-                serverVO.setSubordinate(Collections.singletonList(hokageUserDO.getUsername()));
-                serverVO.setSubordinateId(Collections.singletonList(hokageUserDO.getId()));
+                        // supervisor info
+                        serverVO.setSubordinate(Collections.singletonList(hokageUserDO.getUsername()));
+                        serverVO.setSubordinateId(Collections.singletonList(hokageUserDO.getId()));
 
-                // number of users of the server
-                List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
-                    Collections.singletonList(serverDO.getId())
-                );
-                serverVO.setUserNum(subordinateServerDOList.size());
+                        // number of users of the server
+                        List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
+                            Collections.singletonList(serverDO.getId())
+                        );
+                        serverVO.setUserNum(subordinateServerDOList.size());
 
-                return serverVO;
-            }).collect(Collectors.toList());
+                        return serverVO;
+                    }).collect(Collectors.toList());
 
             List<String> serverLabels = serverVOList.stream()
                     .flatMap(serverVO -> serverVO.getLabels().stream())
