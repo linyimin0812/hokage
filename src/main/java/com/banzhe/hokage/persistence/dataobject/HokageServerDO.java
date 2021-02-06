@@ -51,4 +51,9 @@ public class HokageServerDO extends HokageBaseDO {
      * server description
      */
     private String description;
+
+    /**
+     * creator
+     */
+    private String creator;
 }

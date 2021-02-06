@@ -3,7 +3,7 @@ package com.banzhe.hokage.biz.service.impl;
 import com.banzhe.hokage.biz.converter.server.ConverterTypeEnum;
 import com.banzhe.hokage.biz.converter.user.UserConverter;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
-import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
+import com.banzhe.hokage.biz.enums.ErrorCodeEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;
 import com.banzhe.hokage.biz.form.user.UserServerSearchForm;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;
@@ -84,7 +84,7 @@ public class HokageUserServiceImpl implements HokageUserService {
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.nonNull(userDO)) {
-            return res.fail(UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), UserErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
+            return res.fail(ErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), ErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
         }
         // 2. encrypt the password
         hokageUserDO.setPasswd(passwordEncoder.encode(hokageUserDO.getPasswd()));
@@ -104,7 +104,7 @@ public class HokageUserServiceImpl implements HokageUserService {
         if (result > 0) {
             return res.success(hokageUserDO);
         }
-        return res.fail(UserErrorCodeEnum.USER_REGISTER_FAIL.getCode(), UserErrorCodeEnum.USER_REGISTER_FAIL.getMsg());
+        return res.fail(ErrorCodeEnum.USER_REGISTER_FAIL.getCode(), ErrorCodeEnum.USER_REGISTER_FAIL.getMsg());
     }
 
     @Override
@@ -112,7 +112,7 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         ServiceResponse<HokageUserDO> res = new ServiceResponse<>();
 
-        res.fail(UserErrorCodeEnum.USER_PASSWD_ERROR.getCode(), UserErrorCodeEnum.USER_PASSWD_ERROR.getMsg());
+        res.fail(ErrorCodeEnum.USER_PASSWD_ERROR.getCode(), ErrorCodeEnum.USER_PASSWD_ERROR.getMsg());
 
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());

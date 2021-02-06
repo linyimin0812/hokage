@@ -15,6 +15,7 @@
         <result property="passwd" column="passwd"/>
         <result property="sshPort" column="ssh_port"/>
         <result property="label" column="label"/>
+        <result property="creator" column="creator"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -29,7 +30,8 @@
         ip,
         passwd,
         ssh_port,
-        label
+        label,
+        creator
     </sql>
 
     <sql id="tableNme">
@@ -64,6 +66,9 @@
             </if>
             <if test="label != null ">
                 and label = #{label}
+            </if>
+            <if test="creator != null ">
+                and creator = #{creator}
             </if>
         </where>
     </sql>

@@ -78,4 +78,9 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
     public Integer addBySupervisorId(Long id, List<Long> serverIds) {
         return supervisorServerMapper.addBySupervisorId(id, serverIds);
     }
+
+    @Override
+    public HokageSupervisorServerDO queryBySupervisorIdAndServerId(Long supervisorId, Long serverId) {
+        return supervisorServerMapper.queryBySupervisorIdAndServerId(supervisorId, serverId);
+    }
 }

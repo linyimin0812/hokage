@@ -4,7 +4,6 @@ import com.banzhe.hokage.biz.form.server.HokageServerForm;
 import com.banzhe.hokage.biz.form.server.ServerOperateForm;
 import com.banzhe.hokage.biz.form.server.ServerSearchForm;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
-import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
@@ -67,15 +66,25 @@ public class ServerController extends BaseController {
         return success(response.getData());
     }
 
-    // TODO: 删除服务器
     @RequestMapping(value = "/server/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServer(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.delete(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
         return success(Boolean.TRUE);
     }
 
-    // TODO: 添加管理员
     @RequestMapping(value = "/server/supervisor/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addServerSupervisor(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.designateSupervisor(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
         return success(Boolean.TRUE);
     }
 
@@ -85,25 +94,16 @@ public class ServerController extends BaseController {
         return success(Boolean.TRUE);
     }
 
-    /**
-     * 我管理的服务器
-     */
-    // TODO: 列举我管理的服务器信息
+    // TODO: 列举服务器信息: 超级管理员、管理员和普通用户使用统一接口？
     @RequestMapping(value = "/supervisor/server/list", method = RequestMethod.GET)
     public ResultVO<List<HokageServerVO>> listSupervisorServer(@RequestParam Long id) {
         return success(Collections.emptyList());
     }
 
-    // TODO: 申请服务器
+    // TODO: 申请服务器：管理员
     @RequestMapping(value = "/supervisor/server/apply", method = RequestMethod.POST)
     public ResultVO<HokageServerVO> applyServer(@RequestBody ServerOperateForm form) {
         return success(new HokageServerVO());
-    }
-
-    // TODO: 删除服务器
-    @RequestMapping(value = "/supervisor/server/delete", method = RequestMethod.POST)
-    public ResultVO<Boolean> delSupervisorServer(@RequestBody ServerOperateForm form) {
-        return success(Boolean.TRUE);
     }
 
     // TODO: 添加用户
@@ -118,31 +118,9 @@ public class ServerController extends BaseController {
         return success(Boolean.TRUE);
     }
 
-
-    /**
-     * 我使用的服务器
-     */
-    // TODO: 列举我管理的服务器信息
-    @RequestMapping(value = "/my/server/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageServerVO>> listMyServer(@RequestParam Long id) {
-        return success(Collections.emptyList());
-    }
-
     // TODO: 申请服务器
     @RequestMapping(value = "/my/server/apply", method = RequestMethod.POST)
     public ResultVO<HokageServerVO> applyMyServer(@RequestBody ServerOperateForm form) {
         return success(new HokageServerVO());
-    }
-
-    // TODO: 删除服务器
-    @RequestMapping(value = "/my/server/delete", method = RequestMethod.POST)
-    public ResultVO<Boolean> delMyServer(@RequestBody ServerOperateForm form) {
-        return success(Boolean.TRUE);
-    }
-
-    // TODO: 添加服务器
-    @RequestMapping(value = "/my/server/add", method = RequestMethod.POST)
-    public ResultVO<Boolean> addMyServer(@RequestBody HokageServerForm form) {
-        return success(Boolean.TRUE);
     }
 }

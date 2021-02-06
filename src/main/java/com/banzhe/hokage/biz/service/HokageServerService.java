@@ -1,6 +1,7 @@
 package com.banzhe.hokage.biz.service;
 
 import com.banzhe.hokage.biz.form.server.HokageServerForm;
+import com.banzhe.hokage.biz.form.server.ServerOperateForm;
 import com.banzhe.hokage.biz.form.server.ServerSearchForm;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
 import com.banzhe.hokage.common.ServiceResponse;
@@ -57,4 +58,18 @@ public interface HokageServerService {
      * @return
      */
     ServiceResponse<HokageServerForm> save(HokageServerForm form);
+
+    /**
+     * delete server
+     * @param form
+     * @return
+     */
+    ServiceResponse<Boolean> delete(ServerOperateForm form);
+
+    /**
+     * designate servers to a supervisor
+     * @param form
+     * @return
+     */
+    ServiceResponse<Boolean> designateSupervisor(ServerOperateForm form);
 }

@@ -74,6 +74,14 @@
         </where>
     </select>
 
+    <select id="queryBySupervisorIdAndServerId" resultMap="HokageSupervisorServerMapper">
+        SELECT <include refid="allColumns" />
+        FROM <include refid="tableName" />
+        <where>
+            server_id=#{serverId} and supervisor_id=#{supervisorId}
+        </where>
+    </select>
+
     <delete id="removeBySupervisorId">
         delete
         FROM

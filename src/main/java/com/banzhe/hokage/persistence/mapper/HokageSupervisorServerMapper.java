@@ -67,4 +67,12 @@ public interface HokageSupervisorServerMapper {
      * @return
      */
     Integer addBySupervisorId(@Param("supervisorId") Long id, @Param("serverIds") List<Long> serverIds);
+
+    /**
+     * retrieve relationship based-on supervisor id and server id
+     * @param supervisorId
+     * @param serverId
+     * @return
+     */
+    HokageSupervisorServerDO queryBySupervisorIdAndServerId(@Param("supervisorId") Long supervisorId, @Param("serverId") Long serverId);
 }

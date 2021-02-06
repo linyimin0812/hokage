@@ -2,9 +2,9 @@ package com.banzhe.hokage.biz;
 
 /**
  * @author linyimin
- * @date 2020/9/6 10:53 上午
+ * @date 2020/9/6 10:53 am
  * @email linyimin520812@gmail.com
- * @description 常用的一些常量
+ * @description common constant variable
  */
 public class Constant {
     // 用户的session key

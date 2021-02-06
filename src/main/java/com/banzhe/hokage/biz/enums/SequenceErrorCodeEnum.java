@@ -2,13 +2,16 @@ package com.banzhe.hokage.biz.enums;
 
 /**
  * @author linyimin
- * @date 2020/8/30 5:34 下午
+ * @date 2020/8/30 5:34 pm
  * @email linyimin520812@gmail.com
  * @description
  */
 public enum SequenceErrorCodeEnum {
 
-    SEQUENCE_INSERT_ERROR("A-0101", "sequence插入出错");
+    /**
+     * sequence value insert error
+     */
+    SEQUENCE_INSERT_ERROR("A-0101", "sequence insert error");
 
     private String code;
     private String msg;

@@ -2,14 +2,17 @@ package com.banzhe.hokage.biz.enums;
 
 /**
  * @author linyimin
- * @date 2020/10/31 2:46 下午
+ * @date 2020/10/31 2:46 pm
  * @email linyimin520812@gmail.com
- * @description 服务器标签
+ * @description server label
  */
 public enum ServerLabel {
-    intranet,    // 内网
-    extranet,    // 外网
-    x86,         // x86
-    gpu;         // gpu
+    /**
+     * server label
+     */
+    intranet,
+    extranet,
+    x86,
+    gpu;
 
 }

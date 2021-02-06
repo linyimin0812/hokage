@@ -2,6 +2,7 @@ package com.banzhe.hokage.persistence.dao;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -62,4 +63,12 @@ public interface HokageSupervisorServerDao {
      * @return
      */
     Integer addBySupervisorId(Long id, List<Long> serverIds);
+
+    /**
+     * retrieve relationship based-on supervisor id and server id
+     * @param supervisorId
+     * @param serverId
+     * @return
+     */
+    HokageSupervisorServerDO queryBySupervisorIdAndServerId(Long supervisorId, Long serverId);
 }

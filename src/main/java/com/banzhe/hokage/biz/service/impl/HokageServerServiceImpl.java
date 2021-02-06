@@ -5,8 +5,10 @@ import com.banzhe.hokage.biz.converter.server.ServerDOConverter;
 import com.banzhe.hokage.biz.converter.server.ServerFormConverter;
 import com.banzhe.hokage.biz.converter.server.ServerSearchFormConverter;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
+import com.banzhe.hokage.biz.enums.ErrorCodeEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;
 import com.banzhe.hokage.biz.form.server.HokageServerForm;
+import com.banzhe.hokage.biz.form.server.ServerOperateForm;
 import com.banzhe.hokage.biz.form.server.ServerSearchForm;
 import com.banzhe.hokage.biz.request.AllServerQuery;
 import com.banzhe.hokage.biz.request.SubordinateServerQuery;
@@ -25,10 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 
 /**
  * @author linyimin
@@ -223,5 +228,58 @@ public class HokageServerServiceImpl implements HokageServerService {
         form.setId(serverDO.getId());
 
         return response.success(form);
+    }
+
+    @Override
+    public ServiceResponse<Boolean> delete(ServerOperateForm form) {
+        // TODO: 区分实现，参考listServer的实现
+        return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> designateSupervisor(ServerOperateForm form) {
+
+        Long operatorId = checkNotNull(form.getId(), "id can't be null");
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be null");
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server ids can't be null");
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        List<Long> supervisorIds = form.getUserIds();
+        List<Long> serverIds = form.getServerIds();
+
+                // retrieve operate role
+        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
+
+        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
+            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+        }
+
+        if (!UserRoleEnum.super_operator.getValue().equals(roleResponse.getData())) {
+            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+        }
+
+        boolean result = supervisorIds.stream().anyMatch(supervisorId -> {
+            return serverIds.stream().anyMatch(serverId -> {
+                HokageSupervisorServerDO supervisorServerDO = supervisorServerDao.queryBySupervisorIdAndServerId(supervisorId, serverId);
+                if (Objects.nonNull(supervisorServerDO)) {
+                    return true;
+                }
+                ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_server.name());
+                supervisorServerDO = new HokageSupervisorServerDO();
+                supervisorServerDO.setId(primaryKeyRes.getData());
+                supervisorServerDO.setSupervisorId(supervisorId);
+                supervisorServerDO.setServerId(serverId);
+
+                return supervisorServerDao.insert(supervisorServerDO) > 0;
+            });
+        });
+
+        if (result) {
+            return response.success(true);
+        }
+
+        return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
     }
 }
