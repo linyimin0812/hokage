@@ -67,6 +67,25 @@
             </if>
         </where>
     </sql>
+
+    <sql id="queryBaseSql">
+        <if test="hostname != null">
+            and hostname=#{hostname}
+        </if>
+        <if test="domain != null">
+            and domain=#{domain}
+        </if>
+        <if test="ipAddress != null">
+            and ip=#{ipAddress}
+        </if>
+        <if test="label != null">
+            and label = #{label}
+        </if>
+        <if test="serverGroup != null">
+            and server_group = #{serverGroup}
+        </if>
+    </sql>
+
     <insert id="insert" parameterType="HokageServerDO">
         INSERT INTO
         <include refid="tableNme"/>
@@ -130,7 +149,7 @@
         SELECT
         <include refid="allColumns"/>
         FROM
-        <include refid="tableNme"></include>
+        <include refid="tableNme"/>
     </select>
 
     <select id="selectByIds" parameterType="java.util.List" resultMap="HokageServerMapper">
@@ -173,6 +192,80 @@
         <include refid="tableNme"/>
         <where>
             server_group=#{group}
+        </where>
+    </select>
+
+    <select id="selectBySupervisorId" parameterType="java.lang.Long" resultMap="HokageServerMapper">
+        SELECT
+            <include refid="allColumns" />
+        FROM
+            <include refid="tableNme"/>
+        <where>
+            id IN (
+                SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id = #{supervisorId}
+            )
+        </where>
+    </select>
+
+    <select id="selectByAllServerQuery" parameterType="com.banzhe.hokage.biz.request.AllServerQuery" resultMap="HokageServerMapper">
+        SELECT <include refid="allColumns"/>
+        FROM <include refid="tableNme"/>
+        <where>
+            <include refid="queryBaseSql" />
+            <if test="supervisor != null">
+                and id IN (
+                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
+                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{supervisor}, '%')
+                    )
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBySupervisorServerQuery" parameterType="com.banzhe.hokage.biz.request.SupervisorServerQuery" resultMap="HokageServerMapper">
+        SELECT <include refid="allColumns" />
+        FROM <include refid="tableNme" />
+        <where>
+            <include refid="queryBaseSql" />
+            <if test="account != null">
+                and account = #{account}
+            </if>
+
+            <if test="username != null">
+                and id IN (
+                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
+                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+                    )
+                    UNION ALL
+                    SELECT server_id FROM `hokage.hokage_subordinate_server` WHERE subordinate_id IN (
+                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+                    )
+                )
+            </if>
+
+        </where>
+    </select>
+
+    <select id="selectBySubordinateServerQuery" parameterType="com.banzhe.hokage.biz.request.SubordinateServerQuery" resultMap="HokageServerMapper">
+        SELECT <include refid="allColumns" />
+        FROM <include refid="tableNme" />
+        <where>
+            <include refid="queryBaseSql" />
+            <if test="account != null">
+                and account = #{account}
+            </if>
+
+            <if test="username != null">
+                and id IN (
+                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
+                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+                    )
+                    UNION ALL
+                    SELECT server_id FROM `hokage.hokage_subordinate_server` WHERE subordinate_id IN (
+                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+                    )
+                )
+            </if>
         </where>
     </select>
 </mapper>

@@ -1,18 +1,16 @@
-package com.banzhe.hokage.biz.form.server;
+package com.banzhe.hokage.biz.request;
 
-import com.banzhe.hokage.biz.enums.ServerLabel;
 import com.banzhe.hokage.common.PageQuery;
 import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/11/1 17:29
+ * @date 2020/12/20 23:07
  * @email linyimin520812@gmail.com
- * @description server search form
+ * @description
  */
 @Data
-public class ServerSearchForm extends PageQuery {
-
+public class ServerQuery extends PageQuery {
     /**
      * operator id
      */
@@ -21,25 +19,20 @@ public class ServerSearchForm extends PageQuery {
      * host name
      */
     private String hostname;
-
     /**
      * domain
      */
     private String domain;
-
     /**
      * ip address
      */
     private String ipAddress;
 
     /**
-     * supervisor name
-     */
-    private String supervisorName;
-    /**
      * server label
      */
     private String label;
+
     /**
      * server status
      */
@@ -49,21 +42,4 @@ public class ServerSearchForm extends PageQuery {
      * server group
      */
     private String serverGroup;
-
-    /**
-     * server status
-     */
-    private String serverStatus;
-
-    /**
-     * server ssh account
-     */
-    private String account;
-
-    /**
-     * account status
-     */
-    private String accountStatus;
-
 }
-

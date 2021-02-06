@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @description conversion between server DO and VO
  */
 @Component
-public class ServerConverter {
+public class ServerDOConverter {
 
     private static HokageSubordinateServerDao subordinateServerDao;
     private static HokageSupervisorServerDao supervisorServerDao;
@@ -41,17 +41,17 @@ public class ServerConverter {
 
     @Autowired
     public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
-        ServerConverter.subordinateServerDao = subordinateServerDao;
+        ServerDOConverter.subordinateServerDao = subordinateServerDao;
     }
 
     @Autowired
     public void setSupervisorServerDao(HokageSupervisorServerDao supervisorServerDao) {
-        ServerConverter.supervisorServerDao = supervisorServerDao;
+        ServerDOConverter.supervisorServerDao = supervisorServerDao;
     }
 
     @Autowired
     public void setHokageUserDao(HokageUserDao hokageUserDao) {
-        ServerConverter.hokageUserDao = hokageUserDao;
+        ServerDOConverter.hokageUserDao = hokageUserDao;
     }
 
     public static HokageServerVO converterDO2VO(HokageServerDO serverDO, ConverterTypeEnum type) {
@@ -63,7 +63,7 @@ public class ServerConverter {
         /**
          * serverDO to serverVO
          * @param serverDO server DO
-         * @return
+         * @return HokageServerVO
          */
         HokageServerVO converter(HokageServerDO serverDO);
     }
@@ -122,10 +122,9 @@ public class ServerConverter {
 
         @Override
         public HokageServerVO converter(HokageServerDO serverDO) {
-            HokageServerVO serverVO = new HokageServerVO();
 
             // 1. set common property
-            HokageServerVO hokageServerVO = preConverter(serverDO);
+            HokageServerVO serverVO = preConverter(serverDO);
 
             // 2. set operation list
             List<HokageOperation> operations = Collections.singletonList(

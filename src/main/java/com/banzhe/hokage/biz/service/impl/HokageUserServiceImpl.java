@@ -364,6 +364,11 @@ public class HokageUserServiceImpl implements HokageUserService {
         return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
+    @Override
+    public ServiceResponse<Integer> getRoleByUserId(Long id) {
+        return null;
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
         checkNotNull(userDO, "userDO can't be null");
         return UserConverter.converter(userDO, ConverterTypeEnum.supervisor);

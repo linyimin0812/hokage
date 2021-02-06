@@ -109,7 +109,7 @@ public class UserConverter {
 
             List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream().map(serverDO -> {
 
-                HokageServerVO serverVO = ServerConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
+                HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
 
                 // supervisor info
                 serverVO.setSupervisor(Collections.singletonList(hokageUserDO.getUsername()));
@@ -171,7 +171,7 @@ public class UserConverter {
             List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream()
                     .map(serverDO -> {
 
-                        HokageServerVO serverVO = ServerConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
+                        HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
 
                         // supervisor info
                         serverVO.setSubordinate(Collections.singletonList(hokageUserDO.getUsername()));

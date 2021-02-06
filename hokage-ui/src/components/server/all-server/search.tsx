@@ -16,8 +16,8 @@ export default class Search extends React.Component<SearchPropTypes> {
                     onFinish={this.props.onFinish}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <Row gutter={24}>
-                        <Col span={5} key="hostname">
+                    <Row gutter={24} style={{ width: '100%' }}>
+                        <Col span={4} key="hostname">
                             <Form.Item
                                 name="hoatname"
                                 label="主机名"
@@ -25,17 +25,36 @@ export default class Search extends React.Component<SearchPropTypes> {
                                 <Input placeholder="请输入" />
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="admin">
+
+                        <Col span={4} key="domain">
                             <Form.Item
-                                name="admin"
+                                name="domain"
+                                label="域名"
+                            >
+                                <Input placeholder="请输入" />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={4} key="ipAddress">
+                            <Form.Item
+                                name="ipAddress"
+                                label="ip地址"
+                            >
+                                <Input placeholder="请输入" />
+                            </Form.Item>
+                        </Col>
+
+                        <Col span={4} key="supervisor">
+                            <Form.Item
+                                name="supervisor"
                                 label="管理员"
                             >
                                 <Input placeholder="请输入" />
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="serverTag">
+                        <Col span={4} key="serverLabel">
                             <Form.Item
-                                name="serverTag"
+                                name="serverLabel"
                                 label="标签"
                             >
                                 <Select defaultValue="-1">
@@ -44,6 +63,20 @@ export default class Search extends React.Component<SearchPropTypes> {
                                     <Select.Option value="gpuServer">GPU服务器</Select.Option>
                                     <Select.Option value="intranetServer">内网服务器</Select.Option>
                                     <Select.Option value="publicNetworkServer">外网服务器</Select.Option>
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col span={4} key="serverGroup">
+                            <Form.Item
+                                name="serverGroup"
+                                label="服务器分组"
+                            >
+                                <Select defaultValue="-1">
+                                    <Select.Option value="-1">默认</Select.Option>
+                                    <Select.Option value="ordinaryServer">Hadoop集群</Select.Option>
+                                    <Select.Option value="gpuServer">分布式文件存储</Select.Option>
+                                    <Select.Option value="intranetServer">K8S</Select.Option>
+                                    <Select.Option value="publicNetworkServer">Web应用</Select.Option>
                                 </Select>
                             </Form.Item>
                         </Col>
@@ -60,7 +93,7 @@ export default class Search extends React.Component<SearchPropTypes> {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="submit">
+                        <Col span={4} key="submit">
                             <Button type="primary" htmlType="submit">
                                 Search
                             </Button>

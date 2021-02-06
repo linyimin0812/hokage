@@ -42,19 +42,19 @@ const nestedColumns = [
 
 const columns = [
     {
-        title: 'id',
-        dataIndex: 'id',
-        key: 'id'
-    },
-    {
         title: '主机名',
         dataIndex: 'hostname',
         key: 'hostname'
     },
     {
         title: '域名',
-        dataIndex: 'domainName',
-        key: 'domainName'
+        dataIndex: 'domain',
+        key: 'domain'
+    },
+    {
+        title: 'ip地址',
+        dataIndex: 'ipAddress',
+        key: 'ipAddress'
     },
     {
         title: '标签',
@@ -253,9 +253,9 @@ export default class MyOperateServer extends React.Component {
         for (let i = 0; i < 5; i++) {
             const value = {
                 key: i + 1,
-                id: 'id_' + i,
                 hostname: 'master_' + i + ".pcncad.club",
-                domainName: 'name_' + i + ".pcncad.club",
+                domain: 'name_' + i + ".pcncad.club",
+                ipAddress: `10.108.211.${i+1}`,
                 serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
                 numOfUser: i + 1,
                 status: "在线",
@@ -292,42 +292,42 @@ export default class MyOperateServer extends React.Component {
                                     style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
                                 >
                                     <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
-                    <span>
-                      <InfoCircleOutlined
-                          translate="true"
-                          style={{ color: "#1890ff" }}
-                      />
-                      已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
-                    </span>
+                                        <span>
+                                        <InfoCircleOutlined
+                                            translate="true"
+                                            style={{ color: "#1890ff" }}
+                                        />
+                                        已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
+                                        </span>
                                     </Col>
                                     <Col span={12} >
-                    <span style={{ float: 'right' }}>
-                      {
-                          selectedRowKeys.length > 0 ? ([
-                              <Button
-                                  icon={<MinusOutlined translate="true" />}
-                                  onClick={this.delete}
-                              >
-                                  批量删除
-                              </Button>,
-                              <Divider type="vertical" />
-                          ]) : (
-                              null
-                          )
-                      }
-                        <Button
-                            icon={<PlusOutlined translate="true" />}
-                            onClick={this.add}
-                        >
-                        申请
-                      </Button>
-                      <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-                      <span style={{ paddingLeft: '64px' }} >
-                        <SyncOutlined
-                            translate="true" onClick={this.sync}
-                        />
-                      </span>
-                    </span>
+                                        <span style={{ float: 'right' }}>
+                                        {
+                                            selectedRowKeys.length > 0 ? ([
+                                                <Button
+                                                    icon={<MinusOutlined translate="true" />}
+                                                    onClick={this.delete}
+                                                >
+                                                    批量删除
+                                                </Button>,
+                                                <Divider type="vertical" />
+                                            ]) : (
+                                                null
+                                            )
+                                        }
+                                            <Button
+                                                icon={<PlusOutlined translate="true" />}
+                                                onClick={this.add}
+                                            >
+                                            申请
+                                        </Button>
+                                        <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                        <span style={{ paddingLeft: '64px' }} >
+                                            <SyncOutlined
+                                                translate="true" onClick={this.sync}
+                                            />
+                                        </span>
+                                        </span>
                                     </Col>
                                 </Row>
                                 <Table

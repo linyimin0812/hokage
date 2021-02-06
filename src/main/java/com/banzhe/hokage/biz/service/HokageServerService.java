@@ -1,5 +1,9 @@
 package com.banzhe.hokage.biz.service;
 
+import com.banzhe.hokage.biz.form.server.ServerSearchForm;
+import com.banzhe.hokage.biz.request.AllServerQuery;
+import com.banzhe.hokage.biz.request.SubordinateServerQuery;
+import com.banzhe.hokage.biz.request.SupervisorServerQuery;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
@@ -14,14 +18,14 @@ import java.util.List;
  */
 public interface HokageServerService {
     /**
-     * 插入一条新记录
+     * insert a new record
      * @param serverDO
      * @return
      */
     ServiceResponse<Long> insert(HokageServerDO serverDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param serverDO
      * @return
      */
@@ -34,28 +38,29 @@ public interface HokageServerService {
     ServiceResponse<List<HokageServerVO>> selectAll();
 
     /**
-     * 根据id获取批量服务器
+     * search server
+     * @param form ServerSearchForm
+     * @return List<HokageServerVO>
+     */
+    ServiceResponse<List<HokageServerVO>> listServer(ServerSearchForm form);
+
+    /**
+     * retrieve server information based on server ids
      * @param ids
      * @return
      */
     ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids);
 
-    /**
-     * 根据Id获取服务器信息
-     * @param id
-     * @return
-     */
-    ServiceResponse<HokageServerDO> selectById(Long id);
 
     /**
-     * 根据类型查找服务器信息
+     * retrieve server information based on server type
      * @param type
      * @return
      */
     ServiceResponse<List<HokageServerDO>> selectByType(String type);
 
     /**
-     * 根据服务器组查找服务器信息
+     * retrieve server information based on server group
      * @param group
      * @return
      */

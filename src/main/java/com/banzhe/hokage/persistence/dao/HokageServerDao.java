@@ -1,5 +1,8 @@
 package com.banzhe.hokage.persistence.dao;
 
+import com.banzhe.hokage.biz.request.AllServerQuery;
+import com.banzhe.hokage.biz.request.SubordinateServerQuery;
+import com.banzhe.hokage.biz.request.SupervisorServerQuery;
 import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
 
 import java.util.List;
@@ -12,50 +15,79 @@ import java.util.List;
  */
 public interface HokageServerDao {
     /**
-     * 插入一条新记录
+     * insert a new record
      * @param serverDO
      * @return
      */
     Long insert(HokageServerDO serverDO);
 
     /**
-     * 更新一条记录
+     * update a record
      * @param serverDO
      * @return
      */
     Long update(HokageServerDO serverDO);
 
     /**
-     * 获取所有服务器信息
+     * retrieve all server
      * @return
      */
     List<HokageServerDO> selectAll();
 
     /**
-     * 根据id获取批量服务器
+     * retrieve server based-on batch ids
      * @param ids
      * @return
      */
     List<HokageServerDO> selectByIds(List<Long> ids);
 
     /**
-     * 根据Id获取服务器信息
+     * retrieve server based-on id
      * @param id
      * @return
      */
     HokageServerDO selectById(Long id);
 
     /**
-     * 根据类型查找服务器信息
+     * retrieve servers based-on server type
      * @param type
      * @return
      */
     List<HokageServerDO> listByType(String type);
 
     /**
-     * 根据服务器组查找服务器信息
+     * retrieve servers based-on server group
      * @param group
      * @return
      */
     List<HokageServerDO> selectByGroup(String group);
+
+    /**
+     * retrieve server based-on supervisor id
+     * @param supervisorId
+     * @return
+     */
+    List<HokageServerDO> selectBySupervisorId(Long supervisorId);
+
+    /**
+     * retrieve server info
+     * @param query
+     * @return
+     */
+    List<HokageServerDO> selectByQuery(AllServerQuery query);
+
+    /**
+     * retrieve server info
+     * @param query
+     * @return
+     */
+    List<HokageServerDO> selectByQuery(SupervisorServerQuery query);
+
+    /**
+     * retrieve server info
+     * @param query
+     * @return
+     */
+    List<HokageServerDO> selectByQuery(SubordinateServerQuery query);
+
 }

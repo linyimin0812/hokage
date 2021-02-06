@@ -1,11 +1,17 @@
 package com.banzhe.hokage.biz.controller;
 
+import com.banzhe.hokage.biz.converter.ServerFormConverter;
+import com.banzhe.hokage.biz.enums.UserRoleEnum;
 import com.banzhe.hokage.biz.form.server.HokageServerForm;
 import com.banzhe.hokage.biz.form.server.ServerOperateForm;
 import com.banzhe.hokage.biz.form.server.ServerSearchForm;
+import com.banzhe.hokage.biz.request.AllServerQuery;
+import com.banzhe.hokage.biz.request.SubordinateServerQuery;
+import com.banzhe.hokage.biz.request.SupervisorServerQuery;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageServerService;
+import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
@@ -14,10 +20,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:50
+ * @date 2020/8/23 1:50 am
  * @email linyimin520812@gmail.com
  * @description server controller
  */
@@ -25,10 +34,16 @@ import java.util.List;
 public class ServerController extends BaseController {
 
     private HokageServerService serverService;
+    private HokageUserService userService;
 
     @Autowired
     public void setServerService(HokageServerService serverService) {
         this.serverService = serverService;
+    }
+
+    @Autowired
+    public void setUserService(HokageUserService userService) {
+        this.userService = userService;
     }
 
     /**
@@ -43,10 +58,17 @@ public class ServerController extends BaseController {
         return fail(serviceResponse.getCode(), serviceResponse.getMsg());
     }
 
-    // TODO: 搜索服务器信息
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> searchServer(@RequestBody ServerSearchForm form) {
-        return success(Collections.emptyList());
+    public ResultVO<List<HokageServerVO>> searchServer(@RequestBody ServerSearchForm form) {
+        Long operateId = checkNotNull(form.getOperateId(), "operator can't be null");
+
+        ServiceResponse<List<HokageServerVO>> response = serverService.listServer(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
+        return success(response.getData());
     }
 
     // TODO: 添加服务器

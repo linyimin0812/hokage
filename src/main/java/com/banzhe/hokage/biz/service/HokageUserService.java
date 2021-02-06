@@ -136,5 +136,11 @@ public interface HokageUserService {
      */
     ServiceResponse<Boolean> recycleSubordinate(Long id, List<Long> serverIds);
 
+    /**
+     * retrieve user role based on user id
+     * @param id
+     * @return
+     */
+    ServiceResponse<Integer> getRoleByUserId(Long id);
 
 }

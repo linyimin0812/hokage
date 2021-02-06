@@ -25,11 +25,6 @@ const renderStatus = (text: string, _: any, __: any) => {
 
 const columns = [
     {
-        title: "id",
-        dataIndex: "id",
-        key: "id"
-    },
-    {
         title: "主机名",
         dataIndex: "hostname",
         key: "hostname"
@@ -38,6 +33,11 @@ const columns = [
         title: "域名",
         dataIndex: "domainName",
         key: "domainName"
+    },
+    {
+        title: "ip地址",
+        dataIndex: "ipAddress",
+        key: "ipAddress"
     },
     {
         title: "登录账号",
@@ -71,9 +71,9 @@ const datas: any[] = []
 for (let i = 0; i < 5; i++) {
     const data = {
         key: i + 1,
-        id: 'id_' + i,
         hostname: 'master_' + i + ".pcncad.club",
         domainName: 'name_' + i + ".pcncad.club",
+        ipAddress: `10.108.211.${i+1}`,
         account: "banzhe_" + i,
         serverStatus: i % 2 === 0 ? '掉线' : '在线',
         myStatus: i % 2 === 0 ? '退出' : '登录',
@@ -186,49 +186,49 @@ export default class MyServer extends React.Component<any, MyServerState> {
                                     style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
                                 >
                                     <Col span={12} style={{ display: 'flex', alignItems: 'center' }}> 
-                    <span>
-                      <InfoCircleOutlined
-                          translate="true"
-                          style={{ color: "#1890ff" }}
-                      />
-                      已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
-                    </span>
+                                        <span>
+                                        <InfoCircleOutlined
+                                            translate="true"
+                                            style={{ color: "#1890ff" }}
+                                        />
+                                            已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
+                                        </span>
                                     </Col>
                                     <Col span={12} >
-                    <span style={{ float: 'right' }}>
-                      {
-                          selectedRowKeys.length > 0 ? ([
-                              <Button
-                                  icon={<MinusOutlined translate="true" />}
-                                  onClick={this.delete}
-                              >
-                                  批量删除
-                              </Button>,
-                              <Divider type="vertical" />
-                          ]) : (
-                              null
-                          )
-                      }
-                        <Button
-                            icon={<PlusOutlined translate="true" />}
-                            onClick={this.applyServer}
-                        >
-                        申请服务器
-                      </Button>
-                      <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />                      
-                      <Divider type="vertical" />
-                      <Button
-                          icon={<PlusOutlined translate="true" />}
-                          onClick={this.add}
-                      >
-                        添加服务器
-                      </Button>
-                      <span style={{ paddingLeft: '64px' }} >
-                        <SyncOutlined
-                            translate="true" onClick={this.sync}
-                        />
-                      </span>
-                    </span>
+                                        <span style={{ float: 'right' }}>
+                                            {
+                                                selectedRowKeys.length > 0 ? ([
+                                                    <Button
+                                                        icon={<MinusOutlined translate="true" />}
+                                                        onClick={this.delete}
+                                                    >
+                                                        批量删除
+                                                    </Button>,
+                                                    <Divider type="vertical" />
+                                                ]) : (
+                                                    null
+                                                )
+                                            }
+                                            <Button
+                                                icon={<PlusOutlined translate="true" />}
+                                                onClick={this.applyServer}
+                                            >
+                                                申请服务器
+                                            </Button>
+                                            <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />                      
+                                            <Divider type="vertical" />
+                                            <Button
+                                                icon={<PlusOutlined translate="true" />}
+                                                onClick={this.add}
+                                            >
+                                                    添加服务器
+                                            </Button>
+                                            <span style={{ paddingLeft: '64px' }} >
+                                                <SyncOutlined
+                                                    translate="true" onClick={this.sync}
+                                                />
+                                            </span>
+                                        </span>
                                     </Col>
                                 </Row>
                                 <Table

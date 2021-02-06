@@ -7,9 +7,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/11/1 4:00 下午
+ * @date 2020/11/1 16:00
  * @email linyimin520812@gmail.com
- * @description 管理员信息查询
+ * @description supervisor information search form
  */
 @Data
 public class UserServerSearchForm extends PageQuery {

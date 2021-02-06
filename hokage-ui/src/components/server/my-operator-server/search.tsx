@@ -16,8 +16,8 @@ export default class Search extends React.Component<SearchPropTypes> {
                     onFinish={this.props.onFinish}
                     style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
-                    <Row gutter={24}>
-                        <Col span={5} key="hostname">
+                    <Row gutter={24} style={{ width: '100%' }}>
+                        <Col span={4} key="hostname">
                             <Form.Item
                                 name="hoatname"
                                 label="主机名"
@@ -25,7 +25,7 @@ export default class Search extends React.Component<SearchPropTypes> {
                                 <Input placeholder="请输入" />
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="admin">
+                        <Col span={4} key="domain">
                             <Form.Item
                                 name="domainName"
                                 label="域名"
@@ -33,9 +33,17 @@ export default class Search extends React.Component<SearchPropTypes> {
                                 <Input placeholder="请输入" />
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="serverTag">
+                        <Col span={4} key="ipAddress">
                             <Form.Item
-                                name="serverTag"
+                                name="ipAddress"
+                                label="ip地址"
+                            >
+                                <Input placeholder="请输入" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={4} key="serverLabel">
+                            <Form.Item
+                                name="serverLabel"
                                 label="标签"
                             >
                                 <Select defaultValue="-1">
@@ -60,7 +68,23 @@ export default class Search extends React.Component<SearchPropTypes> {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col span={5} key="submit">
+                        <Col span={4} key="username">
+                            <Form.Item
+                                name="username"
+                                label="用户名"
+                            >
+                                <Input placeholder="请输入" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={4} key="account">
+                            <Form.Item
+                                name="account"
+                                label="登录账号"
+                            >
+                                <Input placeholder="请输入" />
+                            </Form.Item>
+                        </Col>
+                        <Col span={4} key="submit">
                             <Button type="primary" htmlType="submit">
                                 Search
                             </Button>
