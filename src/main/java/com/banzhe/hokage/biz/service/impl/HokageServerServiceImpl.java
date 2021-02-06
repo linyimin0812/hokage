@@ -260,21 +260,20 @@ public class HokageServerServiceImpl implements HokageServerService {
             return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
-        boolean result = supervisorIds.stream().anyMatch(supervisorId -> {
-            return serverIds.stream().anyMatch(serverId -> {
-                HokageSupervisorServerDO supervisorServerDO = supervisorServerDao.queryBySupervisorIdAndServerId(supervisorId, serverId);
-                if (Objects.nonNull(supervisorServerDO)) {
-                    return true;
-                }
-                ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_server.name());
-                supervisorServerDO = new HokageSupervisorServerDO();
-                supervisorServerDO.setId(primaryKeyRes.getData());
-                supervisorServerDO.setSupervisorId(supervisorId);
-                supervisorServerDO.setServerId(serverId);
+        boolean result = supervisorIds.stream().anyMatch(supervisorId -> serverIds.stream().anyMatch(serverId -> {
+            HokageSupervisorServerDO supervisorServerDO = supervisorServerDao.queryBySupervisorIdAndServerId(supervisorId, serverId);
+            if (Objects.nonNull(supervisorServerDO)) {
+                return true;
+            }
 
-                return supervisorServerDao.insert(supervisorServerDO) > 0;
-            });
-        });
+            ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_server.name());
+            supervisorServerDO = new HokageSupervisorServerDO();
+            supervisorServerDO.setId(primaryKeyRes.getData());
+            supervisorServerDO.setSupervisorId(supervisorId);
+            supervisorServerDO.setServerId(serverId);
+
+            return supervisorServerDao.insert(supervisorServerDO) > 0;
+        }));
 
         if (result) {
             return response.success(true);
