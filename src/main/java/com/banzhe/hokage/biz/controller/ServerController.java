@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collections;
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * @author linyimin
  * @date 2020/8/23 1:50 am
@@ -96,12 +94,6 @@ public class ServerController extends BaseController {
         return success(Collections.emptyList());
     }
 
-    // TODO: 搜索服务器信息
-    @RequestMapping(value = "/supervisor/server/search", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> searchSupervisorServer(@RequestBody ServerSearchForm form) {
-        return success(Collections.emptyList());
-    }
-
     // TODO: 申请服务器
     @RequestMapping(value = "/supervisor/server/apply", method = RequestMethod.POST)
     public ResultVO<HokageServerVO> applyServer(@RequestBody ServerOperateForm form) {
@@ -133,12 +125,6 @@ public class ServerController extends BaseController {
     // TODO: 列举我管理的服务器信息
     @RequestMapping(value = "/my/server/list", method = RequestMethod.GET)
     public ResultVO<List<HokageServerVO>> listMyServer(@RequestParam Long id) {
-        return success(Collections.emptyList());
-    }
-
-    // TODO: 搜索服务器信息
-    @RequestMapping(value = "/my/server/search", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> searchMyServer(@RequestBody ServerSearchForm form) {
         return success(Collections.emptyList());
     }
 
