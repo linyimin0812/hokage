@@ -188,24 +188,24 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         // add supervisor
         if (!CollectionUtils.isEmpty(form.getSupervisors())) {
-            List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
+            List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
 
             List<Long> supervisorIds = form.getSupervisors();
 
-            List<Long> addList = new ArrayList<>();
+            List<Long> addList;
             List<Long> deleteList = new ArrayList<>();
 
-            if (!CollectionUtils.isEmpty(supervisorServerDOS)) {
-                addList = supervisorIds.stream().filter(id -> supervisorServerDOS.stream()
+            if (!CollectionUtils.isEmpty(supervisorServerDOList)) {
+                addList = supervisorIds.stream().filter(id -> supervisorServerDOList.stream()
                         .noneMatch(superServerDO -> id.equals(superServerDO.getSupervisorId())))
                         .collect(Collectors.toList());
 
-                deleteList = supervisorServerDOS.stream()
+                deleteList = supervisorServerDOList.stream()
                         .map(HokageSupervisorServerDO::getSupervisorId)
                         .filter(id -> !supervisorIds.contains(id))
                         .collect(Collectors.toList());
             } else {
-                addList.addAll(supervisorIds);
+                addList = new ArrayList<>(supervisorIds);
             }
 
             boolean result = addList.stream().allMatch(id -> {
