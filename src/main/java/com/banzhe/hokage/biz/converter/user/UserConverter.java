@@ -1,5 +1,7 @@
-package com.banzhe.hokage.biz.converter;
+package com.banzhe.hokage.biz.converter.user;
 
+import com.banzhe.hokage.biz.converter.server.ConverterTypeEnum;
+import com.banzhe.hokage.biz.converter.server.ServerDOConverter;
 import com.banzhe.hokage.biz.enums.OperationTypeEnum;
 import com.banzhe.hokage.biz.form.user.HokageUserLoginForm;
 import com.banzhe.hokage.biz.form.user.HokageUserRegisterForm;

@@ -1,4 +1,4 @@
-package com.banzhe.hokage.biz.converter;
+package com.banzhe.hokage.biz.converter.server;
 
 /**
  * @author linyimin

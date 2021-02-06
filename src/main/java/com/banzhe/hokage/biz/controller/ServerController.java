@@ -47,7 +47,6 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchServer(@RequestBody ServerSearchForm form) {
-        Long operateId = checkNotNull(form.getOperateId(), "operator can't be null");
 
         ServiceResponse<List<HokageServerVO>> response = serverService.listServer(form);
 
@@ -58,10 +57,16 @@ public class ServerController extends BaseController {
         return success(response.getData());
     }
 
-    // TODO: 添加服务器
     @RequestMapping(value = "/server/add", method = RequestMethod.POST)
-    public ResultVO<HokageServerVO> addServer(@RequestBody HokageServerForm form) {
-        return success(new HokageServerVO());
+    public ResultVO<HokageServerForm> addServer(@RequestBody HokageServerForm form) {
+
+        ServiceResponse<HokageServerForm> response = serverService.save(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
+        return success(response.getData());
     }
 
     // TODO: 删除服务器

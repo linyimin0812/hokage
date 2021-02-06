@@ -1,7 +1,7 @@
 package com.banzhe.hokage.biz.service.impl;
 
-import com.banzhe.hokage.biz.converter.ConverterTypeEnum;
-import com.banzhe.hokage.biz.converter.UserConverter;
+import com.banzhe.hokage.biz.converter.server.ConverterTypeEnum;
+import com.banzhe.hokage.biz.converter.user.UserConverter;
 import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;

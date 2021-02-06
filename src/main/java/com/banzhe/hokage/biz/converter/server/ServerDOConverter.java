@@ -1,4 +1,4 @@
-package com.banzhe.hokage.biz.converter;
+package com.banzhe.hokage.biz.converter.server;
 
 import com.banzhe.hokage.biz.enums.OperationTypeEnum;
 import com.banzhe.hokage.biz.response.HokageOperation;

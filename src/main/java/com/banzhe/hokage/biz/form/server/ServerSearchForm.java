@@ -40,10 +40,6 @@ public class ServerSearchForm extends PageQuery {
      * server label
      */
     private String label;
-    /**
-     * server status
-     */
-    private String status;
 
     /**
      * server group
@@ -64,6 +60,11 @@ public class ServerSearchForm extends PageQuery {
      * account status
      */
     private String accountStatus;
+
+    /**
+     * username
+     */
+    private String username;
 
 }
 

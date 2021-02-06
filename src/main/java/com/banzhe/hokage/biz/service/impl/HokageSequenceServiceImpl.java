@@ -12,7 +12,7 @@ import java.util.Objects;
 
 /**
  * @author linyimin
- * @date 2020/8/30 5:16 下午
+ * @date 2020/8/30 5:16 pm
  * @email linyimin520812@gmail.com
  * @description
  */
@@ -31,13 +31,13 @@ public class HokageSequenceServiceImpl implements HokageSequenceService {
         ServiceResponse<Long> res = new ServiceResponse<>();
         HokageSequenceDO sequenceDO = sequenceDao.getSequenceByName(name);
         if (Objects.isNull(sequenceDO)) {
-            throw new RuntimeException(String.format("name: %s 对应的sequence不存在。", name));
+            throw new RuntimeException(String.format("name: %s of sequence is not exist", name));
         }
-        // 更新下一个值
+        // update next value
         sequenceDO.setValue(sequenceDO.getValue() + 1);
         Integer result = sequenceDao.update(sequenceDO);
         if (result <= 0) {
-            throw new RuntimeException(String.format("name: %s 对应的sequence更新失败。", name));
+            throw new RuntimeException(String.format("name: %s of sequence update failed", name));
         }
         return res.success(sequenceDO.getValue());
     }

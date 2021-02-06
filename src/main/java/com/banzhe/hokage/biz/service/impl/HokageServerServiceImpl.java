@@ -1,25 +1,32 @@
 package com.banzhe.hokage.biz.service.impl;
 
-import com.banzhe.hokage.biz.converter.ConverterTypeEnum;
-import com.banzhe.hokage.biz.converter.ServerDOConverter;
-import com.banzhe.hokage.biz.converter.ServerFormConverter;
+import com.banzhe.hokage.biz.converter.server.ConverterTypeEnum;
+import com.banzhe.hokage.biz.converter.server.ServerDOConverter;
+import com.banzhe.hokage.biz.converter.server.ServerFormConverter;
+import com.banzhe.hokage.biz.converter.server.ServerSearchFormConverter;
+import com.banzhe.hokage.biz.enums.SequenceNameEnum;
 import com.banzhe.hokage.biz.enums.UserRoleEnum;
+import com.banzhe.hokage.biz.form.server.HokageServerForm;
 import com.banzhe.hokage.biz.form.server.ServerSearchForm;
 import com.banzhe.hokage.biz.request.AllServerQuery;
 import com.banzhe.hokage.biz.request.SubordinateServerQuery;
 import com.banzhe.hokage.biz.request.SupervisorServerQuery;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
+import com.banzhe.hokage.biz.service.HokageSequenceService;
 import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageServerDao;
+import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
+import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,6 +41,9 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     private HokageServerDao hokageServerDao;
     private HokageUserService userService;
+    private ServerFormConverter formConverter;
+    private HokageSequenceService sequenceService;
+    private HokageSupervisorServerDao supervisorServerDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -45,32 +55,37 @@ public class HokageServerServiceImpl implements HokageServerService {
         this.userService = userService;
     }
 
+    @Autowired
+    public void setFormConverter(ServerFormConverter converter) {
+        this.formConverter = converter;
+    }
+
+    @Autowired
+    private void setSupervisorServerDao(HokageSupervisorServerDao supervisorServerDao) {
+        this.supervisorServerDao = supervisorServerDao;
+    }
+
+    @Autowired
+    private void setSequenceService(HokageSequenceService service) {
+        this.sequenceService = service;
+    }
+
     private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
             ImmutableMap.<Integer, Function<ServerSearchForm, List<HokageServerDO>>>builder()
                     .put(UserRoleEnum.super_operator.getValue(), (form -> {
-                        AllServerQuery query = ServerFormConverter.converterToAll(form);
+                        AllServerQuery query = ServerSearchFormConverter.converterToAll(form);
                         return hokageServerDao.selectByQuery(query);
 
                     }))
                     .put(UserRoleEnum.supervisor.getValue(), (form -> {
-                        SupervisorServerQuery query = ServerFormConverter.converterToSupervisor(form);
+                        SupervisorServerQuery query = ServerSearchFormConverter.converterToSupervisor(form);
                         return hokageServerDao.selectByQuery(query);
                     }))
                     .put(UserRoleEnum.subordinate.getValue(), (form -> {
-                        SubordinateServerQuery query = ServerFormConverter.converterToSubordinate(form);
+                        SubordinateServerQuery query = ServerSearchFormConverter.converterToSubordinate(form);
                         return hokageServerDao.selectByQuery(query);
                     }))
                     .build();
-
-    @Override
-    public ServiceResponse<Long> insert(HokageServerDO serverDO) {
-        return null;
-    }
-
-    @Override
-    public ServiceResponse<Long> update(HokageServerDO serverDO) {
-        return null;
-    }
 
     @Override
     public ServiceResponse<List<HokageServerVO>> selectAll() {
@@ -113,10 +128,17 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     }
 
-
-
     @Override
     public ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids) {
+
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+
+        List<HokageServerDO> serverDOList = hokageServerDao.selectByIds(ids);
+
+        if (CollectionUtils.isEmpty(serverDOList)) {
+            response.success(Collections.emptyList());
+        }
+
         return null;
     }
 
@@ -128,5 +150,78 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Override
     public ServiceResponse<List<HokageServerDO>> selectByGroup(String group) {
         return null;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<HokageServerForm> save(HokageServerForm form) {
+
+        ServiceResponse<HokageServerForm> response = new ServiceResponse<>();
+
+        HokageServerDO serverDO = formConverter.doForward(form);
+
+        // TODO: get hostname from ssh
+
+        if (Objects.isNull(form.getId()) || form.getId()  == 0) {
+            // insert
+            ServiceResponse<Long> primaryKeyResponse = sequenceService.nextValue(SequenceNameEnum.hokage_server.name());
+            if (!primaryKeyResponse.getSucceeded() || primaryKeyResponse.getData() <= 0) {
+                throw new RuntimeException("sequenceService get hokage_server primary key value error.");
+            }
+            serverDO.setId(primaryKeyResponse.getData());
+
+            if (hokageServerDao.insert(serverDO) <= 0) {
+                throw new RuntimeException("ServerService insert server info error.");
+            }
+
+        } else {
+            // update
+            if (hokageServerDao.update(serverDO) <= 0) {
+                throw new RuntimeException("ServerService update server info error.");
+            }
+        }
+
+        // add supervisor
+        if (!CollectionUtils.isEmpty(form.getSupervisors())) {
+            List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
+
+            List<Long> supervisorIds = form.getSupervisors();
+
+            List<Long> addList = new ArrayList<>();
+            List<Long> deleteList = new ArrayList<>();
+
+            if (!CollectionUtils.isEmpty(supervisorServerDOS)) {
+                addList = supervisorIds.stream().filter(id -> supervisorServerDOS.stream()
+                        .noneMatch(superServerDO -> id.equals(superServerDO.getSupervisorId())))
+                        .collect(Collectors.toList());
+
+                deleteList = supervisorServerDOS.stream()
+                        .map(HokageSupervisorServerDO::getSupervisorId)
+                        .filter(id -> !supervisorIds.contains(id))
+                        .collect(Collectors.toList());
+            } else {
+                addList.addAll(supervisorIds);
+            }
+
+            boolean result = addList.stream().allMatch(id -> {
+                HokageSupervisorServerDO supervisorServerDO = new HokageSupervisorServerDO();
+                ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_server.name());
+                supervisorServerDO.setId(primaryKeyRes.getData());
+                supervisorServerDO.setServerId(serverDO.getId());
+                supervisorServerDO.setSupervisorId(id);
+                return supervisorServerDao.insert(supervisorServerDO) > 0;
+            });
+
+            if (!CollectionUtils.isEmpty(deleteList)) {
+                result &= deleteList.stream().allMatch(id -> supervisorServerDao.removeBySupervisorId(id, Collections.singletonList(serverDO.getId())) > 0);
+            }
+
+            if (!result) {
+                throw new RuntimeException("update supervisor error.");
+            }
+        }
+        form.setId(serverDO.getId());
+
+        return response.success(form);
     }
 }

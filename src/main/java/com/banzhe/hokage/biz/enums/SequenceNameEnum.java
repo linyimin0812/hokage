@@ -2,12 +2,15 @@ package com.banzhe.hokage.biz.enums;
 
 /**
  * @author linyimin
- * @date 2020/8/30 5:41 下午
+ * @date 2020/8/30 5:41 pm
  * @email linyimin520812@gmail.com
- * @description
+ * @description table name
  */
 public enum SequenceNameEnum {
 
+    /**
+     * user info table
+     */
     hokage_user,
     hokage_supervisor_subordinate,
     hokage_server,

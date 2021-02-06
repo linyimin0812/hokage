@@ -1,7 +1,7 @@
 package com.banzhe.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.banzhe.hokage.biz.converter.UserConverter;
+import com.banzhe.hokage.biz.converter.user.UserConverter;
 import com.banzhe.hokage.biz.enums.UserErrorCodeEnum;
 import com.banzhe.hokage.biz.form.user.*;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;

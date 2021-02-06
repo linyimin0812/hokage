@@ -1,14 +1,23 @@
 package com.banzhe.hokage.persistence.dataobject;
 
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author linyimin
- * @date 2020/8/22 4:31 下午
+ * @date 2020/8/22 4:31 pm
  * @email linyimin520812@gmail.com
- * @description data object的基本属性
+ * @description data object's base property
  */
+@Data
 public class HokageBaseDO {
-    private Date gmtCreate; // 创建时间
-    private Date gmtModified; // 修改时间
+    /**
+     * create time
+     */
+    private Date gmtCreate;
+    /**
+     * modified time
+     */
+    private Date gmtModified;
 }

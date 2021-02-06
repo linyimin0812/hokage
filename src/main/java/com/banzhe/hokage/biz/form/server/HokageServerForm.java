@@ -6,17 +6,56 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/11/1 5:51 下午
+ * @date 2020/11/1 5:51 pm
  * @email linyimin520812@gmail.com
- * @description 服务器信息表单
+ * @description server info form
  */
 @Data
 public class HokageServerForm {
-    private String domain;              // 域名
-    private String ip;                  // 服务器ip
-    private String sshPort;             // ssh端口
-    private String account;             // 登录账号
-    private String passwd;              // 登录密码
-    private String serverGroup;         // 服务器分组
-    private List<Long> supervisors;     // 服务器管理员
+
+    /**
+     * server id, primary key
+     */
+    private Long id;
+
+    /**
+     * domain
+     */
+    private String domain;
+    /**
+     * server ip
+     */
+    private String ip;
+    /**
+     * ssh port
+     */
+    private String sshPort;
+    /**
+     * ssh account, which is used to
+     */
+    private String account;
+    /**
+     * passwd
+     * TODO: support ssh key
+     */
+    private String passwd;
+    /**
+     * server group
+     */
+    private String serverGroup;
+
+    /**
+     * server label: internal, external, X86, GPU
+     */
+    private String label;
+    /**
+     * server operator
+     */
+    private List<Long> supervisors;
+
+    /**
+     * server description
+     */
+    private String description;
+
 }
