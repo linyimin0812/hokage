@@ -6,7 +6,6 @@ import com.banzhe.hokage.biz.form.server.ServerSearchForm;
 import com.banzhe.hokage.biz.response.server.HokageServerVO;
 import com.banzhe.hokage.biz.response.user.HokageUserVO;
 import com.banzhe.hokage.biz.service.HokageServerService;
-import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.BaseController;
 import com.banzhe.hokage.common.ResultVO;
 import com.banzhe.hokage.common.ServiceResponse;
@@ -28,16 +27,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ServerController extends BaseController {
 
     private HokageServerService serverService;
-    private HokageUserService userService;
 
     @Autowired
     public void setServerService(HokageServerService serverService) {
         this.serverService = serverService;
-    }
-
-    @Autowired
-    public void setUserService(HokageUserService userService) {
-        this.userService = userService;
     }
 
     /**
