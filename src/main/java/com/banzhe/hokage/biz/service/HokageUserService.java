@@ -143,4 +143,11 @@ public interface HokageUserService {
      */
     ServiceResponse<Integer> getRoleByUserId(Long id);
 
+    /**
+     * determine whether the user is a super
+     * @param id: user id
+     * @return true: yes, false: no
+     */
+    ServiceResponse<Boolean> isSuperOperator(Long id);
+
 }

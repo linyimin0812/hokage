@@ -88,9 +88,14 @@ public class ServerController extends BaseController {
         return success(Boolean.TRUE);
     }
 
-    // TODO: 撤销管理员
     @RequestMapping(value = "/server/supervisor/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServerSupervisor(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.revokeSupervisor(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
         return success(Boolean.TRUE);
     }
 

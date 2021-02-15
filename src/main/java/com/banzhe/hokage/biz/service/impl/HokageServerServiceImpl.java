@@ -249,14 +249,14 @@ public class HokageServerServiceImpl implements HokageServerService {
         List<Long> supervisorIds = form.getUserIds();
         List<Long> serverIds = form.getServerIds();
 
-                // retrieve operate role
-        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
+        // retrieve operate role
+        ServiceResponse<Boolean> isSuperResponse = userService.isSuperOperator(operatorId);
 
-        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
-            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+        if (!isSuperResponse.getSucceeded()) {
+            return response.fail(isSuperResponse.getCode(), isSuperResponse.getMsg());
         }
 
-        if (!UserRoleEnum.super_operator.getValue().equals(roleResponse.getData())) {
+        if (!isSuperResponse.getData()) {
             return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
@@ -280,5 +280,31 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
+    }
+
+    @Override
+    public ServiceResponse<Boolean> revokeSupervisor(ServerOperateForm form) {
+        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        ServiceResponse<Boolean> isSuperResponse = userService.isSuperOperator(operatorId);
+
+        if (!isSuperResponse.getSucceeded()) {
+            return response.fail(isSuperResponse.getCode(), isSuperResponse.getMsg());
+        }
+
+        if (!isSuperResponse.getData()) {
+            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+        }
+
+        List<Long> userIds = form.getUserIds();
+        List<Long> serverIds = form.getServerIds();
+
+        boolean result = userIds.stream().anyMatch(userId -> supervisorServerDao.removeBySupervisorId(userId, serverIds) > 0);
+
+        return response.success(result);
     }
 }

@@ -369,6 +369,18 @@ public class HokageUserServiceImpl implements HokageUserService {
         return null;
     }
 
+    @Override
+    public ServiceResponse<Boolean> isSuperOperator(Long id) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        ServiceResponse<Integer> roleResponse = this.getRoleByUserId(id);
+
+        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
+            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+        }
+
+        return response.success(UserRoleEnum.super_operator.getValue().equals(roleResponse.getData()));
+    }
+
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {
         checkNotNull(userDO, "userDO can't be null");
         return UserConverter.converter(userDO, ConverterTypeEnum.supervisor);
