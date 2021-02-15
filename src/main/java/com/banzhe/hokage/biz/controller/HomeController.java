@@ -4,10 +4,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * @author linyimin
+ * @date 2021/02/23 1:56am
+ * @email linyimin520812@gmail.com
+ * @description home controller
+ */
 @Controller
 public class HomeController {
     /**
-     * 应用入口
+     * application entrance
      * @param model
      * @return
      */
