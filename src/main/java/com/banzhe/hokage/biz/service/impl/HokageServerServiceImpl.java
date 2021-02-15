@@ -358,4 +358,30 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
     }
+
+    @Override
+    public ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form) {
+        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        ServiceResponse<Boolean> isSupervisorResponse = userService.isSupervisor(operatorId);
+
+        if (!isSupervisorResponse.getSucceeded()) {
+            return response.fail(isSupervisorResponse.getCode(), isSupervisorResponse.getMsg());
+        }
+
+        if (!isSupervisorResponse.getData()) {
+            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+        }
+
+        List<Long> userIds = form.getUserIds();
+        List<Long> serverIds = form.getServerIds();
+
+        boolean result = userIds.stream().anyMatch(userId -> subordinateServerDao.removeBySubordinateId(userId, serverIds) > 0);
+
+        return response.success(result);
+    }
 }

@@ -111,7 +111,6 @@ public class ServerController extends BaseController {
         return success(new HokageServerVO());
     }
 
-    // TODO: 添加用户
     @RequestMapping(value = "/server/subordinate/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addServerSubordinate(@RequestBody ServerOperateForm form) {
 
@@ -124,9 +123,14 @@ public class ServerController extends BaseController {
         return success(Boolean.TRUE);
     }
 
-    // TODO: 撤销用户
     @RequestMapping(value = "/server/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServerSubordinate(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.revokeSubordinate(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
         return success(Boolean.TRUE);
     }
 
