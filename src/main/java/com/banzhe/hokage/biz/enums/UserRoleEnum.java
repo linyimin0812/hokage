@@ -2,9 +2,9 @@ package com.banzhe.hokage.biz.enums;
 
 /**
  * @author linyimin
- * @date 2020/8/30 3:44 下午
+ * @date 2020/8/30 3:44 pm
  * @email linyimin520812@gmail.com
- * @description 用户角色
+ * @description user role
  */
 public enum UserRoleEnum {
 

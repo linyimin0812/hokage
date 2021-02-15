@@ -19,8 +19,10 @@ import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageServerDao;
+import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
+import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +51,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     private ServerFormConverter formConverter;
     private HokageSequenceService sequenceService;
     private HokageSupervisorServerDao supervisorServerDao;
+    private HokageSubordinateServerDao subordinateServerDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -73,6 +76,11 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Autowired
     private void setSequenceService(HokageSequenceService service) {
         this.sequenceService = service;
+    }
+
+    @Autowired
+    private void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
+        this.supervisorServerDao = supervisorServerDao;
     }
 
     private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
@@ -306,5 +314,48 @@ public class HokageServerServiceImpl implements HokageServerService {
         boolean result = userIds.stream().anyMatch(userId -> supervisorServerDao.removeBySupervisorId(userId, serverIds) > 0);
 
         return response.success(result);
+    }
+
+    @Override
+    public ServiceResponse<Boolean> designateSubordinate(ServerOperateForm form) {
+        Long operatorId = checkNotNull(form.getId(), "id can't be null");
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be null");
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server ids can't be null");
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        ServiceResponse<Boolean> isSupervisorResponse = userService.isSupervisor(operatorId);
+
+        if (!isSupervisorResponse.getSucceeded()) {
+            return response.fail(isSupervisorResponse.getCode(), isSupervisorResponse.getMsg());
+        }
+
+        if (!isSupervisorResponse.getData()) {
+            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+        }
+
+        List<Long> subordinateIds = form.getUserIds();
+        List<Long> serverIds = form.getServerIds();
+
+        boolean result = subordinateIds.stream().anyMatch(subordinateId -> serverIds.stream().anyMatch(serverId -> {
+            HokageSubordinateServerDO subordinateServerDO = subordinateServerDao.queryBySubordinateIdAndServerId(subordinateId, serverId);
+            if (Objects.nonNull(subordinateServerDO)) {
+                return true;
+            }
+
+            ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_subordinate_server.name());
+            subordinateServerDO = new HokageSubordinateServerDO();
+            subordinateServerDO.setId(primaryKeyRes.getData());
+            subordinateServerDO.setSubordinateId(subordinateId);
+            subordinateServerDO.setServerId(serverId);
+
+            return subordinateServerDao.insert(subordinateServerDO) > 0;
+        }));
+
+        if (result) {
+            return response.success(true);
+        }
+
+        return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
     }
 }

@@ -150,4 +150,10 @@ public interface HokageUserService {
      */
     ServiceResponse<Boolean> isSuperOperator(Long id);
 
+    /**
+     * determine whether the user is a supervisor
+     * @param id: user id
+     * @return true: yes, false: no
+     */
+    ServiceResponse<Boolean> isSupervisor(Long id);
 }

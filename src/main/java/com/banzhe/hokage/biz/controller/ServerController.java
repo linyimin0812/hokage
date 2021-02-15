@@ -114,6 +114,13 @@ public class ServerController extends BaseController {
     // TODO: 添加用户
     @RequestMapping(value = "/server/subordinate/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addServerSubordinate(@RequestBody ServerOperateForm form) {
+
+        ServiceResponse<Boolean> response = serverService.designateSubordinate(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
         return success(Boolean.TRUE);
     }
 

@@ -1,6 +1,8 @@
 package com.banzhe.hokage.persistence.dao;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
+import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
+
 import java.util.List;
 
 /**
@@ -68,5 +70,13 @@ public interface HokageSubordinateServerDao {
      * @return
      */
     Integer removeBySubordinateId(Long id, List<Long> serverIds);
+
+    /**
+     * retrieve relationship based-on subordinate id and server id
+     * @param subordinateId
+     * @param serverId
+     * @return
+     */
+    HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
 
 }

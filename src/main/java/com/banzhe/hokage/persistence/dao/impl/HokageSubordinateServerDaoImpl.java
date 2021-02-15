@@ -2,6 +2,7 @@ package com.banzhe.hokage.persistence.dao.impl;
 
 import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
+import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.banzhe.hokage.persistence.mapper.HokageSubordinateServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -93,5 +94,10 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     @Override
     public Integer removeBySubordinateId(Long id, List<Long> serverIds) {
         return subordinateServerMapper.removeBySubordinateId(id, serverIds);
+    }
+
+    @Override
+    public HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId) {
+        return subordinateServerMapper.queryBySubordinateIdAndServerId(subordinateId, serverId);
     }
 }

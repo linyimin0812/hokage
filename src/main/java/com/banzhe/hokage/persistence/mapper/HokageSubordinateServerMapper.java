@@ -1,6 +1,7 @@
 package com.banzhe.hokage.persistence.mapper;
 
 import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
+import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -76,4 +77,11 @@ public interface HokageSubordinateServerMapper {
      */
     Integer removeBySubordinateId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
 
+    /**
+     * retrieve relationship based-on subordinate id and server id
+     * @param subordinateId
+     * @param serverId
+     * @return
+     */
+    HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
 }

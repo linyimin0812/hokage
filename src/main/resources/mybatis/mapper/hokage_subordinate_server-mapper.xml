@@ -120,4 +120,12 @@
         </where>
     </delete>
 
+    <select id="queryBySubordinateIdAndServerId" resultMap="HokageSubordinateServerMapper">
+        SELECT <include refid="allColumn" />
+        FROM <include refid="tableName" />
+        <where>
+            server_id=#{serverId} and subordinate_id=#{subordinateId}
+        </where>
+    </select>
+
 </mapper>
