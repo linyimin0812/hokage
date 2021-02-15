@@ -81,9 +81,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
 										批量删除
 									</Button>,
 									<Divider type="vertical" />,
-								  ]) : (
-									  null
-								)
+								  ]) : null
 							}
 							<Button
 								key="3"
