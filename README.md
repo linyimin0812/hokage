@@ -64,4 +64,25 @@ docker run -d --restart=always --name hokage -p 8080:8080 hokage-0.0.1:SNAPSHOT
 127.0.0.1:8080/swagger-ui/index.html?url=/v3/api-docs
 ```
 
+## development
+
+
+
+### set proxy port
+
+houkage-ui/package.json
+
+```json
+{
+  "proxy": "http://127.0.0.1:8080"
+}
+```
+
+### start up ui
+
+```shell script
+npm install
+PORT=3000 npm start
+```
+
 
