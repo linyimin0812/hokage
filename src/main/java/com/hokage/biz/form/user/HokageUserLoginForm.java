@@ -7,16 +7,16 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author linyimin
- * @date 2020/8/29 10:07 下午
+ * @date 2020/8/29 10:07 pm
  * @email linyimin520812@gmail.com
- * @description 用户登录表单
+ * @description user login form
  */
 @Data
 public class HokageUserLoginForm {
     @NotNull
-    @ExceptionInfo(code = "A-0001", msg = "登录邮箱不能为空")
-    private String email;        // 用户名称
+    @ExceptionInfo(code = "A-0001", msg = "user email can't be null")
+    private String email;
     @NotNull
     @ExceptionInfo(code = "A-0002")
-    private String passwd;          // 用户密码
+    private String passwd;
 }

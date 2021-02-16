@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.ErrorCodeEnum;
 import com.hokage.biz.form.user.*;
-import com.hokage.biz.form.user.*;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.BaseController;
