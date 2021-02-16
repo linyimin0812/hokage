@@ -14,7 +14,7 @@ type AppProps = {
 type AppState = {
     auth: {
         login: boolean, // loggin status
-        role: number,   // user role
+        role: number, // user role
         data: {}
     }
     title: string,
