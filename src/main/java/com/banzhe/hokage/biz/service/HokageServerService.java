@@ -93,4 +93,11 @@ public interface HokageServerService {
      * @return
      */
     ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form);
+
+    /**
+     * apply server
+     * @param form
+     * @return
+     */
+    ServiceResponse<Boolean> applyServer(ServerOperateForm form);
 }

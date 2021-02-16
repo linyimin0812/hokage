@@ -19,5 +19,6 @@ public enum SequenceNameEnum {
     hokage_supervisor_server,
     hokage_task_result,
     hokage_security_group,
-    hokage_task
+    hokage_task,
+    hokage_server_application
 }

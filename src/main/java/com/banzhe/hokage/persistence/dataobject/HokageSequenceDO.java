@@ -1,6 +1,7 @@
 package com.banzhe.hokage.persistence.dataobject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -9,8 +10,18 @@ import lombok.Data;
  * @description
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class HokageSequenceDO extends HokageBaseDO {
-    private Long id;        // 序列id
-    private String name;    // 序列名称
-    private Long value;     // 序列值
+    /**
+     * sequence id
+     */
+    private Long id;
+    /**
+     * sequence name
+     */
+    private String name;
+    /**
+     * sequence name
+     */
+    private Long value;
 }

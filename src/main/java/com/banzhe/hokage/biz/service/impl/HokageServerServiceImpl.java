@@ -1,5 +1,6 @@
 package com.banzhe.hokage.biz.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.banzhe.hokage.biz.converter.server.ConverterTypeEnum;
 import com.banzhe.hokage.biz.converter.server.ServerDOConverter;
 import com.banzhe.hokage.biz.converter.server.ServerFormConverter;
@@ -18,12 +19,8 @@ import com.banzhe.hokage.biz.service.HokageSequenceService;
 import com.banzhe.hokage.biz.service.HokageServerService;
 import com.banzhe.hokage.biz.service.HokageUserService;
 import com.banzhe.hokage.common.ServiceResponse;
-import com.banzhe.hokage.persistence.dao.HokageServerDao;
-import com.banzhe.hokage.persistence.dao.HokageSubordinateServerDao;
-import com.banzhe.hokage.persistence.dao.HokageSupervisorServerDao;
-import com.banzhe.hokage.persistence.dataobject.HokageServerDO;
-import com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO;
-import com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO;
+import com.banzhe.hokage.persistence.dao.*;
+import com.banzhe.hokage.persistence.dataobject.*;
 import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +49,8 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageSequenceService sequenceService;
     private HokageSupervisorServerDao supervisorServerDao;
     private HokageSubordinateServerDao subordinateServerDao;
+    private HokageUserDao userDao;
+    private HokageServerApplicationDao applicationDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -80,7 +79,17 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Autowired
     private void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
-        this.supervisorServerDao = supervisorServerDao;
+        this.subordinateServerDao = subordinateServerDao;
+    }
+
+    @Autowired
+    private void setApplicationDao(HokageServerApplicationDao applicationDao) {
+        this.applicationDao = applicationDao;
+    }
+
+    @Autowired
+    private void setUserDao(HokageUserDao userDao) {
+        this.userDao = userDao;
     }
 
     private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
@@ -99,6 +108,47 @@ public class HokageServerServiceImpl implements HokageServerService {
                         return hokageServerDao.selectByQuery(query);
                     }))
                     .build();
+
+    private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
+            ImmutableMap.<Integer, Function<ServerOperateForm, Boolean>>builder()
+                    .put(UserRoleEnum.supervisor.getValue(), (form -> {
+                        List<Long> serverIds = form.getServerIds();
+                        return serverIds.stream().anyMatch(serverId -> {
+                            HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
+
+                            applicationDO.setApplyId(form.getId())
+                                    .setServerId(serverId);
+
+                            // get approve id
+                            List<HokageUserDO> userDOList = userDao.listUserByRole(UserRoleEnum.super_operator.getValue());
+                            if (CollectionUtils.isEmpty(userDOList)) {
+                                throw new RuntimeException("super operator is empty.");
+                            }
+                            String approveIds = userDOList.stream().map(userDo -> String.valueOf(userDo.getId())).collect(Collectors.joining(","));
+                            applicationDO.setApproveIds(approveIds);
+                            return applicationDao.save(applicationDO);
+                        });
+                    }))
+                    .put(UserRoleEnum.subordinate.getValue(), (form -> form.getServerIds().stream()
+                            .anyMatch(serverId -> {
+                                HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
+
+                                applicationDO.setApplyId(form.getId())
+                                        .setServerId(serverId);
+
+                                // get approve id
+                                List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(serverId));
+                                if (CollectionUtils.isEmpty(supervisorServerDOS)) {
+                                    throw new RuntimeException(String.format("supervisor of server id: %s is empty.", serverId));
+                                }
+
+                                String approveIds = supervisorServerDOS.stream().map(serverDO -> String.valueOf(serverDO.getId())).collect(Collectors.joining(","));
+
+                                applicationDO.setApproveIds(approveIds);
+
+                                return applicationDao.save(applicationDO);
+                            })
+                    )).build();
 
     @Override
     public ServiceResponse<List<HokageServerVO>> selectAll() {
@@ -381,6 +431,30 @@ public class HokageServerServiceImpl implements HokageServerService {
         List<Long> serverIds = form.getServerIds();
 
         boolean result = userIds.stream().anyMatch(userId -> subordinateServerDao.removeBySubordinateId(userId, serverIds) > 0);
+
+        return response.success(result);
+    }
+
+    @Override
+    public ServiceResponse<Boolean> applyServer(ServerOperateForm form) {
+        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
+
+        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
+            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+        }
+
+        Function<ServerOperateForm, Boolean> applyFunction = SERVER_APPLY_MAP.get(roleResponse.getData());
+
+        if (Objects.isNull(applyFunction)) {
+            throw new RuntimeException("Unsupported server apply: " + JSON.toJSONString(form));
+        }
+
+        Boolean result = applyFunction.apply(form);
 
         return response.success(result);
     }

@@ -4,27 +4,27 @@ import com.banzhe.hokage.persistence.dataobject.HokageSequenceDO;
 
 /**
  * @author linyimin
- * @date 2020/8/30 4:29 下午
+ * @date 2020/8/30 4:29 pm
  * @email linyimin520812@gmail.com
  * @description
  */
 public interface HokageSequenceDao {
     /**
-     * 插入一条新纪录
+     * insert a new record
      * @param sequenceDO
      * @return
      */
     Integer insert(HokageSequenceDO sequenceDO);
 
     /**
-     * 更新序列值
+     * update a record
      * @param sequenceDO
      * @return
      */
     Integer update(HokageSequenceDO sequenceDO);
 
     /**
-     * 根据序列名称获取序列值
+     * retrieve sequence id based-on sequence name
      * @param name
      * @return
      */

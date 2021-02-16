@@ -1,5 +1,6 @@
 package com.banzhe.hokage.persistence.dao.impl;
 
+import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dao.HokageUserDao;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 import com.banzhe.hokage.persistence.mapper.HokageUserMapper;
@@ -10,9 +11,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/7/26 9:59 下午
+ * @date 2020/7/26 9:59 pm
  * @email linyimin520812@gmail.com
- * @description 定义用户表操作接口
+ * @description user dao interface
  */
 @Repository
 public class HokageUserDaoImpl implements HokageUserDao {

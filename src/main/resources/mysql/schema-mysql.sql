@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
   `server_id` bigint NOT NULL COMMENT '服务器id',
   PRIMARY KEY (`id`)
 )
-  COMMENT = '普通用户和服务器颖映射表';
+  COMMENT = '普通用户和服务器映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
   `id` bigint NOT NULL,
@@ -81,7 +81,19 @@ CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
   `server_id` bigint NOT NULL COMMENT '服务器id',
   PRIMARY KEY (`id`)
 )
-  COMMENT = '管理员和服务器颖映射表';
+  COMMENT = '管理员和服务器映射表';
+
+CREATE TABLE IF NOT EXISTS `hokage_server_application` (
+   `id` bigint NOT NULL,
+   `gmt_create` DATETIME NOT NULL,
+   `gmt_modified` DATETIME NOT NULL,
+   `apply_id` bigint NOT NULL COMMENT '提交申请人',
+   `server_id` bigint NOT NULL COMMENT '申请服务器id',
+   `approve_id` varchar(128) NULL COMMENT '可以通过审批的id',
+   `actual_approve_id` bigint NOT NULL COMMENT '实际审批人id',
+   PRIMARY KEY (`id`)
+)
+    COMMENT = '管理员与用户关系映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_task` (
   `id` bigint NOT NULL,

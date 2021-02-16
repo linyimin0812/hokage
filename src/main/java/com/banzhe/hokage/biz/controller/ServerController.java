@@ -105,10 +105,15 @@ public class ServerController extends BaseController {
         return success(Collections.emptyList());
     }
 
-    // TODO: 申请服务器：管理员
-    @RequestMapping(value = "/supervisor/server/apply", method = RequestMethod.POST)
-    public ResultVO<HokageServerVO> applyServer(@RequestBody ServerOperateForm form) {
-        return success(new HokageServerVO());
+    @RequestMapping(value = "/server/apply", method = RequestMethod.POST)
+    public ResultVO<Boolean> applyServer(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.applyServer(form);
+
+        if (!response.getSucceeded()) {
+            return fail(response.getCode(), response.getMsg());
+        }
+
+        return success(Boolean.TRUE);
     }
 
     @RequestMapping(value = "/server/subordinate/add", method = RequestMethod.POST)
@@ -132,11 +137,5 @@ public class ServerController extends BaseController {
         }
 
         return success(Boolean.TRUE);
-    }
-
-    // TODO: 申请服务器
-    @RequestMapping(value = "/my/server/apply", method = RequestMethod.POST)
-    public ResultVO<HokageServerVO> applyMyServer(@RequestBody ServerOperateForm form) {
-        return success(new HokageServerVO());
     }
 }

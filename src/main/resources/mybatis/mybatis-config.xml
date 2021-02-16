@@ -20,6 +20,7 @@
         <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageTaskDO" alias="HokageTaskDO" />
         <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageTaskResultDO" alias="HokageTaskResultDO" />
         <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSequenceDO" alias="HokageSequenceDO" />
+        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageServerApplicationDO" alias="HokageServerApplicationDO" />
     </typeAliases>
     <mappers>
         <mapper resource="mybatis/mapper/hokage_user-mapper.xml"/>
@@ -32,5 +33,6 @@
         <mapper resource="mybatis/mapper/hokage_taskr-mapper.xml"/>
         <mapper resource="mybatis/mapper/hokage_task_result-mapper.xml"/>
         <mapper resource="mybatis/mapper/hokage_sequence-mapper.xml" />
+        <mapper resource="mybatis/mapper/Hokage_server_application-mapper.xml" />
     </mappers>
 </configuration>

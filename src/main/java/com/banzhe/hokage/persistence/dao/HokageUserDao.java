@@ -1,5 +1,6 @@
 package com.banzhe.hokage.persistence.dao;
 
+import com.banzhe.hokage.common.ServiceResponse;
 import com.banzhe.hokage.persistence.dataobject.HokageUserDO;
 
 import java.util.List;
