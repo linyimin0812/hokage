@@ -31,11 +31,13 @@ public class ServerController extends BaseController {
     }
 
     /**
-     * list all server
+     * list server
      */
     @RequestMapping(value = "/server/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageServerVO>> listServer() {
-        ServiceResponse<List<HokageServerVO>> serviceResponse = serverService.selectAll();
+    public ResultVO<List<HokageServerVO>> listServer(@RequestParam Long id) {
+        ServerSearchForm form = new ServerSearchForm();
+        form.setOperateId(id);
+        ServiceResponse<List<HokageServerVO>> serviceResponse = serverService.listServer(form);
         if (serviceResponse.getSucceeded()) {
             return success(Collections.emptyList());
         }
@@ -97,12 +99,6 @@ public class ServerController extends BaseController {
         }
 
         return success(Boolean.TRUE);
-    }
-
-    // TODO: 列举服务器信息: 超级管理员、管理员和普通用户使用统一接口？
-    @RequestMapping(value = "/supervisor/server/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageServerVO>> listSupervisorServer(@RequestParam Long id) {
-        return success(Collections.emptyList());
     }
 
     @RequestMapping(value = "/server/apply", method = RequestMethod.POST)
