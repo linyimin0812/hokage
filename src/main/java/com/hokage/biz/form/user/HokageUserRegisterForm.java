@@ -15,6 +15,12 @@ import javax.validation.constraints.Size;
  */
 @Data
 public class HokageUserRegisterForm {
+
+    /**
+     * user id, primary key
+     */
+    private Long id;
+
     @NotNull
     @ExceptionInfo(code = "A-0001", msg = "username can't be null")
     private String username;
@@ -26,12 +32,13 @@ public class HokageUserRegisterForm {
      * user role: 100-super operator, 1-supervisor, 2-subordinate
      */
     private Integer role;
-    @NotNull(message = "email can't be null")
-    @Email(message = "email is not in correct format")
-    @ExceptionInfo(code = "A-0003")
+
     /**
      * user email, use to login
      */
+    @NotNull(message = "email can't be null")
+    @Email(message = "email is not in correct format")
+    @ExceptionInfo(code = "A-0003")
     private String email;
     /**
      * subscribe: 0-not subscribe, 1: subscribe, if trgiger the condition, then send an email
