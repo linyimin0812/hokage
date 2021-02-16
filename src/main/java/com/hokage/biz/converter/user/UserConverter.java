@@ -81,6 +81,7 @@ public class UserConverter {
     public static HokageUserLoginForm DOToLoginForm(HokageUserDO userDO) {
         HokageUserLoginForm loginForm = new HokageUserLoginForm();
         BeanUtils.copyProperties(loginForm, userDO);
+        loginForm.setPasswd("");
         return loginForm;
     }
 
