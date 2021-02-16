@@ -10,17 +10,17 @@
         <setting name="cacheEnabled" value="false"/>
     </settings>
     <typeAliases>
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageUserDO" alias="HokageUserDO"/>
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSupervisorServerDO" alias="HokageSupervisorServerDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSubordinateServerDO" alias="HokageSubordinateServerDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSupervisorSubordinateDO" alias="HokageSupervisorSubordinateDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSecurityGroupDO" alias="HokageSecurityGroupDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageServerDO" alias="HokageServerDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageServerGroupDO" alias="HokageServerGroupDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageTaskDO" alias="HokageTaskDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageTaskResultDO" alias="HokageTaskResultDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageSequenceDO" alias="HokageSequenceDO" />
-        <typeAlias type="com.banzhe.hokage.persistence.dataobject.HokageServerApplicationDO" alias="HokageServerApplicationDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageUserDO" alias="HokageUserDO"/>
+        <typeAlias type="com.hokage.persistence.dataobject.HokageSupervisorServerDO" alias="HokageSupervisorServerDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageSubordinateServerDO" alias="HokageSubordinateServerDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageSupervisorSubordinateDO" alias="HokageSupervisorSubordinateDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageSecurityGroupDO" alias="HokageSecurityGroupDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageServerDO" alias="HokageServerDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageServerGroupDO" alias="HokageServerGroupDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageTaskDO" alias="HokageTaskDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageTaskResultDO" alias="HokageTaskResultDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageSequenceDO" alias="HokageSequenceDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageServerApplicationDO" alias="HokageServerApplicationDO" />
     </typeAliases>
     <mappers>
         <mapper resource="mybatis/mapper/hokage_user-mapper.xml"/>

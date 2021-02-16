@@ -8,7 +8,7 @@
 		<version>2.3.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.banzhe</groupId>
+	<groupId>com.hokage</groupId>
 	<artifactId>hokage</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hokage</name>
@@ -264,7 +264,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>2.1.5.RELEASE</version>
 				<configuration>
-					<mainClass>com.banzhe.hokage.HokageApplication</mainClass>
+					<mainClass>com.hokage.HokageApplication</mainClass>
 					<layout>JAR</layout>
 					<executable>true</executable>
 				</configuration>

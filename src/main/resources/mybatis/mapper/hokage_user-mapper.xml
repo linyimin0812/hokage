@@ -2,7 +2,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageUserMapper">
+<mapper namespace="com.hokage.persistence.mapper.HokageUserMapper">
     <resultMap id="HokageUserMapper" type="HokageUserDO">
         <result property="id" column="id" />
         <result property="gmtCreate" column="gmt_create" />

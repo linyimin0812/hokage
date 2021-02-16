@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageTaskResultMapper">
+<mapper namespace="com.hokage.persistence.mapper.HokageTaskResultMapper">
     <resultMap id="HokageTaskResultMapper" type="HokageTaskResultDO">
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtCreate" column="gmt_create"/>

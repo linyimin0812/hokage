@@ -1,8 +1,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageSequenceMapper">
-    <resultMap id="HokageSequenceMapper" type="com.banzhe.hokage.persistence.dataobject.HokageSequenceDO">
+<mapper namespace="com.hokage.persistence.mapper.HokageSequenceMapper">
+    <resultMap id="HokageSequenceMapper" type="com.hokage.persistence.dataobject.HokageSequenceDO">
         <result property="id" column="id"/>
         <result property="gmtCreate" column="gmt_create" />
         <result property="gmtModified" column="gmt_modified" />

@@ -1,7 +1,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.banzhe.hokage.persistence.mapper.HokageServerMapper">
+<mapper namespace="com.hokage.persistence.mapper.HokageServerMapper">
     <resultMap id="HokageServerMapper" type="HokageServerDO">
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtCreate" column="gmt_create"/>
@@ -212,7 +212,7 @@
         </where>
     </select>
 
-    <select id="selectByAllServerQuery" parameterType="com.banzhe.hokage.biz.request.AllServerQuery" resultMap="HokageServerMapper">
+    <select id="selectByAllServerQuery" parameterType="com.hokage.biz.request.AllServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns"/>
         FROM <include refid="tableNme"/>
         <where>
@@ -227,7 +227,7 @@
         </where>
     </select>
 
-    <select id="selectBySupervisorServerQuery" parameterType="com.banzhe.hokage.biz.request.SupervisorServerQuery" resultMap="HokageServerMapper">
+    <select id="selectBySupervisorServerQuery" parameterType="com.hokage.biz.request.SupervisorServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
@@ -251,7 +251,7 @@
         </where>
     </select>
 
-    <select id="selectBySubordinateServerQuery" parameterType="com.banzhe.hokage.biz.request.SubordinateServerQuery" resultMap="HokageServerMapper">
+    <select id="selectBySubordinateServerQuery" parameterType="com.hokage.biz.request.SubordinateServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
