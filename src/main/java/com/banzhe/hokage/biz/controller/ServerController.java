@@ -30,20 +30,6 @@ public class ServerController extends BaseController {
         this.serverService = serverService;
     }
 
-    /**
-     * list server
-     */
-    @RequestMapping(value = "/server/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageServerVO>> listServer(@RequestParam Long id) {
-        ServerSearchForm form = new ServerSearchForm();
-        form.setOperateId(id);
-        ServiceResponse<List<HokageServerVO>> serviceResponse = serverService.listServer(form);
-        if (serviceResponse.getSucceeded()) {
-            return success(Collections.emptyList());
-        }
-        return fail(serviceResponse.getCode(), serviceResponse.getMsg());
-    }
-
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchServer(@RequestBody ServerSearchForm form) {
 
