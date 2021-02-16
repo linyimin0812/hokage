@@ -9,12 +9,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @OpenAPIDefinition(
 	info = @Info(
-		title = "Hokage接口文档",
+		title = "Hokage API docs",
 		version = "1.0",
-		description = "Hokage是一个基于spring boot,jsch,react开发的服务器管理系统"
+		description = "Hokage is a server management system based-on spring boot, jsch and react"
 	),
 	externalDocs = @ExternalDocumentation(
-		description = "项目地址",
+		description = "project address",
 		url = "https://github.com/linyimin-bupt/hokage"
 	)
 )
