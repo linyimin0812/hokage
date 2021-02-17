@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/8/23 1:12 上午
+ * @date 2020/8/23 1:12 am
  * @email linyimin520812@gmail.com
  * @description custom unified response body
  */
