@@ -6,6 +6,15 @@ type SearchPropTypes = {
     clear: () => void
 }
 
+const formItemLayout = {
+    labelCol: {
+        span: 6,
+    },
+    wrapperCol: {
+        span: 18,
+    },
+}
+
 export default class Search extends React.Component<SearchPropTypes> {
     render() {
         return (
@@ -14,13 +23,13 @@ export default class Search extends React.Component<SearchPropTypes> {
                 <Form
                     name="operator-search"
                     onFinish={this.props.onFinish}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <Row gutter={24}>
                         <Col span={6} key="id">
                             <Form.Item
                                 name="id"
                                 label="id"
+                                {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
                             </Form.Item>
@@ -29,6 +38,7 @@ export default class Search extends React.Component<SearchPropTypes> {
                             <Form.Item
                                 name="name"
                                 label="姓名"
+                                {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
                             </Form.Item>
@@ -37,6 +47,7 @@ export default class Search extends React.Component<SearchPropTypes> {
                             <Form.Item
                                 name="serverTag"
                                 label="标签"
+                                {...formItemLayout}
                             >
                                 <Select defaultValue="-1">
                                     <Select.Option value="-1">请选择</Select.Option>

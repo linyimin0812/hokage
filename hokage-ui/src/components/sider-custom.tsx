@@ -25,7 +25,7 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
 		this.state = {
 			mode: 'inline',
 			openKeys: [],
-			selectedKey: '',
+			selectedKey: window.location.pathname,
 			firstHide: true, // 点击收缩菜单，第一次隐藏展开子菜单，openMenu时恢复
 		};
 	}
@@ -115,10 +115,10 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
 				/>
 				<style>
 					{`
-                    #nprogress .spinner{
-                        left: ${collapsed ? '70px' : '206px'};
-                        right: 0 !important;
-                    }
+						#nprogress .spinner{
+							left: ${collapsed ? '70px' : '206px'};
+							right: 0 !important;
+						}
                     `}
 				</style>
 			</Sider>
@@ -126,4 +126,4 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
 	}
 }
 
-export default withRouter(SiderCustom);
+export default withRouter(SiderCustom)

@@ -36,7 +36,7 @@ const menus: {
             icon: 'hdd',
             subs: [
                 {
-                  key: '/app/server/all',
+                    key: '/app/server/all',
                     title: '所有的服务器',
                     icon: 'laptop',
                     component: 'AllServers',

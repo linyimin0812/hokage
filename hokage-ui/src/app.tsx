@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
-import Routes from './routes';
-import DocumentTitle from 'react-document-title';
-import SiderCustom from './components/sider-custom';
-import HeaderCustom from './components/header-custom';
-import { Layout } from 'antd';
+import React, { Component } from 'react'
+import Routes from './routes'
+import DocumentTitle from 'react-document-title'
+import SiderCustom from './components/sider-custom'
+import HeaderCustom from './components/header-custom'
+import { Layout } from 'antd'
 
-const { Content, Footer } = Layout;
+const { Content, Footer } = Layout
 
 type AppProps = {
-    responsive: any;
-};
+}
 
 type AppState = {
     auth: {
@@ -41,14 +40,11 @@ export default class App extends Component<AppProps, AppState> {
     };
     render() {
         const { title } = this.state;
-        const { responsive = { data: {} } } = this.props;
         const { auth } = this.state;
         return (
             <DocumentTitle title={title}>
                 <Layout>
-                    {!responsive.data.isMobile && (
-                        <SiderCustom collapsed={this.state.collapsed} />
-                    )}
+                    <SiderCustom collapsed={this.state.collapsed} />
                     <Layout className="layout" style={{ flexDirection: 'column' }}>
                         <HeaderCustom
                             toggle={this.toggle}
