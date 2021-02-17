@@ -8,7 +8,10 @@ import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.mapper.HokageServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -44,6 +47,9 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
         return serverMapper.selectByIds(ids);
     }
 

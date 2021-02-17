@@ -229,10 +229,8 @@ public class UserConverter {
     private static HokageUserVO preConverter(HokageUserDO hokageUserDO) {
         HokageUserVO hokageUserVO = new HokageUserVO();
 
-        HokageUserVO userVO = new HokageUserVO();
-
         // subordinate info
-        BeanUtils.copyProperties(hokageUserDO, userVO);
+        BeanUtils.copyProperties(hokageUserDO, hokageUserVO);
 
         return hokageUserVO;
     }
