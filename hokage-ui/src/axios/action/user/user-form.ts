@@ -6,8 +6,6 @@
  * Last modified  : 2020-10-27 01:12:01
  */
 
-import { ExclamationOutlined } from "@ant-design/icons"
-
 export interface UserLoginForm {
     email: string,
     passwd: string
@@ -18,6 +16,9 @@ export interface UserLogoutForm {
     email: string
 }
 
-export interface UserRegisterForm {
-    
+export interface UserRegisterForm extends UserLoginForm{
+    id?: number,
+    username: string,
+    role: number,
+    subscribed: number
 }

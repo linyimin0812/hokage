@@ -6,9 +6,9 @@ export interface ServiceParam {
 }
 
 
-export interface ServiceResult {
+export interface ServiceResult<T> {
     success: boolean,
     code: string,
     msg?: string,
-    data?: any
+    data?: T
 }

@@ -4,7 +4,7 @@
  * @email linyimin520812@gmail.com
  * @description user service
  */
-import { ServiceParam } from './common'
+import { ServiceParam } from '../common'
 import { serviceConfig } from './service-wrap'
 
 const serviceInfo: { [name: string]: ServiceParam} = {

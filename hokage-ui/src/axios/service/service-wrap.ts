@@ -6,15 +6,15 @@
  */
 
 import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
-import { ServiceParam, ServiceResult } from './common'
+import { ServiceParam, ServiceResult } from '../common'
 
 export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
-    const service: {[name: string]: (data?: any, config?: AxiosRequestConfig)=> Promise<ServiceResult>} = {}
+    const service: {[name: string]: (data?: any, config?: AxiosRequestConfig)=> Promise<ServiceResult<any>>} = {}
     // encapsulate the API as an http access method
     Object.keys(serviceInfo).forEach((name: string) => {
-        service[name] = (data?: any, config?: AxiosRequestConfig): Promise<ServiceResult> => {
-            return new Promise<ServiceResult>((resolve, reject) => {
-                const promise: AxiosPromise<ServiceResult> = axios({
+        service[name] = (data?: any, config?: AxiosRequestConfig): Promise<ServiceResult<any>> => {
+            return new Promise<ServiceResult<any>>((resolve, reject) => {
+                const promise: AxiosPromise<ServiceResult<any>> = axios({
                     ...serviceInfo[name],
                     ...config,
                     data: data
