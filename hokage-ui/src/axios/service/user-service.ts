@@ -41,7 +41,7 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     },
 
     // add supervisor
-    'addSuperisor': {
+    'addSupervisor': {
         url: '/user/supervisor/add',
         method: 'POST'
     },

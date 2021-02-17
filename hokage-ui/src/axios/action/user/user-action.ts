@@ -9,7 +9,7 @@ import { UserService } from '../../service'
 import {
     UserLoginForm,
     UserLogoutForm,
-    UserRegisterForm, UserVO,
+    UserRegisterForm, UserServerOperateForm, UserVO,
 } from './user-form';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
@@ -87,6 +87,19 @@ import { ServiceResult } from '../../common'
                  reject(value.msg)
              }).catch(err => {
                  return reject("获取普通用户失败. err: " + JSON.stringify(err))
+             })
+         })
+     },
+
+     addSupervisor: (form: UserServerOperateForm): Promise<boolean> => {
+         return new Promise<boolean>((resolve, reject) => {
+             UserService.addSupervisor(form).then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("添加管理员失败. err: " + JSON.stringify(err))
              })
          })
      }

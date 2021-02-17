@@ -13,6 +13,7 @@ import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { Models } from '../../../utils/model'
 import { hashCode } from '../../../utils'
+import { UserAction } from '../../../axios/action';
 
 interface NestedTableDataSource {
     key: string,
@@ -154,6 +155,10 @@ export default class Operator extends React.Component<any, OperatorState> {
         selectedRowKeys: [],
         isModalVisible: false
     }
+
+    // @ts-ignore
+    hokageUid: number = window.hokageUid || 0
+
     columns = [
         {
             title: 'id',
@@ -223,11 +228,20 @@ export default class Operator extends React.Component<any, OperatorState> {
 
     onModalOk = (value: any) => {
         console.log(value)
-        this.setState({ ...this.state, isModalVisible: false })
-        message.loading({ content: 'Loading...', key: 'addUser' });
-        setTimeout(() => {
-            message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-        }, 2000);
+
+        UserAction.addSupervisor({
+            id: this.hokageUid,
+            serverIds: [],
+            userIds: value.userIds || []
+        }).then(value => {
+            if (value) {
+                this.setState({ ...this.state, isModalVisible: false })
+            } else {
+                message.error('添加管理员失败')
+            }
+        }).catch((err) => {
+            message.error(err)
+        })
     }
 
     onModalCancel = () => {

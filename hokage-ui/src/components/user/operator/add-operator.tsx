@@ -2,21 +2,22 @@ import React from 'react'
 import { Modal, Form, Row, Col, Select, Button, message } from 'antd'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
+import { FormInstance } from 'antd/lib/form';
 
 type AddOperatorPropTypes = {
-    onModalOk: (value: any) => void,
+    onModalOk: (value: number[]) => void,
     onModalCancel: () => void,
     isModalVisible: boolean
 }
 
 type AddOperatorStateType = {
-    ordinaryUsers: Option[]
+    ordinaryUsers: Option[],
 }
 
 export default class AddOperator extends React.Component<AddOperatorPropTypes, AddOperatorStateType> {
 
     state = {
-        ordinaryUsers: []
+        ordinaryUsers: [],
     }
 
     componentDidMount() {
@@ -29,6 +30,15 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
         }).catch(err => {
             message.error(err)
         })
+    }
+
+    formRef = React.createRef<FormInstance>()
+
+    reset = () => {
+        this.props.onModalCancel()
+        if (this.formRef.current) {
+            this.formRef.current.resetFields()
+        }
     }
 
     render() {
@@ -44,10 +54,11 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
                 <Form
                     name="operator-add"
                     onFinish={this.props.onModalOk}
+                    ref={this.formRef}
                 >
                     <Row gutter={24}>
                         <Col span={15}>
-                            <Form.Item name="usernames" initialValue={[]}>
+                            <Form.Item name="userIds" initialValue={[]}>
                                 <Select
                                     mode="multiple"
                                     style={{ width: '100%' }}
@@ -72,9 +83,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
                                     style={{
                                         margin: '0 8px',
                                     }}
-                                    onClick={() => {
-                                        this.props.onModalCancel();
-                                    }}
+                                    onClick={this.reset}
                                 >
                                     取消
                                 </Button>

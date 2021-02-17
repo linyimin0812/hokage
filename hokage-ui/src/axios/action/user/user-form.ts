@@ -38,3 +38,9 @@ export interface Operation {
     operationName: string,
     operationLink: string,
 }
+
+export interface UserServerOperateForm {
+    id: number,
+    serverIds: number[],
+    userIds: number[]
+}
