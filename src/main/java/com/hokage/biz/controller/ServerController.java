@@ -1,8 +1,10 @@
 package com.hokage.biz.controller;
 
+import com.google.common.collect.Lists;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
+import com.hokage.biz.response.HokageOptionVO;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.BaseController;
@@ -118,5 +120,18 @@ public class ServerController extends BaseController {
         }
 
         return success(Boolean.TRUE);
+    }
+
+    @RequestMapping(value = "/server/label/list", method = RequestMethod.GET)
+    public ResultVO<List<HokageOptionVO>> listServerLabel() {
+        List<HokageOptionVO> optionVOList = Lists.newArrayList(
+                new HokageOptionVO("请选择", ""),
+                new HokageOptionVO("普通服务器", "X86"),
+                new HokageOptionVO("GPU服务器", "GPU"),
+                new HokageOptionVO("内网服务器", "internal"),
+                new HokageOptionVO("外网服务器", "external")
+        );
+
+        return success(optionVOList);
     }
 }
