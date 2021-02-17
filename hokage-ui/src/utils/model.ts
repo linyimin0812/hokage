@@ -1,8 +1,8 @@
 /**
  * @author linyimin
- * @date 2020/9/6 3:38 下午
+ * @date 2020/9/6 3:38 pm
  * @email linyimin520812@gmail.com
- * @description 全局存储, 需要自己保证key的唯一性
+ * @description global store, need to guarantee the uniqueness of key yourself
  */
 
 import _ from 'lodash'
