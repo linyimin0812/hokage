@@ -13,7 +13,7 @@ import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { Models } from '../../../utils/model'
 import { hashCode } from '../../../utils'
-import { UserAction } from '../../../axios/action';
+import { UserAction } from '../../../axios/action'
 
 interface NestedTableDataSource {
     key: string,
@@ -227,7 +227,6 @@ export default class Operator extends React.Component<any, OperatorState> {
     }
 
     onModalOk = (value: any) => {
-        console.log(value)
 
         UserAction.addSupervisor({
             id: this.hokageUid,
