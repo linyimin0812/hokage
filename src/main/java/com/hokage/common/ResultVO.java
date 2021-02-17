@@ -14,7 +14,7 @@ public class ResultVO<T> {
     /**
      * controller run success
      */
-    private boolean success;
+    private Boolean success;
     /**
      * status(A/B/C)-(0000-9999)
      * A class status：from user
