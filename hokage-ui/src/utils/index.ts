@@ -1,4 +1,4 @@
-// 获取url的参数
+// retrieve url parameter variable
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
     const _query = window.location.search.substr(1);
@@ -8,8 +8,7 @@ export const queryString = () => {
         if (!_queryString.hasOwnProperty(_pair[0])) {
             _queryString[_pair[0]] = decodeURIComponent(_pair[1]);
         } else if (typeof _queryString[_pair[0]] === 'string') {
-            const _arr = [_queryString[_pair[0]], decodeURIComponent(_pair[1])];
-            _queryString[_pair[0]] = _arr;
+            _queryString[_pair[0]] = [_queryString[_pair[0]], decodeURIComponent(_pair[1])];
         } else {
             _queryString[_pair[0]].push(decodeURIComponent(_pair[1]));
         }
