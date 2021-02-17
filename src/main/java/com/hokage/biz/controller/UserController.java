@@ -158,7 +158,18 @@ public class UserController extends BaseController {
         return fail(response.getCode(), response.getMsg());
     }
 
-    @RequestMapping(value = "/user/subordinate/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/subordinate/all", method = RequestMethod.GET)
+    public ResultVO<List<HokageUserVO>> listAllSubordinate() {
+
+        ServiceResponse<List<HokageUserVO>> res = userService.listAllOrdinateUsers();
+
+        if (res.getSucceeded()) {
+            return success(res.getData());
+        }
+        return fail(res.getCode(), res.getMsg());
+    }
+
+    @RequestMapping(value = "/user/subordinate/list", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> listSubordinate(@RequestParam UserServerSearchForm form) {
 
         Preconditions.checkNotNull(form.getId(), "operation id can't be null");

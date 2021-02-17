@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -261,6 +262,23 @@ public class HokageUserServiceImpl implements HokageUserService {
                     .collect(Collectors.toList());
             userDOList = userDao.listUserByIds(userIdList);
         }
+        List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
+        response.success(userVOList);
+
+        return response;
+    }
+
+    @Override
+    public ServiceResponse<List<HokageUserVO>> listAllOrdinateUsers() {
+        ServiceResponse<List<HokageUserVO>> response = new ServiceResponse<>();
+
+        List<HokageUserDO> userDOList = userDao.listUserByRole(UserRoleEnum.subordinate.getValue());
+        if (CollectionUtils.isEmpty(userDOList)) {
+            response.success(Collections.emptyList());
+
+            return response;
+        }
+
         List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
         response.success(userVOList);
 

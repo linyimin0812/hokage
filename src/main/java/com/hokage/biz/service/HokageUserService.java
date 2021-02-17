@@ -88,6 +88,12 @@ public interface HokageUserService {
     ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId);
 
     /**
+     * list all ordinary user by supervisor, if supervisorId is a super, list all ordinary user
+     * @return
+     */
+    ServiceResponse<List<HokageUserVO>> listAllOrdinateUsers();
+
+    /**
      * search subordinate
      * @param form
      * @return
