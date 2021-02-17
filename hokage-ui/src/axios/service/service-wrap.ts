@@ -13,6 +13,11 @@ export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
     // encapsulate the API as an http access method
     Object.keys(serviceInfo).forEach((name: string) => {
         service[name] = (data?: any, config?: AxiosRequestConfig): Promise<ServiceResult<any>> => {
+            // @ts-ignore
+            const hokageUid = window.hokageUid || 0
+            if (hokageUid > 0) {
+                data = data ? {...data, hokageUid} : { hokageUid }
+            }
             return new Promise<ServiceResult<any>>((resolve, reject) => {
                 const promise: AxiosPromise<ServiceResult<any>> = axios({
                     ...serviceInfo[name],

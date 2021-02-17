@@ -9,8 +9,8 @@ import { UserService } from '../../service'
 import {
     UserLoginForm,
     UserLogoutForm,
-    UserRegisterForm
-} from './user-form'
+    UserRegisterForm, UserVO,
+} from './user-form';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
 
@@ -63,5 +63,31 @@ import { ServiceResult } from '../../common'
 				return reject(err)
 			})
         })
+     },
+
+     listSupervisor: (): Promise<UserVO[]> => {
+         return new Promise<UserVO[]>((resolve, reject) => {
+             UserService.listSupervisor().then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("获取服务器管理员失败. err: " + JSON.stringify(err))
+             })
+         })
+     },
+
+     listAllSubordinate: (): Promise<UserVO[]> => {
+         return new Promise<UserVO[]>((resolve, reject) => {
+             UserService.listAllSubordinate().then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("获取普通用户失败. err: " + JSON.stringify(err))
+             })
+         })
      }
  }

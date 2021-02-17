@@ -1,4 +1,5 @@
 // retrieve url parameter variable
+
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
     const _query = window.location.search.substr(1);
@@ -14,4 +15,26 @@ export const queryString = () => {
         }
     });
     return _queryString;
-};
+}
+
+/**
+ * generate a random integer, inclusive max
+ * @param max
+ */
+export const randomInt = (max: number): number => {
+    max = Math.ceil(max)
+    return Math.floor(Math.random() * (max + 1))
+}
+
+/**
+ * calculate string hashcode
+ * @param text
+ */
+export const hashCode = (text: string): number => {
+    let hash = 5381
+    let length = text.length
+    while (length) {
+        hash = (hash * 33) ^ text.charCodeAt(--length)
+    }
+    return hash >>> 0;
+}

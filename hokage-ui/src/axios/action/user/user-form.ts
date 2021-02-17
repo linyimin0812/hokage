@@ -22,3 +22,19 @@ export interface UserRegisterForm extends UserLoginForm{
     role: number,
     subscribed: number
 }
+
+export interface UserVO {
+    id: number,
+    username: string,
+    email: string,
+    role: number,
+    serverNum: number,
+    serverLabel: string[],
+    operationList: Operation[],
+}
+
+export interface Operation {
+    operationType: string,
+    operationName: string,
+    operationLink: string,
+}

@@ -8,9 +8,12 @@ import {
     SyncOutlined,
     UsergroupDeleteOutlined
 } from '@ant-design/icons'
-import AddOperator from './add-operator';
+import AddOperator from './add-operator'
 
 import { TableExtendable } from '../../common/table-extendable'
+import { Models } from '../../../utils/model'
+import { hashCode } from '../../../utils'
+
 interface NestedTableDataSource {
     key: string,
     hostname: string,
@@ -20,6 +23,8 @@ interface NestedTableDataSource {
     status: string,
     action: string
 }
+
+const serverLabelColors: string[] = Models.get('serverLabelColor')
 
 // 嵌套表 
 const columns = [
@@ -42,32 +47,9 @@ const columns = [
                 <span>
         {
             serverTags.map((tag: any )=> {
-                let color = ''
-                let name = ''
-                switch (tag) {
-                    case 'ordinaryServer':
-                        color = 'magenta'
-                        name = 'X86'
-                        break
-                    case 'gpuServer':
-                        color = 'red'
-                        name = 'GPU'
-                        break
-                    case 'intranetServer':
-                        color = 'green'
-                        name = '内网'
-                        break
-                    case 'publicNetworkServer':
-                        color = 'purple'
-                        name = '公网'
-                        break
-                    default:
-                        color = '#f50'
-                        name = '未知'
-                }
                 return (
-                    <Tag color={color} key={tag}>
-                        {name}
+                    <Tag color={serverLabelColors[hashCode(tag) % serverTags.length]} key={tag}>
+                        {tag}
                     </Tag>
                 );
             })
@@ -147,8 +129,8 @@ export default class Operator extends React.Component<any, OperatorState> {
                     for (let i = 0; i < 3; i++) {
                         const data: NestedTableDataSource = {
                             key: record.key + '_' + i,
-                            hostname: record.name,
-                            domainName: record.name,
+                            hostname: record.username,
+                            domainName: record.username,
                             serverTags: [colors[i], colors[i+1]],
                             numberOfUser: 3,
                             status: '在线',
@@ -180,53 +162,30 @@ export default class Operator extends React.Component<any, OperatorState> {
         },
         {
             title: '姓名',
-            dataIndex: 'name',
-            key: 'name'
+            dataIndex: 'username',
+            key: 'username'
         },
         {
             title: '负责服务器数量',
-            dataIndex: 'numOfServer',
-            key: 'numOfServer'
+            dataIndex: 'serverNum',
+            key: 'serverNum'
         },
         {
             title: '服务器标签',
-            dataIndex: 'serverTags',
-            key: 'serverTags',
-            render: (serverTags: any, _: any, __: any) => {
+            dataIndex: 'serverLabel',
+            key: 'serverLabel',
+            render: (serverLabel: string[], _: any, __: any) => {
                 return (
                     <span>
-          {
-              serverTags.map((tag: any )=> {
-                  let color = ''
-                  let name = ''
-                  switch (tag) {
-                      case 'ordinaryServer':
-                          color = 'magenta'
-                          name = 'X86'
-                          break
-                      case 'gpuServer':
-                          color = 'red'
-                          name = 'GPU'
-                          break
-                      case 'intranetServer':
-                          color = 'green'
-                          name = '内网'
-                          break
-                      case 'publicNetworkServer':
-                          color = 'purple'
-                          name = '公网'
-                          break
-                      default:
-                          color = '#f50'
-                          name = '未知'
-                  }
-                  return (
-                      <Tag color={color} key={tag}>
-                          {name}
-                      </Tag>
-                  );
-              })
-          }
+              {
+                  serverLabel.map((tag: string )=> {
+                      return (
+                          <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>
+                              {tag}
+                          </Tag>
+                      );
+                  })
+              }
         </span>)
             }
         },
@@ -282,9 +241,9 @@ export default class Operator extends React.Component<any, OperatorState> {
             const value = {
                 key: i + 1,
                 id: 'id_' + i,
-                name: 'name_' + i + ".pcncad.club",
-                serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
-                numOfServer: i + 1,
+                username: 'name_' + i + ".pcncad.club",
+                serverLabel: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
+                serverNum: i + 1,
                 status: "online",
                 action: '查看 | 修改 | 添加服务器 | 删除'
             }
@@ -330,9 +289,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                         批量删除
                       </Button>
                     </span>
-                    ) : (
-                        null
-                    )
+                    ) : null
                 }
                   <Button
                       icon={<UserAddOutlined translate="true" />}

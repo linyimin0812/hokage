@@ -12,7 +12,7 @@ interface StoreType {
 }
 
 export const Models = {
-    _store:  {} as StoreType,
+    _store:  { serverLabelColor: ['magenta', 'red', 'green', 'purple', '#f50'] },
 
     get: (key: string): any => {
         return _.get(Models._store, key)

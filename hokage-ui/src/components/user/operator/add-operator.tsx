@@ -1,5 +1,7 @@
 import React from 'react'
-import { Modal, Form, Row, Col, Select, Button } from 'antd'
+import { Modal, Form, Row, Col, Select, Button, message } from 'antd'
+import { Option } from '../../../axios/action/server/server-type'
+import { UserAction } from '../../../axios/action'
 
 type AddOperatorPropTypes = {
     onModalOk: (value: any) => void,
@@ -7,20 +9,31 @@ type AddOperatorPropTypes = {
     isModalVisible: boolean
 }
 
-// TODO: 获取真实的所有用户
-const ordianryUser: any[] = [];
-for (let i = 10; i < 36; i++) {
-    ordianryUser.push(<Select.Option key={i.toString(36) + i} value={i.toString(36) + i}>{i.toString(36) + i}</Select.Option>);
+type AddOperatorStateType = {
+    ordinaryUsers: Option[]
 }
 
-export default class AddOperator extends React.Component<AddOperatorPropTypes, {}> {
+export default class AddOperator extends React.Component<AddOperatorPropTypes, AddOperatorStateType> {
 
     state = {
-        isModalVisible: false
+        ordinaryUsers: []
+    }
+
+    componentDidMount() {
+        UserAction.listAllSubordinate().then(userVOList => {
+            const subordinateUserOptions: Option[] = userVOList.map(userVO => {
+                return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
+            })
+            this.setState({ ordinaryUsers: subordinateUserOptions })
+
+        }).catch(err => {
+            message.error(err)
+        })
     }
 
     render() {
         const { isModalVisible } = this.props
+        const { ordinaryUsers } = this.state
         return (
             <Modal
                 title="批量添加管理员"
@@ -40,7 +53,13 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, {
                                     style={{ width: '100%' }}
                                     placeholder={"请选择(支持多选)"}
                                 >
-                                    {ordianryUser}
+                                    {
+                                        ordinaryUsers.map((option: Option, index) => {
+                                            return (
+                                                <Select.Option key={index} value={option.value}>{option.label}</Select.Option>
+                                            )
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
