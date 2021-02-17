@@ -246,7 +246,6 @@ export default class Operator extends React.Component<any, OperatorState> {
 
     onModalCancel = () => {
         this.setState({ ...this.state, isModalVisible: false })
-        message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
     }
 
     render() {
