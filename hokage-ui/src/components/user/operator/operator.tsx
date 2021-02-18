@@ -1,19 +1,13 @@
 import React, { ReactText } from 'react'
-import { Table, Row, Col, Button, Tag, message } from 'antd'
+import { Table, Row, Col, Button, message } from 'antd'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
 import Search from './search'
-import {
-    UserAddOutlined,
-    InfoCircleOutlined,
-    SyncOutlined,
-    UsergroupDeleteOutlined
-} from '@ant-design/icons'
+import { UserAddOutlined, InfoCircleOutlined, SyncOutlined, UsergroupDeleteOutlined } from '@ant-design/icons'
 import AddOperator from './add-operator'
-
 import { TableExtendable } from '../../common/table-extendable'
-import { Models } from '../../../utils/model'
-import { hashCode } from '../../../utils'
 import { UserAction } from '../../../axios/action'
+import { Operation } from '../../../axios/action/user/user-form'
+import { breadcrumProps, columns, nestedColumn } from './column-definition';
 
 interface NestedTableDataSource {
     key: string,
@@ -25,74 +19,31 @@ interface NestedTableDataSource {
     action: string
 }
 
-const serverLabelColors: string[] = Models.get('serverLabelColor')
-
-// 嵌套表 
-const columns = [
-    {
-        title: '主机名',
-        dataIndex: 'hostname',
-        key: 'hostname'
-    },
-    {
-        title: '域名',
-        dataIndex: 'domainName',
-        key: 'domainName'
-    },
-    {
-        title: '标签',
-        dataIndex: 'serverTags',
-        key: 'serverTags',
-        render: (serverTags: any, _: any, __: any) => {
-            return serverTags.map((tag: any )=> <Tag color={serverLabelColors[hashCode(tag) % serverTags.length]} key={tag}>{tag}</Tag>)
-        }
-    },
-    {
-        title: '使用人数',
-        dataIndex: 'numberOfUser',
-        key: 'numOfUser'
-    },
-    {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-        render: (text: string, _: any, __: any) => <Tag color = {serverLabelColors[hashCode(text) % serverLabelColors.length]}> { text } </Tag>
-    },
-    {
-        title: '操作',
-        dataIndex: 'action',
-        key: 'action'
-    }
-]
-
+interface DataSource {
+    id: number,
+    username: string,
+    serverNum: number,
+    serverLabel: string[],
+    action: Operation,
+    // TODO: 添加ServerVO[]
+}
 
 type OperatorState = {
+    dataSource: DataSource[],
     expandable: TableExtendable,
     nestedTableDataSource: NestedTableDataSource[],
     selectedRowKeys: ReactText[],
     isModalVisible: boolean
 }
 
-const breadcrumProps: BreadcrumbPrpos[] = [
-    {
-        name: '首页',
-        link: '/app/index'
-    },
-    {
-        name: '用户管理'
-    },
-    {
-        name: '服务器管理员'
-    }
-]
-
 export default class Operator extends React.Component<any, OperatorState> {
 
     state: OperatorState = {
+        dataSource: [],
         expandable: {
             expandedRowKeys: [],
             expandedRowRender: () => {
-                return <Table columns={columns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
+                return <Table columns={nestedColumn} dataSource={this.state.nestedTableDataSource} pagination={false} />;
             },
             onExpand: (expanded: boolean, record: any) => {
                 if (expanded) {
@@ -129,39 +80,12 @@ export default class Operator extends React.Component<any, OperatorState> {
         isModalVisible: false
     }
 
+    componentDidMount() {
+        // TODO: 获取管理员信息
+    }
+
     // @ts-ignore
     hokageUid: number = window.hokageUid || 0
-
-    columns = [
-        {
-            title: 'id',
-            dataIndex: 'id',
-            key: 'id'
-        },
-        {
-            title: '姓名',
-            dataIndex: 'username',
-            key: 'username'
-        },
-        {
-            title: '负责服务器数量',
-            dataIndex: 'serverNum',
-            key: 'serverNum'
-        },
-        {
-            title: '服务器标签',
-            dataIndex: 'serverLabel',
-            key: 'serverLabel',
-            render: (serverLabel: string[], _: any, __: any) => serverLabel.map(
-                (tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>
-            )
-        },
-        {
-            title: '操作',
-            dataIndex: 'action',
-            key: 'action'
-        }
-    ]
 
     onFinish = (value: any) => {
         console.log(value)
@@ -282,7 +206,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                     </Row>
                     <Table
                         rowSelection={rowSelection}
-                        columns={this.columns}
+                        columns={columns}
                         dataSource={data}
                         expandable={this.state.expandable}
                     />
