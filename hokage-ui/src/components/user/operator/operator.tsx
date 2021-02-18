@@ -201,7 +201,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                                         translate="true" onClick={this.sync}
                                     />
                                 </span>
-                          </span>
+                            </span>
                         </Col>
                     </Row>
                     <Table
