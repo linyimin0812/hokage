@@ -152,15 +152,9 @@ export default class Operator extends React.Component<any, OperatorState> {
             title: '服务器标签',
             dataIndex: 'serverLabel',
             key: 'serverLabel',
-            render: (serverLabel: string[], _: any, __: any) => {
-                return (
-                    <span>
-                        {
-                            serverLabel.map((tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>)
-                        }
-                    </span>
-                )
-            }
+            render: (serverLabel: string[], _: any, __: any) => serverLabel.map(
+                (tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>
+            )
         },
         {
             title: '操作',
