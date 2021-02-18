@@ -182,16 +182,11 @@ export default class Operator extends React.Component<any, OperatorState> {
             render: (serverLabel: string[], _: any, __: any) => {
                 return (
                     <span>
-              {
-                  serverLabel.map((tag: string )=> {
-                      return (
-                          <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>
-                              {tag}
-                          </Tag>
-                      );
-                  })
-              }
-        </span>)
+                        {
+                            serverLabel.map((tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>)
+                        }
+                    </span>
+                )
             }
         },
         {
@@ -281,41 +276,41 @@ export default class Operator extends React.Component<any, OperatorState> {
                         style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
                     >
                         <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
-              <span>
-                <InfoCircleOutlined
-                    translate="true"
-                    style={{ color: "#1890ff" }}
-                />
-                已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
-              </span>
+                            <span>
+                                <InfoCircleOutlined
+                                    translate="true"
+                                    style={{ color: "#1890ff" }}
+                                />
+                                已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
+                            </span>
                         </Col>
                         <Col span={12} >
-              <span style={{ float: 'right' }}>
-                {
-                    selectedRowKeys.length > 0 ? (
-                        <span style={{ paddingRight: '64px' }}>
-                      <Button
-                          icon={<UsergroupDeleteOutlined translate="true" />}
-                          onClick={this.delete}
-                      >
-                        批量删除
-                      </Button>
-                    </span>
-                    ) : null
-                }
-                  <Button
-                      icon={<UserAddOutlined translate="true" />}
-                      onClick={this.add}
-                  >
-                  添加
-                </Button>
-                <AddOperator onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-                <span style={{ paddingLeft: '64px' }} >
-                  <SyncOutlined
-                      translate="true" onClick={this.sync}
-                  />
-                </span>
-              </span>
+                            <span style={{ float: 'right' }}>
+                                {
+                                    selectedRowKeys.length > 0 ? (
+                                        <span style={{ paddingRight: '64px' }}>
+                                            <Button
+                                                icon={<UsergroupDeleteOutlined translate="true" />}
+                                                onClick={this.delete}
+                                            >
+                                            批量删除
+                                          </Button>
+                                        </span>
+                                    ) : null
+                                }
+                                <Button
+                                    icon={<UserAddOutlined translate="true" />}
+                                    onClick={this.add}
+                                >
+                                    添加
+                                </Button>
+                                <AddOperator onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                <span style={{ paddingLeft: '64px' }} >
+                                    <SyncOutlined
+                                        translate="true" onClick={this.sync}
+                                    />
+                                </span>
+                          </span>
                         </Col>
                     </Row>
                     <Table
