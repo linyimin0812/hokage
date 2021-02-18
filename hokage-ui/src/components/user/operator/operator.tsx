@@ -56,23 +56,7 @@ const columns = [
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        render: (text: string, _: any, __: any) => {
-            let color: string = ''
-            switch(text) {
-                case '在线':
-                    color = 'green'
-                    break;
-                case '掉线':
-                    color = 'red'
-                    break
-                default:
-                    color = 'red'
-                    break
-            }
-            return (
-                <Tag color = {color}> { text } </Tag>
-            )
-        }
+        render: (text: string, _: any, __: any) => <Tag color = {serverLabelColors[hashCode(text) % serverLabelColors.length]}> { text } </Tag>
     },
     {
         title: '操作',
