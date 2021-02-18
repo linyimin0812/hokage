@@ -44,18 +44,7 @@ const columns = [
         dataIndex: 'serverTags',
         key: 'serverTags',
         render: (serverTags: any, _: any, __: any) => {
-            return (
-                <span>
-        {
-            serverTags.map((tag: any )=> {
-                return (
-                    <Tag color={serverLabelColors[hashCode(tag) % serverTags.length]} key={tag}>
-                        {tag}
-                    </Tag>
-                );
-            })
-        }
-      </span>)
+            return serverTags.map((tag: any )=> <Tag color={serverLabelColors[hashCode(tag) % serverTags.length]} key={tag}>{tag}</Tag>)
         }
     },
     {
