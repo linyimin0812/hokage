@@ -6,7 +6,7 @@ import { UserAddOutlined, InfoCircleOutlined, SyncOutlined, UsergroupDeleteOutli
 import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
-import { Operation } from '../../../axios/action/user/user-form'
+import { Operation, UserVO } from '../../../axios/action/user/user-form';
 import { breadcrumProps, columns, nestedColumn } from './column-definition';
 
 interface NestedTableDataSource {
@@ -19,17 +19,8 @@ interface NestedTableDataSource {
     action: string
 }
 
-interface DataSource {
-    id: number,
-    username: string,
-    serverNum: number,
-    serverLabel: string[],
-    action: Operation,
-    // TODO: 添加ServerVO[]
-}
-
 type OperatorState = {
-    dataSource: DataSource[],
+    dataSource: UserVO[],
     expandable: TableExtendable,
     nestedTableDataSource: NestedTableDataSource[],
     selectedRowKeys: ReactText[],
@@ -82,6 +73,11 @@ export default class Operator extends React.Component<any, OperatorState> {
 
     componentDidMount() {
         // TODO: 获取管理员信息
+        UserAction.listSupervisor().then(supervisorList => {
+            this.setState({dataSource: supervisorList})
+        }).catch(err => {
+            message.error(err)
+        })
     }
 
     // @ts-ignore
@@ -134,20 +130,8 @@ export default class Operator extends React.Component<any, OperatorState> {
     }
 
     render() {
-        const data: any = []
-        for (let i = 0; i < 5; i++) {
-            const value = {
-                key: i + 1,
-                id: 'id_' + i,
-                username: 'name_' + i + ".pcncad.club",
-                serverLabel: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
-                serverNum: i + 1,
-                status: "online",
-                action: '查看 | 修改 | 添加服务器 | 删除'
-            }
-            data.push(value)
-        }
-        const { selectedRowKeys, isModalVisible } = this.state
+
+        const { selectedRowKeys, isModalVisible, dataSource } = this.state
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -207,7 +191,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                     <Table
                         rowSelection={rowSelection}
                         columns={columns}
-                        dataSource={data}
+                        dataSource={dataSource}
                         expandable={this.state.expandable}
                     />
                 </div>

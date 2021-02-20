@@ -102,5 +102,5 @@ import { ServiceResult } from '../../common'
                  return reject("添加管理员失败. err: " + JSON.stringify(err))
              })
          })
-     }
+     },
  }

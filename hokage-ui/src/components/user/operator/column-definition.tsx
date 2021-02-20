@@ -1,8 +1,9 @@
-import { Tag } from 'antd'
+import { Button, Tag } from 'antd';
 import { hashCode } from '../../../utils'
 import React from 'react'
 import { Models } from '../../../utils/model'
 import { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { Operation } from '../../../axios/action/user/user-form';
 
 /**
  * @author linyimin
@@ -70,14 +71,15 @@ export const columns = [
         title: '服务器标签',
         dataIndex: 'serverLabel',
         key: 'serverLabel',
-        render: (serverLabel: string[], _: any, __: any) => serverLabel.map(
+        render: (serverLabel: string[]) => serverLabel.map(
             (tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>
         )
     },
     {
         title: '操作',
-        dataIndex: 'action',
-        key: 'action'
+        dataIndex: 'operationList',
+        key: 'action',
+        render: (operationList: Operation[]) => operationList.map(operation => <Button type="link" href={operation.operationLink}>{operation.operationName}</Button>)
     }
 ]
 
