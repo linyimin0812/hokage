@@ -1,13 +1,13 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import BreadcrumbCustom from '../../bread-crumb-custom'
 import Search from './search'
 import { UserAddOutlined, InfoCircleOutlined, SyncOutlined, UsergroupDeleteOutlined } from '@ant-design/icons'
 import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
-import { Operation, UserVO } from '../../../axios/action/user/user-form';
-import { breadcrumProps, columns, nestedColumn } from './column-definition';
+import { UserVO } from '../../../axios/action/user/user-form'
+import { breadcrumProps, columns, nestedColumn } from './column-definition'
 
 interface NestedTableDataSource {
     key: string,
@@ -24,7 +24,8 @@ type OperatorState = {
     expandable: TableExtendable,
     nestedTableDataSource: NestedTableDataSource[],
     selectedRowKeys: ReactText[],
-    isModalVisible: boolean
+    isModalVisible: boolean,
+    loading: boolean,
 }
 
 export default class Operator extends React.Component<any, OperatorState> {
@@ -68,13 +69,14 @@ export default class Operator extends React.Component<any, OperatorState> {
         },
         nestedTableDataSource: [],
         selectedRowKeys: [],
-        isModalVisible: false
+        isModalVisible: false,
+        loading: false,
     }
 
     componentDidMount() {
-        // TODO: 获取管理员信息
+        this.setState({loading: true})
         UserAction.listSupervisor().then(supervisorList => {
-            this.setState({dataSource: supervisorList})
+            this.setState({dataSource: supervisorList, loading: false})
         }).catch(err => {
             message.error(err)
         })
@@ -131,7 +133,7 @@ export default class Operator extends React.Component<any, OperatorState> {
 
     render() {
 
-        const { selectedRowKeys, isModalVisible, dataSource } = this.state
+        const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -192,7 +194,9 @@ export default class Operator extends React.Component<any, OperatorState> {
                         rowSelection={rowSelection}
                         columns={columns}
                         dataSource={dataSource}
+                        loading={loading}
                         expandable={this.state.expandable}
+                        pagination={false}
                     />
                 </div>
             </div>
