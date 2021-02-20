@@ -1,9 +1,8 @@
-import { Button, Tag } from 'antd';
-import { hashCode } from '../../../utils'
+import { Button, Tag } from 'antd'
+import { randomColor } from '../../../utils'
 import React from 'react'
-import { Models } from '../../../utils/model'
 import { BreadcrumbPrpos } from '../../bread-crumb-custom'
-import { Operation } from '../../../axios/action/user/user-type';
+import { Operation } from '../../../axios/action/user/user-type'
 
 /**
  * @author linyimin
@@ -12,9 +11,13 @@ import { Operation } from '../../../axios/action/user/user-type';
  * @description
  */
 
-const serverLabelColors = Models.get('serverLabelColor')
 
 export const nestedColumn = [
+    {
+        title: 'id',
+        dataIndex: 'id',
+        key: 'id'
+    },
     {
         title: '主机名',
         dataIndex: 'hostname',
@@ -22,32 +25,33 @@ export const nestedColumn = [
     },
     {
         title: '域名',
-        dataIndex: 'domainName',
-        key: 'domainName'
+        dataIndex: 'domain',
+        key: 'domain'
     },
     {
         title: '标签',
-        dataIndex: 'serverTags',
-        key: 'serverTags',
-        render: (serverTags: any, _: any, __: any) => {
-            return serverTags.map((tag: any )=> <Tag color={serverLabelColors[hashCode(tag) % serverTags.length]} key={tag}>{tag}</Tag>)
+        dataIndex: 'labels',
+        key: 'labels',
+        render: (labels: string[]) => {
+            return labels.map((tag: any )=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>)
         }
     },
     {
         title: '使用人数',
-        dataIndex: 'numberOfUser',
-        key: 'numOfUser'
+        dataIndex: 'userNum',
+        key: 'userNum'
     },
     {
         title: '状态',
         dataIndex: 'status',
         key: 'status',
-        render: (text: string, _: any, __: any) => <Tag color = {serverLabelColors[hashCode(text) % serverLabelColors.length]}> { text } </Tag>
+        render: (text: string) => <Tag color = {randomColor(text)}> { text } </Tag>
     },
     {
         title: '操作',
-        dataIndex: 'action',
-        key: 'action'
+        dataIndex: 'operationList',
+        key: 'operationList',
+        render: (operationList: Operation[]) => operationList.map(operation => <Button type="link" href={operation.operationLink}>{operation.operationName}</Button>)
     }
 ]
 
@@ -72,7 +76,7 @@ export const columns = [
         dataIndex: 'serverLabel',
         key: 'serverLabel',
         render: (serverLabel: string[]) => serverLabel.map(
-            (tag: string)=> <Tag color={serverLabelColors[hashCode(tag) % serverLabel.length]} key={tag}>{tag}</Tag>
+            (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
         )
     },
     {

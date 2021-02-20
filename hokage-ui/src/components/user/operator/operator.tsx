@@ -8,21 +8,12 @@ import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { breadcrumProps, columns, nestedColumn } from './column-definition'
-
-interface NestedTableDataSource {
-    key: string,
-    hostname: string,
-    domainName: string,
-    serverTags: string[],
-    numberOfUser: number,
-    status: string,
-    action: string
-}
+import { ServerVO } from '../../../axios/action/server/server-type'
 
 type OperatorState = {
     dataSource: UserVO[],
     expandable: TableExtendable,
-    nestedTableDataSource: NestedTableDataSource[],
+    nestedTableDataSource: ServerVO[],
     selectedRowKeys: ReactText[],
     isModalVisible: boolean,
     loading: boolean,
@@ -38,27 +29,16 @@ export default class Operator extends React.Component<any, OperatorState> {
                 return <Table columns={nestedColumn} dataSource={this.state.nestedTableDataSource} pagination={false} />;
             },
             onExpand: (expanded: boolean, record: any) => {
+                const userVO: UserVO = record;
+
                 if (expanded) {
-                    // TODO: 这里替换成接口,请求真实的数据
-                    const expandedRowKeys: string[] = [record.key]
-                    const datasources: NestedTableDataSource[] = []
-                    const colors = ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"]
-                    for (let i = 0; i < 3; i++) {
-                        const data: NestedTableDataSource = {
-                            key: record.key + '_' + i,
-                            hostname: record.username,
-                            domainName: record.username,
-                            serverTags: [colors[i], colors[i+1]],
-                            numberOfUser: 3,
-                            status: '在线',
-                            action: '回收'
-                        }
-                        datasources.push(data)
-                    }
+                    // Why?
+                    const expandedRowKeys: ReactText[] = [record.key]
+
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = expandedRowKeys
 
-                    this.setState({ ...this.state, nestedTableDataSource: datasources, expandable })
+                    this.setState({ ...this.state, nestedTableDataSource: userVO.serverVOList, expandable })
                 } else {
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = []

@@ -4,7 +4,23 @@
  * @email linyimin520812@gmail.com
  * @description
  */
+import { Operation } from '../user/user-type'
+
 export interface Option {
     label: string,
     value: any
+}
+
+export interface ServerVO {
+    id: number,
+    hostname: string,
+    domain: string,
+    labels: string[],
+    supervisorList: string[],
+    supervisorIdList: number[],
+    subordinateList: string[],
+    subordinateIdList: number[],
+    userNum: number,
+    status: string,
+    operationList: Operation[],
 }

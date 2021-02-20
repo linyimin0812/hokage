@@ -1,5 +1,7 @@
 // retrieve url parameter variable
 
+import { Models } from './model'
+
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
     const _query = window.location.search.substr(1);
@@ -37,4 +39,11 @@ export const hashCode = (text: string): number => {
         hash = (hash * 33) ^ text.charCodeAt(--length)
     }
     return hash >>> 0;
+}
+
+
+
+export const randomColor = (text: string): string => {
+    const colorList: string[] = Models.get('serverLabelColor')
+    return colorList[hashCode(text) % colorList.length]
 }

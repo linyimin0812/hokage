@@ -11,7 +11,7 @@ import {
 import AddUser from './add-user';
 
 interface Expandable {
-	expandedRowKeys: string[],
+	expandedRowKeys: ReactText[],
 	expandedRowRender: () => ReactNode,
 	onExpand: (expanded: boolean, record: any) => void
 }

@@ -2,9 +2,10 @@
  * @summary user form data type
  * @author linyimin <linyimin520812@gmail.com>
  *
- * Created at     : 2020-10-27 01:08:26 
+ * Created at     : 2020-10-27 01:08:26
  * Last modified  : 2020-10-27 01:12:01
  */
+import { ServerVO } from '../server/server-type'
 
 export interface UserLoginForm {
     email: string,
@@ -31,6 +32,7 @@ export interface UserVO {
     serverNum: number,
     serverLabel: string[],
     operationList: Operation[],
+    serverVOList: ServerVO[],
 }
 
 export interface Operation {
