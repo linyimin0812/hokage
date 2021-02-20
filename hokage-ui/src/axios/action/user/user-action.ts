@@ -10,7 +10,7 @@ import {
     UserLoginForm,
     UserLogoutForm,
     UserRegisterForm, UserServerOperateForm, UserVO,
-} from './user-form';
+} from './user-type';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
 

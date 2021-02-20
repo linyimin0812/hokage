@@ -3,7 +3,7 @@ import { hashCode } from '../../../utils'
 import React from 'react'
 import { Models } from '../../../utils/model'
 import { BreadcrumbPrpos } from '../../bread-crumb-custom'
-import { Operation } from '../../../axios/action/user/user-form';
+import { Operation } from '../../../axios/action/user/user-type';
 
 /**
  * @author linyimin

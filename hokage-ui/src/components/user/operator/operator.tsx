@@ -6,7 +6,7 @@ import { UserAddOutlined, InfoCircleOutlined, SyncOutlined, UsergroupDeleteOutli
 import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
-import { UserVO } from '../../../axios/action/user/user-form'
+import { UserVO } from '../../../axios/action/user/user-type'
 import { breadcrumProps, columns, nestedColumn } from './column-definition'
 
 interface NestedTableDataSource {
