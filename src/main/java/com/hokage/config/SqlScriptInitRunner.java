@@ -1,6 +1,5 @@
 package com.hokage.config;
 
-import com.google.common.io.CharSource;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -127,16 +126,6 @@ public class SqlScriptInitRunner implements CommandLineRunner {
             paths.stream()
                     .filter(sqlScriptFile -> !StringUtils.containsAny(sqlScriptFile, DDL, DML))
                     .forEach(consumer);
-
-            // CREATE SPRING_SESSION INDEX
-            String createIndex =
-                    "CREATE UNIQUE INDEX SPRING_SESSION_IX1 ON SPRING_SESSION (SESSION_ID);\n" +
-                    "CREATE INDEX SPRING_SESSION_IX2 ON SPRING_SESSION (EXPIRY_TIME);\n" +
-                    "CREATE INDEX SPRING_SESSION_IX3 ON SPRING_SESSION (PRINCIPAL_NAME);\n";
-
-            Reader reader = CharSource.wrap(createIndex).openStream();
-            runner.runScript(reader);
-
         }
     }
     @Data
