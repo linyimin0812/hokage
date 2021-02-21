@@ -2,6 +2,7 @@ import React from 'react'
 import { Divider, Form, Row, Col, Input, Button, Select, message } from 'antd'
 import { ServerAction } from '../../../axios/action/server/server-action'
 import { Option } from '../../../axios/action/server/server-type'
+import { formItemLayout } from '../../common/table-layout'
 
 type SearchProps = {
     onFinish: (value: any) => void,
@@ -10,15 +11,6 @@ type SearchProps = {
 
 type SearchState = {
     serverOptions: Option[]
-}
-
-const formItemLayout = {
-    labelCol: {
-        span: 6,
-    },
-    wrapperCol: {
-        span: 18,
-    },
 }
 
 export default class Search extends React.Component<SearchProps, SearchState> {

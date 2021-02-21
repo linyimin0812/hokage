@@ -1,26 +1,50 @@
 import React from 'react'
-import { Divider, Form, Row, Col, Input, Button, Select } from 'antd'
+import { Divider, Form, Row, Col, Input, Button, Select, message } from 'antd'
+import { ServerAction } from '../../../axios/action/server/server-action'
+import { Option } from '../../../axios/action/server/server-type'
+import { formItemLayout } from '../../common/table-layout'
 
-type SearchPropTypes = {
+type SearchProps = {
     onFinish: (value: any) => void,
     clear: () => void
 }
 
-export default class Search extends React.Component<SearchPropTypes> {
+type SearchState = {
+    serverOptions: Option[]
+}
+
+export default class Search extends React.Component<SearchProps, SearchState> {
+
+    constructor(props: SearchProps) {
+        super(props)
+        this.state = {
+            serverOptions: []
+        }
+    }
+
+    componentDidMount() {
+        ServerAction.listServerOptions().then(options => {
+            this.setState({serverOptions: options})
+        }).catch((err) => {
+            message.error(err)
+        })
+    }
+
     render() {
+        const { serverOptions } = this.state;
         return (
             <div style={{ backgroundColor: '#FFFFFF' }}>
                 <Divider orientation="left">服务器使用者信息查询</Divider>
                 <Form
                     name="operator-search"
                     onFinish={this.props.onFinish}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <Row gutter={24}>
                         <Col span={6} key="id">
                             <Form.Item
                                 name="id"
                                 label="id"
+                                {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
                             </Form.Item>
@@ -28,7 +52,8 @@ export default class Search extends React.Component<SearchPropTypes> {
                         <Col span={6} key="name">
                             <Form.Item
                                 name="name"
-                                label="姓名"
+                                label="使用者姓名"
+                                {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
                             </Form.Item>
@@ -36,14 +61,15 @@ export default class Search extends React.Component<SearchPropTypes> {
                         <Col span={6} key="serverTag">
                             <Form.Item
                                 name="serverTag"
-                                label="标签"
+                                label="服务器标签"
+                                {...formItemLayout}
                             >
-                                <Select defaultValue="-1">
-                                    <Select.Option value="-1">请选择</Select.Option>
-                                    <Select.Option value="ordinaryServer">普通服务器</Select.Option>
-                                    <Select.Option value="gpuServer">GPU服务器</Select.Option>
-                                    <Select.Option value="intranetServer">内网服务器</Select.Option>
-                                    <Select.Option value="publicNetworkServer">外网服务器</Select.Option>
+                                <Select>
+                                    {
+                                        serverOptions.map(option => {
+                                            return <Select.Option value={option.value}>{option.label}</Select.Option>
+                                        })
+                                    }
                                 </Select>
                             </Form.Item>
                         </Col>
