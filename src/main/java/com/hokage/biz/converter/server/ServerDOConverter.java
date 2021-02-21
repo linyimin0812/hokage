@@ -106,8 +106,8 @@ public class ServerDOConverter {
             List<String> supervisorNameList = supervisorList.stream()
                     .map(HokageUserDO::getUsername)
                     .collect(Collectors.toList());
-            hokageServerVO.setSupervisor(supervisorNameList);
-            hokageServerVO.setSupervisorId(supervisorIds);
+            hokageServerVO.setSupervisorList(supervisorNameList);
+            hokageServerVO.setSupervisorIdList(supervisorIds);
 
             return hokageServerVO;
         }

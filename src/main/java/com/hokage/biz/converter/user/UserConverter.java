@@ -116,8 +116,8 @@ public class UserConverter {
                 HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
 
                 // supervisor info
-                serverVO.setSupervisor(Collections.singletonList(hokageUserDO.getUsername()));
-                serverVO.setSupervisorId(Collections.singletonList(hokageUserDO.getId()));
+                serverVO.setSupervisorList(Collections.singletonList(hokageUserDO.getUsername()));
+                serverVO.setSupervisorIdList(Collections.singletonList(hokageUserDO.getId()));
 
                 return serverVO;
 
@@ -178,8 +178,8 @@ public class UserConverter {
                         HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
 
                         // supervisor info
-                        serverVO.setSubordinate(Collections.singletonList(hokageUserDO.getUsername()));
-                        serverVO.setSubordinateId(Collections.singletonList(hokageUserDO.getId()));
+                        serverVO.setSubordinateName(Collections.singletonList(hokageUserDO.getUsername()));
+                        serverVO.setSubordinateIdList(Collections.singletonList(hokageUserDO.getId()));
 
                         // number of users of the server
                         List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
