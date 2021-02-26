@@ -73,9 +73,9 @@ export const columns = [
     },
     {
         title: '服务器标签',
-        dataIndex: 'serverLabel',
-        key: 'serverLabel',
-        render: (serverLabel: string[]) => serverLabel.map(
+        dataIndex: 'serverLabelList',
+        key: 'serverLabelList',
+        render: (serverLabelList: string[]) => serverLabelList.map(
             (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
         )
     },

@@ -252,9 +252,14 @@ public class HokageUserServiceImpl implements HokageUserService {
     public ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId) {
         ServiceResponse<List<HokageUserVO>> response = new ServiceResponse<>();
         HokageUserDO userDO = userDao.getUserById(supervisorId);
-        List<HokageUserDO> userDOList = new ArrayList<>();
+
+        if (Objects.isNull(userDO)) {
+            return response.success(Collections.emptyList());
+        }
+
+        List<HokageUserDO> userDOList;
         // if supervisorId is a super, list all ordinary user
-        if (userDO.getRole().equals(UserRoleEnum.super_operator.getValue())) {
+        if (UserRoleEnum.super_operator.getValue().equals(userDO.getRole())) {
             userDOList = userDao.listUserByRole(UserRoleEnum.subordinate.getValue());
         } else {
             List<Long> userIdList = supervisorSubordinateDao.listBySupervisorId(supervisorId).stream()

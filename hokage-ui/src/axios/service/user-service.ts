@@ -70,7 +70,7 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     // list subordinate
     'listSubordinate': {
         url: '/user/subordinate/list',
-        method: 'GET'
+        method: 'POST'
     },
     // list all subordinate
     'listAllSubordinate': {

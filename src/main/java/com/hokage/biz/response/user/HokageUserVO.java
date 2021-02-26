@@ -18,7 +18,7 @@ public class HokageUserVO {
      * user id
      */
     private Long id;
-    /**
+    /*
      * user name
      */
     private String username;
@@ -38,7 +38,7 @@ public class HokageUserVO {
     /**
      * labels of server
      */
-    private List<String> serverLabel;
+    private List<String> serverLabelList;
     /**
      * operation list
      */

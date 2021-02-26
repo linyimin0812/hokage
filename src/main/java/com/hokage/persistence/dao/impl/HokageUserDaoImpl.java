@@ -5,7 +5,9 @@ import com.hokage.persistence.dataobject.HokageUserDO;
 import com.hokage.persistence.mapper.HokageUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -96,6 +98,9 @@ public class HokageUserDaoImpl implements HokageUserDao {
      */
     @Override
     public List<HokageUserDO> listUserByIds(List<Long> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return Collections.emptyList();
+        }
         return userMapper.listUserByIds(ids);
     }
 }

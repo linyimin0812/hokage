@@ -25,6 +25,28 @@ public class HokageServerVO {
      * server domain
      */
     private String domain;
+
+    /**
+     * server ip address
+     */
+    private String ip;
+
+    /**
+     * server login type: 0 - account and password, 1 - key
+     */
+    private Integer loginType;
+
+    /**
+     * ssh port
+     */
+    private String sshPort;
+
+    /**
+     * server group
+     */
+    private List<String> serverGroup;
+
+
     /**
      * server labels
      */
@@ -60,4 +82,9 @@ public class HokageServerVO {
      * operations
      */
     private List<HokageOperation> operationList;
+
+    /**
+     * server description
+     */
+    private String description;
 }

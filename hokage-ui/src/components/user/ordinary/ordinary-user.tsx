@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactText } from 'react'
-import { Table, Row, Col, Button, Tag, message } from 'antd'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { Table, Row, Col, Button, message } from 'antd'
+import BreadcrumbCustom from '../../bread-crumb-custom'
 import Search from './search'
 import {
 	UserAddOutlined,
@@ -9,6 +9,10 @@ import {
 	UsergroupDeleteOutlined,
 } from '@ant-design/icons';
 import AddUser from './add-user';
+import { breadcrumProps, columns, nestedColumn } from './column-definition'
+import { ServerVO } from '../../../axios/action/server/server-type'
+import { UserVO } from '../../../axios/action/user/user-type'
+import { UserAction } from '../../../axios/action'
 
 interface Expandable {
 	expandedRowKeys: ReactText[],
@@ -16,108 +20,15 @@ interface Expandable {
 	onExpand: (expanded: boolean, record: any) => void
 }
 
-interface NestedTableDataSource {
-	key: string,
-	hostname: string,
-	domainName: string,
-	IPAddress: string,
-	serverTags: string[],
-	numberOfUser: number,
-	status: string,
-	action: string
-}
-
-// 嵌套表 
-const columns = [
-	{
-		title: '主机名',
-		dataIndex: 'hostname',
-		key: 'hostname',
-	},
-	{
-		title: '域名',
-		dataIndex: 'domainName',
-		key: 'domainName',
-	},
-	{
-		title: 'IP地址',
-		dataIndex: 'IPAddress',
-		key: 'IPAddress',
-	},
-	{
-		title: '标签',
-		dataIndex: 'serverTags',
-		key: 'serverTags',
-		render: (serverTags: any, _: any, __: any) => {
-			return (
-				<span>
-        {
-			serverTags.map((tag: any) => {
-				let color = '';
-				let name = '';
-				switch (tag) {
-					case 'ordinaryServer':
-						color = 'magenta';
-						name = 'X86';
-						break;
-					case 'gpuServer':
-						color = 'red';
-						name = 'GPU';
-						break;
-					case 'intranetServer':
-						color = 'green';
-						name = '内网';
-						break;
-					case 'publicNetworkServer':
-						color = 'purple';
-						name = '公网';
-						break;
-					default:
-						color = '#f50';
-						name = '未知';
-				}
-				return (
-					<Tag color={color} key={tag}>
-						{name}
-					</Tag>
-				);
-			})
-		}
-      </span>);
-		},
-	},
-	{
-		title: '状态',
-		dataIndex: 'status',
-		key: 'status',
-	},
-	{
-		title: '操作',
-		dataIndex: 'action',
-		key: 'action',
-	},
-
-];
 
 type OrdinaryUserState = {
 	expandable: Expandable,
-	nestedTableDataSource: NestedTableDataSource[],
+	nestedTableDataSource: ServerVO[],
 	selectedRowKeys: ReactText[],
 	isModalVisible: boolean,
+	dataSource: UserVO[],
+	loading: boolean,
 }
-
-const breadcrumProps: BreadcrumbPrpos[] = [
-	{
-		name: '首页',
-		link: '/app/index',
-	},
-	{
-		name: '用户管理',
-	},
-	{
-		name: '服务器管理员',
-	},
-];
 
 export default class OrdinaryUser extends React.Component<any, OrdinaryUserState> {
 
@@ -125,31 +36,17 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		expandable: {
 			expandedRowKeys: [],
 			expandedRowRender: () => {
-				return <Table columns={columns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
+				return <Table columns={nestedColumn} dataSource={this.state.nestedTableDataSource} pagination={false} />;
 			},
 			onExpand: (expanded: boolean, record: any) => {
 				if (expanded) {
-					// TODO: 这里替换成接口,请求真实的数据
+					const serverVOList: ServerVO[] = record.serverVOList || []
 					const expandedRowKeys: string[] = [record.key];
-					const datasources: NestedTableDataSource[] = [];
-					const colors = ['ordinaryServer', 'gpuServer', 'intranetServer', 'publicNetworkServer'];
-					for (let i = 0; i < 3; i++) {
-						const data: NestedTableDataSource = {
-							key: record.key + '_' + i,
-							hostname: record.name,
-							domainName: record.name,
-							IPAddress: `10.108.210.21${i}`,
-							serverTags: [colors[i], colors[i + 1]],
-							numberOfUser: 3,
-							status: 'online',
-							action: '回收'
-						};
-						datasources.push(data);
-					}
+
 					const expandable: Expandable = this.state.expandable;
 					expandable.expandedRowKeys = expandedRowKeys;
 
-					this.setState({ ...this.state, nestedTableDataSource: datasources, expandable });
+					this.setState({ ...this.state, nestedTableDataSource: serverVOList, expandable });
 				} else {
 					const expandable: Expandable = this.state.expandable;
 					expandable.expandedRowKeys = [];
@@ -161,71 +58,25 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		nestedTableDataSource: [],
 		selectedRowKeys: [],
 		isModalVisible: false,
-	};
-	columns = [
-		{
-			title: 'id',
-			dataIndex: 'id',
-			key: 'id',
-		},
-		{
-			title: '姓名',
-			dataIndex: 'name',
-			key: 'name',
-		},
-		{
-			title: '使用服务器数量',
-			dataIndex: 'numOfServer',
-			key: 'numOfServer',
-		},
-		{
-			title: '标签',
-			dataIndex: 'serverTags',
-			key: 'serverTags',
-			render: (serverTags: any, _: any, __: any) => {
-				return (
-					<span>
-          			{
-						serverTags.map((tag: any) => {
-							let color = '';
-							let name = '';
-							switch (tag) {
-								case 'ordinaryServer':
-									color = 'magenta';
-									name = 'X86';
-									break;
-								case 'gpuServer':
-									color = 'red';
-									name = 'GPU';
-									break;
-								case 'intranetServer':
-									color = 'green';
-									name = '内网';
-									break;
-								case 'publicNetworkServer':
-									color = 'purple';
-									name = '公网';
-									break;
-								default:
-									color = '#f50';
-									name = '未知';
-							}
-							return (
-								<Tag color={color} key={tag}>
-									{name}
-								</Tag>
-							);
-						})
-					}
-        </span>);
-			},
-		},
-		{
-			title: '操作',
-			dataIndex: 'action',
-			key: 'action',
-		},
-	];
+		dataSource: [],
+		loading: false
+	}
+
+	componentDidMount() {
+		this.listSubordinate(this.hokageUid)
+	}
+
+	// @ts-ignore
+	hokageUid: number = window.hokageUid || 0
+
+	listSubordinate = (supervisorId: number) => {
+		this.setState({loading: true})
+		UserAction.listSubordinate(supervisorId).then(userList => {
+			this.setState({dataSource: userList, loading: false})
+		}).catch(err => {
+			message.error(err)
+		})
+	}
 
 	onFinish = (value: any) => {
 		console.log(value);
@@ -267,19 +118,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 	};
 
 	render() {
-		const data: any = [];
-		for (let i = 0; i < 5; i++) {
-			const value = {
-				key: i + 1,
-				id: 'id_' + i,
-				name: 'name_' + i + '.pcncad.club',
-				serverTags: ['ordinaryServer', 'gpuServer', 'intranetServer', 'publicNetworkServer'],
-				numOfServer: i + 1,
-				action: '添加服务器 | 删除',
-			};
-			data.push(value);
-		}
-		const { selectedRowKeys, isModalVisible } = this.state;
+		const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state;
 		const rowSelection = {
 			selectedRowKeys,
 			onChange: this.onSelectChange,
@@ -319,9 +158,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
                         批量删除
                       </Button>
                     </span>
-					) : (
-						null
-					)
+					) : null
 				}
 				  <Button
 					  icon={<UserAddOutlined translate="true" />}
@@ -340,9 +177,10 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 					</Row>
 					<Table
 						rowSelection={rowSelection}
-						columns={this.columns}
-						dataSource={data}
+						columns={columns}
+						dataSource={dataSource}
 						expandable={this.state.expandable}
+						loading={loading}
 					/>
 				</div>
 			</div>

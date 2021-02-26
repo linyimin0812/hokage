@@ -170,7 +170,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/user/subordinate/list", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> listSubordinate(@RequestParam UserServerSearchForm form) {
+    public ResultVO<List<HokageUserVO>> listSubordinate(@RequestBody UserServerSearchForm form) {
 
         Preconditions.checkNotNull(form.getId(), "operation id can't be null");
 

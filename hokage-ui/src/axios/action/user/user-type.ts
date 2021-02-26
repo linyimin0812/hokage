@@ -30,7 +30,7 @@ export interface UserVO {
     email: string,
     role: number,
     serverNum: number,
-    serverLabel: string[],
+    serverLabelList: string[],
     operationList: Operation[],
     serverVOList: ServerVO[],
 }
@@ -45,4 +45,10 @@ export interface UserServerOperateForm {
     id: number,
     serverIds: number[],
     userIds: number[]
+}
+
+export interface UserServerSearchForm {
+    id: number,
+    username: string,
+    label: string
 }

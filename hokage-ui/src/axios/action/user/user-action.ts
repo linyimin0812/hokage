@@ -9,7 +9,10 @@ import { UserService } from '../../service'
 import {
     UserLoginForm,
     UserLogoutForm,
-    UserRegisterForm, UserServerOperateForm, UserVO,
+    UserRegisterForm,
+    UserServerSearchForm,
+    UserServerOperateForm,
+    UserVO,
 } from './user-type';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
@@ -103,4 +106,18 @@ import { ServiceResult } from '../../common'
              })
          })
      },
+
+     listSubordinate: (supervisorId: number): Promise<UserVO[]> => {
+         return new Promise<UserVO[]>((resolve, reject) => {
+             const form: UserServerSearchForm = { id: supervisorId, username: '', label: '' }
+             UserService.listSubordinate(form).then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("获取普通用户列表. err: " + JSON.stringify(err))
+             })
+         })
+     }
  }

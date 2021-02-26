@@ -21,6 +21,10 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
     }
 
     componentDidMount() {
+        this.listUserOptions()
+    }
+
+    listUserOptions = () => {
         UserAction.listAllSubordinate().then(userVOList => {
             const subordinateUserOptions: Option[] = userVOList.map(userVO => {
                 return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
@@ -30,6 +34,11 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
         }).catch(err => {
             message.error(err)
         })
+    }
+
+    onModalOk = (idList: number[]) => {
+        this.props.onModalOk(idList)
+        this.listUserOptions()
     }
 
     formRef = React.createRef<FormInstance>()
@@ -53,7 +62,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
             >
                 <Form
                     name="operator-add"
-                    onFinish={this.props.onModalOk}
+                    onFinish={this.onModalOk}
                     ref={this.formRef}
                 >
                     <Row gutter={24}>
