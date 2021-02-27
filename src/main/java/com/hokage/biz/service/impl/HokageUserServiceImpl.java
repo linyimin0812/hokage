@@ -3,7 +3,7 @@ package com.hokage.biz.service.impl;
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.SequenceNameEnum;
-import com.hokage.biz.enums.ErrorCodeEnum;
+import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.user.UserServerSearchForm;
 import com.hokage.biz.response.user.HokageUserVO;
@@ -12,6 +12,7 @@ import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -85,7 +86,7 @@ public class HokageUserServiceImpl implements HokageUserService {
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.nonNull(userDO)) {
-            return res.fail(ErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), ErrorCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
+            return res.fail(ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
         }
         // 2. encrypt the password
         hokageUserDO.setPasswd(passwordEncoder.encode(hokageUserDO.getPasswd()));
@@ -105,7 +106,7 @@ public class HokageUserServiceImpl implements HokageUserService {
         if (result > 0) {
             return res.success(hokageUserDO);
         }
-        return res.fail(ErrorCodeEnum.USER_REGISTER_FAIL.getCode(), ErrorCodeEnum.USER_REGISTER_FAIL.getMsg());
+        return res.fail(ResultCodeEnum.USER_REGISTER_FAIL.getCode(), ResultCodeEnum.USER_REGISTER_FAIL.getMsg());
     }
 
     @Override
@@ -113,7 +114,7 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         ServiceResponse<HokageUserDO> res = new ServiceResponse<>();
 
-        res.fail(ErrorCodeEnum.USER_PASSWD_ERROR.getCode(), ErrorCodeEnum.USER_PASSWD_ERROR.getMsg());
+        res.fail(ResultCodeEnum.USER_PASSWD_ERROR.getCode(), ResultCodeEnum.USER_PASSWD_ERROR.getMsg());
 
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
@@ -329,9 +330,21 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         ServiceResponse<Boolean> res = new ServiceResponse<>();
 
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOList = ids.stream().map(id -> {
+        List<HokageSupervisorSubordinateDO> subordinateDOList = supervisorSubordinateDao.listSubordinate(supervisorId, ids);
+
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOList = ids.stream().filter(id -> {
+            // if subordinate has existed, filter
+            return subordinateDOList.stream().noneMatch(DO -> DO.getSubordinateId().equals(id));
+        }).map(id -> {
             HokageSupervisorSubordinateDO supervisorSubordinateDO  = new HokageSupervisorSubordinateDO();
 
+            // retrieve id
+            ServiceResponse<Long> response = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_subordinate.name());
+            if (!response.getSucceeded() || ObjectUtils.defaultIfNull(response.getData(), 0L) == 0) {
+                throw new RuntimeException("addSubordinate: can't retrieve primary key id, reason: " + response.getMsg());
+            }
+
+            supervisorSubordinateDO.setId(response.getData());
             supervisorSubordinateDO.setSupervisorId(supervisorId);
             supervisorSubordinateDO.setSubordinateId(id);
 

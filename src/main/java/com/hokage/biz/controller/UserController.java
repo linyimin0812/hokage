@@ -2,7 +2,7 @@ package com.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.user.UserConverter;
-import com.hokage.biz.enums.ErrorCodeEnum;
+import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.form.user.*;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
@@ -71,7 +71,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
     public ResultVO<Boolean> logout(@RequestBody @Valid HokageUserLogoutForm form, HttpSession session) {
         if (Objects.isNull(session.getAttribute(form.getEmail()))) {
-            return fail(ErrorCodeEnum.USER_NO_LOGIN.getCode(), ErrorCodeEnum.USER_NO_LOGIN.getMsg());
+            return fail(ResultCodeEnum.USER_NO_LOGIN.getCode(), ResultCodeEnum.USER_NO_LOGIN.getMsg());
         }
         session.removeAttribute(form.getEmail());
 

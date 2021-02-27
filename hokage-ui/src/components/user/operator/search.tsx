@@ -23,7 +23,7 @@ export default class Search extends React.Component<SearchProps, SearchState> {
     }
 
     componentDidMount() {
-        ServerAction.listServerOptions().then(options => {
+        ServerAction.listServerLabelOptions().then(options => {
             this.setState({serverOptions: options})
         }).catch((err) => {
             message.error(err)

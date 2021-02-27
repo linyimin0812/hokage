@@ -6,7 +6,7 @@ import com.hokage.biz.converter.server.ServerDOConverter;
 import com.hokage.biz.converter.server.ServerFormConverter;
 import com.hokage.biz.converter.server.ServerSearchFormConverter;
 import com.hokage.biz.enums.SequenceNameEnum;
-import com.hokage.biz.enums.ErrorCodeEnum;
+import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
@@ -16,6 +16,7 @@ import com.hokage.biz.request.SubordinateServerQuery;
 import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageSequenceService;
+import com.hokage.biz.service.HokageServerGroupService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.ServiceResponse;
@@ -26,12 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.*;
 
 
 /**
@@ -51,6 +52,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
+    private HokageServerGroupService serverGroupService;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -90,6 +92,11 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Autowired
     private void setUserDao(HokageUserDao userDao) {
         this.userDao = userDao;
+    }
+
+    @Autowired
+    private void setServerGroupService(HokageServerGroupService serverGroupService) {
+        this.serverGroupService = serverGroupService;
     }
 
     private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
@@ -315,7 +322,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         if (!isSuperResponse.getData()) {
-            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
         boolean result = supervisorIds.stream().anyMatch(supervisorId -> serverIds.stream().anyMatch(serverId -> {
@@ -337,7 +344,7 @@ public class HokageServerServiceImpl implements HokageServerService {
             return response.success(true);
         }
 
-        return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
+        return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ResultCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
     }
 
     @Override
@@ -355,7 +362,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         if (!isSuperResponse.getData()) {
-            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
         List<Long> userIds = form.getUserIds();
@@ -381,7 +388,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         if (!isSupervisorResponse.getData()) {
-            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
         List<Long> subordinateIds = form.getUserIds();
@@ -406,7 +413,7 @@ public class HokageServerServiceImpl implements HokageServerService {
             return response.success(true);
         }
 
-        return response.fail(ErrorCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ErrorCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
+        return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ResultCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
     }
 
     @Override
@@ -424,7 +431,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         if (!isSupervisorResponse.getData()) {
-            return response.fail(ErrorCodeEnum.USER_NO_PERMISSION.getCode(), ErrorCodeEnum.USER_NO_PERMISSION.getMsg());
+            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
         }
 
         List<Long> userIds = form.getUserIds();

@@ -24,4 +24,31 @@ public class ServerOperateForm {
      * server ids
      */
     private List<Long> serverIds;
+
+    /**
+     * server group
+     */
+    private ServerGroup serverGroup;
+
+    @Data
+    public static class ServerGroup {
+        /**
+         * primary key
+         */
+        private Long id;
+        /**
+         * group name
+         */
+        private String name;
+        /**
+         * creator id
+         */
+        private Long creatorId;
+
+        /**
+         * description
+         */
+        private String description;
+    }
+
 }

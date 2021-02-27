@@ -13,6 +13,18 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     'listServerLabel': {
         url: '/server/label/list',
         method: 'GET'
+    },
+
+    // add server label
+    'addServerLabel': {
+        url: '/server/group/add',
+        method: 'POST'
+    },
+
+    // list all server group
+    'listServerGroup': {
+        url: '/server/group/list',
+        method: 'GET'
     }
 }
 

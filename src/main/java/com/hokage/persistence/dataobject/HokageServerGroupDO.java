@@ -1,17 +1,35 @@
 package com.hokage.persistence.dataobject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author linyimin
- * @date 2020/7/26 9:51 下午
+ * @date 2020/7/26 9:51 pm
  * @email linyimin520812@gmail.com
- * @description 服务器分组配置信息表
+ * @description server group data object
  */
 
+
 @Data
+@Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 public class HokageServerGroupDO extends HokageBaseDO {
-    private Long id;            // 服务器组id
-    private String name;        // 服务器组名称
-    private String description; // 服务器组描述
+    /**
+     * server group id
+     */
+    private Long id;
+    /**
+     * server group name
+     */
+    private String name;
+    /**
+     * server group description
+     */
+    private String description;
+    /**
+     * server group creator
+     */
+    private Long creatorId;
 }

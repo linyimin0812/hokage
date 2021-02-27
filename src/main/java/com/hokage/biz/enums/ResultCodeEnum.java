@@ -6,7 +6,7 @@ package com.hokage.biz.enums;
  * @email linyimin520812@gmail.com
  * @description
  */
-public enum ErrorCodeEnum {
+public enum ResultCodeEnum {
 
     /**
      * user error code
@@ -26,7 +26,9 @@ public enum ErrorCodeEnum {
     /**
      * server error code
      */
-    SERVER_SYSTEM_ERROR("B-001", "system error");
+    SERVER_SYSTEM_ERROR("B-001", "system error"),
+
+    SUCCESS("0000", "success");
 
     private String code;
     private String msg;
@@ -47,7 +49,7 @@ public enum ErrorCodeEnum {
         return this.msg;
     }
 
-    ErrorCodeEnum(String code, String msg) {
+    ResultCodeEnum(String code, String msg) {
         this.code = code;
         this.msg = msg;
     }

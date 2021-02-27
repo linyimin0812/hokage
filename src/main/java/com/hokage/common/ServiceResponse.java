@@ -2,6 +2,7 @@ package com.hokage.common;
 
 import com.hokage.biz.enums.SuccessCodeEnum;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author linyimin
@@ -10,6 +11,7 @@ import lombok.Data;
  * @description service layer return
  */
 @Data
+@Accessors(chain = true)
 public class ServiceResponse<T> {
     /**
      * data of service return

@@ -29,3 +29,10 @@ export interface ServerVO {
     status: string,
     operationList: Operation[],
 }
+
+export interface ServerGroup {
+    id?: number,
+    name: string,
+    description: string,
+    creatorId: number,
+}

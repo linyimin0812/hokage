@@ -1,5 +1,6 @@
 package com.hokage.persistence.mapper;
 
+import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.hokage.persistence.dataobject.HokageSupervisorSubordinateDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -72,4 +73,12 @@ public interface HokageSupervisorSubordinateMapper {
      * @return
      */
     Long deleteSubordinate(@Param("supervisorId") Long supervisorId, @Param("subordinateIds") List<Long> subordinateIds);
+
+    /**
+     * list subordinate based on subordinate ids and supervisor id
+     * @param supervisorId
+     * @param subordinateIds
+     * @return
+     */
+    List<HokageSupervisorSubordinateDO> listSubordinate(@Param("supervisorId")Long supervisorId, @Param("subordinateIds") List<Long> subordinateIds);
 }

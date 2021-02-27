@@ -1,4 +1,3 @@
-drop database hokage;
 # 创建数据库及相关数据表
 CREATE DATABASE IF NOT EXISTS `hokage` DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 USE `hokage`;
@@ -59,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_group` (
   `gmt_modified` DATETIME NOT NULL,
   `name` varchar(128) NOT NULL COMMENT '分组名称(只能是字母或者数字)',
   `description` varchar(1024) NULL COMMENT '分组信息描述',
+  `creator_id` bigint NULL COMMENT '创建人',
   PRIMARY KEY (`id`)
 )
   COMMENT = '服务器分组配置信息表';

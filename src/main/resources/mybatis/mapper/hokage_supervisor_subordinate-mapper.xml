@@ -24,14 +24,14 @@
         INSERT INTO
         <include refid="tableName"/>
         (
-            <include refid="allColumns"/>
+        <include refid="allColumns"/>
         )
         VALUES (
-            #{id},
-            now(),
-            now(),
-            #{subordinateId},
-            #{supervisorId}
+        #{id},
+        now(),
+        now(),
+        #{subordinateId},
+        #{supervisorId}
         );
     </insert>
 
@@ -43,14 +43,12 @@
         )
         VALUES
 
-        <foreach collection="list" item="supervisorSubordinateDO" index="index" separator=",">
-            (
-                #{id},
-                now(),
-                now(),
-                #{supervisorSubordinateDO.subordinateId},
-                #{supervisorSubordinateDO.supervisorId}
-            )
+        <foreach collection="list" item="supervisorSubordinateDO" index="index" open="(" close=")" separator=",">
+            #{supervisorSubordinateDO.id},
+            now(),
+            now(),
+            #{supervisorSubordinateDO.subordinateId},
+            #{supervisorSubordinateDO.supervisorId}
         </foreach>
     </insert>
 
@@ -99,6 +97,21 @@
         <include refid="allColumns"/>
         FROM
         <include refid="tableName"/>
+    </select>
+
+    <select id="listSubordinate" resultMap="HokageSupervisorSubordinateMapper">
+        SELECT
+        <include refid="allColumns" />
+        FROM
+        <include refid="tableName" />
+        <where>
+            supervisor_id = #{supervisorId}
+            AND
+            subordinate_id IN
+            <foreach collection="subordinateIds" item="id" index="index" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </where>
     </select>
 
     <delete id="deleteSubordinate">

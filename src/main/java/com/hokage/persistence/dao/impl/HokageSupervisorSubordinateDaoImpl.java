@@ -3,10 +3,14 @@ package com.hokage.persistence.dao.impl;
 import com.hokage.persistence.dao.HokageSupervisorSubordinateDao;
 import com.hokage.persistence.dataobject.HokageSupervisorSubordinateDO;
 import com.hokage.persistence.mapper.HokageSupervisorSubordinateMapper;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author linyimin
@@ -41,6 +45,9 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
      */
     @Override
     public Long insertBatch(List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS) {
+        if (CollectionUtils.isEmpty(supervisorSubordinateDOS)) {
+            return 0L;
+        }
         return supervisorSubordinateMapper.insertBatch(supervisorSubordinateDOS);
     }
 
@@ -102,5 +109,13 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
     @Override
     public Long deleteSubordinate(Long supervisorId, List<Long> subordinateIds) {
         return supervisorSubordinateMapper.deleteSubordinate(supervisorId, subordinateIds);
+    }
+
+    @Override
+    public List<HokageSupervisorSubordinateDO> listSubordinate(Long supervisorId, List<Long> subordinateIds) {
+        if (ObjectUtils.defaultIfNull(supervisorId, 0L) == 0 || CollectionUtils.isEmpty(subordinateIds)) {
+            return Collections.emptyList();
+        }
+        return supervisorSubordinateMapper.listSubordinate(supervisorId, subordinateIds);
     }
 }

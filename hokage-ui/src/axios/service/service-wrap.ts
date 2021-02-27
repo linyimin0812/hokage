@@ -14,11 +14,13 @@ export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
     Object.keys(serviceInfo).forEach((name: string) => {
         service[name] = (data?: any, config?: AxiosRequestConfig): Promise<ServiceResult<any>> => {
             return new Promise<ServiceResult<any>>((resolve, reject) => {
-                const promise: AxiosPromise<ServiceResult<any>> = axios({
-                    ...serviceInfo[name],
-                    ...config,
-                    data: data
-                })
+                const requestConfig: AxiosRequestConfig = { ...serviceInfo[name], ...config }
+                if (['GET', 'get'].includes(serviceInfo[name].method)) {
+                    requestConfig.params = data
+                } else {
+                    requestConfig.data = data
+                }
+                const promise: AxiosPromise<ServiceResult<any>> = axios(requestConfig)
 
                 promise.then(result => {
                     resolve(result.data)

@@ -2,48 +2,91 @@ import React from 'react'
 import { Modal, Form, Select, Button, Input, Tooltip, Divider, message } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import isIP from 'is-ip'
-import { PlusOutlined } from '@ant-design/icons/lib';
+import { PlusOutlined } from '@ant-design/icons/lib'
+import { Option } from '../../axios/action/server/server-type'
+import { UserServerOperateForm } from '../../axios/action/user/user-type'
+import { ServerAction } from '../../axios/action/server/server-action'
+import { UserAction } from '../../axios/action';
+
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,
     onModalCancel: () => void,
     isModalVisible: boolean
 }
 
-// TODO: 获取真实的所有用户
-const ordianryUser: any[] = [];
-for (let i = 10; i < 36; i++) {
-    ordianryUser.push(<Select.Option key={i.toString(36) + i} value={i.toString(36) + i}>{i.toString(36) + i}</Select.Option>);
+type AddServerStateTypes = {
+    serverGroupOptions: Option[],
+    userOptions: Option[],
+    isAddGroup: boolean
 }
 
-export default class AddServer extends React.Component<AddServerPropTypes, {}> {
+const hokageUid = parseInt(window.localStorage.getItem('hokageUid') || '0')
+
+export default class AddServer extends React.Component<AddServerPropTypes, AddServerStateTypes> {
 
     state = {
-        isModalVisible: false,
         isAddGroup: false,
-        data: ordianryUser
+        userOptions: [],
+        serverGroupOptions: []
     }
 
-    onGroupModalOk = (value: any) => {
-        console.log(value)
-        this.setState({
-            isAddGroup: false,
-            data: this.state.data.concat(<Select.Option key={value.groupName} value={value.groupName}>{`${value.groupName}(${value.groupDes})`}</Select.Option>)
+    componentDidMount() {
+        this.listServerGroupOptions()
+        this.listSubordinateOptions()
+    }
+
+    listServerGroupOptions = () => {
+        ServerAction.listServerGroup(hokageUid).then(data => {
+            this.setState({serverGroupOptions: data})
+        }).catch(err => message.error(err))
+    }
+
+    listSubordinateOptions = () => {
+        UserAction.listAllSubordinate().then(userVOList => {
+            const subordinateUserOptions: Option[] = userVOList.map(userVO => {
+                return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
+            })
+            this.setState({ userOptions: subordinateUserOptions })
+
+        }).catch(err => {
+            message.error(err)
         })
-        message.loading({ content: 'Loading...', key: 'addUser' });
-        setTimeout(() => {
-            message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-        }, 2000);
+    }
+
+    onGroupModalOk = (value: { name: string, description: string }) => {
+        const form: UserServerOperateForm = {
+            id: hokageUid,
+            serverGroup: {
+                name: value.name,
+                description: value.description || '',
+                creatorId: hokageUid
+            }
+        }
+        ServerAction.addServerLabel(form).then(result => {
+            if (result) {
+                message.success(`已添加'${value.name}'分组`)
+            }
+        }).catch(err => message.error(err))
+            .finally(() => {
+                this.setState({
+                    isAddGroup: false,
+                })
+            })
+
+        // 重新加载分组
+        this.listServerGroupOptions()
+
     }
 
     render() {
         const { isModalVisible } = this.props
-        const { isAddGroup, data } = this.state
+        const { isAddGroup, serverGroupOptions, userOptions } = this.state
         return (
             <Modal
                 title="添加服务器"
                 visible={isModalVisible}
                 footer={null}
-                onCancel={this.props.onModalCancel}
+                closable={false}
             >
                 <Form
                     name="server-add"
@@ -52,27 +95,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                     wrapperCol={{ span: 18 }}
                 >
                     <Form.Item
-                        label={
-                            <span>
-                                二级域名&nbsp;
-                                <Tooltip title="指定服务器域名, 如: master.pcncad.club, 请填写master. 若不填写,默认使用主机名作为二级域名.">
-                                    <QuestionCircleOutlined translate="true" />
-                                </Tooltip>
-                            </span>
-                        }
-                    >
-                        <Form.Item
-                            name="domainName"
-                            noStyle
-                        >
-                            <Input style={{ width: '75%' }} placeholder="请指定服务器域名" />
-                        </Form.Item>
-                        <span>
-                            .pcncad.club
-                        </span>
-                    </Form.Item>
-                    <Form.Item
-                        name="IP"
+                        name="ip"
                         label="服务器IP"
                         rules={[
                             {
@@ -93,6 +116,21 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                     >
                         <Input placeholder="请输入服务器IP" />
                     </Form.Item>
+
+                    <Form.Item
+                        name={'domain'}
+                        label={
+                            <span>
+                                域名
+                                <Tooltip title="指定服务器域名,如:master.pcncad.club.">
+                                    <QuestionCircleOutlined translate="true" />
+                                </Tooltip>
+                            </span>
+                        }
+                    >
+                        <Input placeholder="请指定服务器域名" />
+                    </Form.Item>
+
                     <Form.Item
                         name="sshPort"
                         label="SSH端口"
@@ -117,7 +155,14 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
 
                     <Form.Item
                         name="account"
-                        label="管理账号"
+                        label={
+                            <span>
+                                管理账号
+                                <Tooltip title="此账号用于系统操作服务器, 请保证此账号具有root权限">
+                                    <QuestionCircleOutlined translate="true" />
+                                </Tooltip>
+                            </span>
+                        }
                         rules={[
                             {
                                 required: true,
@@ -126,10 +171,10 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                         ]}
                         hasFeedback
                     >
-                        <Input placeholder="此账号用于系统操作服务器, 请保证此账号具有root权限" />
+                        <Input placeholder="请输入管理账号" />
                     </Form.Item>
                     <Form.Item
-                        name="password"
+                        name="passwd"
                         label="密码"
                         rules={[
                             {
@@ -143,30 +188,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                     </Form.Item>
 
                     <Form.Item
-                        name="confirmPasswd"
-                        label="确认密码"
-                        dependencies={['password']}
-                        hasFeedback
-                        rules={[
-                            {
-                                required: true,
-                                message: '请再次输入密码',
-                            },
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (value === '' || value === undefined || getFieldValue('password') === value) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject('密码不一致, 请重新输入');
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password placeholder="请再次输入密码" />
-                    </Form.Item>
-
-                    <Form.Item
-                        name="operator"
+                        name="serverGroup"
                         label="指定分组"
                         hasFeedback
                     >
@@ -188,13 +210,12 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                                     </div>
                                 </div>
                             )}
-                        >
-                            {data}
-                        </Select>
+                            options={serverGroupOptions}
+                        />
                     </Form.Item>
 
                     <Form.Item
-                        name="operator"
+                        name="supervisors"
                         label="指定管理员"
                         hasFeedback
                     >
@@ -202,9 +223,15 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                             mode="multiple"
                             style={{ width: '100%' }}
                             placeholder={"请选择管理员(支持多选)"}
-                        >
-                            {data}
-                        </Select>
+                            options={userOptions}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="description"
+                        label="描述"
+                        hasFeedback
+                    >
+                        <Input.TextArea placeholder={"请输入服务器描述"} />
                     </Form.Item>
 
                     <Form.Item wrapperCol={{ span: 24 }}>
@@ -239,7 +266,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                         wrapperCol={{ span: 18 }}
                     >
                         <Form.Item
-                            name="groupName"
+                            name="name"
                             label="分组名称"
                             rules={[
                                 {
@@ -260,7 +287,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, {}> {
                             <Input placeholder="请输入分组名称" />
                         </Form.Item>
                         <Form.Item
-                            name="groupDes"
+                            name="description"
                             label="分组描述"
                         >
                             <Input placeholder="请输入分组描述" />

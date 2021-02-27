@@ -5,7 +5,7 @@
  * Created at     : 2020-10-27 01:08:26
  * Last modified  : 2020-10-27 01:12:01
  */
-import { ServerVO } from '../server/server-type'
+import { ServerGroup, ServerVO } from '../server/server-type';
 
 export interface UserLoginForm {
     email: string,
@@ -43,8 +43,9 @@ export interface Operation {
 
 export interface UserServerOperateForm {
     id: number,
-    serverIds: number[],
-    userIds: number[]
+    serverIds?: number[],
+    userIds?: number[],
+    serverGroup?: ServerGroup
 }
 
 export interface UserServerSearchForm {

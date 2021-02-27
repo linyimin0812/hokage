@@ -1,34 +1,64 @@
 package com.hokage.biz.service;
 
+import com.hokage.biz.form.server.ServerOperateForm;
+import com.hokage.biz.response.HokageOptionVO;
+import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerGroupDO;
 
 import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:14 上午
+ * @date 2020/8/22 11:14 am
  * @email linyimin520812@gmail.com
- * @description 服务器组信息
+ * @description server group service interface
  */
 public interface HokageServerGroupService {
     /**
-     * 插入一条新的记录
+     * insert a new record
      * @param serverGroupDO
      * @return
      */
-    Long insert(HokageServerGroupDO serverGroupDO);
+    ServiceResponse<Boolean> insert(HokageServerGroupDO serverGroupDO);
 
     /**
-     * 返回所有服务器组信息
+     * list all server group
      * @return
      */
-    List<HokageServerGroupDO> selectAll();
+    ServiceResponse<List<HokageServerGroupDO>> selectAll();
 
     /**
-     * 更新服务器组信息
+     * update server group
      * @param serverGroupDO
      * @return
      */
-    Long update(HokageServerGroupDO serverGroupDO);
+    ServiceResponse<Boolean> update(HokageServerGroupDO serverGroupDO);
 
+    /**
+     * update or insert a record
+     * @param serverGroupDO
+     * @return
+     */
+    ServiceResponse<HokageServerGroupDO> upsert(HokageServerGroupDO serverGroupDO);
+
+    /**
+     * list server grpup based-on creator id
+     * @param id
+     * @return
+     */
+    ServiceResponse<List<HokageServerGroupDO>> listByCreatorId(Long id);
+
+    /**
+     * list server group based-on creator id
+     * @param id
+     * @return
+     */
+    ServiceResponse<List<HokageOptionVO>> listGroup(Long id);
+
+    /**
+     * add server group
+     * @param form
+     * @return
+     */
+    ServiceResponse<Boolean> addGroup(ServerOperateForm form);
 }
