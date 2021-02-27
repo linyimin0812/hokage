@@ -67,7 +67,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 	}
 
 	// @ts-ignore
-	hokageUid: number = window.hokageUid || 0
+	hokageUid: number = window.localStorage.getItem('hokageUid') || 0
 
 	listSubordinate = (supervisorId: number) => {
 		this.setState({loading: true})
@@ -111,6 +111,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		}).then(value => {
 			if (value) {
 				this.setState({ ...this.state, isModalVisible: false })
+				this.listSubordinate(this.hokageUid)
 			} else {
 				message.error('添加管理员失败')
 			}

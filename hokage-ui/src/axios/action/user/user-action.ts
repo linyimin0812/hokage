@@ -23,8 +23,7 @@ import { ServiceResult } from '../../common'
             UserService.login(formData).then(value => {
                 if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
-                    // @ts-ignore
-                    window.hokageUid = data.id
+                    window.localStorage.setItem('hokageUid', data.id + '')
 					return resolve(value)
                 }
                 
@@ -41,8 +40,7 @@ import { ServiceResult } from '../../common'
             UserService.logout(formData).then(value => {
                 if (value.success) {
                     Models.remove('userInfo')
-                    // @ts-ignore
-                    window.hokageUid = 0
+                    window.localStorage.removeItem('hokageUid')
                     return resolve(true)
                 }
                 return reject(value)
@@ -58,7 +56,7 @@ import { ServiceResult } from '../../common'
 				if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
                     // @ts-ignore
-                    window.hokageUid = data.id
+                    window.localStorage.setItem('hokageUid', data.id + '')
 					return resolve(value)
 				}
 				return reject(value)

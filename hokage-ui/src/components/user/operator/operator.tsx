@@ -63,7 +63,7 @@ export default class Operator extends React.Component<any, OperatorState> {
     }
 
     // @ts-ignore
-    hokageUid: number = window.hokageUid || 0
+    hokageUid: number = window.localStorage.getItem('hokageUid') || 0
 
     onFinish = (value: any) => {
         console.log(value)

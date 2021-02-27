@@ -1,7 +1,8 @@
 import { BreadcrumbPrpos } from '../../bread-crumb-custom';
-import { Tag } from 'antd';
+import { Button, Tag } from 'antd';
 import React from 'react';
 import { randomColor } from '../../../utils';
+import { Operation } from '../../../axios/action/user/user-type';
 
 /**
  * @author linyimin
@@ -54,8 +55,17 @@ export const columns = [
     },
     {
         title: '操作',
-        dataIndex: 'action',
-        key: 'action',
+        dataIndex: 'operationList',
+        key: 'operationList',
+        render: ((operationList: Operation[]) => {
+            return (
+                <span>
+                    {
+                        operationList.map((operation: Operation) => <Button type="link" href={operation.operationLink}>{operation.operationName}</Button>)
+                    }
+                </span>
+            )
+        })
     },
 ];
 
