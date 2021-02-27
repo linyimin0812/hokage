@@ -103,18 +103,24 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		alert('sync operator');
 	};
 
-	onModalOk = (value: any) => {
-		console.log(value);
-		this.setState({ ...this.state, isModalVisible: false });
-		message.loading({ content: 'Loading...', key: 'addUser' });
-		setTimeout(() => {
-			message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-		}, 2000);
+	onModalOk = (value: {userIds: number[]}) => {
+		UserAction.addSubordinate({
+			id: this.hokageUid,
+			serverIds: [],
+			userIds: (value && value.userIds) || []
+		}).then(value => {
+			if (value) {
+				this.setState({ ...this.state, isModalVisible: false })
+			} else {
+				message.error('添加管理员失败')
+			}
+		}).catch((err) => {
+			message.error(err)
+		})
 	};
 
 	onModalCancel = () => {
 		this.setState({ ...this.state, isModalVisible: false });
-		message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
 	};
 
 	render() {

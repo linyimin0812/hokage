@@ -119,5 +119,18 @@ import { ServiceResult } from '../../common'
                  return reject("获取普通用户列表. err: " + JSON.stringify(err))
              })
          })
-     }
+     },
+
+     addSubordinate: (form: UserServerOperateForm): Promise<boolean> => {
+         return new Promise<boolean>((resolve, reject) => {
+             UserService.addSubordinate(form).then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("添加用户失败. err: " + JSON.stringify(err))
+             })
+         })
+     },
  }

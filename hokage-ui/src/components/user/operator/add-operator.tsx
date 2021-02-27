@@ -38,6 +38,9 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
 
     onModalOk = (idList: number[]) => {
         this.props.onModalOk(idList)
+        if (this.formRef.current) {
+            this.formRef.current.resetFields()
+        }
         this.listUserOptions()
     }
 

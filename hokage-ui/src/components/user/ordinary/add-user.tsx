@@ -58,15 +58,16 @@ export default class AddUser extends React.Component<AddUserProps, AddSubordinat
                 title="批量添加用户"
                 visible={isModalVisible}
                 footer={null}
+                onCancel={this.props.onModalCancel}
             >
                 <Form
                     name="operator-add"
-                    onFinish={this.props.onModalOk}
+                    onFinish={this.onModalOk}
                     ref={this.formRef}
                 >
                     <Row gutter={24}>
                         <Col span={15}>
-                            <Form.Item name="usernames" initialValue={[]}>
+                            <Form.Item name="userIds" initialValue={[]}>
                                 <Select
                                     mode="multiple"
                                     style={{ width: '100%' }}
