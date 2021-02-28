@@ -11,6 +11,10 @@ export interface Option {
     value: any
 }
 
+export interface ServerGroupOption extends Option {
+    id?: number
+}
+
 export interface ServerVO {
     id: number,
     hostname: string,
@@ -18,7 +22,7 @@ export interface ServerVO {
     ip: string,
     loginType: string,
     sshPort: string,
-    serverGroup: string[],
+    serverGroupList: string[],
     description: string,
     labels: string[],
     supervisorList: string[],
@@ -33,6 +37,19 @@ export interface ServerVO {
 export interface ServerGroup {
     id?: number,
     name: string,
+    description?: string,
+    creatorId?: number,
+}
+
+export interface ServerForm {
+    id: number,
+    domain: string,
+    ip: string,
+    loginType: string,
+    sshPort: string,
+    serverGroupList: number[],
     description: string,
-    creatorId: number,
+    labels: string[],
+    supervisors: number[],
+    operatorId: number
 }

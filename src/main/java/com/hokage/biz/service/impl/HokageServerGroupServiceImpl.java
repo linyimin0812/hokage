@@ -108,13 +108,13 @@ public class HokageServerGroupServiceImpl extends HokageServiceResponse implemen
     }
 
     @Override
-    public ServiceResponse<List<HokageOptionVO>> listGroup(Long id) {
+    public ServiceResponse<List<HokageOptionVO<Long>>> listGroup(Long id) {
         List<HokageServerGroupDO> serverGroupDOList = serverGroupDao.listByCreatorId(id);
         if (CollectionUtils.isEmpty(serverGroupDOList)) {
             return success(Collections.emptyList());
         }
-        List<HokageOptionVO> optionVOList = serverGroupDOList.stream()
-                .map(serverGroupDO -> new HokageOptionVO(serverGroupDO.getName(), String.valueOf(serverGroupDO.getId())))
+        List<HokageOptionVO<Long>> optionVOList = serverGroupDOList.stream()
+                .map(serverGroupDO -> new HokageOptionVO<>(serverGroupDO.getName(), serverGroupDO.getId()))
                 .collect(Collectors.toList());
         return success(optionVOList);
     }

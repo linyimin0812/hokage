@@ -1,6 +1,7 @@
 package com.hokage.persistence.dataobject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -10,6 +11,7 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class HokageServerDO extends HokageBaseDO {
     /**
      * server id
@@ -55,5 +57,5 @@ public class HokageServerDO extends HokageBaseDO {
     /**
      * creator
      */
-    private String creator;
+    private Long creatorId;
 }

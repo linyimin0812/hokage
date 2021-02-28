@@ -15,7 +15,7 @@
         <result property="passwd" column="passwd"/>
         <result property="sshPort" column="ssh_port"/>
         <result property="label" column="label"/>
-        <result property="creator" column="creator"/>
+        <result property="creatorId" column="creator_id"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -31,7 +31,7 @@
         passwd,
         ssh_port,
         label,
-        creator
+        creator_id
     </sql>
 
     <sql id="tableNme">
@@ -67,8 +67,8 @@
             <if test="label != null ">
                 and label = #{label}
             </if>
-            <if test="creator != null ">
-                and creator = #{creator}
+            <if test="creatorId != null ">
+                and creator_id = #{creatorId}
             </if>
         </where>
     </sql>
@@ -95,7 +95,7 @@
         INSERT INTO
         <include refid="tableNme"/>
         (
-            <include refid="allColumns"/>
+        <include refid="allColumns"/>
         )
         VALUES (
             #{id},
@@ -109,9 +109,11 @@
             #{ip},
             #{passwd},
             #{sshPort},
-            #{label}
+            #{label},
+            #{creatorId}
         );
     </insert>
+
     <update id="update" parameterType="HokageServerDO">
         UPDATE
         <include refid="tableNme"/>

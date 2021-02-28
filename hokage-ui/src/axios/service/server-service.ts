@@ -25,6 +25,12 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     'listServerGroup': {
         url: '/server/group/list',
         method: 'GET'
+    },
+
+    // save server
+    'saveServer': {
+        url: '/server/add',
+        method: 'POST'
     }
 }
 

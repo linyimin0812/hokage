@@ -5,6 +5,9 @@ import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import java.util.stream.Collectors;
 
 /**
  * @author linyimin
@@ -19,6 +22,11 @@ public class ServerFormConverter implements Converter<HokageServerForm, HokageSe
     public HokageServerDO doForward(HokageServerForm hokageServerForm) {
         HokageServerDO serverDO = new HokageServerDO();
         BeanUtils.copyProperties(hokageServerForm, serverDO);
+        if (!CollectionUtils.isEmpty(hokageServerForm.getServerGroupList())) {
+            String group = hokageServerForm.getServerGroupList().stream().map(String::valueOf).collect(Collectors.joining(","));
+            serverDO.setServerGroup(group);
+        }
+        serverDO.setCreatorId(hokageServerForm.getOperatorId());
         return serverDO;
     }
 

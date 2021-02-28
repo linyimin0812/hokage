@@ -4,7 +4,7 @@
  * @email linyimin520812@gmail.com
  * @description
  */
-import { Option } from './server-type'
+import { Option, ServerForm } from './server-type'
 import { ServerService } from '../../service/server-service'
 import { ServiceResult } from '../../common'
 import { UserServerOperateForm } from '../user/user-type'
@@ -40,7 +40,6 @@ export const ServerAction = {
     listServerGroup: (id: number): Promise<Option[]> => {
         return new Promise<Option[]>(async (resolve, reject) => {
             try {
-                console.log({ id: id })
                 const result: ServiceResult<Option[]> = await ServerService.listServerGroup({ id: id })
                 if (!result.success) {
                     return reject(result.msg)
@@ -48,6 +47,20 @@ export const ServerAction = {
                 resolve(result.data)
             } catch (e) {
                 reject('获取服务器分组失败')
+            }
+        })
+    },
+
+    saveServer: (form: ServerForm): Promise<ServerForm> => {
+        return new Promise<ServerForm>(async (resolve, reject) => {
+            try {
+                const result: ServiceResult<ServerForm> = await ServerService.saveServer(form)
+                if (!result.success) {
+                    return reject(result.msg)
+                }
+                resolve(result.data)
+            } catch (e) {
+                reject('保存服务器信息失败: ' + JSON.stringify(e))
             }
         })
     }

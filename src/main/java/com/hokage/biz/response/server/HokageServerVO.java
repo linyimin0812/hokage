@@ -46,6 +46,11 @@ public class HokageServerVO {
      */
     private List<String> serverGroup;
 
+    /**
+     * server group
+     */
+    private List<String> serverGroupIdList;
+
 
     /**
      * server labels

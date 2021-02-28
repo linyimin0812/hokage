@@ -252,10 +252,10 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         // add supervisor
-        if (!CollectionUtils.isEmpty(form.getSupervisors())) {
+        if (!CollectionUtils.isEmpty(form.getSupervisorList())) {
             List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
 
-            List<Long> supervisorIds = form.getSupervisors();
+            List<Long> supervisorIds = form.getSupervisorList();
 
             List<Long> addList;
             List<Long> deleteList = new ArrayList<>();

@@ -130,7 +130,7 @@ export default class Operator extends React.Component<any, OperatorState> {
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}
-                        style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
+                        style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0 0' }}
                     >
                         <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
                             <span>

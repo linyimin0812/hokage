@@ -2,6 +2,7 @@ package com.hokage.biz.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 /**
  * @author linyimin
@@ -10,8 +11,11 @@ import lombok.Data;
  * @description hokage option
  */
 @Data
+@Accessors(chain = true)
 @AllArgsConstructor
-public class HokageOptionVO {
+public class HokageOptionVO<T> {
     private String label;
-    private String value;
+    private T value;
+
+    public HokageOptionVO() {}
 }

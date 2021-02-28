@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server` (
   `server_group` varchar(128) NULL COMMENT '服务器分组',
   `label`  varchar(32) NULL COMMENT '服务器类型, 0-内网、1-外网、3-X86、4-GPU',
   `description` varchar(1024) NULL COMMENT '服务器描述',
+  `creator_id` bigint NOT NULL COMMENT '创建人id',
   PRIMARY KEY (`id`)
 )
   COMMENT = '服务器信息表';

@@ -1,6 +1,5 @@
 package com.hokage.biz.controller;
 
-import com.google.common.collect.Lists;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
@@ -13,6 +12,7 @@ import com.hokage.common.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -123,13 +123,13 @@ public class ServerController extends BaseController {
     }
 
     @RequestMapping(value = "/server/label/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageOptionVO>> listServerLabel() {
-        List<HokageOptionVO> optionVOList = Lists.newArrayList(
-                new HokageOptionVO("请选择", ""),
-                new HokageOptionVO("普通服务器", "X86"),
-                new HokageOptionVO("GPU服务器", "GPU"),
-                new HokageOptionVO("内网服务器", "internal"),
-                new HokageOptionVO("外网服务器", "external")
+    public ResultVO<List<HokageOptionVO<String>>> listServerLabel() {
+        List<HokageOptionVO<String>> optionVOList = Arrays.asList(
+                new HokageOptionVO<>("请选择", ""),
+                new HokageOptionVO<>("普通服务器", "X86"),
+                new HokageOptionVO<>("GPU服务器", "GPU"),
+                new HokageOptionVO<>("内网服务器", "internal"),
+                new HokageOptionVO<>("外网服务器", "external")
         );
 
         return success(optionVOList);

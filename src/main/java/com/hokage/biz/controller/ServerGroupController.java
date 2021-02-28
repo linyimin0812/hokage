@@ -28,8 +28,8 @@ public class ServerGroupController extends BaseController {
     }
 
     @RequestMapping(value = "/server/group/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageOptionVO>> listServerGroup(@RequestParam Long id) {
-        ServiceResponse<List<HokageOptionVO>> optionListResult = serverGroupService.listGroup(id);
+    public ResultVO<List<HokageOptionVO<Long>>> listServerGroup(@RequestParam Long id) {
+        ServiceResponse<List<HokageOptionVO<Long>>> optionListResult = serverGroupService.listGroup(id);
         if (optionListResult.getSucceeded()) {
             return success(optionListResult.getData());
         }
@@ -38,13 +38,17 @@ public class ServerGroupController extends BaseController {
     }
 
     @RequestMapping(value = "/server/group/add", method = RequestMethod.POST)
-    public ResultVO<Boolean> addServerGroup(@RequestBody ServerOperateForm form) {
-        ServiceResponse<Boolean> optionListResult = serverGroupService.addGroup(form);
+    public ResultVO<List<HokageOptionVO<Long>>> addServerGroup(@RequestBody ServerOperateForm form) {
         Preconditions.checkNotNull(form.getId(), "operator id can't be null");
-        if (optionListResult.getSucceeded()) {
-            return success(optionListResult.getData());
+        ServiceResponse<Boolean> saveResult = serverGroupService.addGroup(form);
+        if (saveResult.getSucceeded()) {
+            ServiceResponse<List<HokageOptionVO<Long>>> optionListResult = serverGroupService.listGroup(form.getId());
+            if (optionListResult.getSucceeded()) {
+                return success(optionListResult.getData());
+            }
+            return fail(optionListResult.getCode(), optionListResult.getMsg());
         }
 
-        return fail(optionListResult.getCode(), optionListResult.getMsg());
+        return fail(saveResult.getCode(), saveResult.getMsg());
     }
 }
