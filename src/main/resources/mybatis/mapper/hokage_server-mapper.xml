@@ -80,8 +80,8 @@
         <if test="domain != null">
             and domain=#{domain}
         </if>
-        <if test="ipAddress != null">
-            and ip=#{ipAddress}
+        <if test="ip != null">
+            and ip=#{ip}
         </if>
         <if test="label != null">
             and label = #{label}

@@ -26,7 +26,7 @@ public class ServerQuery extends PageQuery {
     /**
      * ip address
      */
-    private String ipAddress;
+    private String ip;
 
     /**
      * server label

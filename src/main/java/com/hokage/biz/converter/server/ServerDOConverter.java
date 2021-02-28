@@ -11,9 +11,11 @@ import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -150,7 +152,18 @@ public class ServerDOConverter {
 
         // server information
         BeanUtils.copyProperties(serverDO, serverVO);
-        serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
+
+        if (StringUtils.isNoneBlank(serverDO.getLabel())) {
+            serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
+        } else {
+            serverVO.setLabels(Collections.emptyList());
+        }
+
+        if (StringUtils.isNoneBlank(serverDO.getServerGroup())) {
+            serverVO.setServerGroupList(Arrays.asList(serverDO.getServerGroup().split(",")));
+        } else {
+            serverVO.setServerGroupList(Collections.emptyList());
+        }
 
         // TODO: retrieve server status from ssh
 

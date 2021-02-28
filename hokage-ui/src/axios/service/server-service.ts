@@ -31,6 +31,12 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     'saveServer': {
         url: '/server/add',
         method: 'POST'
+    },
+
+    // list server
+    'searchServer': {
+        url: '/server/search',
+        method: 'POST'
     }
 }
 

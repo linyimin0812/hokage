@@ -4,7 +4,7 @@
  * @email linyimin520812@gmail.com
  * @description
  */
-import { Option, ServerForm } from './server-type'
+import { Option, ServerForm, ServerSearchForm, ServerVO } from './server-type'
 import { ServerService } from '../../service/server-service'
 import { ServiceResult } from '../../common'
 import { UserServerOperateForm } from '../user/user-type'
@@ -61,6 +61,20 @@ export const ServerAction = {
                 resolve(result.data)
             } catch (e) {
                 reject('保存服务器信息失败: ' + JSON.stringify(e))
+            }
+        })
+    },
+
+    searchServer: (form: ServerSearchForm): Promise<ServerVO[]> => {
+        return new Promise<ServerVO[]>(async (resolve, reject) => {
+            try {
+                const result: ServiceResult<ServerVO[]> = await ServerService.searchServer(form)
+                if (!result.success) {
+                    return reject(result.msg)
+                }
+                resolve(result.data)
+            } catch (e) {
+                reject('搜索服务器信息失败: ' + JSON.stringify(e))
             }
         })
     }

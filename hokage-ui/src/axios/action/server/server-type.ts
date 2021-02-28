@@ -53,3 +53,17 @@ export interface ServerForm {
     supervisors: number[],
     operatorId: number
 }
+
+export interface ServerSearchForm {
+    operatorId: number,
+    hostname?: string,
+    domain?: string,
+    ip?: string,
+    supervisorName?: string,
+    label?: string,
+    serverGroup?: string,
+    status?: string,
+    account?: string,
+    accountStatus?: string,
+    username?: string
+}

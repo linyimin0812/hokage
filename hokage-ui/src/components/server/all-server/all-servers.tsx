@@ -5,13 +5,14 @@ import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@
 import Search from './search'
 import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
-import { ServerForm, ServerVO } from '../../../axios/action/server/server-type'
-import { ServerAction } from '../../../axios/action/server/server-action';
+import { ServerForm, ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
 
 type AllServerState = {
     selectedRowKeys: ReactText[],
     isModalVisible: boolean,
-    dataSource: ServerVO[]
+    dataSource: ServerVO[],
+    loading: boolean
 }
 
 const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
@@ -21,7 +22,22 @@ export default class AllServer extends React.Component<{}, AllServerState> {
     state: AllServerState = {
         selectedRowKeys: [],
         isModalVisible: false,
-        dataSource: []
+        dataSource: [],
+        loading: false
+    }
+
+    componentDidMount() {
+        this.listServer()
+    }
+
+    listServer = () => {
+        this.setState({loading: true})
+        const form: ServerSearchForm = {
+            operatorId: hokageUid
+        }
+        ServerAction.searchServer(form).then(result => {
+            this.setState({dataSource: result})
+        }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
     }
 
     onFinish = (value: any) => {
@@ -51,8 +67,9 @@ export default class AllServer extends React.Component<{}, AllServerState> {
 
     onModalOk = (value: ServerForm) => {
         value.operatorId = hokageUid
-        ServerAction.saveServer(value).then(result => {
-            message.success('服务器已添加')
+        ServerAction.saveServer(value).then(() => {
+            this.setState({ isModalVisible: false })
+            this.listServer()
         }).catch(e => message.error(e))
     }
 
@@ -62,7 +79,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
     }
 
     render() {
-        const { selectedRowKeys, isModalVisible, dataSource } = this.state
+        const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange
@@ -110,6 +127,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
                         rowSelection={rowSelection}
                         columns={columns}
                         dataSource={dataSource}
+                        loading={loading}
                     />
                 </div>
             </div>

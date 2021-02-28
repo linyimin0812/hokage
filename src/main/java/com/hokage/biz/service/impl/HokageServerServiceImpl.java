@@ -52,6 +52,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
+
     private HokageServerGroupService serverGroupService;
 
     @Autowired
@@ -173,9 +174,9 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
 
-        Long operateId = form.getOperateId();
+        Long operatorId = form.getOperatorId();
         // retrieve operate role
-        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operateId);
+        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
 
         if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
             return response.fail(roleResponse.getCode(), roleResponse.getMsg());

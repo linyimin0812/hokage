@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @description
  */
 @Service
-public class HokageUserServiceImpl implements HokageUserService {
+public class HokageUserServiceImpl extends HokageServiceResponse implements HokageUserService {
 
     private HokageUserDao userDao;
     private BCryptPasswordEncoder passwordEncoder;
@@ -81,12 +81,10 @@ public class HokageUserServiceImpl implements HokageUserService {
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<HokageUserDO> register(HokageUserDO hokageUserDO) {
 
-        ServiceResponse<HokageUserDO> res = new ServiceResponse<>();
-
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.nonNull(userDO)) {
-            return res.fail(ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
+            return fail(ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getCode(), ResultCodeEnum.USERNAME_DUPLICATE_ERROR.getMsg());
         }
         // 2. encrypt the password
         hokageUserDO.setPasswd(passwordEncoder.encode(hokageUserDO.getPasswd()));
@@ -99,53 +97,44 @@ public class HokageUserServiceImpl implements HokageUserService {
         if (sequence.getSucceeded()) {
             hokageUserDO.setId(sequence.getData());
         } else {
-            return res.fail(sequence.getCode(), sequence.getMsg());
+            return fail(sequence.getCode(), sequence.getMsg());
         }
 
         Long result = userDao.insert(hokageUserDO);
         if (result > 0) {
-            return res.success(hokageUserDO);
+            return success(hokageUserDO);
         }
-        return res.fail(ResultCodeEnum.USER_REGISTER_FAIL.getCode(), ResultCodeEnum.USER_REGISTER_FAIL.getMsg());
+        return fail(ResultCodeEnum.USER_REGISTER_FAIL.getCode(), ResultCodeEnum.USER_REGISTER_FAIL.getMsg());
     }
 
     @Override
     public ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO) {
 
-        ServiceResponse<HokageUserDO> res = new ServiceResponse<>();
-
-        res.fail(ResultCodeEnum.USER_PASSWD_ERROR.getCode(), ResultCodeEnum.USER_PASSWD_ERROR.getMsg());
-
         // 1. determine whether the mail already exists
         HokageUserDO userDO = userDao.getUserByEmail(hokageUserDO.getEmail());
         if (Objects.isNull(userDO)) {
-            return res;
+            return fail(ResultCodeEnum.USER_PASSWD_ERROR.getCode(), ResultCodeEnum.USER_PASSWD_ERROR.getMsg());
         }
 
         // 2. verify password
         boolean isMatch = passwordEncoder.matches(hokageUserDO.getPasswd(), userDO.getPasswd());
 
-        return isMatch ? res.success(userDO) : res;
+        return isMatch ? success(userDO) : fail(ResultCodeEnum.USER_PASSWD_ERROR.getCode(), ResultCodeEnum.USER_PASSWD_ERROR.getMsg());
     }
 
     @Override
     public ServiceResponse<List<HokageUserVO>> listSupervisors() {
 
-        ServiceResponse<List<HokageUserVO>> res = new ServiceResponse<>();
-
         List<HokageUserDO> users = userDao.listUserByRole(UserRoleEnum.supervisor.getValue());
 
         List<HokageUserVO> userVOList = users.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
 
-        res.success(userVOList);
+        return success(userVOList);
 
-        return res;
     }
 
     @Override
     public ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form) {
-
-        ServiceResponse<List<HokageUserVO>> res = new ServiceResponse<>();
 
         List<HokageUserDO>  supervisorList;
         if (Objects.nonNull(form.getId()) && form.getId() > 0) {
@@ -167,16 +156,15 @@ public class HokageUserServiceImpl implements HokageUserService {
         }
 
         List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
-        res.success(userVOList);
 
-        return res;
+        return success(userVOList);
+
     }
 
     @Override
     public ServiceResponse<Boolean> addSupervisor(List<Long> ids) {
         checkNotNull(ids, "supervisor ids can't be null");
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = ids.stream().allMatch(id -> {
             HokageUserDO userDO = new HokageUserDO();
             userDO.setId(id);
@@ -184,16 +172,15 @@ public class HokageUserServiceImpl implements HokageUserService {
             return userDao.update(userDO) > 0;
         });
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+        return fail("A-XXX", "HokageUserDO addSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> deleteSupervisor(List<Long> ids) {
         checkNotNull(ids, "supervisor ids can't be null");
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = ids.stream().allMatch(id -> {
             HokageUserDO userDO = new HokageUserDO();
             userDO.setId(id);
@@ -206,21 +193,20 @@ public class HokageUserServiceImpl implements HokageUserService {
             return supervisorServerDao.removeBySupervisorId(id) > 0;
         });
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO deleteSupervisor error");
+        return fail("A-XXX", "HokageUserDO deleteSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> recycleSupervisor(Long id) {
         checkNotNull(id, "supervisor ids can't be null");
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = supervisorServerDao.removeBySupervisorId(id) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
     @Override
@@ -228,12 +214,11 @@ public class HokageUserServiceImpl implements HokageUserService {
         checkNotNull(id, "supervisor id can't be null");
         checkNotNull(id, "serverIds can't be null");
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = supervisorServerDao.removeBySupervisorId(id, serverIds) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
     @Override
@@ -241,21 +226,19 @@ public class HokageUserServiceImpl implements HokageUserService {
         checkNotNull(id, "supervisor id can't be null");
         checkNotNull(id, "serverIds can't be null");
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = supervisorServerDao.addBySupervisorId(id, serverIds) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO grantSupervisor error");
+        return fail("A-XXX", "HokageUserDO grantSupervisor error");
     }
 
     @Override
     public ServiceResponse<List<HokageUserVO>> listOrdinaryUsers(Long supervisorId) {
-        ServiceResponse<List<HokageUserVO>> response = new ServiceResponse<>();
         HokageUserDO userDO = userDao.getUserById(supervisorId);
 
         if (Objects.isNull(userDO)) {
-            return response.success(Collections.emptyList());
+            return success(Collections.emptyList());
         }
 
         List<HokageUserDO> userDOList;
@@ -269,26 +252,24 @@ public class HokageUserServiceImpl implements HokageUserService {
             userDOList = userDao.listUserByIds(userIdList);
         }
         List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
-        response.success(userVOList);
 
-        return response;
+        return success(userVOList);
+
     }
 
     @Override
     public ServiceResponse<List<HokageUserVO>> listAllOrdinateUsers() {
-        ServiceResponse<List<HokageUserVO>> response = new ServiceResponse<>();
 
         List<HokageUserDO> userDOList = userDao.listUserByRole(UserRoleEnum.subordinate.getValue());
         if (CollectionUtils.isEmpty(userDOList)) {
-            response.success(Collections.emptyList());
 
-            return response;
+            return success(Collections.emptyList());
+
         }
 
         List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
-        response.success(userVOList);
 
-        return response;
+        return success(userVOList);
     }
 
     /**
@@ -298,7 +279,6 @@ public class HokageUserServiceImpl implements HokageUserService {
      */
     @Override
     public ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form) {
-        ServiceResponse<List<HokageUserVO>> res = new ServiceResponse<>();
 
         List<HokageUserDO>  supervisorList;
         if (Objects.nonNull(form.getId()) && form.getId() > 0) {
@@ -320,15 +300,13 @@ public class HokageUserServiceImpl implements HokageUserService {
         }
 
         List<HokageUserVO> userVOList = supervisorList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
-        res.success(userVOList);
 
-        return res;
+        return success(userVOList);
+
     }
 
     @Override
     public ServiceResponse<Boolean> addSubordinate(Long supervisorId, List<Long> ids) {
-
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
 
         List<HokageSupervisorSubordinateDO> subordinateDOList = supervisorSubordinateDao.listSubordinate(supervisorId, ids);
 
@@ -353,80 +331,81 @@ public class HokageUserServiceImpl implements HokageUserService {
 
         Long result = supervisorSubordinateDao.insertBatch(supervisorSubordinateDOList);
         if (result > 0) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+        return fail("A-XXX", "HokageUserDO addSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> deleteSubordinate(Long supervisorId, List<Long> ids) {
 
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
-
         Long result = supervisorSubordinateDao.deleteSubordinate(supervisorId, ids);
         if (result > 0) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO addSupervisor error");
+        return fail("A-XXX", "HokageUserDO addSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> grantSubordinate(Long id, List<Long> serverIds) {
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
         boolean isSucceed = subordinateServerDao.addBySubordinateId(id, serverIds) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO grantSupervisor error");
+        return fail("A-XXX", "HokageUserDO grantSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> recycleSubordinate(Long id) {
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
+
         boolean isSucceed = subordinateServerDao.removeBySubordinateId(id) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
     @Override
     public ServiceResponse<Boolean> recycleSubordinate(Long id, List<Long> serverIds) {
-        ServiceResponse<Boolean> res = new ServiceResponse<>();
+
         boolean isSucceed = subordinateServerDao.removeBySubordinateId(id, serverIds) > 0;
         if (isSucceed) {
-            return res.success(Boolean.TRUE);
+            return success(Boolean.TRUE);
         }
-        return res.fail("A-XXX", "HokageUserDO recycleSupervisor error");
+        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
     }
 
     @Override
     public ServiceResponse<Integer> getRoleByUserId(Long id) {
-        return null;
+        HokageUserDO userDO = userDao.getUserById(id);
+        if (Objects.isNull(userDO)) {
+            return fail(ResultCodeEnum.NO_SUCH_USER.getCode(), ResultCodeEnum.NO_SUCH_USER.getMsg());
+        }
+        return success(userDO.getRole());
     }
 
     @Override
     public ServiceResponse<Boolean> isSuperOperator(Long id) {
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
         ServiceResponse<Integer> roleResponse = this.getRoleByUserId(id);
 
         if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
-            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+            return fail(roleResponse.getCode(), roleResponse.getMsg());
         }
 
-        return response.success(UserRoleEnum.super_operator.getValue().equals(roleResponse.getData()));
+        return success(UserRoleEnum.super_operator.getValue().equals(roleResponse.getData()));
     }
 
     @Override
     public ServiceResponse<Boolean> isSupervisor(Long id) {
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
         ServiceResponse<Integer> roleResponse = this.getRoleByUserId(id);
 
         if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
-            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
+            return fail(roleResponse.getCode(), roleResponse.getMsg());
         }
 
-        return response.success(UserRoleEnum.supervisor.getValue().equals(roleResponse.getData()));
+        return success(UserRoleEnum.supervisor.getValue().equals(roleResponse.getData()));
     }
 
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {

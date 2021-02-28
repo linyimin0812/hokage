@@ -23,6 +23,8 @@ public enum ResultCodeEnum {
 
     USER_NO_PERMISSION("A-006", "require permission"),
 
+    NO_SUCH_USER("A-007", "no such user"),
+
     /**
      * server error code
      */

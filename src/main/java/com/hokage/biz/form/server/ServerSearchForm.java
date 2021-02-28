@@ -15,7 +15,7 @@ public class ServerSearchForm extends PageQuery {
     /**
      * operator id
      */
-    private Long operateId;
+    private Long operatorId;
     /**
      * host name
      */
@@ -29,7 +29,7 @@ public class ServerSearchForm extends PageQuery {
     /**
      * ip address
      */
-    private String ipAddress;
+    private String ip;
 
     /**
      * supervisor name
@@ -48,7 +48,7 @@ public class ServerSearchForm extends PageQuery {
     /**
      * server status
      */
-    private String serverStatus;
+    private String status;
 
     /**
      * server ssh account

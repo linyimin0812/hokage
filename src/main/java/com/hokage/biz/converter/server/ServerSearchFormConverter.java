@@ -17,21 +17,21 @@ public class ServerSearchFormConverter {
         AllServerQuery query = new AllServerQuery();
         BeanUtils.copyProperties(form, query);
         query.setSupervisor(form.getSupervisorName());
-        query.setStatus(form.getServerStatus());
+        query.setStatus(form.getStatus());
         return query;
     }
 
     public static SupervisorServerQuery converterToSupervisor(ServerSearchForm form) {
         SupervisorServerQuery query = new SupervisorServerQuery();
         BeanUtils.copyProperties(form, query);
-        query.setStatus(form.getServerStatus());
+        query.setStatus(form.getStatus());
         return query;
     }
 
     public static SubordinateServerQuery converterToSubordinate(ServerSearchForm form) {
         SubordinateServerQuery query =  new SubordinateServerQuery();
         query.setLoginStatus(form.getAccountStatus());
-        query.setStatus(form.getServerStatus());
+        query.setStatus(form.getStatus());
         return query;
     }
 
