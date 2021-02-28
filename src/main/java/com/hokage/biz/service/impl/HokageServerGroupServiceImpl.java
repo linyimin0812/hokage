@@ -122,7 +122,6 @@ public class HokageServerGroupServiceImpl extends HokageServiceResponse implemen
     @Override
     public ServiceResponse<Boolean> addGroup(ServerOperateForm form) {
         Long operatorId = checkNotNull(form.getId(), "operator id can't be null");
-        ServiceResponse<Boolean> serviceResponse = new ServiceResponse<>();
 
         ServerGroup serverGroup = form.getServerGroup();
 
