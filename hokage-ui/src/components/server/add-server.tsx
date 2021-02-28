@@ -65,6 +65,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
         ServerAction.addServerLabel(form).then(result => {
             if (result) {
                 message.success(`已添加'${value.name}'分组`)
+                this.setState({serverGroupOptions: result})
             }
         }).catch(err => message.error(err))
             .finally(() => {
@@ -72,9 +73,6 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
                     isAddGroup: false,
                 })
             })
-
-        // 重新加载分组
-        this.listServerGroupOptions()
 
     }
 
@@ -240,12 +238,8 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
                                 添加
                             </Button>
                             <Button
-                                style={{
-                                    margin: '0 8px',
-                                }}
-                                onClick={() => {
-                                    this.props.onModalCancel();
-                                }}
+                                style={{ margin: '0 8px' }}
+                                onClick={() => this.props.onModalCancel()}
                             >
                                 取消
                             </Button>

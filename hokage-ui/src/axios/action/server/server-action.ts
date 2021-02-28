@@ -24,14 +24,14 @@ export const ServerAction = {
         })
     },
 
-    addServerLabel: (form: UserServerOperateForm): Promise<boolean> => {
-        return new Promise<boolean>(async (resolve, reject) => {
+    addServerLabel: (form: UserServerOperateForm): Promise<Option[]> => {
+        return new Promise<Option[]>(async (resolve, reject) => {
             try {
-                const result: ServiceResult<boolean> = await ServerService.addServerLabel(form)
+                const result: ServiceResult<Option[]> = await ServerService.addServerLabel(form)
                 if (!result.success) {
                     return reject(result.msg)
                 }
-                resolve(result.data || false)
+                resolve(result.data || [])
             } catch (e) {
                 reject('保存服务器分组失败')
             }
