@@ -4,7 +4,7 @@ import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
-import OperatorApplyServer from '../operator-apply-server'
+import ApplyServer from '../operator-apply-server'
 import { breadcrumbProps, columns, nestedColumns } from './column-definition'
 
 interface NestedTableDataSource {
@@ -178,7 +178,7 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
                                             <Button icon={<PlusOutlined translate="true" />} onClick={this.add} >
                                                 申请
                                             </Button>
-                                            <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                            <ApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
                                             <span style={{ paddingLeft: '64px' }} >
                                                 <SyncOutlined translate="true" onClick={this.sync} />
                                             </span>
