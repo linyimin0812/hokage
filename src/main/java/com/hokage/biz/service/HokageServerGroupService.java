@@ -53,7 +53,7 @@ public interface HokageServerGroupService {
      * @param id
      * @return
      */
-    ServiceResponse<List<HokageOptionVO<Long>>> listGroup(Long id);
+    ServiceResponse<List<HokageOptionVO<String>>> listGroup(Long id);
 
     /**
      * add server group

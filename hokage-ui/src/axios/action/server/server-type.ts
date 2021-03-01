@@ -47,7 +47,7 @@ export interface ServerForm {
     ip: string,
     loginType: string,
     sshPort: string,
-    serverGroupList: number[],
+    serverGroupList: string[],
     description: string,
     labels: string[],
     supervisors: number[],

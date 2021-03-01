@@ -42,7 +42,7 @@ public class HokageServerForm {
     /**
      * server group
      */
-    private List<Long> serverGroupList;
+    private List<String> serverGroupList;
 
     /**
      * server label: internal, external, X86, GPU

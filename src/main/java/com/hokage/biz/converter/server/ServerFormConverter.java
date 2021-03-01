@@ -23,7 +23,7 @@ public class ServerFormConverter implements Converter<HokageServerForm, HokageSe
         HokageServerDO serverDO = new HokageServerDO();
         BeanUtils.copyProperties(hokageServerForm, serverDO);
         if (!CollectionUtils.isEmpty(hokageServerForm.getServerGroupList())) {
-            String group = hokageServerForm.getServerGroupList().stream().map(String::valueOf).collect(Collectors.joining(","));
+            String group = String.join(",", hokageServerForm.getServerGroupList());
             serverDO.setServerGroup(group);
         }
         serverDO.setCreatorId(hokageServerForm.getOperatorId());
