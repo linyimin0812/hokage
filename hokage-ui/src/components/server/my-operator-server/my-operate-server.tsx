@@ -4,7 +4,7 @@ import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
-import ApplyServer from '../operator-apply-server'
+import ApplyServer from '../apply-server'
 import { breadcrumbProps, columns, nestedColumns } from './column-definition'
 
 interface NestedTableDataSource {
