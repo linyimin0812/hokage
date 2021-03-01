@@ -1,136 +1,11 @@
 import React, { ReactText } from 'react'
-import { Tag, message, Table, Row, Col, Button, Result, Divider } from 'antd'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { message, Table, Row, Col, Button, Result, Divider } from 'antd'
+import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
 import OperatorApplyServer from '../operator-apply-server'
-
-// 嵌套表 
-const nestedColumns = [
-    {
-        title: 'id',
-        dataIndex: 'id',
-        key: 'id'
-    },
-    {
-        title: '姓名',
-        dataIndex: 'name',
-        key: 'name'
-    },
-    {
-        title: '用户名', // 服务器登录用户名
-        dataIndex: 'loginName',
-        key: 'loginName'
-    },
-    {
-        title: '申请时间',
-        dataIndex: 'applyTime',
-        key: 'applyTime'
-    },
-    {
-        title: '最近登录时间',
-        dataIndex: 'lastLoginTime',
-        key: 'lastLoginTime'
-    },
-    {
-        title: '操作',
-        dataIndex: 'action',
-        key: 'action'
-    }
-]
-
-const columns = [
-    {
-        title: '主机名',
-        dataIndex: 'hostname',
-        key: 'hostname'
-    },
-    {
-        title: '域名',
-        dataIndex: 'domain',
-        key: 'domain'
-    },
-    {
-        title: 'ip地址',
-        dataIndex: 'ipAddress',
-        key: 'ipAddress'
-    },
-    {
-        title: '标签',
-        dataIndex: 'serverTags',
-        key: 'serverTags',
-        render: (serverTags: any, _: any, __: any) => {
-            return (
-                <span>
-          {
-              serverTags.map((tag: any) => {
-                  let color = ''
-                  let name = ''
-                  switch (tag) {
-                      case 'ordinaryServer':
-                          color = 'magenta'
-                          name = 'X86'
-                          break
-                      case 'gpuServer':
-                          color = 'red'
-                          name = 'GPU'
-                          break
-                      case 'intranetServer':
-                          color = 'green'
-                          name = '内网'
-                          break
-                      case 'publicNetworkServer':
-                          color = 'purple'
-                          name = '公网'
-                          break
-                      default:
-                          color = '#f50'
-                          name = '未知'
-                  }
-                  return (
-                      <Tag color={color} key={tag}>
-                          {name}
-                      </Tag>
-                  );
-              })
-          }
-        </span>)
-        }
-    },
-    {
-        title: '使用人数',
-        dataIndex: 'numOfUser',
-        key: 'numOfUser'
-    },
-    {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-        render: (text: string, _: any, __: any) => {
-            let color: string = ''
-            switch (text) {
-                case '在线':
-                    color = 'green'
-                    break;
-                case '掉线':
-                    color = 'red'
-                    break
-                default:
-                    color = 'red'
-                    break
-            }
-            return (
-                <Tag color={color}> {text} </Tag>
-            )
-        }
-    },
-    {
-        title: '操作',
-        dataIndex: 'action',
-        key: 'action'
-    }
-]
+import { breadcrumbProps, columns, nestedColumns } from './column-definition'
 
 interface NestedTableDataSource {
     key: string,
@@ -149,20 +24,7 @@ type AllServerState = {
     isModalVisible: boolean
 }
 
-const breadcrumProps: BreadcrumbPrpos[] = [
-    {
-        name: '首页',
-        link: '/app/index'
-    },
-    {
-        name: '我的服务器'
-    },
-    {
-        name: '我管理的服务器'
-    }
-]
-
-export default class MyOperateServer extends React.Component {
+export default class MyOperateServer extends React.Component<{}, AllServerState> {
 
     state: AllServerState = {
         expandable: {
@@ -271,9 +133,9 @@ export default class MyOperateServer extends React.Component {
 
         return (
             <div>
-                <BreadcrumbCustom breadcrumProps={breadcrumProps} />
+                <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
                 {
-                    (data === undefined || data.length === 0)
+                    (data.length === 0)
                         ?
                         <Result
                             title="你还没有可管理的服务器哦,请点击申请按钮进行申请"
@@ -289,44 +151,37 @@ export default class MyOperateServer extends React.Component {
                             <div style={{ backgroundColor: '#FFFFFF' }}>
                                 <Row
                                     gutter={24}
-                                    style={{ backgroundColor: '#e6f7ff', border: '#91d5ff' }}
+                                    style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0 0' }}
                                 >
                                     <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
                                         <span>
-                                        <InfoCircleOutlined
-                                            translate="true"
-                                            style={{ color: "#1890ff" }}
-                                        />
-                                        已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
+                                            <InfoCircleOutlined
+                                                translate="true"
+                                                style={{ color: "#1890ff" }}
+                                            />
+                                            已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
                                         </span>
                                     </Col>
                                     <Col span={12} >
                                         <span style={{ float: 'right' }}>
-                                        {
-                                            selectedRowKeys.length > 0 ? ([
-                                                <Button
-                                                    icon={<MinusOutlined translate="true" />}
-                                                    onClick={this.delete}
-                                                >
-                                                    批量删除
-                                                </Button>,
-                                                <Divider type="vertical" />
-                                            ]) : (
-                                                null
-                                            )
-                                        }
-                                            <Button
-                                                icon={<PlusOutlined translate="true" />}
-                                                onClick={this.add}
-                                            >
-                                            申请
-                                        </Button>
-                                        <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-                                        <span style={{ paddingLeft: '64px' }} >
-                                            <SyncOutlined
-                                                translate="true" onClick={this.sync}
-                                            />
-                                        </span>
+                                            {
+                                                selectedRowKeys.length > 0 ? ([
+                                                    <Button
+                                                        icon={<MinusOutlined translate="true" />}
+                                                        onClick={this.delete}
+                                                    >
+                                                        批量删除
+                                                    </Button>,
+                                                    <Divider type="vertical" />
+                                                ]) : null
+                                            }
+                                            <Button icon={<PlusOutlined translate="true" />} onClick={this.add} >
+                                                申请
+                                            </Button>
+                                            <OperatorApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                            <span style={{ paddingLeft: '64px' }} >
+                                                <SyncOutlined translate="true" onClick={this.sync} />
+                                            </span>
                                         </span>
                                     </Col>
                                 </Row>
