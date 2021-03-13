@@ -6,22 +6,29 @@ import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
 import ApplyServer from '../apply-server'
 import { breadcrumbProps, columns, nestedColumns } from './column-definition'
+import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
+import { ServerAction } from '../../../axios/action/server/server-action';
+import { Operation } from '../../../axios/action/user/user-type';
+
+const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
 interface NestedTableDataSource {
     key: string,
     id: string,
-    name: string,
-    loginName: string,
+    username: string,
+    account: string,
     applyTime: string,
     lastLoginTime: string,
-    action: string
+    operationList: Operation[]
 }
 
 type AllServerState = {
     expandable: TableExtendable,
     nestedTableDataSource: NestedTableDataSource[],
     selectedRowKeys: ReactText[],
-    isModalVisible: boolean
+    isModalVisible: boolean,
+    dataSource: ServerVO[],
+    loading: boolean
 }
 
 export default class MyOperateServer extends React.Component<{}, AllServerState> {
@@ -37,19 +44,6 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
                     // TODO: 这里替换成接口,请求真实的数据
                     const expandedRowKeys: string[] = [record.key]
                     const datasources: NestedTableDataSource[] = []
-                    // const colors = ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"]
-                    for (let i = 0; i < 3; i++) {
-                        const data: NestedTableDataSource = {
-                            key: record.key + '_' + i,
-                            id: i.toString(),
-                            name: 'banzhe',
-                            loginName: 'banzhe',
-                            applyTime: new Date().toISOString(),
-                            lastLoginTime: new Date().toISOString(),
-                            action: '查看 | 删除'
-                        }
-                        datasources.push(data)
-                    }
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = expandedRowKeys
 
@@ -64,7 +58,27 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
         },
         nestedTableDataSource: [],
         selectedRowKeys: [],
-        isModalVisible: false
+        isModalVisible: false,
+        dataSource: [],
+        loading: false
+    }
+
+    componentDidMount() {
+        this.listServer()
+    }
+
+    listServer = () => {
+        this.setState({loading: true})
+        const form: ServerSearchForm = {
+            operatorId: hokageUid
+        }
+        ServerAction.searchServer(form).then(result => {
+            result = (result || []).map(serverVO => {
+                serverVO.key = serverVO.id + ''
+                return serverVO
+            })
+            this.setState({dataSource: result})
+        }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
     }
 
     onFinish = (value: any) => {
@@ -78,10 +92,6 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
     onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
         this.setState({ selectedRowKeys })
         // TODO: 从selectRows中获取选择的目标数据,然后进行相关操作
-    }
-
-    add = () => {
-        this.setState({ ...this.state, isModalVisible: true })
     }
 
     delete = () => {
@@ -111,21 +121,7 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
     }
 
     render() {
-        const data: any = []
-        for (let i = 0; i < 5; i++) {
-            const value = {
-                key: i + 1,
-                hostname: 'master_' + i + ".pcncad.club",
-                domain: 'name_' + i + ".pcncad.club",
-                ipAddress: `10.108.211.${i+1}`,
-                serverTags: ['ordinaryServer', 'gpuServer', "intranetServer", "publicNetworkServer"],
-                numOfUser: i + 1,
-                status: "在线",
-                action: '添加用户 | 删除服务器 | 服务器信息'
-            }
-            data.push(value)
-        }
-        const { selectedRowKeys, isModalVisible } = this.state
+        const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -134,66 +130,48 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
         return (
             <div>
                 <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
-                {
-                    (data.length === 0)
-                        ?
-                        <Result
-                            title="你还没有可管理的服务器哦,请点击申请按钮进行申请"
-                            extra={
-                                <Button type="primary" onClick={this.applyServer}>
-                                    申请
-                                </Button>
-                            }
+                <>
+                    <Search onFinish={this.onFinish} clear={this.resetFields} />
+                    <div style={{ backgroundColor: '#FFFFFF' }}>
+                        <Row
+                            gutter={24}
+                            style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0 0' }}
+                        >
+                            <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
+                                <span>
+                                    <InfoCircleOutlined translate="true" style={{ color: "#1890ff" }} />
+                                    已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
+                                </span>
+                            </Col>
+                            <Col span={12} >
+                                <span style={{ float: 'right' }}>
+                                    {
+                                        selectedRowKeys.length > 0 ? ([
+                                            <Button icon={<MinusOutlined translate="true" />} onClick={this.delete}>
+                                                批量删除
+                                            </Button>,
+                                            <Divider type="vertical" />
+                                        ]) : null
+                                    }
+                                    <Button icon={<PlusOutlined translate="true" />} onClick={() => this.setState({ ...this.state, isModalVisible: true })} >
+                                        申请
+                                    </Button>
+                                    <ApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                    <span style={{ paddingLeft: '64px' }} >
+                                        <SyncOutlined translate="true" onClick={this.sync} />
+                                    </span>
+                                </span>
+                            </Col>
+                        </Row>
+                        <Table
+                            rowSelection={rowSelection}
+                            columns={columns}
+                            dataSource={dataSource}
+                            expandable={this.state.expandable}
+                            loading={loading}
                         />
-                        :
-                        <>
-                            <Search onFinish={this.onFinish} clear={this.resetFields} />
-                            <div style={{ backgroundColor: '#FFFFFF' }}>
-                                <Row
-                                    gutter={24}
-                                    style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0 0' }}
-                                >
-                                    <Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
-                                        <span>
-                                            <InfoCircleOutlined
-                                                translate="true"
-                                                style={{ color: "#1890ff" }}
-                                            />
-                                            已选择{<span style={{ color: "blue" }}>{selectedRowKeys.length}</span>}项
-                                        </span>
-                                    </Col>
-                                    <Col span={12} >
-                                        <span style={{ float: 'right' }}>
-                                            {
-                                                selectedRowKeys.length > 0 ? ([
-                                                    <Button
-                                                        icon={<MinusOutlined translate="true" />}
-                                                        onClick={this.delete}
-                                                    >
-                                                        批量删除
-                                                    </Button>,
-                                                    <Divider type="vertical" />
-                                                ]) : null
-                                            }
-                                            <Button icon={<PlusOutlined translate="true" />} onClick={this.add} >
-                                                申请
-                                            </Button>
-                                            <ApplyServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-                                            <span style={{ paddingLeft: '64px' }} >
-                                                <SyncOutlined translate="true" onClick={this.sync} />
-                                            </span>
-                                        </span>
-                                    </Col>
-                                </Row>
-                                <Table
-                                    rowSelection={rowSelection}
-                                    columns={columns}
-                                    dataSource={data}
-                                    expandable={this.state.expandable}
-                                />
-                            </div>
-                        </>
-                }
+                    </div>
+                </>
             </div>
         )
     }

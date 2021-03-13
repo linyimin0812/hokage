@@ -17,6 +17,7 @@ export interface ServerGroupOption extends Option {
 
 export interface ServerVO {
     id: number,
+    key?: string,
     hostname: string,
     domain: string,
     ip: string,

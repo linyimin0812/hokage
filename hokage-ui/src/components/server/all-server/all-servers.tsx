@@ -36,6 +36,10 @@ export default class AllServer extends React.Component<{}, AllServerState> {
             operatorId: hokageUid
         }
         ServerAction.searchServer(form).then(result => {
+            result = (result || []).map(serverVO => {
+                serverVO.key = serverVO.id + ''
+                return serverVO
+            })
             this.setState({dataSource: result})
         }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
     }

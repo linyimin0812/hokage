@@ -33,7 +33,7 @@ export default class ApplyServer extends React.Component<ApplyPropTypes, ApplySt
                 closable={false}
             >
                 <Form
-                    name="operator-add"
+                    name="applyServerForm"
                     onFinish={this.props.onModalOk}
                     labelCol={{ span: 4 }}
                     wrapperCol={{ span: 18 }}
