@@ -32,6 +32,11 @@ public class HokageServerVO {
     private String ip;
 
     /**
+     * login account
+     */
+    private String account;
+
+    /**
      * server login type: 0 - account and password, 1 - key
      */
     private Integer loginType;
@@ -51,11 +56,6 @@ public class HokageServerVO {
      */
     private List<String> serverGroupIdList;
 
-
-    /**
-     * server labels
-     */
-    private List<String> labels;
     /**
      * supervisor name
      */

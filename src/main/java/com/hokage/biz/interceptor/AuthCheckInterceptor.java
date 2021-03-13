@@ -22,9 +22,7 @@ public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
 
         String path = request.getRequestURI();
 
-        /**
-         * user had login
-         */
+         // user had login
         if (Objects.nonNull(session)) {
             Object user = session.getAttribute(Constant.USER_SESSION_KEY);
             if (Objects.nonNull(user)) {
@@ -39,9 +37,7 @@ public class AuthCheckInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        /**
-         * user hadn't login yet
-         */
+        // user hadn't login yet
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.sendRedirect(Constant.LOGIN_PAGE_URL);
         return false;
