@@ -1,16 +1,18 @@
 import React, { ReactText } from 'react'
-import { Table, Result, Button, Tag, Row, Col, message, Divider } from 'antd'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { Table, Button, Row, Col, message, Divider } from 'antd'
+import BreadcrumbCustom from '../../bread-crumb-custom'
 import Search from './search'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
 import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
-import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
-import { ServerAction } from '../../../axios/action/server/server-action';
+import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
+import AddAccount from '../add-account';
 
 type MyServerState = {
     selectedRowKeys: ReactText[],
-    isModalVisible: boolean,
+    isAddServerModalVisible: boolean,
+    isAddAccountModalVisible: boolean,
     dataSource: ServerVO[],
     loading: boolean
 }
@@ -21,7 +23,8 @@ export default class MyServer extends React.Component<any, MyServerState> {
 
     state = {
         selectedRowKeys: [],
-        isModalVisible: false,
+        isAddServerModalVisible: false,
+        isAddAccountModalVisible: false,
         dataSource: [],
         loading: false
     }
@@ -45,7 +48,7 @@ export default class MyServer extends React.Component<any, MyServerState> {
     }
 
     applyServer = () => {
-        window.location.href = "/#/app/server/all"
+        window.location.href = "/app/server/all"
     }
 
     onFinish = (value: any) => {
@@ -61,10 +64,6 @@ export default class MyServer extends React.Component<any, MyServerState> {
         // TODO: 从selectRows中获取选择的目标数据,然后进行相关操作
     }
 
-    add = () => {
-        this.setState({ ...this.state, isModalVisible: true })
-    }
-
     delete = () => {
         alert("delete operators bat")
     }
@@ -73,25 +72,33 @@ export default class MyServer extends React.Component<any, MyServerState> {
         alert("sync operator")
     }
 
-    onModalOk = (value: any) => {
+    onAddServerModalOk = (value: any) => {
         console.log(value)
-        this.setState({ ...this.state, isModalVisible: false })
+        this.setState({ ...this.state, isAddServerModalVisible: false })
         message.loading({ content: 'Loading...', key: 'addUser' });
         setTimeout(() => {
             message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
         }, 2000);
     }
 
-    onModalCancel = () => {
-        this.setState({ ...this.state, isModalVisible: false })
+    onAddServerModalCancel = () => {
+        this.setState({ ...this.state, isAddServerModalVisible: false })
         message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
+    }
+
+    onAddAccountModalOk = (value: any) => {
+        console.log(value)
+    }
+
+    onAddAccountModalCancel = () => {
+        this.setState({ ...this.state, isAddAccountModalVisible: false })
     }
 
 
 
     render() {
 
-        const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state
+        const { selectedRowKeys, isAddServerModalVisible, isAddAccountModalVisible, dataSource, loading } = this.state
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
@@ -125,10 +132,15 @@ export default class MyServer extends React.Component<any, MyServerState> {
                                 <Button icon={<PlusOutlined translate="true" />} onClick={this.applyServer}>
                                     申请服务器
                                 </Button>
-                                <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+                                <AddServer onModalOk={this.onAddServerModalOk} onModalCancel={this.onAddServerModalCancel} isModalVisible={isAddServerModalVisible} />
+                                <AddAccount onModalOk={this.onAddAccountModalOk} onModalCancel={this.onAddAccountModalCancel} isModalVisible={isAddAccountModalVisible} />
                                 <Divider type="vertical" />
-                                <Button icon={<PlusOutlined translate="true" />} onClick={this.add}>
+                                <Button icon={<PlusOutlined translate="true" />} onClick={() => this.setState({ ...this.state, isAddServerModalVisible: true })}>
                                     添加服务器
+                                </Button>
+                                <Divider type="vertical" />
+                                <Button icon={<PlusOutlined translate="true" />} onClick={() => this.setState({ ...this.state, isAddAccountModalVisible: true })}>
+                                    添加账号
                                 </Button>
                                 <span style={{ paddingLeft: '64px' }} >
                                     <SyncOutlined translate="true" onClick={this.sync} />
