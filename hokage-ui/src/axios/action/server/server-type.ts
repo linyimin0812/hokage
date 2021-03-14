@@ -22,6 +22,7 @@ export interface ServerVO {
     domain: string,
     ip: string,
     loginType: string,
+    account: string,
     sshPort: string,
     serverGroupList: string[],
     description: string,

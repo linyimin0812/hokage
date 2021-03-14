@@ -1,23 +1,14 @@
 import React, { ReactText } from 'react'
-import { message, Table } from 'antd';
+import { message, Table } from 'antd'
 import ApplyAndSearchServer from '../common/apply-and-search-server'
-import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type';
+import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type'
 import { column } from './column-definition'
-import { ServerAction } from '../../axios/action/server/server-action';
+import { ServerAction } from '../../axios/action/server/server-action'
+import { Operation } from '../../axios/action/user/user-type'
 
-// const datas: any[] = []
-// for (let i = 0; i < 11; i++) {
-//     const data = {
-//         serverIp: '10.108.210' + (i + 5),
-//         loginForm: (i % 2 === 0) ? '私钥' : '密码',
-//         status: (i % 2 === 0) ? '退出' : '登录',
-//         account: "banzhe_" + i,
-//         remark: '测试',
-//         action: '登录 | 退出 | 编辑 | 删除',
-//         key: i
-//     }
-//     datas.push(data)
-// }
+type SshInfoProps = {
+    addSshTerm: (id: string) => void
+}
 
 type SshInfoState = {
     selectedRowKeys: ReactText[],
@@ -27,7 +18,7 @@ type SshInfoState = {
 
 const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
-export default class SshInfo extends React.Component<{}, SshInfoState> {
+export default class SshInfo extends React.Component<SshInfoProps, SshInfoState> {
 
     state = {
         selectedRowKeys: [],
@@ -47,6 +38,16 @@ export default class SshInfo extends React.Component<{}, SshInfoState> {
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {
                 serverVO.key = serverVO.id + ''
+                const operationList: Operation[] = serverVO.operationList
+                // TODO: 所有动作由后台传回，对于action类型，添加相关动作
+                operationList.push(
+                    {
+                        operationType: 'action',
+                        operationName: '登录',
+                        operationAction: this.props.addSshTerm,
+                    },
+                )
+                serverVO.operationList = operationList
                 return serverVO
             })
             this.setState({dataSource: result})

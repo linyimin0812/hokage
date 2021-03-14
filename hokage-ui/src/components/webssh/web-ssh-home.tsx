@@ -12,33 +12,26 @@ interface PanesType {
     closable?: boolean
 }
 
-const panes = [
-    {
-        key: '1',
-        content: <SshInfo />,
-        title: '我的服务器',
-        closable: false
-    },
-    {
-        key: '2',
-        content: <Xterm id="terminal" />,
-        title: 'Web ssh 连接'
-    }
-]
-
 interface WebSshState {
     panes: PanesType[],
     activeKey: string
 }
 
-export default class FileManagementHome extends React.Component<any, WebSshState> {
+export default class WebSshHome extends React.Component<any, WebSshState> {
     constructor(props: any) {
         super(props)
         this.state = {
-            panes: panes,
+            panes: [{
+                key: '1',
+                content: <SshInfo addSshTerm={this.addPane} />,
+                title: '我的服务器',
+                closable: false
+            }],
             activeKey: '1'
         }
     }
+
+
 
     onChange = (activeKey: string) => {
         this.setState({
@@ -47,21 +40,21 @@ export default class FileManagementHome extends React.Component<any, WebSshState
     }
     /**
      * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
-     * TODO: 作为属性传给FileManagement组件进行触发
      */
-    addPane = () => {
-        let key = new Date().toLocaleTimeString()
+    addPane = (id: string) => {
         const { panes } = this.state
-        const pane: PanesType = {
-            key: key,
-            content: <Xterm id="terminal" />,
-            title: key
-        }
-        panes.push(pane)
 
+        if (!panes.some(pane => pane.key === id)) {
+            const pane: PanesType = {
+                key: id,
+                content: <Xterm id={id} />,
+                title: id
+            }
+            panes.push(pane)
+        }
         this.setState({
             panes,
-            activeKey: key
+            activeKey: id
         })
     }
 

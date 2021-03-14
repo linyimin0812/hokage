@@ -36,9 +36,10 @@ export interface UserVO {
 }
 
 export interface Operation {
-    operationType: string,
+    operationType: 'link' | 'confirm' | 'modal' | 'action',
     operationName: string,
-    operationLink: string,
+    operationLink?: string,
+    operationAction?: Function
 }
 
 export interface UserServerOperateForm {
