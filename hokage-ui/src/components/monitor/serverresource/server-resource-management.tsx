@@ -4,7 +4,7 @@ import SystemStatus from './systemstatus/system-status'
 import BasicInfoHome from './basicinfo/basic-info-home'
 import NetworkHome from './network/network-home'
 
-export default class ServerResourceManagement extends React.Component<any, any>{
+export default class ServerResourceManagement extends React.Component {
 
     render() {
         return (

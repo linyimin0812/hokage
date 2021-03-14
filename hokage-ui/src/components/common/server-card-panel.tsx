@@ -1,12 +1,13 @@
 import React from 'react'
 import { message, Row, Col } from 'antd'
-import ServerCard from '../common/server-card'
-import ApplyServerPrompt from '../common/apply-server-prompt'
-import ApplyAndSearchServer from '../common/apply-and-search-server'
+import ServerCard from './server-card'
+import ApplyServerPrompt from './apply-server-prompt'
+import ApplyAndSearchServer from './apply-and-search-server'
 import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type';
 import { ServerAction } from '../../axios/action/server/server-action';
 
 type FileServerProps = {
+    actionName: string
     action: (id: string) => void
 }
 
@@ -17,7 +18,7 @@ type FileServerState = {
 
 const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
-export default class FileServer extends React.Component<FileServerProps, FileServerState> {
+export default class ServerCardPanel extends React.Component<FileServerProps, FileServerState> {
 
     state = {
         isModalVisible: false,
@@ -87,7 +88,7 @@ export default class FileServer extends React.Component<FileServerProps, FileSer
                         account={serverVO.account}
                         serverIp={serverVO.ip}
                         description={serverVO.description}
-                        actionName={"文件管理"}
+                        actionName={this.props.actionName}
                         action={this.props.action}
                     />
 

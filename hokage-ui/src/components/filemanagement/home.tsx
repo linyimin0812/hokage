@@ -1,14 +1,9 @@
-import BreadcrumbCustom, { BreadcrumbPrpos } from "../bread-crumb-custom";
+import BreadcrumbCustom, { BreadcrumbPrpos } from "../bread-crumb-custom"
 import React from 'react'
-import FileManagement from "./file-management";
-import { Tabs } from "antd";
-import FileServer from "./fiile-server";
-interface PanesType {
-	title: string,
-	content: JSX.Element,
-	key: string,
-	closable?: boolean
-}
+import FileManagement from "./file-management"
+import { Tabs } from "antd"
+import ServerCardPanel from "../common/server-card-panel"
+import { ActionPanesType } from '../common/server-card'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
 	{
@@ -20,18 +15,24 @@ const breadcrumbProps: BreadcrumbPrpos[] = [
 	}
 ]
 
+interface HomePropsType {
+	initActionPanes: ActionPanesType[],
+	initActiveKey: string,
+	addActionPanel: (id: string) => void
+}
+
 interface FileManagementState {
-	panes: PanesType[],
+	actionPanes: ActionPanesType[],
 	activeKey: string
 }
 
-export default class FileManagementHome extends React.Component<any, FileManagementState> {
+export default class FileManagementHome extends React.Component<HomePropsType, FileManagementState> {
 	constructor(props: any) {
 		super(props)
 		this.state = {
-			panes: [{
+			actionPanes: [{
 					key: '1',
-					content: <FileServer action={this.addPane} />,
+					content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
 					title: '我的服务器',
 					closable: false
 			}],
@@ -44,39 +45,36 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 			activeKey: activeKey
 		})
 	}
-	/**
-	 * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
-	 * TODO: 作为属性传给FileManagement组件进行触发
-	 */
+
 	addPane = (id: string) => {
-		const { panes } = this.state
-		if (!panes.some(pane => pane.key === id)) {
-			const pane: PanesType = {
+		const { actionPanes } = this.state
+		if (!actionPanes.some(pane => pane.key === id)) {
+			const pane: ActionPanesType = {
 				key: id,
 				content: <FileManagement />,
 				title: id
 			}
-			panes.push(pane)
+			actionPanes.push(pane)
 		}
 
 		this.setState({
-			panes,
+			actionPanes: actionPanes,
 			activeKey: id
 		})
 	}
 
 	onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-		let { activeKey, panes } = this.state
+		let { activeKey, actionPanes } = this.state
 		switch(action) {
 			case 'remove':
 				let lastKeyIndex: number = 0
-				panes.forEach((pane, i) => {
+				actionPanes.forEach((pane, i) => {
 					if (pane.key === targetKey) {
 						lastKeyIndex = i -1
 					}
 				})
 
-				const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
+				const newPanes: ActionPanesType[] = actionPanes.filter(pane => pane.key !== targetKey)
 
 				if (targetKey === activeKey && newPanes.length) {
 					lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
@@ -84,7 +82,7 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 				}
 
 				this.setState({
-					panes: newPanes,
+					actionPanes: newPanes,
 					activeKey
 				})
 				break
@@ -95,7 +93,7 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 	}
 
 	render() {
-		const { activeKey, panes } = this.state
+		const { activeKey, actionPanes } = this.state
 		return (
 			<>
 				<BreadcrumbCustom breadcrumProps={breadcrumbProps} />
@@ -107,7 +105,7 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 					onEdit={this.onEdit}
 				>
 					{
-						panes.map(pane => {
+						actionPanes.map(pane => {
 							return (
 								<Tabs.TabPane
 									tab={pane.title}

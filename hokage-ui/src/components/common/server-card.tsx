@@ -1,5 +1,12 @@
 import React from 'react'
-import { Card, Row, Col, Avatar, Divider, Button } from 'antd';
+import { Card, Row, Col, Avatar, Divider, Button } from 'antd'
+
+export interface ActionPanesType {
+	title: string,
+	content: JSX.Element,
+	key: string,
+	closable?: boolean
+}
 
 interface ServerCardPropsType {
 	account: string,
