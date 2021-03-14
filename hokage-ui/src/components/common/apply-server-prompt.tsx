@@ -14,7 +14,7 @@ export default class ApplyServerPrompt extends React.Component<any, ApplyServerP
     }
 
     applyServer = () => {
-        window.location.href = "/#/app/server/all"
+        window.location.href = "/app/server/all"
     }
 
     add = () => {

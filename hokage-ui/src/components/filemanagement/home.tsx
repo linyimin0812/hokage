@@ -10,20 +10,6 @@ interface PanesType {
 	closable?: boolean
 }
 
-const panes = [
-	{
-		key: '1',
-		content: <FileServer />,
-		title: '我的服务器',
-		closable: false
-	},
-	{
-		key: '2',
-		content: <FileManagement />,
-		title: '文件管理'
-	}
-]
-
 const breadcrumbProps: BreadcrumbPrpos[] = [
 	{
 		name: '首页',
@@ -43,7 +29,12 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 	constructor(props: any) {
 		super(props)
 		this.state = {
-			panes: panes,
+			panes: [{
+					key: '1',
+					content: <FileServer action={this.addPane} />,
+					title: '我的服务器',
+					closable: false
+			}],
 			activeKey: '1'
 		}
 	}
@@ -57,19 +48,20 @@ export default class FileManagementHome extends React.Component<any, FileManagem
 	 * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
 	 * TODO: 作为属性传给FileManagement组件进行触发
 	 */
-	addPane = () => {
-		let key = new Date().toLocaleTimeString()
+	addPane = (id: string) => {
 		const { panes } = this.state
-		const pane: PanesType = {
-			key: key,
-			content: <FileManagement />,
-			title: key
+		if (!panes.some(pane => pane.key === id)) {
+			const pane: PanesType = {
+				key: id,
+				content: <FileManagement />,
+				title: id
+			}
+			panes.push(pane)
 		}
-		panes.push(pane)
 
 		this.setState({
 			panes,
-			activeKey: key
+			activeKey: id
 		})
 	}
 

@@ -1,27 +1,48 @@
 import React from 'react'
-import { message, Row, Col } from 'antd';
-import ServerCard from '../common/server-card';
-import ApplyServerPrompt from '../common/apply-server-prompt';
-import ApplyAndSearchServer from '../common/apply-and-search-server';
+import { message, Row, Col } from 'antd'
+import ServerCard from '../common/server-card'
+import ApplyServerPrompt from '../common/apply-server-prompt'
+import ApplyAndSearchServer from '../common/apply-and-search-server'
+import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type';
+import { ServerAction } from '../../axios/action/server/server-action';
 
-const datas: any[] = [1,2,3,4,5,6,7,8,9,10]
-
-type FileServerPropsType = {
-    action?: string
+type FileServerProps = {
+    action: (id: string) => void
 }
 
 type FileServerState = {
-    isModalVisible: boolean
+    isModalVisible: boolean,
+    dataSource: ServerVO[]
 }
 
-export default class FileServer extends React.Component<FileServerPropsType, FileServerState> {
+const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
+
+export default class FileServer extends React.Component<FileServerProps, FileServerState> {
 
     state = {
-        isModalVisible: false
+        isModalVisible: false,
+        dataSource: []
+    }
+
+    componentDidMount() {
+        this.listServer()
+    }
+
+    listServer = () => {
+        const form: ServerSearchForm = {
+            operatorId: hokageUid
+        }
+        ServerAction.searchServer(form).then(result => {
+            result = (result || []).map(serverVO => {
+                serverVO.key = serverVO.id + ''
+                return serverVO
+            })
+            this.setState({dataSource: result})
+        }).catch(err => message.error(err))
     }
 
     applyServer = () => {
-        window.location.href = "/#/app/server/all"
+        window.location.href = "/app/server/all"
     }
 
     onFinish = (value: any) => {
@@ -58,12 +79,18 @@ export default class FileServer extends React.Component<FileServerPropsType, Fil
         alert('enter file management')
     }
 
-    renderServerCards = () => {
-        return datas.map(value => {
-            console.log(value)
+    renderServerCards = (dataSource: ServerVO[]) => {
+        return dataSource.map(serverVO => {
             return (
                 <Col span={8}>
-                    <ServerCard serverType="test" serverIp={"192.182.92." + value} description="测试" action={this.props.action || "文件管理"} />
+                    <ServerCard
+                        account={serverVO.account}
+                        serverIp={serverVO.ip}
+                        description={serverVO.description}
+                        actionName={"文件管理"}
+                        action={this.props.action}
+                    />
+
                 </Col>
             )
         })
@@ -71,17 +98,19 @@ export default class FileServer extends React.Component<FileServerPropsType, Fil
 
     render() {
 
+        const { dataSource } = this.state
+
         return (
             <>
                 {
-                    (datas === undefined || datas.length === 0)
+                    (dataSource === undefined || dataSource.length === 0)
                         ?
                         <ApplyServerPrompt />
                         :
                         <div style={{ backgroundColor: '#FFFFFF' }}>
                             <ApplyAndSearchServer />
-                            <Row gutter={24} style={{ paddingTop: '4px' }}>
-                                {this.renderServerCards()}
+                            <Row gutter={24} style={{ margin: '0 0' }}>
+                                {this.renderServerCards(dataSource)}
                             </Row>
                         </div>
                 }
