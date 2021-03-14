@@ -1,7 +1,7 @@
 import BreadcrumbCustom from "../bread-crumb-custom"
 import React from 'react'
 import { Tabs } from "antd"
-import SshInfo from "./ssh-info"
+import WebSshServer from "./web-ssh-server"
 import Xterm from "./xterm"
 import { breadcrumbProps } from './column-definition'
 
@@ -23,7 +23,7 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
         this.state = {
             panes: [{
                 key: '1',
-                content: <SshInfo addSshTerm={this.addPane} />,
+                content: <WebSshServer addSshTerm={this.addPane} />,
                 title: '我的服务器',
                 closable: false
             }],

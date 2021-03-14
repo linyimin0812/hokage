@@ -18,7 +18,7 @@ type SshInfoState = {
 
 const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
-export default class SshInfo extends React.Component<SshInfoProps, SshInfoState> {
+export default class WebSshServer extends React.Component<SshInfoProps, SshInfoState> {
 
     state = {
         selectedRowKeys: [],
