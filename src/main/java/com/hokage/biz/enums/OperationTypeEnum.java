@@ -18,5 +18,9 @@ public enum OperationTypeEnum {
     /**
      * modal
      */
-    modal
+    modal,
+    /**
+     * action
+     */
+    action
 }

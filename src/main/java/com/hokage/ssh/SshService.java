@@ -32,8 +32,8 @@ import java.util.concurrent.Executors;
 public class SshService {
 
     private SshConnectionInfo connectionInfo;
-    private static Map<String, WebSocketDO> webSocketSessions = new ConcurrentHashMap<>();
-    private ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final Map<String, WebSocketDO> webSocketSessions = new ConcurrentHashMap<>();
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
      * 前端打开一个ssh连接页面时, 初始化一个ssh连接
@@ -47,7 +47,7 @@ public class SshService {
         webSocketDO.setWebSocketSession(session);
         webSocketDO.setJSch(jSch);
 
-        this.webSocketSessions.put(session.getId(), webSocketDO);
+        webSocketSessions.put(session.getId(), webSocketDO);
 
     }
 
@@ -64,7 +64,7 @@ public class SshService {
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_INIT.getValue())) {
                 this.connectionInfo = JSON.parseObject(message.getData(), new TypeReference<SshConnectionInfo>(){});
 
-                WebSocketDO webSocketDO = this.webSocketSessions.get(session.getId());
+                WebSocketDO webSocketDO = webSocketSessions.get(session.getId());
 
                 if (Objects.nonNull(webSocketDO)) {
                     // 丢给线程进行处理
@@ -81,7 +81,7 @@ public class SshService {
 
             // 处理xterm输入的字符
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_DATA.getValue())) {
-                WebSocketDO webSocketDO = this.webSocketSessions.get(session.getId());
+                WebSocketDO webSocketDO = webSocketSessions.get(session.getId());
                 if (Objects.nonNull(webSocketDO)) {
                     sendToSsh(webSocketDO.getChannel(), message.getData());
                 }
@@ -174,12 +174,12 @@ public class SshService {
      * @param session
      */
     public void close(WebSocketSession session) {
-        WebSocketDO webSocketDO = this.webSocketSessions.get(session.getId());
+        WebSocketDO webSocketDO = webSocketSessions.get(session.getId());
         if (Objects.nonNull(webSocketDO)) {
             if (Objects.nonNull(webSocketDO.getChannel())) {
                 webSocketDO.getChannel().disconnect();
             }
-            this.webSocketSessions.remove(session.getId());
+            webSocketSessions.remove(session.getId());
         }
     }
 
