@@ -7,7 +7,7 @@ import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
-import AddAccount from '../add-account';
+import AddAccount from '../add-account'
 
 type MyServerState = {
     selectedRowKeys: ReactText[],

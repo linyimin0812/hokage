@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Form, Select, Button, Input } from 'antd'
-import { Option } from '../../axios/action/server/server-type';
+import { Option } from '../../axios/action/server/server-type'
 
 type ApplyPropTypes = {
     onModalOk: (value: any) => void,

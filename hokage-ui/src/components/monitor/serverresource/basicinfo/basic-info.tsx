@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Table } from 'antd';
+import { Card, Table } from 'antd'
 
 const data: {[key: string]: any}[] = [
     {
@@ -33,6 +33,6 @@ export default class BasicInfo extends React.Component<BasicInfoPropsType, any> 
                     <Table.Column dataIndex="value" />
                 </Table>
             </Card>
-        );
+        )
     }
 }

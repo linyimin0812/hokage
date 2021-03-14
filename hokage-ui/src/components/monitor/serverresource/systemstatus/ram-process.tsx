@@ -43,6 +43,6 @@ export default class RamProcess extends React.Component<any, any>{
                     <Table.Column title="CMD" dataIndex="cmd" />
                 </Table>
             </Card>
-        );
+        )
     }
 }

@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Divider, message, Result } from 'antd';
-import { PlusOutlined } from '@ant-design/icons/lib';
-import AddServer from '../server/add-server';
+import React from 'react'
+import { Button, Divider, message, Result } from 'antd'
+import { PlusOutlined } from '@ant-design/icons/lib'
+import AddServer from '../server/add-server'
 
 interface ApplyServerPromptStateType {
     isModalVisible: boolean
@@ -25,16 +25,16 @@ export default class ApplyServerPrompt extends React.Component<any, ApplyServerP
     onModalOk = (value: any) => {
         console.log(value)
         this.setState({ isModalVisible: false })
-        message.loading({ content: 'Loading...', key: 'addServer' });
+        message.loading({ content: 'Loading...', key: 'addServer' })
         // TODO 保存服务器信息
         setTimeout(() => {
-            message.success({ content: 'Loaded!', key: 'addServer', duration: 2 });
-        }, 2000);
+            message.success({ content: 'Loaded!', key: 'addServer', duration: 2 })
+        }, 2000)
     }
 
     onModalCancel = () => {
         this.setState({ isModalVisible: false })
-        message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
+        message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 })
     }
 
     render() {

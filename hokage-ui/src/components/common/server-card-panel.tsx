@@ -3,8 +3,8 @@ import { message, Row, Col } from 'antd'
 import ServerCard from './server-card'
 import ApplyServerPrompt from './apply-server-prompt'
 import ApplyAndSearchServer from './apply-and-search-server'
-import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type';
-import { ServerAction } from '../../axios/action/server/server-action';
+import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type'
+import { ServerAction } from '../../axios/action/server/server-action'
 
 type FileServerProps = {
     actionName: string
@@ -68,7 +68,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
         message.loading({ content: 'Loading...', key: 'addUser' });
         setTimeout(() => {
             message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-        }, 2000);
+        }, 2000)
     }
 
     onModalCancel = () => {

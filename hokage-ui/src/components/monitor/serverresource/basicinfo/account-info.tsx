@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Table } from 'antd';
+import { Card, Table } from 'antd'
 
 const data: any[] = [
     {
@@ -29,6 +29,6 @@ export default class AccountInfo extends React.Component<any, any> {
                     <Table.Column title="工作目录" dataIndex="homeDir" />
                 </Table>
             </Card>
-        );
+        )
     }
 }

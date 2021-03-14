@@ -27,7 +27,7 @@ export default class InterfaceInfo extends React.Component<any, any>{
                 </Table>
             </Card>
 
-        );
+        )
     }
 
 }

@@ -29,6 +29,6 @@ export default class DiskPartition extends React.Component<any, any>{
                     <Table.Column title="MOUNT" dataIndex="mount" />
                 </Table>
             </Card>
-        );
+        )
     }
 }

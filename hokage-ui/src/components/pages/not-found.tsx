@@ -6,7 +6,7 @@ class NotFound extends React.Component {
         animated: '',
     };
     enter = () => {
-        this.setState({ animated: 'hinge' });
+        this.setState({ animated: 'hinge' })
     };
     render() {
         return (
@@ -21,8 +21,8 @@ class NotFound extends React.Component {
                     onMouseEnter={this.enter}
                 />
             </div>
-        );
+        )
     }
 }
 
-export default NotFound;
+export default NotFound

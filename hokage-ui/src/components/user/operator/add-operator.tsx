@@ -2,7 +2,7 @@ import React from 'react'
 import { Modal, Form, Row, Col, Select, Button, message } from 'antd'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
-import { FormInstance } from 'antd/lib/form';
+import { FormInstance } from 'antd/lib/form'
 
 type AddOperatorPropTypes = {
     onModalOk: (value: number[]) => void,

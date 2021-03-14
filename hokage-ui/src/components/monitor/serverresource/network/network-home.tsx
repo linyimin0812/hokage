@@ -34,6 +34,6 @@ export default class NetworkHome extends React.Component<any, any>{
                     <Col span={2} />
                 </Row>
             </div>
-        );
+        )
     }
 }

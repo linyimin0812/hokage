@@ -7,8 +7,8 @@ import {
 	InfoCircleOutlined,
 	SyncOutlined,
 	UsergroupDeleteOutlined,
-} from '@ant-design/icons';
-import AddUser from './add-user';
+} from '@ant-design/icons'
+import AddUser from './add-user'
 import { breadcrumProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { UserVO } from '../../../axios/action/user/user-type'
@@ -180,6 +180,6 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 					/>
 				</div>
 			</div>
-		);
+		)
 	}
 }

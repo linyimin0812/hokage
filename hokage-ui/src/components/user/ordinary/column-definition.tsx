@@ -1,8 +1,8 @@
-import { BreadcrumbPrpos } from '../../bread-crumb-custom';
-import { Button, Tag } from 'antd';
-import React from 'react';
-import { randomColor } from '../../../utils';
-import { Operation } from '../../../axios/action/user/user-type';
+import { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { Button, Tag } from 'antd'
+import React from 'react'
+import { randomColor } from '../../../utils'
+import { Operation } from '../../../axios/action/user/user-type'
 
 /**
  * @author linyimin
@@ -67,7 +67,7 @@ export const columns = [
             )
         })
     },
-];
+]
 
 // 嵌套表
 export const nestedColumn = [
@@ -139,4 +139,4 @@ export const nestedColumn = [
         key: 'action',
     },
 
-];
+]

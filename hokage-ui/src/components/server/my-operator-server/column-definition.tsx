@@ -1,8 +1,8 @@
-import { Button, Tag } from 'antd';
-import React from 'react';
-import { BreadcrumbPrpos } from '../../bread-crumb-custom';
-import { randomColor } from '../../../utils';
-import { Operation } from '../../../axios/action/user/user-type';
+import { Button, Tag } from 'antd'
+import React from 'react'
+import { BreadcrumbPrpos } from '../../bread-crumb-custom'
+import { randomColor } from '../../../utils'
+import { Operation } from '../../../axios/action/user/user-type'
 
 /**
  * @author linyimin

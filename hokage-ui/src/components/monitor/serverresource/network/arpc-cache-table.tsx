@@ -35,7 +35,7 @@ export default class ARPCacheTable extends React.Component<any, any>{
                 </Table>
             </Card>
 
-        );
+        )
     }
 
 }
