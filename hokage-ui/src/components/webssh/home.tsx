@@ -1,134 +1,126 @@
-import BreadcrumbCustom, { BreadcrumbPrpos } from "../bread-crumb-custom"
+import BreadcrumbCustom from "../bread-crumb-custom"
 import React from 'react'
 import { Tabs } from "antd"
 import SshInfo from "./ssh-info"
 import Xterm from "./xterm"
+import { breadcrumbProps } from './column-definition'
+
 interface PanesType {
-  title: string,
-  content: JSX.Element,
-  key: string,
-  closable?: boolean
+    title: string,
+    content: JSX.Element,
+    key: string,
+    closable?: boolean
 }
 
 const panes = [
-  {
-    key: '1',
-    content: <SshInfo />,
-    title: '我的服务器',
-    closable: false
-  },
-  {
-    key: '2',
-    content: <Xterm id="terminal" />,
-    title: 'Web ssh 连接'
-  }
-]
-
-const breadcrumbProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: 'Web终端'
-  }
+    {
+        key: '1',
+        content: <SshInfo />,
+        title: '我的服务器',
+        closable: false
+    },
+    {
+        key: '2',
+        content: <Xterm id="terminal" />,
+        title: 'Web ssh 连接'
+    }
 ]
 
 interface WebSshState {
-  panes: PanesType[],
-  activeKey: string
+    panes: PanesType[],
+    activeKey: string
 }
 
 export default class FileManagementHome extends React.Component<any, WebSshState> {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      panes: panes,
-      activeKey: '1'
-    }
-  }
-  
-  onChange = (activeKey: string) => {
-    this.setState({
-      activeKey: activeKey
-    })    
-  }
-  /**
-   * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
-   * TODO: 作为属性传给FileManagement组件进行触发
-   */
-  addPane = () => {
-    let key = new Date().toLocaleTimeString()
-    const { panes } = this.state
-    const pane: PanesType = {
-      key: key,
-      content: <Xterm id="terminal" />,
-      title: key
-    }
-    panes.push(pane)
-    
-    this.setState({
-      panes,
-      activeKey: key
-    })
-  }
-  
-  onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-    let { activeKey, panes } = this.state
-    switch(action) {
-      case 'remove':
-        let lastKeyIndex: number = 0
-        panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastKeyIndex = i -1
-          }
-        })
-        
-        const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
-    
-        if (targetKey === activeKey && newPanes.length) {
-          lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          activeKey = newPanes[lastKeyIndex].key
+    constructor(props: any) {
+        super(props)
+        this.state = {
+            panes: panes,
+            activeKey: '1'
         }
-        
+    }
+
+    onChange = (activeKey: string) => {
         this.setState({
-          panes: newPanes,
-          activeKey
+            activeKey: activeKey
         })
-        break
-      case 'add':
-        break
     }
-    
-  }
-  
-  render() {
-    const { activeKey, panes } = this.state
-    return (
-      <>
-      <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
-      <Tabs
-        onChange={this.onChange}
-        activeKey={activeKey}
-        type="editable-card"
-        hideAdd
-        onEdit={this.onEdit}
-      >
-        {
-          panes.map(pane => {
-            return (
-              <Tabs.TabPane
-                tab={pane.title}
-                key={pane.key}
-                closable={pane.closable}
-              >
-                {pane.content}
-              </Tabs.TabPane>
-            )
-          })
+    /**
+     * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
+     * TODO: 作为属性传给FileManagement组件进行触发
+     */
+    addPane = () => {
+        let key = new Date().toLocaleTimeString()
+        const { panes } = this.state
+        const pane: PanesType = {
+            key: key,
+            content: <Xterm id="terminal" />,
+            title: key
         }
-      </Tabs>
-      </>
-    )
-  }
+        panes.push(pane)
+
+        this.setState({
+            panes,
+            activeKey: key
+        })
+    }
+
+    onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
+        let { activeKey, panes } = this.state
+        switch(action) {
+            case 'remove':
+                let lastKeyIndex: number = 0
+                panes.forEach((pane, i) => {
+                    if (pane.key === targetKey) {
+                        lastKeyIndex = i -1
+                    }
+                })
+
+                const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
+
+                if (targetKey === activeKey && newPanes.length) {
+                    lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
+                    activeKey = newPanes[lastKeyIndex].key
+                }
+
+                this.setState({
+                    panes: newPanes,
+                    activeKey
+                })
+                break
+            case 'add':
+                break
+        }
+
+    }
+
+    render() {
+        const { activeKey, panes } = this.state
+        return (
+            <>
+                <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
+                <Tabs
+                    onChange={this.onChange}
+                    activeKey={activeKey}
+                    type="editable-card"
+                    hideAdd
+                    onEdit={this.onEdit}
+                >
+                    {
+                        panes.map(pane => {
+                            return (
+                                <Tabs.TabPane
+                                    tab={pane.title}
+                                    key={pane.key}
+                                    closable={pane.closable}
+                                >
+                                    {pane.content}
+                                </Tabs.TabPane>
+                            )
+                        })
+                    }
+                </Tabs>
+            </>
+        )
+    }
 }

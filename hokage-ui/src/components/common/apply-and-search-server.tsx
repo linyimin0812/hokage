@@ -18,7 +18,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
 	};
 
 	applyServer = () => {
-		window.location.href = '/#/app/server/all';
+		window.location.href = '/app/server/all';
 	};
 
 	add = () => {
@@ -57,7 +57,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
 					gutter={24}
 					style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', padding: '4px 0px' }}
 				>
-					<Col span={12} style={{ display: 'flex', alignItems: 'center' }}>
+					<Col span={8} style={{ display: 'flex', alignItems: 'center' }}>
 						{
 							selectionKeys !== undefined ? (
 								<span>
@@ -70,7 +70,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
 							) : null
 						}
 					</Col>
-					<Col span={12}>
+					<Col span={16}>
 						<span style={{ float: 'right' }}>
 							{
 								(selectionKeys || []).length > 0 ? ([
