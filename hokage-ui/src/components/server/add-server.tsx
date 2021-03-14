@@ -1,12 +1,14 @@
 import React from 'react'
-import { Modal, Form, Select, Button, Input, Tooltip, Divider, message } from 'antd'
+import { Modal, Form, Select, Button, Input, Tooltip, Divider, message, Radio } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import isIP from 'is-ip'
-import { PlusOutlined } from '@ant-design/icons/lib'
+import { InboxOutlined, PlusOutlined } from '@ant-design/icons/lib';
 import { Option, ServerGroupOption } from '../../axios/action/server/server-type'
 import { UserServerOperateForm } from '../../axios/action/user/user-type'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { UserAction } from '../../axios/action'
+import Dragger from 'antd/lib/upload/Dragger';
+import { RadioChangeEvent } from 'antd/lib/radio';
 
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,
@@ -17,7 +19,9 @@ type AddServerPropTypes = {
 type AddServerStateTypes = {
     serverGroupOptions: ServerGroupOption[],
     userOptions: Option[],
-    isAddGroup: boolean
+    isAddGroup: boolean,
+    passwordHidden: boolean,
+    keyHidden: boolean,
 }
 
 const hokageUid = parseInt(window.localStorage.getItem('hokageUid') || '0')
@@ -27,7 +31,9 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
     state = {
         isAddGroup: false,
         userOptions: [],
-        serverGroupOptions: []
+        serverGroupOptions: [],
+        passwordHidden: false,
+        keyHidden: true
     }
 
     componentDidMount() {
@@ -76,9 +82,22 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
 
     }
 
+    loginTypeChange = (e: RadioChangeEvent) => {
+        if (!e || !e.target) {
+            return
+        }
+        if (e.target.value === 0) {
+            this.setState({ passwordHidden: false, keyHidden: true })
+        }
+
+        if (e.target.value === 1) {
+            this.setState({ passwordHidden: true, keyHidden: false })
+        }
+    }
+
     render() {
         const { isModalVisible } = this.props
-        const { isAddGroup, serverGroupOptions, userOptions } = this.state
+        const { isAddGroup, serverGroupOptions, userOptions, passwordHidden, keyHidden } = this.state
         return (
             <Modal
                 title="添加服务器"
@@ -171,18 +190,22 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
                     >
                         <Input placeholder="请输入管理账号" />
                     </Form.Item>
-                    <Form.Item
-                        name="passwd"
-                        label="密码"
-                        rules={[
-                            {
-                                required: true,
-                                message: '请输入账号密码',
-                            },
-                        ]}
-                        hasFeedback
-                    >
+
+                    <Form.Item name={'loginType'} label={<span>登录类型</span>} required >
+                        <Radio.Group onChange={this.loginTypeChange} defaultValue={0}>
+                            <Radio value={0}>密码</Radio>
+                            <Radio value={1}>密钥</Radio>
+                        </Radio.Group>
+                    </Form.Item>
+                    <Form.Item hidden={passwordHidden} name="passwd" label=" " required>
                         <Input.Password placeholder="请输入账号密码" />
+                    </Form.Item>
+
+                    <Form.Item hidden={keyHidden} name="passwd" label=" " required>
+                        <Dragger style={{textAlign: 'center'}}>
+                            <p><InboxOutlined translate = {false} /></p>
+                            <p>点击或者拖拽密钥文件上传</p>
+                        </Dragger>
                     </Form.Item>
 
                     <Form.Item

@@ -1,5 +1,5 @@
 import React, { ReactText } from 'react'
-import { message, Table, Row, Col, Button, Result, Divider } from 'antd'
+import { message, Table, Row, Col, Button, Divider } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'

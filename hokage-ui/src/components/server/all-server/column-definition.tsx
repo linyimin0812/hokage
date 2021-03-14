@@ -33,12 +33,6 @@ export const columns = [
         render: (serverGroupList: string[]) => serverGroupList.map((group, index) => <Tag color={randomColor(group)} key={index}>{group}</Tag>)
     },
     {
-        title: '标签',
-        dataIndex: 'labels',
-        key: 'labels',
-        render: (labels: string[]) => labels.map((label, index) => <Tag color={randomColor(label)} key={index}>{label}</Tag>)
-    },
-    {
         title: '管理员',
         dataIndex: 'supervisorList',
         key: 'supervisorList',
