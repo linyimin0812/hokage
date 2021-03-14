@@ -6,9 +6,9 @@ import { TableExtendable } from '../../common/table-extendable'
 import Search from './search'
 import ApplyServer from '../apply-server'
 import { breadcrumbProps, columns, nestedColumns } from './column-definition'
-import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
-import { ServerAction } from '../../../axios/action/server/server-action';
-import { Operation } from '../../../axios/action/user/user-type';
+import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
+import { Operation } from '../../../axios/action/user/user-type'
 
 const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
