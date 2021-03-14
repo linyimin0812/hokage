@@ -124,7 +124,7 @@ public class UserConverter {
             }).collect(Collectors.toList());
 
             List<String> serverLabels = serverVOList.stream()
-                    .flatMap(serverVO -> serverVO.getLabels().stream())
+                    .flatMap(serverVO -> serverVO.getServerGroupList().stream())
                     .distinct()
                     .collect(Collectors.toList());
 
@@ -191,7 +191,7 @@ public class UserConverter {
                     }).collect(Collectors.toList());
 
             List<String> serverLabels = serverVOList.stream()
-                    .flatMap(serverVO -> serverVO.getLabels().stream())
+                    .flatMap(serverVO -> serverVO.getServerGroupIdList().stream())
                     .distinct()
                     .collect(Collectors.toList());
 

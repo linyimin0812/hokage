@@ -4,13 +4,19 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/7/26 10:23 下午
+ * @date 2020/7/26 10:23 pm
  * @email linyimin520812@gmail.com
- * @description 管理员和服务器颖映射表
+ * @description supervisor and server mapping relation
  */
 @Data
 public class HokageSupervisorServerDTO {
     private Long id;
-    private Long supervisorId;  // 管理员id
-    private Long serverId;      // 服务器id
+    /**
+     * supervisor id
+     */
+    private Long supervisorId;
+    /**
+     * server id
+     */
+    private Long serverId;
 }

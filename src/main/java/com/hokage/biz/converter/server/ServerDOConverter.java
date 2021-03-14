@@ -153,12 +153,6 @@ public class ServerDOConverter {
         // server information
         BeanUtils.copyProperties(serverDO, serverVO);
 
-        if (StringUtils.isNoneBlank(serverDO.getLabel())) {
-            serverVO.setLabels(Arrays.asList(serverDO.getLabel().split(",")));
-        } else {
-            serverVO.setLabels(Collections.emptyList());
-        }
-
         if (StringUtils.isNoneBlank(serverDO.getServerGroup())) {
             serverVO.setServerGroupList(Arrays.asList(serverDO.getServerGroup().split(",")));
         } else {
