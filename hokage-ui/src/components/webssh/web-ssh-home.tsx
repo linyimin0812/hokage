@@ -4,6 +4,7 @@ import { Tabs } from "antd"
 import WebSshServer from "./web-ssh-server"
 import Xterm from "./xterm"
 import { breadcrumbProps } from './column-definition'
+import { ServerVO } from '../../axios/action/server/server-type';
 
 interface PanesType {
     title: string,
@@ -41,13 +42,15 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
     /**
      * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
      */
-    addPane = (id: string) => {
+    addPane = (record: ServerVO) => {
         const { panes } = this.state
+
+        const id = `${record.ip} (${record.account})`
 
         if (!panes.some(pane => pane.key === id)) {
             const pane: PanesType = {
                 key: id,
-                content: <Xterm id={id} />,
+                content: <Xterm id={id} server={record} />,
                 title: id
             }
             panes.push(pane)

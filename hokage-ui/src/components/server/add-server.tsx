@@ -9,6 +9,7 @@ import { ServerAction } from '../../axios/action/server/server-action'
 import { UserAction } from '../../axios/action'
 import Dragger from 'antd/lib/upload/Dragger'
 import { RadioChangeEvent } from 'antd/lib/radio'
+import { getHokageUid } from '../../utils'
 
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,
@@ -23,8 +24,6 @@ type AddServerStateTypes = {
     passwordHidden: boolean,
     keyHidden: boolean,
 }
-
-const hokageUid = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
 export default class AddServer extends React.Component<AddServerPropTypes, AddServerStateTypes> {
 
@@ -42,7 +41,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
     }
 
     listServerGroupOptions = () => {
-        ServerAction.listServerGroup(hokageUid).then(data => {
+        ServerAction.listServerGroup(getHokageUid()).then(data => {
             this.setState({serverGroupOptions: data})
         }).catch(err => message.error(err))
     }
@@ -61,11 +60,11 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
 
     onGroupModalOk = (value: { name: string, description: string }) => {
         const form: UserServerOperateForm = {
-            id: hokageUid,
+            id: getHokageUid(),
             serverGroup: {
                 name: value.name,
                 description: value.description || '',
-                creatorId: hokageUid
+                creatorId: getHokageUid()
             }
         }
         ServerAction.addServerLabel(form).then(result => {

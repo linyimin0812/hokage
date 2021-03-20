@@ -9,8 +9,7 @@ import { breadcrumbProps, columns, nestedColumns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
 import { Operation } from '../../../axios/action/user/user-type'
-
-const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
+import { getHokageUid } from '../../../utils';
 
 interface NestedTableDataSource {
     key: string,
@@ -70,7 +69,7 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
     listServer = () => {
         this.setState({loading: true})
         const form: ServerSearchForm = {
-            operatorId: hokageUid
+            operatorId: getHokageUid()
         }
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {

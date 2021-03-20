@@ -8,6 +8,7 @@ import { breadcrumbProps, columns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
 import AddAccount from '../add-account'
+import { getHokageUid } from '../../../utils'
 
 type MyServerState = {
     selectedRowKeys: ReactText[],
@@ -16,8 +17,6 @@ type MyServerState = {
     dataSource: ServerVO[],
     loading: boolean
 }
-
-const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
 export default class MyServer extends React.Component<any, MyServerState> {
 
@@ -36,7 +35,7 @@ export default class MyServer extends React.Component<any, MyServerState> {
     listServer = () => {
         this.setState({loading: true})
         const form: ServerSearchForm = {
-            operatorId: hokageUid
+            operatorId: getHokageUid()
         }
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {

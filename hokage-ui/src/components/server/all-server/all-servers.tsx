@@ -7,6 +7,7 @@ import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerForm, ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
+import { getHokageUid } from '../../../utils';
 
 type AllServerState = {
     selectedRowKeys: ReactText[],
@@ -14,8 +15,6 @@ type AllServerState = {
     dataSource: ServerVO[],
     loading: boolean
 }
-
-const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
 export default class AllServer extends React.Component<{}, AllServerState> {
 
@@ -33,7 +32,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
     listServer = () => {
         this.setState({loading: true})
         const form: ServerSearchForm = {
-            operatorId: hokageUid
+            operatorId: getHokageUid()
         }
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {
@@ -70,7 +69,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
     }
 
     onModalOk = (value: ServerForm) => {
-        value.operatorId = hokageUid
+        value.operatorId = getHokageUid()
         ServerAction.saveServer(value).then(() => {
             this.setState({ isModalVisible: false })
             this.listServer()

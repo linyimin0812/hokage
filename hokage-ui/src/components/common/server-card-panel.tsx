@@ -5,6 +5,7 @@ import ApplyServerPrompt from './apply-server-prompt'
 import ApplyAndSearchServer from './apply-and-search-server'
 import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type'
 import { ServerAction } from '../../axios/action/server/server-action'
+import { getHokageUid } from '../../utils'
 
 type FileServerProps = {
     actionName: string
@@ -15,8 +16,6 @@ type FileServerState = {
     isModalVisible: boolean,
     dataSource: ServerVO[]
 }
-
-const hokageUid: number = parseInt(window.localStorage.getItem('hokageUid') || '0')
 
 export default class ServerCardPanel extends React.Component<FileServerProps, FileServerState> {
 
@@ -31,7 +30,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
 
     listServer = () => {
         const form: ServerSearchForm = {
-            operatorId: hokageUid
+            operatorId: getHokageUid()
         }
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {

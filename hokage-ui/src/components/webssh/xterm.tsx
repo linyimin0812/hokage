@@ -3,9 +3,11 @@ import 'xterm/css/xterm.css'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 import { w3cwebsocket as W3cWebsocket, IMessageEvent, ICloseEvent } from 'websocket'
+import { ServerVO } from '../../axios/action/server/server-type'
 
 interface XtermPropsType {
-    id: string
+    id: string,
+    server: ServerVO
 }
 
 interface XtermStateType {
@@ -36,17 +38,17 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         if (window.location.protocol === 'https') {
             protocol = 'wss://'
         }
-        const endpoint = protocol + window.location.host + '/ssh'
+        const endpoint = protocol + '127.0.0.1:8080/ws/ssh'
         const client: W3cWebsocket = new W3cWebsocket(endpoint)
 
         client.onopen = () => {
+            const { server } = this.props
             client.send(JSON.stringify({
                 type: 'xtermSshInit',
                 data: {
-                    host: "localhost",
-                    port: 22,
-                    username: 'linyimin',
-                    passwd: 'Root!@#456'
+                    host: server.ip,
+                    port: server.sshPort,
+                    username: server.account,
                 }
             }))
         }

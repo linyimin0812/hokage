@@ -16,6 +16,7 @@ import {
 } from './user-type';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
+import { removeHokageUid, setHokageUid } from '../../../utils'
 
  export const UserAction = {
      login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -23,7 +24,7 @@ import { ServiceResult } from '../../common'
             UserService.login(formData).then(value => {
                 if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
-                    window.localStorage.setItem('hokageUid', data.id + '')
+                    setHokageUid(data.id || 0)
 					return resolve(value)
                 }
                 
@@ -40,7 +41,7 @@ import { ServiceResult } from '../../common'
             UserService.logout(formData).then(value => {
                 if (value.success) {
                     Models.remove('userInfo')
-                    window.localStorage.removeItem('hokageUid')
+                    removeHokageUid()
                     return resolve(true)
                 }
                 return reject(value)
@@ -55,8 +56,7 @@ import { ServiceResult } from '../../common'
             UserService.register(formData).then(value => {
 				if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
-                    // @ts-ignore
-                    window.localStorage.setItem('hokageUid', data.id + '')
+                    setHokageUid(data.id || 0)
 					return resolve(value)
 				}
 				return reject(value)

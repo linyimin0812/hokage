@@ -64,7 +64,7 @@ export const column = [
                     <Button
                         type="link"
                         onClick={
-                            () => { operation.operationAction && operation.operationAction(`${record.ip} (${record.account})`)}
+                            () => { operation.operationAction && operation.operationAction(record)}
                         }
                     >
                         {operation.operationName}

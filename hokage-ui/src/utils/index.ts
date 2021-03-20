@@ -47,3 +47,17 @@ export const randomColor = (text: string): string => {
     const colorList: string[] = Models.get('serverLabelColor')
     return colorList[hashCode(text) % colorList.length]
 }
+
+export const setHokageUid = (id: number) => {
+    if (!id) id = 0
+    window.localStorage.setItem('hokageUid', id + '')
+}
+
+export const getHokageUid = (): number => {
+    const hokageUid = window.localStorage.getItem('hokageUid')
+    return hokageUid ? parseInt(hokageUid) : 0
+}
+
+export const removeHokageUid = () => {
+    window.localStorage.removeItem('hokageUid')
+}

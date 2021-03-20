@@ -9,6 +9,7 @@ import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { breadcrumProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
+import { getHokageUid } from '../../../utils'
 
 type OperatorState = {
     dataSource: UserVO[],
@@ -62,9 +63,6 @@ export default class Operator extends React.Component<any, OperatorState> {
         })
     }
 
-    // @ts-ignore
-    hokageUid: number = window.localStorage.getItem('hokageUid') || 0
-
     onFinish = (value: any) => {
         console.log(value)
     }
@@ -93,7 +91,7 @@ export default class Operator extends React.Component<any, OperatorState> {
     onModalOk = (value: any) => {
 
         UserAction.addSupervisor({
-            id: this.hokageUid,
+            id: getHokageUid(),
             serverIds: [],
             userIds: value.userIds || []
         }).then(value => {

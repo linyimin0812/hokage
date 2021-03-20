@@ -13,6 +13,7 @@ import { breadcrumProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { UserAction } from '../../../axios/action'
+import { getHokageUid } from '../../../utils'
 
 interface Expandable {
 	expandedRowKeys: ReactText[],
@@ -63,11 +64,8 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 	}
 
 	componentDidMount() {
-		this.listSubordinate(this.hokageUid)
+		this.listSubordinate(getHokageUid())
 	}
-
-	// @ts-ignore
-	hokageUid: number = window.localStorage.getItem('hokageUid') || 0
 
 	listSubordinate = (supervisorId: number) => {
 		this.setState({loading: true})
@@ -105,13 +103,13 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 
 	onModalOk = (value: {userIds: number[]}) => {
 		UserAction.addSubordinate({
-			id: this.hokageUid,
+			id: getHokageUid(),
 			serverIds: [],
 			userIds: (value && value.userIds) || []
 		}).then(value => {
 			if (value) {
 				this.setState({ ...this.state, isModalVisible: false })
-				this.listSubordinate(this.hokageUid)
+				this.listSubordinate(getHokageUid())
 			} else {
 				message.error('添加管理员失败')
 			}
