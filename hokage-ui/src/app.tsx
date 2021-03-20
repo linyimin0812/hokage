@@ -54,7 +54,7 @@ export default class App extends Component<AppProps, AppState> {
                         <Content style={{ margin: '0 16px', overflow: 'initial', flex: '1 1 0' }}>
                             <Routes />
                         </Content>
-                        <Footer style={{ textAlign: 'center' }}>
+                        <Footer id={'ant-layout-footer'} style={{ textAlign: 'center', padding: '0px 0px' }}>
                             Server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt
                         </Footer>
                     </Layout>

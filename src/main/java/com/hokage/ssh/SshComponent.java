@@ -27,17 +27,19 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author yiminlin
+ */
+
 @Slf4j
 @Service
 public class SshService {
 
-    private SshConnectionInfo connectionInfo;
     private static final Map<String, WebSocketDO> webSocketSessions = new ConcurrentHashMap<>();
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
-     * 前端打开一个ssh连接页面时, 初始化一个ssh连接
-     * @param session
+     * @param session ws session
      */
     public void add(WebSocketSession session) {
 
@@ -53,8 +55,8 @@ public class SshService {
 
     /**
      * 处理来自xterm发来的字符
-     * @param payload
-     * @param session
+     * @param payload message content
+     * @param session ws session
      */
     public void handleMsgFromXterm(String payload, WebSocketSession session) {
         try {
@@ -62,7 +64,7 @@ public class SshService {
 
             // xterm发起连接请求信息
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_INIT.getValue())) {
-                this.connectionInfo = JSON.parseObject(message.getData(), new TypeReference<SshConnectionInfo>(){});
+                SshConnectionInfo connectionInfo = JSON.parseObject(message.getData(), new TypeReference<SshConnectionInfo>(){});
 
                 WebSocketDO webSocketDO = webSocketSessions.get(session.getId());
 
@@ -70,7 +72,7 @@ public class SshService {
                     // 丢给线程进行处理
                     this.executorService.execute(() -> {
                         try {
-                            connectToSsh(webSocketDO, this.connectionInfo, session);
+                            connectToSsh(webSocketDO, connectionInfo, session);
                         } catch (Exception e) {
                             log.error("ssh连接出错", e);
                         }
@@ -109,7 +111,7 @@ public class SshService {
         try {
 
             JSch jSch = webSocketDO.getJSch();
-            jSchSession = jSch.getSession(connectionInfo.getUsername(), connectionInfo.getHost(), connectionInfo.getPort());
+            jSchSession = jSch.getSession(connectionInfo.getAccount(), connectionInfo.getIp(), Integer.parseInt(connectionInfo.getSshPort()));
 
             jSchSession.setConfig(config);
             jSchSession.setPassword(connectionInfo.getPasswd());

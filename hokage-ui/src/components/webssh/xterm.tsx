@@ -23,6 +23,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         terminal.loadAddon(fitAddon)
         terminal.open(document.getElementById(id)!)
         fitAddon.fit()
+        terminal.focus()
         terminal.writeln('connecting ...')
         const client = this.initClient(terminal)
         terminal.onData((text: string, _: void) => {
@@ -46,9 +47,10 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
             client.send(JSON.stringify({
                 type: 'xtermSshInit',
                 data: {
-                    host: server.ip,
-                    port: server.sshPort,
-                    username: server.account,
+                    id: server.id,
+                    ip: server.ip,
+                    sshPort: server.sshPort,
+                    account: server.account,
                 }
             }))
         }
@@ -69,7 +71,18 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     }
 
     render () {
-        return <div id={this.props.id} style={{height: "75vh"}} />
+
+        const layoutHeight = document.getElementsByClassName('ant-layout-content')[0].clientHeight
+        const breadcrumbHeight = document.getElementsByClassName('ant-breadcrumb')[0].clientHeight
+        const tabsNavHeight = document.getElementsByClassName('ant-tabs-nav')[0].clientHeight
+        const footerHeight = document.getElementsByClassName('ant-layout-footer')[0].clientHeight || 0
+
+        let height = '75vh';
+        if (layoutHeight && breadcrumbHeight && tabsNavHeight) {
+            height = layoutHeight - breadcrumbHeight - tabsNavHeight - 2 * footerHeight + 'px'
+        }
+
+        return <div id={this.props.id} style={{height: height, padding: '0 0'}} />
     }
 
 }

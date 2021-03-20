@@ -4,7 +4,7 @@ import { Tabs } from "antd"
 import WebSshServer from "./web-ssh-server"
 import Xterm from "./xterm"
 import { breadcrumbProps } from './column-definition'
-import { ServerVO } from '../../axios/action/server/server-type';
+import { ServerVO } from '../../axios/action/server/server-type'
 
 interface PanesType {
     title: string,
@@ -84,7 +84,7 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
                     activeKey
                 })
                 break
-            case 'add':
+            default:
                 break
         }
 
@@ -109,6 +109,7 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
                                     tab={pane.title}
                                     key={pane.key}
                                     closable={pane.closable}
+
                                 >
                                     {pane.content}
                                 </Tabs.TabPane>

@@ -6,11 +6,15 @@ import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
 /**
- * 一个socket连接对应一个ssh连接
+ * one socket connection corresponds to one ssh connection
+ * @author yiminlin
  */
 @Data
 public class WebSocketDO {
     private WebSocketSession webSocketSession;
     private JSch jSch;
-    private Channel channel;    // shell channel
+    /**
+     * jsch channel
+     */
+    private Channel channel;
 }
