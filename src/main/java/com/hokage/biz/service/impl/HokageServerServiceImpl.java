@@ -202,7 +202,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Override
     public ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids) {
 
-        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        ServiceResponse<List<HokageServerDO>> response = new ServiceResponse<>();
 
         List<HokageServerDO> serverDOList = hokageServerDao.selectByIds(ids);
 
@@ -210,7 +210,9 @@ public class HokageServerServiceImpl implements HokageServerService {
             response.success(Collections.emptyList());
         }
 
-        return null;
+        response.success(serverDOList);
+
+        return response;
     }
 
     @Override

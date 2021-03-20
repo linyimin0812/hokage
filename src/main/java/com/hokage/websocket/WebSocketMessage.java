@@ -2,14 +2,17 @@ package com.hokage.websocket;
 
 import lombok.Data;
 
+/**
+ * @author yiminlin
+ */
 @Data
 public class WebSocketMessage<T> {
     /**
-     * 发送的信息内容
+     * message content
      */
     private T data;
     /**
-     * 消息类型
+     * message type
      */
     private String type;
 

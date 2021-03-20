@@ -1,10 +1,17 @@
 package com.hokage.ssh.enums;
 
+/**
+ * channel type
+ * @author yiminlin
+ */
 public enum  JSchChannelType {
 
+    /**
+     * shell
+     */
     SHELL("shell");
 
-    private String value;
+    private final String value;
     JSchChannelType(String value) {
         this.value = value;
     }

@@ -10,11 +10,16 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfigure implements WebSocketConfigurer {
 
-    @Autowired
     private WebSocketHandler webSocketHandler;
+
+    @Autowired
+    public void setWebSocketHandler(WebSocketHandler handler) {
+        this.webSocketHandler = handler;
+    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(webSocketHandler, "/ssh");
+        registry.addHandler(webSocketHandler, "/ws/ssh")
+                .setAllowedOrigins("*");
     }
 }

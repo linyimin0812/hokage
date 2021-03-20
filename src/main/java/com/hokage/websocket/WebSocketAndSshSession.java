@@ -10,7 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
  * @author yiminlin
  */
 @Data
-public class WebSocketDO {
+public class WebSocketAndSshSession {
     private WebSocketSession webSocketSession;
     private JSch jSch;
     /**

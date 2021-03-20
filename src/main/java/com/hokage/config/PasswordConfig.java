@@ -6,9 +6,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * @author linyimin
- * @date 2020/8/30 3:27 下午
+ * @date 2020/8/30 3:27 pm
  * @email linyimin520812@gmail.com
- * @description
+ * @description password encode
  */
 @Configuration
 public class PasswordConfig {

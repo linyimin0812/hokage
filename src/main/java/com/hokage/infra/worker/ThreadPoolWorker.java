@@ -1,6 +1,7 @@
 package com.hokage.infra.worker;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -13,8 +14,9 @@ import java.util.concurrent.TimeUnit;
  * thread worker pool
  * @author yiminlin
  */
+@Data
 @Component
-public class ThreadWorkerPool {
+public class ThreadPoolWorker {
     private ThreadPoolExecutor executorPool = null;
 
     @PostConstruct

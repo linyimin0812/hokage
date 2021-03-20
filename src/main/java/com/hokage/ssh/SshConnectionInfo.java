@@ -2,10 +2,33 @@ package com.hokage.ssh;
 
 import lombok.Data;
 
+/**
+ * @author yiminlin
+ */
 @Data
 public class SshConnectionInfo {
-    private String host;        // ssh IP
-    private int port;           // ssh 端口
-    private String username;    // ssh登录账号
-    private String passwd;      // 登录密码
+    /**
+     * server id, primary key
+     */
+    private Long id;
+    /**
+     * server ip
+     */
+    private String ip;
+    /**
+     * ssh port
+     */
+    private String sshPort;
+    /**
+     * ssh account
+     */
+    private String account;
+    /**
+     * login type
+     */
+    private Integer loginType;
+    /**
+     * password
+     */
+    private String passwd;
 }

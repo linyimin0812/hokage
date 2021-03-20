@@ -2,19 +2,20 @@ package com.hokage.websocket.enums;
 
 /**
  * 所有WebSocket消息类型
+ * @author yiminlin
  */
 public enum WebSocketMessageType {
 
     /**
-     * x-term请求连接信息
+     * x-term request connection info
      */
     XTERM_SSH_INIT("xtermSshInit"),
     /**
-     * xterm发送的业务信息
+     * command from
      */
     XTERM_SSH_DATA("xtermSshData");
 
-    private String value;
+    private final String value;
 
     WebSocketMessageType (String value) {
         this.value = value;
