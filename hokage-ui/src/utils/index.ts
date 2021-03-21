@@ -1,6 +1,5 @@
-// retrieve url parameter variable
-
 import { Models } from './model'
+import { Terminal } from 'xterm'
 
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
@@ -60,4 +59,53 @@ export const getHokageUid = (): number => {
 
 export const removeHokageUid = () => {
     window.localStorage.removeItem('hokageUid')
+}
+
+export const xtermSpinner = (terminal: Terminal): NodeJS.Timeout => {
+    const spinner = {
+        "interval": 100,
+            "frames": [
+            "🧑⚽️                🧑 ",
+            "🧑 ⚽️               🧑 ",
+            "🧑  ⚽️              🧑 ",
+            "🧑   ⚽️             🧑 ",
+            "🧑    ⚽️            🧑 ",
+            "🧑     ⚽️           🧑 ",
+            "🧑      ⚽️          🧑 ",
+            "🧑       ⚽️         🧑 ",
+            "🧑        ⚽️        🧑 ",
+            "🧑         ⚽️       🧑 ",
+            "🧑          ⚽️      🧑 ",
+            "🧑           ⚽️     🧑 ",
+            "🧑            ⚽️    🧑 ",
+            "🧑             ⚽️   🧑 ",
+            "🧑              ⚽️  🧑 ",
+            "🧑               ⚽️ 🧑 ",
+            "🧑                ⚽️🧑 ",
+            "🧑               ⚽️ 🧑 ",
+            "🧑              ⚽️  🧑 ",
+            "🧑             ⚽️   🧑 ",
+            "🧑            ⚽️    🧑 ",
+            "🧑           ⚽️     🧑 ",
+            "🧑          ⚽️      🧑 ",
+            "🧑         ⚽️       🧑 ",
+            "🧑        ⚽️        🧑 ",
+            "🧑       ⚽️         🧑 ",
+            "🧑      ⚽️          🧑 ",
+            "🧑     ⚽️           🧑 ",
+            "🧑    ⚽️            🧑 ",
+            "🧑   ⚽️             🧑 ",
+            "🧑  ⚽️              🧑 ",
+            "🧑 ⚽️               🧑 ",
+            "🧑⚽️                🧑 ",
+        ]
+    }
+    let i = 0
+    return setInterval(() => {
+        const { frames } = spinner;
+        // eslint-disable-next-line no-octal-escape
+        terminal.write('\x1bc')
+        terminal.writeln('connecting ' + frames[i = ++i % frames.length])
+    }, spinner.interval)
+
 }

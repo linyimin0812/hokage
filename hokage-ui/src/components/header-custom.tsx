@@ -88,32 +88,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 						/>
 					</Col>
 
-					<Col span={17} style={{ height: '65px'}}>
-						{/* <Carousel dots={false} autoplay autoplaySpeed={10 * 1000} speed={3000} style={{textAlign: 'center', marginTop: '9px'}}>
-							<div>
-								<span style={{
-									height: '40px',
-									color: '#000000',
-									lineHeight: '40px',
-									textAlign: 'center',
-									background: '#e9e9e9',
-								}}>
-									服务器node1.pcncad.com的IP发生了变化,由原来的`10.108.210.194`变成了`10.108.211.136`, 由于域名存在缓存,可能会短暂不可用.
-								</span>
-							</div>
-							<div style={{textAlign: 'center'}}>
-								<span style={{
-									height: '40px',
-									color: '#000000',
-									lineHeight: '40px',
-									textAlign: 'center',
-									background: '#e9e9e9',
-								}}>
-									斑蛰向你申请服务器node1.pcncad.com的使用权限,请及时处理.
-								</span>
-							</div>
-						</Carousel> */}
-					</Col>
+					<Col span={17} style={{ height: '65px'}} />
 					<Col span={3}>
 						{
 							isFullScreen ? (
@@ -137,7 +112,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 										}}
 										size="large"
 									>
-										{"banzhe"}
+										{Models.get('userInfo') ? Models.get('userInfo').username : 'Hokage'}
 									</Avatar>
 								}
 								popupOffset={[-60,1]}

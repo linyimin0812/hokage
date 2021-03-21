@@ -4,6 +4,7 @@ import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 import { w3cwebsocket as W3cWebsocket, IMessageEvent, ICloseEvent } from 'websocket'
 import { ServerVO } from '../../axios/action/server/server-type'
+import { xtermSpinner } from '../../utils'
 
 interface XtermPropsType {
     id: string,
@@ -11,7 +12,7 @@ interface XtermPropsType {
 }
 
 interface XtermStateType {
-
+    spinner: NodeJS.Timeout
 }
 
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
@@ -24,7 +25,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         terminal.open(document.getElementById(id)!)
         fitAddon.fit()
         terminal.focus()
-        terminal.writeln('connecting ...')
+        this.setState({ spinner: xtermSpinner(terminal) })
         const client = this.initClient(terminal)
         terminal.onData((text: string, _: void) => {
             client.send(JSON.stringify({
@@ -56,6 +57,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         }
 
         client.onmessage = (message: IMessageEvent) => {
+            clearInterval(this.state.spinner)
             terminal.write(message.data.toString())
         }
 
