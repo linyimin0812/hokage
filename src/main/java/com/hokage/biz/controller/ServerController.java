@@ -1,5 +1,6 @@
 package com.hokage.biz.controller;
 
+import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
@@ -9,11 +10,17 @@ import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
+import com.hokage.persistence.dao.HokageServerSshKeyContentDao;
+import com.hokage.persistence.dataobject.HokageServerSshKeyContentDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author linyimin
@@ -26,9 +33,16 @@ public class ServerController extends BaseController {
 
     private HokageServerService serverService;
 
+    private HokageServerSshKeyContentDao contentDao;
+
     @Autowired
     public void setServerService(HokageServerService serverService) {
         this.serverService = serverService;
+    }
+
+    @Autowired
+    public void setContentDao(HokageServerSshKeyContentDao contentDao) {
+        this.contentDao = contentDao;
     }
 
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
@@ -133,5 +147,27 @@ public class ServerController extends BaseController {
         );
 
         return success(optionVOList);
+    }
+
+    @RequestMapping(value = "/app/file/upload", method = RequestMethod.POST)
+    public ResultVO<String> uploadFile(@RequestParam(value = "sshKeyFile") MultipartFile file) throws IOException {
+
+        if (file.isEmpty()) {
+            return fail(ResultCodeEnum.SERVER_UPLOAD_FILE_ERROR.getCode(), ResultCodeEnum.SERVER_UPLOAD_FILE_ERROR.getMsg());
+        }
+
+        String uid = UUID.randomUUID().toString();
+
+        String content = new String(file.getBytes(), StandardCharsets.UTF_8);;
+        HokageServerSshKeyContentDO contentDO = new HokageServerSshKeyContentDO();
+        contentDO.setUid(uid);
+        contentDO.setContent(content);
+
+        if (contentDao.insert(contentDO) > 0) {
+            return success(uid);
+        }
+
+        return fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ResultCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
+
     }
 }

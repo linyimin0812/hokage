@@ -61,7 +61,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> listByType(String type) {
-        return serverMapper.selectByType(type);
+        return Collections.emptyList();
     }
 
 

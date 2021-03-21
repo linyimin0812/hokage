@@ -1,6 +1,5 @@
 package com.hokage.persistence.dao;
 
-import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerGroupDO;
 
 import java.util.List;

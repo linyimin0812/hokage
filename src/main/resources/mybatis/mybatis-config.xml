@@ -21,6 +21,7 @@
         <typeAlias type="com.hokage.persistence.dataobject.HokageTaskResultDO" alias="HokageTaskResultDO" />
         <typeAlias type="com.hokage.persistence.dataobject.HokageSequenceDO" alias="HokageSequenceDO" />
         <typeAlias type="com.hokage.persistence.dataobject.HokageServerApplicationDO" alias="HokageServerApplicationDO" />
+        <typeAlias type="com.hokage.persistence.dataobject.HokageServerSshKeyContentDO" alias="HokageServerSshKeyContentDO" />
     </typeAliases>
     <mappers>
         <mapper resource="mybatis/mapper/hokage_user-mapper.xml"/>
@@ -33,6 +34,6 @@
         <mapper resource="mybatis/mapper/hokage_taskr-mapper.xml"/>
         <mapper resource="mybatis/mapper/hokage_task_result-mapper.xml"/>
         <mapper resource="mybatis/mapper/hokage_sequence-mapper.xml" />
-        <mapper resource="mybatis/mapper/Hokage_server_application-mapper.xml" />
+        <mapper resource="mybatis/mapper/Hokage_server_ssh_key_content-mapper.xml" />
     </mappers>
 </configuration>

@@ -1,6 +1,5 @@
 package com.hokage.persistence.dao.impl;
 
-import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageServerGroupDao;
 import com.hokage.persistence.dataobject.HokageServerGroupDO;
 import com.hokage.persistence.mapper.HokageServerGroupMapper;

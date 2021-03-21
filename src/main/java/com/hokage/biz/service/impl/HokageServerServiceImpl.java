@@ -5,6 +5,7 @@ import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
 import com.hokage.biz.converter.server.ServerFormConverter;
 import com.hokage.biz.converter.server.ServerSearchFormConverter;
+import com.hokage.biz.enums.LoginTypeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
@@ -55,6 +56,8 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     private HokageServerGroupService serverGroupService;
 
+    private HokageServerSshKeyContentDao contentDao;
+
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
         this.hokageServerDao = hokageServerDao;
@@ -71,33 +74,38 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Autowired
-    private void setSupervisorServerDao(HokageSupervisorServerDao supervisorServerDao) {
+    public void setSupervisorServerDao(HokageSupervisorServerDao supervisorServerDao) {
         this.supervisorServerDao = supervisorServerDao;
     }
 
     @Autowired
-    private void setSequenceService(HokageSequenceService service) {
+    public void setSequenceService(HokageSequenceService service) {
         this.sequenceService = service;
     }
 
     @Autowired
-    private void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
+    public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
         this.subordinateServerDao = subordinateServerDao;
     }
 
     @Autowired
-    private void setApplicationDao(HokageServerApplicationDao applicationDao) {
+    public void setApplicationDao(HokageServerApplicationDao applicationDao) {
         this.applicationDao = applicationDao;
     }
 
     @Autowired
-    private void setUserDao(HokageUserDao userDao) {
+    public void setUserDao(HokageUserDao userDao) {
         this.userDao = userDao;
     }
 
     @Autowired
-    private void setServerGroupService(HokageServerGroupService serverGroupService) {
+    public void setServerGroupService(HokageServerGroupService serverGroupService) {
         this.serverGroupService = serverGroupService;
+    }
+
+    @Autowired
+    private void setContentDao(HokageServerSshKeyContentDao contentDao) {
+        this.contentDao = contentDao;
     }
 
     private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
@@ -232,6 +240,15 @@ public class HokageServerServiceImpl implements HokageServerService {
         ServiceResponse<HokageServerForm> response = new ServiceResponse<>();
 
         HokageServerDO serverDO = formConverter.doForward(form);
+
+        // set ssh key content as password if loginType = 1
+        if (LoginTypeEnum.key.getValue().equals(form.getLoginType())) {
+            HokageServerSshKeyContentDO contentDO = contentDao.listByUid(form.getPasswd());
+            if (Objects.isNull(contentDO)) {
+                throw new RuntimeException("ssh key file content id empty. uid: " + form.getPasswd());
+            }
+            serverDO.setPasswd(contentDO.getContent());
+        }
 
         // TODO: get hostname from ssh
 

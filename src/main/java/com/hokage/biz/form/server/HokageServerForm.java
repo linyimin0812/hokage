@@ -43,11 +43,6 @@ public class HokageServerForm {
      * server group
      */
     private List<String> serverGroupList;
-
-    /**
-     * server label: internal, external, X86, GPU
-     */
-    private String label;
     /**
      * server operator
      */
@@ -62,4 +57,9 @@ public class HokageServerForm {
      * 操作人id
      */
     private Long operatorId;
+
+    /**
+     * login type
+     */
+    private Integer loginType;
 }

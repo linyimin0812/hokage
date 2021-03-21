@@ -46,9 +46,9 @@ public class HokageServerDO extends HokageBaseDO {
      */
     private String serverGroup;
     /**
-     * server label: internal, external, X86, GPU
+     * login type: 0-password, 1-key file
      */
-    private String label;
+    private Integer loginType;
     /**
      * server description
      */

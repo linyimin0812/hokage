@@ -35,6 +35,12 @@ public class HokageServerDTO {
      * server account
      */
     private String account;
+
+    /**
+     * login type: 0-password, 1-key file
+     */
+    private Integer loginType;
+
     /**
      * ssh password
      */

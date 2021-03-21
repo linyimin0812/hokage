@@ -1,0 +1,50 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hokage.persistence.mapper.HokageServerSshKeyContentMapper">
+    <resultMap id="HokageServerSshKeyContentMapper" type="HokageServerSshKeyContentDO">
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="id" column="id"/>
+        <result property="uid" column="uid"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <sql id="allColumn">
+        id,
+        gmt_create,
+        gmt_modified,
+        uid,
+        content
+    </sql>
+
+    <sql id="tableName">
+        hokage_server_ssh_key_content
+    </sql>
+
+    <insert id="insert" parameterType="HokageServerSshKeyContentDO">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        <include refid="allColumn"/>
+        )
+        VALUES (
+        #{id},
+        now(),
+        now(),
+        #{uid},
+        #{content}
+        );
+    </insert>
+
+    <select id="listByUid" parameterType="java.lang.String" resultMap="HokageServerSshKeyContentMapper">
+        SELECT
+        <include refid="allColumn"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            uid = #{uid}
+        </where>
+    </select>
+
+</mapper>

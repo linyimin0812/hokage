@@ -38,7 +38,7 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         serverDO.setIp("10.108.210.102");
         serverDO.setPasswd("123456");
         serverDO.setSshPort("22");
-        serverDO.setLabel("1");
+        serverDO.setLoginType(1);
         Long result = serverDao.insert(serverDO);
 
         Assert.assertEquals(true, result > 0);

@@ -14,8 +14,8 @@
         <result property="ip" column="ip"/>
         <result property="passwd" column="passwd"/>
         <result property="sshPort" column="ssh_port"/>
-        <result property="label" column="label"/>
         <result property="creatorId" column="creator_id"/>
+        <result property="loginType" column="login_type"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -30,8 +30,8 @@
         ip,
         passwd,
         ssh_port,
-        label,
-        creator_id
+        creator_id,
+        login_type
     </sql>
 
     <sql id="tableNme">
@@ -64,11 +64,11 @@
             <if test="sshPort != null and sshPort != '' ">
                 and ssh_port = #{sshPort}
             </if>
-            <if test="label != null ">
-                and label = #{label}
-            </if>
             <if test="creatorId != null ">
                 and creator_id = #{creatorId}
+            </if>
+            <if test="loginType != null ">
+                and login_type = #{loginType}
             </if>
         </where>
     </sql>
@@ -82,9 +82,6 @@
         </if>
         <if test="ip != null">
             and ip=#{ip}
-        </if>
-        <if test="label != null">
-            and label = #{label}
         </if>
         <if test="serverGroup != null">
             and server_group = #{serverGroup}
@@ -109,8 +106,8 @@
             #{ip},
             #{passwd},
             #{sshPort},
-            #{label},
-            #{creatorId}
+            #{creatorId},
+            #{loginType}
         );
     </insert>
 
@@ -143,8 +140,8 @@
             <if test="sshPort != null and sshPort != '' ">
                 ,ssh_port = #{sshPort}
             </if>
-            <if test="label != null ">
-                ,label = #{label}
+            <if test="loginType != null ">
+                ,login_type = #{loginType}
             </if>
         </set>
         <where>
@@ -179,16 +176,6 @@
         <include refid="tableNme"/>
         <where>
             id=#{id}
-        </where>
-    </select>
-
-    <select id="selectByType" parameterType="java.lang.String" resultMap="HokageServerMapper">
-        SELECT
-        <include refid="allColumns"/>
-        FROM
-        <include refid="tableNme"/>
-        <where>
-            label=#{label}
         </where>
     </select>
 

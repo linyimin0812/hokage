@@ -53,13 +53,6 @@ public interface HokageServerMapper {
     HokageServerDO selectById(Long id);
 
     /**
-     * retrieve server info based-on server type
-     * @param type
-     * @return
-     */
-    List<HokageServerDO> selectByType(String type);
-
-    /**
      * retrieve server infos based-on server group
      * @param group
      * @return
@@ -67,6 +60,11 @@ public interface HokageServerMapper {
     List<HokageServerDO> selectByGroup(String group);
 
 
+    /**
+     * retrieve server infos based-on supervisor id
+     * @param supervisorId
+     * @return
+     */
     List<HokageServerDO> selectBySupervisorId(Long supervisorId);
 
     /**

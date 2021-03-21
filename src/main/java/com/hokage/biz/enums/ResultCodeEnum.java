@@ -30,6 +30,11 @@ public enum ResultCodeEnum {
      */
     SERVER_SYSTEM_ERROR("B-001", "system error"),
 
+    /**
+     * upload file error
+     */
+    SERVER_UPLOAD_FILE_ERROR("C-001", "file is empty."),
+
     SUCCESS("0000", "success");
 
     private String code;

@@ -44,14 +44,24 @@ CREATE TABLE IF NOT EXISTS `hokage_server` (
   `ip` varchar(16) NOT NULL COMMENT '服务器ip',
   `ssh_port` varchar(6) NOT NULL COMMENT 'ssh链接端口',
   `account` varchar(32) NOT NULL COMMENT '登录账户',
-  `passwd` varchar(32) NOT NULL COMMENT '登录密码',
+  `login_type` tinyint NOT NULL COMMENT '登录方式, 0-密码登录， 1-密钥文件登录',
+  `passwd` text NOT NULL COMMENT '登录密码',
   `server_group` varchar(128) NULL COMMENT '服务器分组',
-  `label`  varchar(32) NULL COMMENT '服务器类型, 0-内网、1-外网、3-X86、4-GPU',
   `description` varchar(1024) NULL COMMENT '服务器描述',
   `creator_id` bigint NOT NULL COMMENT '创建人id',
   PRIMARY KEY (`id`)
 )
   COMMENT = '服务器信息表';
+
+CREATE TABLE IF NOT EXISTS `hokage_server_ssh_key_content` (
+   `id` bigint NOT NULL,
+   `gmt_create` DATETIME NOT NULL,
+   `gmt_modified` DATETIME NOT NULL,
+   `uid` varchar(36) NOT NULL COMMENT 'uuid',
+   `content` text NOT NULL COMMENT '密钥文件内容',
+   PRIMARY KEY (`id`)
+)
+    COMMENT = '服务器密钥文件内容表';
 
 CREATE TABLE IF NOT EXISTS `hokage_server_group` (
   `id` bigint NOT NULL,
