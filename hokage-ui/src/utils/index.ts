@@ -107,5 +107,6 @@ export const xtermSpinner = (terminal: Terminal): NodeJS.Timeout => {
         terminal.write('\x1bc')
         terminal.writeln('connecting ' + frames[i = ++i % frames.length])
     }, spinner.interval)
-
 }
+
+export const emptyFunction = () => {}

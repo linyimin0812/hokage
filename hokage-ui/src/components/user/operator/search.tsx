@@ -44,6 +44,7 @@ export default class Search extends React.Component<SearchProps, SearchState> {
                             <Form.Item
                                 name="id"
                                 label="id"
+                                colon
                                 {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
@@ -53,6 +54,7 @@ export default class Search extends React.Component<SearchProps, SearchState> {
                             <Form.Item
                                 name="name"
                                 label="管理员姓名"
+                                colon
                                 {...formItemLayout}
                             >
                                 <Input placeholder="请输入" />
@@ -62,6 +64,7 @@ export default class Search extends React.Component<SearchProps, SearchState> {
                             <Form.Item
                                 name="serverTag"
                                 label="服务器标签"
+                                colon
                                 {...formItemLayout}
                             >
                                 <Select>

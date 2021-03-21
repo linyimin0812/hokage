@@ -8,6 +8,7 @@ import { breadcrumbProps, columns } from './column-definition'
 import { ServerForm, ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
 import { getHokageUid } from '../../../utils';
+import { ServiceResult } from '../../../axios/common';
 
 type AllServerState = {
     selectedRowKeys: ReactText[],
@@ -70,6 +71,14 @@ export default class AllServer extends React.Component<{}, AllServerState> {
 
     onModalOk = (value: ServerForm) => {
         value.operatorId = getHokageUid()
+        if (value.passwd && !(typeof value.passwd === 'string')) {
+            const uploadResponse = value.passwd.file.response as ServiceResult<string>
+            if (uploadResponse.success) {
+                value.passwd = uploadResponse.data!
+            } else {
+                message.error('密钥文件上传失败, 请重试！')
+            }
+        }
         ServerAction.saveServer(value).then(() => {
             this.setState({ isModalVisible: false })
             this.listServer()

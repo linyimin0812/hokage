@@ -1,16 +1,15 @@
 import React from 'react'
 import { Modal, Form, Select, Button, Input, Tooltip, Divider, message, Radio } from 'antd'
-import { QuestionCircleOutlined } from '@ant-design/icons'
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import isIP from 'is-ip'
-import { InboxOutlined, PlusOutlined } from '@ant-design/icons/lib';
+import { PlusOutlined } from '@ant-design/icons/lib'
 import { Option, ServerGroupOption } from '../../axios/action/server/server-type'
 import { UserServerOperateForm } from '../../axios/action/user/user-type'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { UserAction } from '../../axios/action'
-import Dragger from 'antd/lib/upload/Dragger'
 import { RadioChangeEvent } from 'antd/lib/radio'
-import { getHokageUid } from '../../utils'
-
+import { emptyFunction, getHokageUid } from '../../utils'
+import { FileUpload } from '../common/file-upload'
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,
     onModalCancel: () => void,
@@ -93,7 +92,6 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
             this.setState({ passwordHidden: true, keyHidden: false })
         }
     }
-
     render() {
         const { isModalVisible } = this.props
         const { isAddGroup, serverGroupOptions, userOptions, passwordHidden, keyHidden } = this.state
@@ -201,10 +199,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
                     </Form.Item>
 
                     <Form.Item hidden={keyHidden} name="passwd" label=" " required>
-                        <Dragger style={{textAlign: 'center'}}>
-                            <p><InboxOutlined translate = {false} /></p>
-                            <p>点击或者拖拽密钥文件上传</p>
-                        </Dragger>
+                        <FileUpload onChange={emptyFunction} />
                     </Form.Item>
 
                     <Form.Item
@@ -325,7 +320,6 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
                         </Form.Item>
                     </Form>
                 </Modal>
-
             </Modal>
         )
     }
