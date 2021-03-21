@@ -242,17 +242,27 @@ public class HokageServerServiceImpl implements HokageServerService {
         HokageServerDO serverDO = formConverter.doForward(form);
 
         // set ssh key content as password if loginType = 1
-        if (LoginTypeEnum.key.getValue().equals(form.getLoginType())) {
-            HokageServerSshKeyContentDO contentDO = contentDao.listByUid(form.getPasswd());
-            if (Objects.isNull(contentDO)) {
-                throw new RuntimeException("ssh key file content id empty. uid: " + form.getPasswd());
-            }
-            serverDO.setPasswd(contentDO.getContent());
-        }
+        updatePasswordContent(serverDO);
 
         // TODO: get hostname from ssh
 
-        if (Objects.isNull(form.getId()) || form.getId()  == 0) {
+
+        upsertServer(serverDO);
+
+        // add supervisor
+        addSupervisor(serverDO, form);
+
+        form.setId(serverDO.getId());
+
+        return response.success(form);
+    }
+
+    /**
+     * insert or update server
+     * @param serverDO
+     */
+    private void upsertServer(HokageServerDO serverDO) {
+        if (Objects.isNull(serverDO.getId()) || serverDO.getId()  == 0) {
             // insert
             ServiceResponse<Long> primaryKeyResponse = sequenceService.nextValue(SequenceNameEnum.hokage_server.name());
             if (!primaryKeyResponse.getSucceeded() || primaryKeyResponse.getData() <= 0) {
@@ -270,8 +280,14 @@ public class HokageServerServiceImpl implements HokageServerService {
                 throw new RuntimeException("ServerService update server info error.");
             }
         }
+    }
 
-        // add supervisor
+    /**
+     * add supervisor when add server
+     * @param serverDO
+     * @param form
+     */
+    private void addSupervisor(HokageServerDO serverDO, HokageServerForm form) {
         if (!CollectionUtils.isEmpty(form.getSupervisorList())) {
             List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
 
@@ -310,9 +326,20 @@ public class HokageServerServiceImpl implements HokageServerService {
                 throw new RuntimeException("update supervisor error.");
             }
         }
-        form.setId(serverDO.getId());
+    }
 
-        return response.success(form);
+    /**
+     * update password content if login type is 1
+     * @param serverDO
+     */
+    private void updatePasswordContent(HokageServerDO serverDO) {
+        if (LoginTypeEnum.key.getValue().equals(serverDO.getLoginType())) {
+            HokageServerSshKeyContentDO contentDO = contentDao.listByUid(serverDO.getPasswd());
+            if (Objects.isNull(contentDO)) {
+                throw new RuntimeException("ssh key file content id empty. uid: " + serverDO.getPasswd());
+            }
+            serverDO.setPasswd(contentDO.getContent());
+        }
     }
 
     @Override

@@ -79,6 +79,9 @@ export default class AllServer extends React.Component<{}, AllServerState> {
                 message.error('密钥文件上传失败, 请重试！')
             }
         }
+        if (!value.loginType) {
+            value.loginType = 0
+        }
         ServerAction.saveServer(value).then(() => {
             this.setState({ isModalVisible: false })
             this.listServer()
