@@ -1,8 +1,8 @@
 // user hook
-import { ServerAction } from '../../../axios/action/server/server-action'
+import { ServerAction } from '../axios/action/server/server-action'
 import { message } from 'antd'
 import { useEffect, useState } from 'react';
-import { Option } from '../../../axios/action/server/server-type'
+import { Option } from '../axios/action/server/server-type'
 
 export const useServerOptions = () => {
 

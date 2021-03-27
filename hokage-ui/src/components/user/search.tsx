@@ -1,7 +1,7 @@
 import React from 'react'
 import { Divider, Form, Row, Col, Input, Button, Select } from 'antd'
 import { formItemLayout } from '../common/table-layout'
-import { useServerOptions } from './hook'
+import { useServerOptions } from '../../hook'
 
 interface SearchFormType {
     id: string,

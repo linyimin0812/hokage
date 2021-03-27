@@ -18,7 +18,6 @@ interface Expandable {
 	onExpand: (expanded: boolean, record: any) => void
 }
 
-
 type OrdinaryUserState = {
 	expandable: Expandable,
 	nestedTableDataSource: ServerVO[],
@@ -113,7 +112,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 	};
 
 	render() {
-		const { selectedRowKeys, isModalVisible, dataSource, loading } = this.state;
+		const { selectedRowKeys, dataSource, loading } = this.state;
 		const rowSelection = {
 			selectedRowKeys,
 			onChange: this.onSelectChange,
