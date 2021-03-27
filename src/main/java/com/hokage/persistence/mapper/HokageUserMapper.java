@@ -1,5 +1,6 @@
 package com.hokage.persistence.mapper;
 
+import com.hokage.biz.request.UserQuery;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
@@ -71,4 +72,11 @@ public interface HokageUserMapper {
      * @return
      */
     List<HokageUserDO> listUserByIds(List<Long> ids);
+
+    /**
+     * list user with query condition
+     * @param query query condition
+     * @return user query result
+     */
+    List<HokageUserDO> query(UserQuery query);
 }

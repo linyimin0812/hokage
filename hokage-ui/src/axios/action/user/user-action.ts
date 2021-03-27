@@ -17,6 +17,7 @@ import {
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
 import { removeHokageUid, setHokageUid } from '../../../utils'
+import { OperatorSearchFormType } from '../../../components/user/operator/search';
 
  export const UserAction = {
      login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -64,19 +65,6 @@ import { removeHokageUid, setHokageUid } from '../../../utils'
 				return reject(err)
 			})
         })
-     },
-
-     listSupervisor: (): Promise<UserVO[]> => {
-         return new Promise<UserVO[]>((resolve, reject) => {
-             UserService.listSupervisor().then(value => {
-                 if (value.success) {
-                     return resolve(value.data)
-                 }
-                 reject(value.msg)
-             }).catch(err => {
-                 return reject("获取服务器管理员失败. err: " + JSON.stringify(err))
-             })
-         })
      },
 
      listAllSubordinate: (): Promise<UserVO[]> => {
@@ -131,4 +119,16 @@ import { removeHokageUid, setHokageUid } from '../../../utils'
              })
          })
      },
+     supervisorSearch: (form: OperatorSearchFormType): Promise<UserVO[]> => {
+         return new Promise<UserVO[]>((resolve, reject) => {
+             UserService.searchSupervisor(form).then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("搜索管理员失败. err: " + JSON.stringify(err))
+             })
+         })
+     }
  }

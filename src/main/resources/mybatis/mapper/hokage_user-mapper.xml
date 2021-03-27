@@ -150,4 +150,26 @@
         </where>
     </select>
 
+    <select id="query" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
+        SELECT
+        <include refid="allColumns" />
+        FROM
+        <include refid="tableName"/>
+        <where>
+            role = #{role}
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+            <if test="serverGroup != null and serverGroup != ''">
+                AND id IN (
+                    SELECT supervisor_id FROM hokage_supervisor_server WHERE server_id IN (
+                        SELECT id FROM hokage_server WHERE server_group = #{serverGroup}
+                    )
+                )
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.hokage.biz.service;
 
 import com.hokage.biz.form.user.UserServerSearchForm;
+import com.hokage.biz.request.UserQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageUserDO;
@@ -38,10 +39,10 @@ public interface HokageUserService {
 
     /**
      * search supervisor
-     * @param form
+     * @param query search condition
      * @return
      */
-    ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form);
+    ServiceResponse<List<HokageUserVO>> searchSupervisors(UserQuery query);
 
     /**
      * add supervisor

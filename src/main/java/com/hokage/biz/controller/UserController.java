@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.form.user.*;
+import com.hokage.biz.request.UserQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.BaseController;
@@ -13,6 +14,7 @@ import com.hokage.persistence.dataobject.HokageUserDO;
 import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -90,7 +92,21 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserServerSearchForm form) {
-        ServiceResponse<List<HokageUserVO>> response = userService.searchSupervisors(form);
+
+        UserQuery query = new UserQuery();
+        if (Objects.nonNull(form.getId())) {
+            query.setId(form.getId());
+        }
+
+        if (!CollectionUtils.isEmpty(form.getServerGroup())) {
+            query.setServerGroup(String.join(",", form.getServerGroup()));
+        }
+
+        if (!StringUtils.isEmpty(form.getUsername())) {
+            query.setUsername(form.getUsername());
+        }
+
+        ServiceResponse<List<HokageUserVO>> response = userService.searchSupervisors(query);
 
         if (response.getSucceeded()) {
             return success(response.getData());

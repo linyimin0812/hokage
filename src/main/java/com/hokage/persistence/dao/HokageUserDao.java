@@ -1,5 +1,6 @@
 package com.hokage.persistence.dao;
 
+import com.hokage.biz.request.UserQuery;
 import com.hokage.persistence.dataobject.HokageUserDO;
 
 import java.util.List;
@@ -67,4 +68,11 @@ public interface HokageUserDao {
      * @return
      */
     List<HokageUserDO> listUserByIds(List<Long> ids);
+
+    /**
+     * list user with query condition
+     * @param query query condition
+     * @return user query result
+     */
+    List<HokageUserDO> query(UserQuery query);
 }

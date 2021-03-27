@@ -1,8 +1,13 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
-import Search from './search'
-import { UserAddOutlined, InfoCircleOutlined, SyncOutlined, UsergroupDeleteOutlined } from '@ant-design/icons'
+import { OperatorSearch, OperatorSearchFormType } from './search'
+import {
+    UserAddOutlined,
+    InfoCircleOutlined,
+    SyncOutlined,
+    UsergroupDeleteOutlined
+} from '@ant-design/icons'
 import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
@@ -55,20 +60,20 @@ export default class Operator extends React.Component<any, OperatorState> {
     }
 
     componentDidMount() {
+        this.searchOperator({})
+    }
+
+    searchOperator = (value?: OperatorSearchFormType) => {
         this.setState({loading: true})
-        UserAction.listSupervisor().then(supervisorList => {
+        UserAction.supervisorSearch(value ? value : {}).then(supervisorList => {
             this.setState({dataSource: supervisorList, loading: false})
         }).catch(err => {
             message.error(err)
         })
     }
 
-    onFinish = (value: any) => {
-        console.log(value)
-    }
-
-    resetFields = () => {
-        console.log("reset")
+    onFinish = (value: OperatorSearchFormType) => {
+        this.searchOperator(value)
     }
 
     onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
@@ -124,7 +129,7 @@ export default class Operator extends React.Component<any, OperatorState> {
         return (
             <div>
                 <BreadcrumbCustom breadcrumProps= {breadcrumProps} />
-                <Search onFinish={this.onFinish} clear={this.resetFields} />
+                <OperatorSearch onFinish={this.onFinish} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}

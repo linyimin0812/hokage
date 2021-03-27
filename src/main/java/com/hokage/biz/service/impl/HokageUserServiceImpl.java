@@ -6,6 +6,7 @@ import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.user.UserServerSearchForm;
+import com.hokage.biz.request.UserQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageUserService;
@@ -13,7 +14,6 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -134,25 +134,13 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<List<HokageUserVO>> searchSupervisors(UserServerSearchForm form) {
+    public ServiceResponse<List<HokageUserVO>> searchSupervisors(UserQuery query) {
 
-        List<HokageUserDO>  supervisorList;
-        if (Objects.nonNull(form.getId()) && form.getId() > 0) {
-            HokageUserDO userDO = userDao.getUserById(form.getId());
-            supervisorList = Collections.singletonList(userDO);
-        } else if (StringUtils.isNoneBlank(form.getLabel())) {
-            // 1. retrieve server info by label
-            List<HokageServerDO> serverDOList = serverDao.listByType(form.getLabel());
-            // 2. retrieve supervisor ids by server ids
-            List<Long> serverIds = serverDOList.stream().map(HokageServerDO::getId).collect(Collectors.toList());
-            List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(serverIds);
-            // 3. retrieve supervisor info by supervisor ids
-            List<Long> userIds = supervisorServerDOList.stream().map(HokageSupervisorServerDO::getId).collect(Collectors.toList());
-            supervisorList = userDao.listUserByIds(userIds);
-        } else {
-            HokageUserDO hokageUserDO = new HokageUserDO();
-            hokageUserDO.setUsername(form.getUsername());
-            supervisorList = userDao.listAll(hokageUserDO);
+        query.setRole(UserRoleEnum.supervisor.getValue());
+
+        List<HokageUserDO>  supervisorList = userDao.query(query);
+        if (CollectionUtils.isEmpty(supervisorList)) {
+            return success(Collections.emptyList());
         }
 
         List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
@@ -284,9 +272,9 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         if (Objects.nonNull(form.getId()) && form.getId() > 0) {
             HokageUserDO userDO = userDao.getUserById(form.getId());
             supervisorList = Collections.singletonList(userDO);
-        } else if (StringUtils.isNoneBlank(form.getLabel())) {
+        } else if (!CollectionUtils.isEmpty(form.getServerGroup())) {
             // 1. retrieve server info by label
-            List<HokageServerDO> serverDOList = serverDao.listByType(form.getLabel());
+            List<HokageServerDO> serverDOList = serverDao.selectByGroup(String.join(",", form.getServerGroup()));
             // 2. retrieve subordinate ids by server ids
             List<Long> serverIds = serverDOList.stream().map(HokageServerDO::getId).collect(Collectors.toList());
             List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(serverIds);

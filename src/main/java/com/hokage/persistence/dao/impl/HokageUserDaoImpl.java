@@ -1,5 +1,6 @@
 package com.hokage.persistence.dao.impl;
 
+import com.hokage.biz.request.UserQuery;
 import com.hokage.persistence.dao.HokageUserDao;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import com.hokage.persistence.mapper.HokageUserMapper;
@@ -102,5 +103,10 @@ public class HokageUserDaoImpl implements HokageUserDao {
             return Collections.emptyList();
         }
         return userMapper.listUserByIds(ids);
+    }
+
+    @Override
+    public List<HokageUserDO> query(UserQuery query) {
+        return userMapper.query(query);
     }
 }

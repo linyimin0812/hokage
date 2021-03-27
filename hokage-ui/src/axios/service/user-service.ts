@@ -28,12 +28,6 @@ const serviceInfo: { [name: string]: ServiceParam} = {
         url: '/user/logout',
         method: 'POST'
     },
-
-    // list supervisor
-    'listSupervisor': {
-        url: '/user/supervisor/list',
-        method: 'GET'
-    },
     // search supervisor
     'searchSupervisor': {
         url: '/user/supervisor/search',

@@ -29,11 +29,6 @@ public class ServerQuery extends PageQuery {
     private String ip;
 
     /**
-     * server label
-     */
-    private String label;
-
-    /**
      * server status
      */
     private String status;
