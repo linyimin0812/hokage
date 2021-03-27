@@ -123,22 +123,16 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<List<HokageUserVO>> listSupervisors() {
+    public ServiceResponse<List<HokageUserVO>> search(UserQuery query) {
 
-        List<HokageUserDO> users = userDao.listUserByRole(UserRoleEnum.supervisor.getValue());
+        List<HokageUserDO>  supervisorList = new ArrayList<>();
 
-        List<HokageUserVO> userVOList = users.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
-
-        return success(userVOList);
-
-    }
-
-    @Override
-    public ServiceResponse<List<HokageUserVO>> searchSupervisors(UserQuery query) {
-
-        query.setRole(UserRoleEnum.supervisor.getValue());
-
-        List<HokageUserDO>  supervisorList = userDao.query(query);
+        if (UserRoleEnum.supervisor.getValue().equals(query.getRole())) {
+            supervisorList = userDao.querySupervisor(query);
+        }
+        if (UserRoleEnum.subordinate.getValue().equals(query.getRole())) {
+            supervisorList = userDao.querySubordinate(query);
+        }
         if (CollectionUtils.isEmpty(supervisorList)) {
             return success(Collections.emptyList());
         }
@@ -258,39 +252,6 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         List<HokageUserVO> userVOList = userDOList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
 
         return success(userVOList);
-    }
-
-    /**
-     * search subordinate
-     * @param form
-     * @return
-     */
-    @Override
-    public ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form) {
-
-        List<HokageUserDO>  supervisorList;
-        if (Objects.nonNull(form.getId()) && form.getId() > 0) {
-            HokageUserDO userDO = userDao.getUserById(form.getId());
-            supervisorList = Collections.singletonList(userDO);
-        } else if (!CollectionUtils.isEmpty(form.getServerGroup())) {
-            // 1. retrieve server info by label
-            List<HokageServerDO> serverDOList = serverDao.selectByGroup(String.join(",", form.getServerGroup()));
-            // 2. retrieve subordinate ids by server ids
-            List<Long> serverIds = serverDOList.stream().map(HokageServerDO::getId).collect(Collectors.toList());
-            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(serverIds);
-            // 3. retrieve subordinate info based on subordinate ids
-            List<Long> userIds = subordinateServerDOList.stream().map(HokageSubordinateServerDO::getId).collect(Collectors.toList());
-            supervisorList = userDao.listUserByIds(userIds);
-        } else {
-            HokageUserDO hokageUserDO = new HokageUserDO();
-            hokageUserDO.setUsername(form.getUsername());
-            supervisorList = userDao.listAll(hokageUserDO);
-        }
-
-        List<HokageUserVO> userVOList = supervisorList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
-
-        return success(userVOList);
-
     }
 
     @Override

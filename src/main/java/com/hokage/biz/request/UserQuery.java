@@ -13,6 +13,11 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserQuery extends PageQuery {
+
+    /**
+     * operator id
+     */
+    private Long operatorId;
     /**
      * primary key
      */

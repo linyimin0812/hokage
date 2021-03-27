@@ -74,9 +74,16 @@ public interface HokageUserMapper {
     List<HokageUserDO> listUserByIds(List<Long> ids);
 
     /**
-     * list user with query condition
+     * list supervisor user with query condition
      * @param query query condition
      * @return user query result
      */
-    List<HokageUserDO> query(UserQuery query);
+    List<HokageUserDO> querySupervisor(UserQuery query);
+
+    /**
+     * list subordinate user with query condition
+     * @param query query condition
+     * @return user query result
+     */
+    List<HokageUserDO> querySubordinate(UserQuery query);
 }

@@ -17,7 +17,7 @@ import {
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
 import { removeHokageUid, setHokageUid } from '../../../utils'
-import { OperatorSearchFormType } from '../../../components/user/operator/search';
+import { UserSearchFormType } from '../../../components/user/search';
 
  export const UserAction = {
      login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -119,7 +119,7 @@ import { OperatorSearchFormType } from '../../../components/user/operator/search
              })
          })
      },
-     supervisorSearch: (form: OperatorSearchFormType): Promise<UserVO[]> => {
+     supervisorSearch: (form: UserSearchFormType): Promise<UserVO[]> => {
          return new Promise<UserVO[]>((resolve, reject) => {
              UserService.searchSupervisor(form).then(value => {
                  if (value.success) {
@@ -128,6 +128,19 @@ import { OperatorSearchFormType } from '../../../components/user/operator/search
                  reject(value.msg)
              }).catch(err => {
                  return reject("搜索管理员失败. err: " + JSON.stringify(err))
+             })
+         })
+     },
+
+     searchSubOrdinate: (form: UserSearchFormType): Promise<UserVO[]> => {
+         return new Promise<UserVO[]>((resolve, reject) => {
+             UserService.searchSubOrdinate(form).then(value => {
+                 if (value.success) {
+                     return resolve(value.data)
+                 }
+                 reject(value.msg)
+             }).catch(err => {
+                 return reject("搜索普通用户失败. err: " + JSON.stringify(err))
              })
          })
      }

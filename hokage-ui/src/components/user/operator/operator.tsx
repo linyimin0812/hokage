@@ -1,7 +1,7 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
-import { OperatorSearch, OperatorSearchFormType } from './search'
+import { UserSearch, UserSearchFormType } from '../search'
 import {
     UserAddOutlined,
     InfoCircleOutlined,
@@ -63,7 +63,7 @@ export default class Operator extends React.Component<any, OperatorState> {
         this.searchOperator({})
     }
 
-    searchOperator = (value?: OperatorSearchFormType) => {
+    searchOperator = (value?: UserSearchFormType) => {
         this.setState({loading: true})
         UserAction.supervisorSearch(value ? value : {}).then(supervisorList => {
             this.setState({dataSource: supervisorList, loading: false})
@@ -72,7 +72,7 @@ export default class Operator extends React.Component<any, OperatorState> {
         })
     }
 
-    onFinish = (value: OperatorSearchFormType) => {
+    onFinish = (value: UserSearchFormType) => {
         this.searchOperator(value)
     }
 
@@ -129,7 +129,7 @@ export default class Operator extends React.Component<any, OperatorState> {
         return (
             <div>
                 <BreadcrumbCustom breadcrumProps= {breadcrumProps} />
-                <OperatorSearch onFinish={this.onFinish} />
+                <UserSearch onFinish={this.onFinish} usernameType={'operator'} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}

@@ -11,7 +11,7 @@ import { Operation } from '../../../axios/action/user/user-type'
  * @description
  */
 
-export const breadcrumProps: BreadcrumbPrpos[] = [
+export const breadcrumbProps: BreadcrumbPrpos[] = [
     {
         name: '首页',
         link: '/app/index',

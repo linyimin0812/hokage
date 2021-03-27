@@ -106,7 +106,12 @@ public class HokageUserDaoImpl implements HokageUserDao {
     }
 
     @Override
-    public List<HokageUserDO> query(UserQuery query) {
-        return userMapper.query(query);
+    public List<HokageUserDO> querySupervisor(UserQuery query) {
+        return userMapper.querySupervisor(query);
+    }
+
+    @Override
+    public List<HokageUserDO> querySubordinate(UserQuery query) {
+        return userMapper.querySubordinate(query);
     }
 }

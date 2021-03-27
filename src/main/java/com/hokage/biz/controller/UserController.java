@@ -1,8 +1,10 @@
 package com.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hokage.biz.converter.user.SearchConverter;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.user.*;
 import com.hokage.biz.request.UserQuery;
 import com.hokage.biz.response.user.HokageUserVO;
@@ -32,6 +34,13 @@ import java.util.Objects;
 public class UserController extends BaseController {
 
     private HokageUserService userService;
+
+    private SearchConverter searchConverter;
+
+    @Autowired
+    public void setSearchConverter(SearchConverter converter) {
+        this.searchConverter = converter;
+    }
 
     @Autowired
     public void setUserService(HokageUserService userService) {
@@ -80,34 +89,13 @@ public class UserController extends BaseController {
         return success(true);
     }
 
-    @RequestMapping(value = "/user/supervisor/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageUserVO>> listSupervisor() {
-        ServiceResponse<List<HokageUserVO>> res = userService.listSupervisors();
-
-        if (res.getSucceeded()) {
-            return success(res.getData());
-        }
-        return fail(res.getCode(), res.getMsg());
-    }
-
     @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserServerSearchForm form) {
 
-        UserQuery query = new UserQuery();
-        if (Objects.nonNull(form.getId())) {
-            query.setId(form.getId());
-        }
+        UserQuery query = searchConverter.doForward(form);
+        query.setRole(UserRoleEnum.supervisor.getValue());
 
-        if (!CollectionUtils.isEmpty(form.getServerGroup())) {
-            query.setServerGroup(String.join(",", form.getServerGroup()));
-        }
-
-        if (!StringUtils.isEmpty(form.getUsername())) {
-            query.setUsername(form.getUsername());
-        }
-
-        ServiceResponse<List<HokageUserVO>> response = userService.searchSupervisors(query);
-
+        ServiceResponse<List<HokageUserVO>> response = userService.search(query);
         if (response.getSucceeded()) {
             return success(response.getData());
         }
@@ -185,22 +173,13 @@ public class UserController extends BaseController {
         return fail(res.getCode(), res.getMsg());
     }
 
-    @RequestMapping(value = "/user/subordinate/list", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> listSubordinate(@RequestBody UserServerSearchForm form) {
-
-        Preconditions.checkNotNull(form.getId(), "operation id can't be null");
-
-        ServiceResponse<List<HokageUserVO>> res = userService.listOrdinaryUsers(form.getId());
-
-        if (res.getSucceeded()) {
-            return success(res.getData());
-        }
-        return fail(res.getCode(), res.getMsg());
-    }
-
     @RequestMapping(value = "/user/subordinate/search", method = RequestMethod.POST)
     public ResultVO<List<HokageUserVO>> searchSubordinate(@RequestBody UserServerSearchForm form) {
-        ServiceResponse<List<HokageUserVO>> response = userService.searchSubordinates(form);
+
+        UserQuery query = searchConverter.doForward(form);
+        Preconditions.checkNotNull(query.getOperatorId(), "operatorId can't be empty.");
+        query.setRole(UserRoleEnum.subordinate.getValue());
+        ServiceResponse<List<HokageUserVO>> response = userService.search(query);
 
         if (response.getSucceeded()) {
             return success(response.getData());

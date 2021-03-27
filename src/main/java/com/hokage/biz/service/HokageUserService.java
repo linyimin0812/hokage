@@ -32,17 +32,11 @@ public interface HokageUserService {
     ServiceResponse<HokageUserDO> login(HokageUserDO hokageUserDO);
 
     /**
-     * retrieve all supervisor
-     * @return
-     */
-    ServiceResponse<List<HokageUserVO>> listSupervisors();
-
-    /**
-     * search supervisor
+     * search user
      * @param query search condition
      * @return
      */
-    ServiceResponse<List<HokageUserVO>> searchSupervisors(UserQuery query);
+    ServiceResponse<List<HokageUserVO>> search(UserQuery query);
 
     /**
      * add supervisor
@@ -93,13 +87,6 @@ public interface HokageUserService {
      * @return
      */
     ServiceResponse<List<HokageUserVO>> listAllOrdinateUsers();
-
-    /**
-     * search subordinate
-     * @param form
-     * @return
-     */
-    ServiceResponse<List<HokageUserVO>> searchSubordinates(UserServerSearchForm form);
 
     /**
      * add subordinate

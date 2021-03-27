@@ -150,7 +150,7 @@
         </where>
     </select>
 
-    <select id="query" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
+    <select id="querySupervisor" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns" />
         FROM
@@ -161,12 +161,39 @@
                 AND id = #{id}
             </if>
             <if test="username != null and username != ''">
-                AND username = #{username}
+                AND username LIKE CONCAT('%', #{username}, '%')
             </if>
             <if test="serverGroup != null and serverGroup != ''">
                 AND id IN (
                     SELECT supervisor_id FROM hokage_supervisor_server WHERE server_id IN (
-                        SELECT id FROM hokage_server WHERE server_group = #{serverGroup}
+                        SELECT id FROM hokage_server WHERE server_group LIKE CONCAT('%', server_group ,'%')
+                    )
+                )
+            </if>
+        </where>
+    </select>
+
+    <select id="querySubordinate" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
+        SELECT
+        <include refid="allColumns" />
+        FROM
+        <include refid="tableName" />
+        <where>
+            id IN (
+                SELECT subordinate_id FROM hokage_supervisor_subordinate WHERE supervisor_id = #{operatorId}
+            )
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="username != null and username != ''">
+                AND id IN (
+                    SELECT id FROM hokage_user WHERE username LIKE CONCAT('%', #{username}, '%')
+                )
+            </if>
+            <if test="serverGroup != null and serverGroup != ''">
+                AND id IN (
+                    SELECT subordinate_id FROM hokage_subordinate_server WHERE server_id IN (
+                        SELECT id FROM hokage_server WHERE server_group LIKE CONCAT('%', server_group, '%')
                     )
                 )
             </if>

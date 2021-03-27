@@ -1,21 +1,23 @@
 import React from 'react'
 import { Divider, Form, Row, Col, Input, Button, Select } from 'antd'
-import { formItemLayout } from '../../common/table-layout'
-import { useServerOptions } from '../hook'
+import { formItemLayout } from '../common/table-layout'
+import { useServerOptions } from './hook'
 
 interface SearchFormType {
     id: string,
     username: string,
-    serverGroup: string[]
+    serverGroup: string[],
+    operatorId: number
 }
 
 type SearchProps = {
-    onFinish: (value: Partial<SearchFormType>) => void
+    onFinish: (value: Partial<SearchFormType>) => void,
+    usernameType: 'operator' | 'ordinary'
 }
 
-export type OperatorSearchFormType = Partial<SearchFormType>
+export type UserSearchFormType = Partial<SearchFormType>
 
-export const OperatorSearch = (props: SearchProps) => {
+export const UserSearch = (props: SearchProps) => {
 
     const [serverOptions] = useServerOptions()
     const [form] = Form.useForm()
@@ -28,7 +30,7 @@ export const OperatorSearch = (props: SearchProps) => {
 
     return (
         <div style={{ backgroundColor: '#FFFFFF' }}>
-            <Divider orientation="left">管理员信息查询</Divider>
+            <Divider orientation="left">{props.usernameType === 'ordinary' ? '服务器使用者信息查询' : '管理员信息查询'}</Divider>
             <Form
                 name="operator-search"
                 onFinish={onFinish}
@@ -48,7 +50,7 @@ export const OperatorSearch = (props: SearchProps) => {
                     <Col span={6} key="username">
                         <Form.Item
                             name="username"
-                            label="管理员姓名"
+                            label={props.usernameType === 'ordinary' ? '使用者姓名' : '管理员姓名'}
                             colon
                             {...formItemLayout}
                         >

@@ -14,7 +14,12 @@ import java.util.List;
 @Data
 public class UserServerSearchForm extends PageQuery {
     /**
-     * user id
+     * operator id
+     */
+    private Long operatorId;
+
+    /**
+     * primary key
      */
     private Long id;
     /**

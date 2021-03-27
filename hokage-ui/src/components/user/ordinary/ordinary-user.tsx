@@ -1,15 +1,12 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
-import Search from './search'
+import { UserSearch, UserSearchFormType } from '../search'
 import {
-	UserAddOutlined,
 	InfoCircleOutlined,
-	SyncOutlined,
 	UsergroupDeleteOutlined,
 } from '@ant-design/icons'
-import AddUser from './add-user'
-import { breadcrumProps, columns, nestedColumn } from './column-definition'
+import { breadcrumbProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { UserAction } from '../../../axios/action'
@@ -64,24 +61,21 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 	}
 
 	componentDidMount() {
-		this.listSubordinate(getHokageUid())
+		this.searchSubordinate({operatorId: getHokageUid()})
 	}
 
-	listSubordinate = (supervisorId: number) => {
+	searchSubordinate = (value: UserSearchFormType) => {
 		this.setState({loading: true})
-		UserAction.listSubordinate(supervisorId).then(userList => {
+		UserAction.searchSubOrdinate(value).then(userList => {
 			this.setState({dataSource: userList, loading: false})
 		}).catch(err => {
 			message.error(err)
 		})
 	}
 
-	onFinish = (value: any) => {
-		console.log(value);
-	};
-
-	resetFields = () => {
-		console.log('reset');
+	onFinish = (value: UserSearchFormType) => {
+		value.operatorId = getHokageUid()
+		this.searchSubordinate(value)
 	};
 
 	onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
@@ -97,10 +91,6 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		alert('delete operators bat');
 	};
 
-	sync = () => {
-		alert('sync operator');
-	};
-
 	onModalOk = (value: {userIds: number[]}) => {
 		UserAction.addSubordinate({
 			id: getHokageUid(),
@@ -109,7 +99,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 		}).then(value => {
 			if (value) {
 				this.setState({ ...this.state, isModalVisible: false })
-				this.listSubordinate(getHokageUid())
+				this.searchSubordinate({operatorId: getHokageUid()})
 			} else {
 				message.error('添加管理员失败')
 			}
@@ -135,8 +125,8 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 
 		return (
 			<div>
-				<BreadcrumbCustom breadcrumProps={breadcrumProps} />
-				<Search onFinish={this.onFinish} clear={this.resetFields} />
+				<BreadcrumbCustom breadcrumProps={breadcrumbProps} />
+				<UserSearch onFinish={this.onFinish} usernameType={'ordinary'} />
 				<div style={{ backgroundColor: '#FFFFFF' }}>
 					<Row
 						gutter={24}
@@ -148,7 +138,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 								已选择{<span style={{ color: 'blue' }}>{selectedRowKeys.length}</span>}项
 							</span>
 						</Col>
-						<Col span={12}>
+						<Col span={12} style={{padding: '0 0'}}>
               				<span style={{ float: 'right' }}>
 								{
 									selectedRowKeys.length > 0 ? (
@@ -159,13 +149,6 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 										</span>
 									) : null
 								}
-						  		<Button icon={<UserAddOutlined translate="true" />} onClick={this.add}>
-						  			添加
-								</Button>
-								<AddUser onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
-								<span style={{ paddingLeft: '64px' }}>
-									<SyncOutlined translate="true" onClick={this.sync} />
-								</span>
               				</span>
 						</Col>
 					</Row>
