@@ -1,116 +1,95 @@
 import React from 'react'
 import { Divider, Form, Row, Col, Input, Button, Select } from 'antd'
+import { ServerSearchForm } from '../../../axios/action/server/server-type'
+import { useServerOptions } from '../../../hook'
 
 type SearchPropTypes = {
-    onFinish: (value: any) => void,
-    clear: () => void
+    onFinish: (value: ServerSearchForm) => void,
 }
 
-export default class Search extends React.Component<SearchPropTypes> {
-    render() {
-        return (
-            <div style={{ backgroundColor: '#FFFFFF'}}>
-                <Divider orientation="left">服务器信息查询</Divider>
-                <Form
-                    name="operator-search"
-                    onFinish={this.props.onFinish}
-                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                >
-                    <Row gutter={24} style={{ width: '100%' }}>
-                        <Col span={4} key="hostname">
-                            <Form.Item
-                                name="hoatname"
-                                label="主机名"
-                            >
-                                <Input placeholder="请输入" />
-                            </Form.Item>
-                        </Col>
+export const AllServerSearch = (props: SearchPropTypes) => {
 
-                        <Col span={4} key="domain">
-                            <Form.Item
-                                name="domain"
-                                label="域名"
-                            >
-                                <Input placeholder="请输入" />
-                            </Form.Item>
-                        </Col>
+    const [form] = Form.useForm()
+    const [serverGroupOptions] = useServerOptions()
 
-                        <Col span={4} key="ipAddress">
-                            <Form.Item
-                                name="ipAddress"
-                                label="ip地址"
-                            >
-                                <Input placeholder="请输入" />
-                            </Form.Item>
-                        </Col>
+    const onFinish = (value: ServerSearchForm) => { props.onFinish(value) }
+    const onReset = () => { form.resetFields() }
 
-                        <Col span={4} key="supervisor">
-                            <Form.Item
-                                name="supervisor"
-                                label="管理员"
-                            >
-                                <Input placeholder="请输入" />
-                            </Form.Item>
-                        </Col>
-                        <Col span={4} key="serverLabel">
-                            <Form.Item
-                                name="serverLabel"
-                                label="标签"
-                            >
-                                <Select defaultValue="-1">
-                                    <Select.Option value="-1">请选择</Select.Option>
-                                    <Select.Option value="ordinaryServer">普通服务器</Select.Option>
-                                    <Select.Option value="gpuServer">GPU服务器</Select.Option>
-                                    <Select.Option value="intranetServer">内网服务器</Select.Option>
-                                    <Select.Option value="publicNetworkServer">外网服务器</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={4} key="serverGroup">
-                            <Form.Item
-                                name="serverGroup"
-                                label="服务器分组"
-                            >
-                                <Select defaultValue="-1">
-                                    <Select.Option value="-1">默认</Select.Option>
-                                    <Select.Option value="ordinaryServer">Hadoop集群</Select.Option>
-                                    <Select.Option value="gpuServer">分布式文件存储</Select.Option>
-                                    <Select.Option value="intranetServer">K8S</Select.Option>
-                                    <Select.Option value="publicNetworkServer">Web应用</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={4} key="status">
-                            <Form.Item
-                                name="status"
-                                label="状态"
-                            >
-                                <Select defaultValue="-1">
-                                    <Select.Option value="-1">请选择</Select.Option>
-                                    <Select.Option value="online">在线</Select.Option>
-                                    <Select.Option value="offline">下线</Select.Option>
-                                    <Select.Option value="exception">异常</Select.Option>
-                                </Select>
-                            </Form.Item>
-                        </Col>
-                        <Col span={4} key="submit">
-                            <Button type="primary" htmlType="submit">
-                                Search
-                            </Button>
-                            <Button
-                                style={{
-                                    margin: '0 8px',
-                                }}
-                                onClick={() => {
-                                    this.props.clear();
-                                }}
-                            >
-                                Clear
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </div>
-        )
-    }
+    return (
+        <div style={{ backgroundColor: '#FFFFFF'}}>
+            <Divider orientation="left">服务器信息查询</Divider>
+            <Form
+                name="operator-search"
+                onFinish={onFinish}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                form={form}
+            >
+                <Row gutter={24} style={{ width: '100%' }}>
+                    <Col span={6} key="hostname">
+                        <Form.Item
+                            name="hostname"
+                            label="主机名"
+                        >
+                            <Input placeholder="请输入" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={6} key="domain">
+                        <Form.Item
+                            name="domain"
+                            label="域名"
+                        >
+                            <Input placeholder="请输入" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={6} key="ipAddress">
+                        <Form.Item
+                            name="ip"
+                            label="ip地址"
+                        >
+                            <Input placeholder="请输入" />
+                        </Form.Item>
+                    </Col>
+
+                    <Col span={6} key="supervisor">
+                        <Form.Item
+                            name="supervisor"
+                            label="管理员"
+                        >
+                            <Input placeholder="请输入" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={6} key="serverGroup">
+                        <Form.Item
+                            name="serverGroup"
+                            label="服务器分组"
+                        >
+                            <Select mode={'multiple'}>
+                                {
+                                    serverGroupOptions.map(option => {
+                                        return <Select.Option value={option.value}>{option.label}</Select.Option>
+                                    })
+                                }
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={4} key="submit">
+                        <Button type="primary" htmlType="submit">
+                            Search
+                        </Button>
+                        <Button
+                            style={{
+                                margin: '0 8px',
+                            }}
+                            htmlType="button"
+                            onClick={onReset}
+                        >
+                            Clear
+                        </Button>
+                    </Col>
+                </Row>
+            </Form>
+        </div>
+    )
 }

@@ -1,5 +1,6 @@
 import { Models } from './model'
 import { Terminal } from 'xterm'
+import { UserRoleEnum } from '../axios/action/user/user-type';
 
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
@@ -59,6 +60,20 @@ export const getHokageUid = (): number => {
 
 export const removeHokageUid = () => {
     window.localStorage.removeItem('hokageUid')
+}
+
+export const setHokageRole = (role: number) => {
+    if (!role) role = UserRoleEnum.subordinate
+    window.localStorage.setItem('hokageRole', role + '')
+}
+
+export const getHokageRole = () => {
+    const role = window.localStorage.getItem('hokageRole')
+    return role ? parseInt(role) : UserRoleEnum.subordinate
+}
+
+export const removeHokageRole = () => {
+    window.localStorage.removeItem('hokageRole')
 }
 
 export const xtermSpinner = (terminal: Terminal): NodeJS.Timeout => {

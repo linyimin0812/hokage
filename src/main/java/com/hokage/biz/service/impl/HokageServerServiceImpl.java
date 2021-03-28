@@ -4,15 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
 import com.hokage.biz.converter.server.ServerFormConverter;
-import com.hokage.biz.converter.server.ServerSearchFormConverter;
 import com.hokage.biz.enums.LoginTypeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
-import com.hokage.biz.form.server.ServerSearchForm;
 import com.hokage.biz.request.AllServerQuery;
+import com.hokage.biz.request.ServerQuery;
 import com.hokage.biz.request.SubordinateServerQuery;
 import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
@@ -53,9 +52,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
-
-    private HokageServerGroupService serverGroupService;
-
     private HokageServerSshKeyContentDao contentDao;
 
     @Autowired
@@ -99,30 +95,15 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Autowired
-    public void setServerGroupService(HokageServerGroupService serverGroupService) {
-        this.serverGroupService = serverGroupService;
-    }
-
-    @Autowired
     private void setContentDao(HokageServerSshKeyContentDao contentDao) {
         this.contentDao = contentDao;
     }
 
-    private final ImmutableMap<Integer, Function<ServerSearchForm, List<HokageServerDO>>> SERVER_QUERY_MAP =
-            ImmutableMap.<Integer, Function<ServerSearchForm, List<HokageServerDO>>>builder()
-                    .put(UserRoleEnum.super_operator.getValue(), (form -> {
-                        AllServerQuery query = ServerSearchFormConverter.converterToAll(form);
-                        return hokageServerDao.selectByQuery(query);
-
-                    }))
-                    .put(UserRoleEnum.supervisor.getValue(), (form -> {
-                        SupervisorServerQuery query = ServerSearchFormConverter.converterToSupervisor(form);
-                        return hokageServerDao.selectByQuery(query);
-                    }))
-                    .put(UserRoleEnum.subordinate.getValue(), (form -> {
-                        SubordinateServerQuery query = ServerSearchFormConverter.converterToSubordinate(form);
-                        return hokageServerDao.selectByQuery(query);
-                    }))
+    private final ImmutableMap<String, Function<ServerQuery, List<HokageServerDO>>> SERVER_QUERY_MAP =
+            ImmutableMap.<String, Function<ServerQuery, List<HokageServerDO>>>builder()
+                    .put(AllServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((AllServerQuery) query)))
+                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((SupervisorServerQuery) query)))
+                    .put(SubordinateServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((SubordinateServerQuery) query)))
                     .build();
 
     private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
@@ -178,33 +159,22 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
-    public ServiceResponse<List<HokageServerVO>> listServer(ServerSearchForm form) {
+    public ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query) {
 
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
 
-        Long operatorId = form.getOperatorId();
-        // retrieve operate role
-        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
-
-        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
-            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
-        }
-
-        Function<ServerSearchForm, List<HokageServerDO>> queryFunction = SERVER_QUERY_MAP.get(roleResponse.getData());
+        Function<ServerQuery, List<HokageServerDO>> queryFunction = SERVER_QUERY_MAP.get(query.getClass().getSimpleName());
 
         if (Objects.isNull(queryFunction)) {
             return response.fail("A-XXX", "search server error, not support search type.");
         }
-        List<HokageServerDO> serverDOList = queryFunction.apply(form);
 
+        List<HokageServerDO> serverDOList = queryFunction.apply(query);
         List<HokageServerVO> serverVOList = serverDOList.stream()
                 .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
                 .collect(Collectors.toList());
 
-        response.success(serverVOList);
-
-        return response;
-
+        return response.success(serverVOList);
     }
 
     @Override

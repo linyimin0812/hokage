@@ -20,7 +20,7 @@ public class SubordinateServerQuery extends ServerQuery {
     private String username;
 
     /**
-     * ssh login status
+     * account ssh login status
      */
-    private String loginStatus;
+    private String accountStatus;
 }

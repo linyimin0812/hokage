@@ -5,7 +5,7 @@ import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-typ
 import { column } from './column-definition'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { Operation } from '../../axios/action/user/user-type'
-import { getHokageUid } from '../../utils'
+import { getHokageRole, getHokageUid } from '../../utils'
 
 type SshInfoProps = {
     addSshTerm: (record: ServerVO) => void
@@ -32,7 +32,8 @@ export default class WebSshServer extends React.Component<SshInfoProps, SshInfoS
     listServer = () => {
         this.setState({loading: true})
         const form: ServerSearchForm = {
-            operatorId: getHokageUid()
+            operatorId: getHokageUid(),
+            role: getHokageRole()
         }
         ServerAction.searchServer(form).then(result => {
             result = (result || []).map(serverVO => {

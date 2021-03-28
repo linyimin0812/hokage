@@ -3,6 +3,8 @@ package com.hokage.biz.form.server;
 import com.hokage.common.PageQuery;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author linyimin
  * @date 2020/11/1 17:29
@@ -35,15 +37,11 @@ public class ServerSearchForm extends PageQuery {
      * supervisor name
      */
     private String supervisorName;
-    /**
-     * server label
-     */
-    private String label;
 
     /**
      * server group
      */
-    private String serverGroup;
+    private List<String> serverGroup;
 
     /**
      * server status
@@ -64,6 +62,11 @@ public class ServerSearchForm extends PageQuery {
      * username
      */
     private String username;
+
+    /**
+     * search user role
+     */
+    private Integer role;
 
 }
 

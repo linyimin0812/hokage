@@ -3,9 +3,8 @@ import { message, Row, Col } from 'antd'
 import ServerCard from './server-card'
 import ApplyServerPrompt from './apply-server-prompt'
 import ApplyAndSearchServer from './apply-and-search-server'
-import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type'
-import { ServerAction } from '../../axios/action/server/server-action'
-import { getHokageUid } from '../../utils'
+import { ServerVO } from '../../axios/action/server/server-type'
+import { searchServer } from '../server/util'
 
 type FileServerProps = {
     actionName: string
@@ -25,20 +24,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
     }
 
     componentDidMount() {
-        this.listServer()
-    }
-
-    listServer = () => {
-        const form: ServerSearchForm = {
-            operatorId: getHokageUid()
-        }
-        ServerAction.searchServer(form).then(result => {
-            result = (result || []).map(serverVO => {
-                serverVO.key = serverVO.id + ''
-                return serverVO
-            })
-            this.setState({dataSource: result})
-        }).catch(err => message.error(err))
+        searchServer(this)
     }
 
     applyServer = () => {

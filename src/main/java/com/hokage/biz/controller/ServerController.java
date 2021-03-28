@@ -1,9 +1,14 @@
 package com.hokage.biz.controller;
 
+import com.google.common.base.Preconditions;
+import com.hokage.biz.converter.server.ServerSearchConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
+import com.hokage.biz.request.AllServerQuery;
+import com.hokage.biz.request.ServerQuery;
 import com.hokage.biz.response.HokageOptionVO;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageServerService;
@@ -48,7 +53,18 @@ public class ServerController extends BaseController {
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchServer(@RequestBody ServerSearchForm form) {
 
-        ServiceResponse<List<HokageServerVO>> response = serverService.listServer(form);
+        Preconditions.checkNotNull(form.getRole(), "role can't be empty.");
+        Preconditions.checkNotNull(form.getOperatorId(), "operator id can't be empty.");
+
+        ServerQuery query = ServerSearchConverter.converterToSubordinate(form);
+        if (UserRoleEnum.super_operator.getValue().equals(form.getRole())) {
+           query = ServerSearchConverter.converterToAll(form);
+        }
+        if (UserRoleEnum.supervisor.getValue().equals(form.getRole())) {
+            query = ServerSearchConverter.converterToSupervisor(form);
+        }
+
+        ServiceResponse<List<HokageServerVO>> response = serverService.searchServer(query);
 
         if (!response.getSucceeded()) {
             return fail(response.getCode(), response.getMsg());

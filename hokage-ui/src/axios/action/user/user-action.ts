@@ -12,12 +12,12 @@ import {
     UserRegisterForm,
     UserServerSearchForm,
     UserServerOperateForm,
-    UserVO,
+    UserVO, UserRoleEnum,
 } from './user-type';
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
-import { removeHokageUid, setHokageUid } from '../../../utils'
-import { UserSearchFormType } from '../../../components/user/search';
+import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../utils'
+import { UserSearchFormType } from '../../../components/user/search'
 
  export const UserAction = {
      login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -26,6 +26,7 @@ import { UserSearchFormType } from '../../../components/user/search';
                 if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
                     setHokageUid(data.id || 0)
+                    setHokageRole(data.role || UserRoleEnum.subordinate)
 					return resolve(value)
                 }
                 
@@ -43,6 +44,7 @@ import { UserSearchFormType } from '../../../components/user/search';
                 if (value.success) {
                     Models.remove('userInfo')
                     removeHokageUid()
+                    removeHokageRole()
                     return resolve(true)
                 }
                 return reject(value)
@@ -58,6 +60,7 @@ import { UserSearchFormType } from '../../../components/user/search';
 				if (value.success && value.data) {
                     const data: UserRegisterForm = value.data
                     setHokageUid(data.id || 0)
+                    setHokageRole(data.role || UserRoleEnum.subordinate)
 					return resolve(value)
 				}
 				return reject(value)

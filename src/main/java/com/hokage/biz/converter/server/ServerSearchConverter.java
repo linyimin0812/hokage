@@ -5,6 +5,7 @@ import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.SubordinateServerQuery;
 import com.hokage.biz.request.SupervisorServerQuery;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author linyimin
@@ -12,26 +13,32 @@ import org.springframework.beans.BeanUtils;
  * @email linyimin520812@gmail.com
  * @description server search form converter
  */
-public class ServerSearchFormConverter {
+public class ServerSearchConverter {
     public static AllServerQuery converterToAll(ServerSearchForm form) {
         AllServerQuery query = new AllServerQuery();
         BeanUtils.copyProperties(form, query);
+        if (!CollectionUtils.isEmpty(form.getServerGroup())) {
+            query.setServerGroup(String.join(",", form.getServerGroup()));
+        }
         query.setSupervisor(form.getSupervisorName());
-        query.setStatus(form.getStatus());
         return query;
     }
 
     public static SupervisorServerQuery converterToSupervisor(ServerSearchForm form) {
         SupervisorServerQuery query = new SupervisorServerQuery();
         BeanUtils.copyProperties(form, query);
-        query.setStatus(form.getStatus());
+        if (!CollectionUtils.isEmpty(form.getServerGroup())) {
+            query.setServerGroup(String.join(",", form.getServerGroup()));
+        }
         return query;
     }
 
     public static SubordinateServerQuery converterToSubordinate(ServerSearchForm form) {
         SubordinateServerQuery query =  new SubordinateServerQuery();
-        query.setLoginStatus(form.getAccountStatus());
-        query.setStatus(form.getStatus());
+        BeanUtils.copyProperties(form, query);
+        if (!CollectionUtils.isEmpty(form.getServerGroup())) {
+            query.setServerGroup(String.join(",", form.getServerGroup()));
+        }
         return query;
     }
 

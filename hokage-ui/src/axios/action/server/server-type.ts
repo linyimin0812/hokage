@@ -6,7 +6,6 @@
  */
 import { Operation } from '../user/user-type'
 import { UploadChangeParam } from 'antd/lib/upload/interface'
-import { ServiceResult } from '../../common';
 
 export interface Option {
     label: string,
@@ -59,16 +58,20 @@ export interface ServerForm {
     passwd: string | UploadChangeParam
 }
 
-export interface ServerSearchForm {
-    operatorId: number,
-    hostname?: string,
-    domain?: string,
-    ip?: string,
+export interface ServerSearchForm extends ServerSearchBaseForm{
     supervisorName?: string,
-    label?: string,
     serverGroup?: string,
     status?: string,
     account?: string,
     accountStatus?: string,
     username?: string
+}
+
+interface ServerSearchBaseForm {
+    operatorId?: number,
+    role?: number,
+    hostname?: string,
+    domain?: string,
+    ip?: string,
+    serverGroup?: string,
 }

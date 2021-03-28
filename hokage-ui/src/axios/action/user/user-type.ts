@@ -54,3 +54,9 @@ export interface UserServerSearchForm {
     username: string,
     label: string
 }
+
+export enum UserRoleEnum {
+    super_operator= 100,
+    supervisor = 1,
+    subordinate = 2
+}

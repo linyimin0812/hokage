@@ -74,17 +74,17 @@
     </sql>
 
     <sql id="queryBaseSql">
-        <if test="hostname != null">
+        <if test="hostname != null and hostname != ''">
             and hostname=#{hostname}
         </if>
-        <if test="domain != null">
+        <if test="domain != null and domain != ''">
             and domain=#{domain}
         </if>
-        <if test="ip != null">
+        <if test="ip != null and ip != ''">
             and ip=#{ip}
         </if>
-        <if test="serverGroup != null">
-            and server_group = #{serverGroup}
+        <if test="serverGroup != null and serverGroup != ''">
+            and server_group LIKE CONCAT('%', #{serverGroup}, '%')
         </if>
     </sql>
 
@@ -196,7 +196,7 @@
             <include refid="tableNme"/>
         <where>
             id IN (
-                SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id = #{supervisorId}
+                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{supervisorId}
             )
         </where>
     </select>
@@ -208,8 +208,8 @@
             <include refid="queryBaseSql" />
             <if test="supervisor != null">
                 and id IN (
-                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
-                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{supervisor}, '%')
+                    SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id IN (
+                        SELECT id FROM hokage_user WHERE `username` LIKE CONCAT('%', #{supervisor}, '%')
                     )
                 )
             </if>
@@ -220,22 +220,23 @@
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
+            id IN (
+                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{operateId}
+            )
             <include refid="queryBaseSql" />
-            <if test="account != null">
-                and account = #{account}
+            <if test="account != null and account != ''">
+                and account LIKE CONCAT('%', account, '%')
             </if>
 
             <if test="username != null">
                 and id IN (
-                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
-                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
-                    )
-                    UNION ALL
-                    SELECT server_id FROM `hokage.hokage_subordinate_server` WHERE subordinate_id IN (
-                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+                    SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id IN (
+                        SELECT id FROM hokage_user WHERE `username` LIKE CONCAT('%', #{username}, '%')
                     )
                 )
             </if>
+
+
 
         </where>
     </select>
@@ -244,19 +245,18 @@
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
+            id IN (
+                SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id = #{operateId}
+            )
             <include refid="queryBaseSql" />
-            <if test="account != null">
-                and account = #{account}
+            <if test="account != null and account != ''">
+                AND account LIKE CONCAT('%', account,'%')
             </if>
 
-            <if test="username != null">
-                and id IN (
-                    SELECT server_id FROM `hokage.hokage_supervisor_server` WHERE supervisor_id IN (
-                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
-                    )
-                    UNION ALL
-                    SELECT server_id FROM `hokage.hokage_subordinate_server` WHERE subordinate_id IN (
-                        SELECT id FROM `hokage.hokage_user` WHERE `username` LIKE CONCAT('%', #{username}, '%')
+            <if test="username != null and username != ''">
+                AND id IN (
+                    SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id IN (
+                        SELECT id FROM hokage_user WHERE `username` LIKE CONCAT('%', #{username}, '%')
                     )
                 )
             </if>

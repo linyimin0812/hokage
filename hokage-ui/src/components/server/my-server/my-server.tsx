@@ -1,14 +1,13 @@
 import React, { ReactText } from 'react'
 import { Table, Button, Row, Col, message, Divider } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
-import Search from './search'
+import { MyServerSearch } from './search'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
 import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
-import { ServerAction } from '../../../axios/action/server/server-action'
 import AddAccount from '../add-account'
-import { getHokageUid } from '../../../utils'
+import { searchServer } from '../util'
 
 type MyServerState = {
     selectedRowKeys: ReactText[],
@@ -29,33 +28,14 @@ export default class MyServer extends React.Component<any, MyServerState> {
     }
 
     componentDidMount() {
-        this.listServer()
+        searchServer(this)
     }
-
-    listServer = () => {
-        this.setState({loading: true})
-        const form: ServerSearchForm = {
-            operatorId: getHokageUid()
-        }
-        ServerAction.searchServer(form).then(result => {
-            result = (result || []).map(serverVO => {
-                serverVO.key = serverVO.id + ''
-                return serverVO
-            })
-            this.setState({dataSource: result})
-        }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
-    }
-
     applyServer = () => {
         window.location.href = "/app/server/all"
     }
 
-    onFinish = (value: any) => {
-        console.log(value)
-    }
-
-    resetFields = () => {
-        console.log("reset")
+    onFinish = (value: ServerSearchForm) => {
+        searchServer(this, value)
     }
 
     onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
@@ -106,7 +86,7 @@ export default class MyServer extends React.Component<any, MyServerState> {
         return (
             <>
                 <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
-                <Search onFinish={this.onFinish} clear={this.resetFields} />
+                <MyServerSearch onFinish={this.onFinish} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}

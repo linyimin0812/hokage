@@ -2,13 +2,14 @@ import React, { ReactText } from 'react'
 import { message, Table, Row, Col, Button, Divider } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import Search from './search'
+import { AllServerSearch } from './search'
 import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerForm, ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
 import { getHokageUid } from '../../../utils';
-import { ServiceResult } from '../../../axios/common';
+import { ServiceResult } from '../../../axios/common'
+import { searchServer } from '../util'
 
 type AllServerState = {
     selectedRowKeys: ReactText[],
@@ -27,29 +28,11 @@ export default class AllServer extends React.Component<{}, AllServerState> {
     }
 
     componentDidMount() {
-        this.listServer()
+        searchServer(this)
     }
 
-    listServer = () => {
-        this.setState({loading: true})
-        const form: ServerSearchForm = {
-            operatorId: getHokageUid()
-        }
-        ServerAction.searchServer(form).then(result => {
-            result = (result || []).map(serverVO => {
-                serverVO.key = serverVO.id + ''
-                return serverVO
-            })
-            this.setState({dataSource: result})
-        }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
-    }
-
-    onFinish = (value: any) => {
-        console.log(value)
-    }
-
-    resetFields = () => {
-        console.log("reset")
+    onFinish = (value: ServerSearchForm) => {
+        searchServer(this, value)
     }
 
     onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
@@ -84,7 +67,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
         }
         ServerAction.saveServer(value).then(() => {
             this.setState({ isModalVisible: false })
-            this.listServer()
+            searchServer(this)
         }).catch(e => message.error(e))
     }
 
@@ -103,7 +86,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
         return (
             <div>
                 <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
-                <Search onFinish={this.onFinish} clear={this.resetFields} />
+                <AllServerSearch onFinish={this.onFinish} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row
                         gutter={24}

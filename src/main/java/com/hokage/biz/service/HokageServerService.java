@@ -2,8 +2,7 @@ package com.hokage.biz.service;
 
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
-import com.hokage.biz.form.server.ServerSearchForm;
-import com.hokage.biz.response.HokageOptionVO;
+import com.hokage.biz.request.ServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerDO;
@@ -26,10 +25,10 @@ public interface HokageServerService {
 
     /**
      * search server
-     * @param form ServerSearchForm
+     * @param query ServerSearchForm
      * @return List<HokageServerVO>
      */
-    ServiceResponse<List<HokageServerVO>> listServer(ServerSearchForm form);
+    ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query);
 
     /**
      * retrieve server information based on server ids

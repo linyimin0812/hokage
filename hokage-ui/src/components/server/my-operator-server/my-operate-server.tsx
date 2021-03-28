@@ -3,13 +3,12 @@ import { message, Table, Row, Col, Button, Divider } from 'antd'
 import BreadcrumbCustom from '../../bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
-import Search from './search'
+import { MyOperatorServerSearch } from './search'
 import ApplyServer from '../apply-server'
 import { breadcrumbProps, columns, nestedColumns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
-import { ServerAction } from '../../../axios/action/server/server-action'
 import { Operation } from '../../../axios/action/user/user-type'
-import { getHokageUid } from '../../../utils';
+import { searchServer } from '../util'
 
 interface NestedTableDataSource {
     key: string,
@@ -38,10 +37,10 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
             expandedRowRender: () => {
                 return <Table columns={nestedColumns} dataSource={this.state.nestedTableDataSource} pagination={false} />;
             },
-            onExpand: (expanded: boolean, record: any) => {
+            onExpand: (expanded: boolean, record: ServerVO) => {
                 if (expanded) {
                     // TODO: 这里替换成接口,请求真实的数据
-                    const expandedRowKeys: string[] = [record.key]
+                    const expandedRowKeys: string[] = [record.key!]
                     const datasources: NestedTableDataSource[] = []
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = expandedRowKeys
@@ -63,25 +62,11 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
     }
 
     componentDidMount() {
-        this.listServer()
+        searchServer(this)
     }
 
-    listServer = () => {
-        this.setState({loading: true})
-        const form: ServerSearchForm = {
-            operatorId: getHokageUid()
-        }
-        ServerAction.searchServer(form).then(result => {
-            result = (result || []).map(serverVO => {
-                serverVO.key = serverVO.id + ''
-                return serverVO
-            })
-            this.setState({dataSource: result})
-        }).catch(err => message.error(err)).finally(() => this.setState({loading: false}))
-    }
-
-    onFinish = (value: any) => {
-        console.log(value)
+    onFinish = (value: ServerSearchForm) => {
+        searchServer(this, value)
     }
 
     resetFields = () => {
@@ -130,7 +115,7 @@ export default class MyOperateServer extends React.Component<{}, AllServerState>
             <div>
                 <BreadcrumbCustom breadcrumProps={breadcrumbProps} />
                 <>
-                    <Search onFinish={this.onFinish} clear={this.resetFields} />
+                    <MyOperatorServerSearch onFinish={this.onFinish} />
                     <div style={{ backgroundColor: '#FFFFFF' }}>
                         <Row
                             gutter={24}
