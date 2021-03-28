@@ -40,6 +40,8 @@ export const ConfirmModal = (props: ActionModalProps) => {
                 okText={translate('confirm')}
                 cancelText={translate('cancel')}
                 confirmLoading={confirmLoading}
+                closable={false}
+                maskClosable={false}
             >
                 <p>{props.content}</p>
             </Modal>
