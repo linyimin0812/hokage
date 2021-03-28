@@ -47,7 +47,7 @@ export const FormModal = (props: FormModalProps) => {
             <Button type="link" onClick={onClick}>{translate(props.actionName)}</Button>
             <Modal
                 visible={visible}
-                title={props.actionName}
+                title={translate(props.actionName)}
                 okText={translate('confirm')}
                 cancelText={translate('cancel')}
                 onCancel={onCancel}
