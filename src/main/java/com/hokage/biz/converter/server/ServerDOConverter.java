@@ -82,15 +82,18 @@ public class ServerDOConverter {
                 new HokageOperation(
                         OperationTypeEnum.modal.name(),
                         "specifySupervisor",
-                        "/server/supervisor/add"),
+                        "/server/supervisor/add",
+                        ""),
                 new HokageOperation(
                         OperationTypeEnum.confirm.name(),
                         "recycleSupervisor",
-                        "/server/supervisor/recycle"),
+                        "/server/supervisor/recycle",
+                        ""),
                 new HokageOperation(
                         OperationTypeEnum.confirm.name(),
                         "modifySupervisor",
-                        "/server/supervisor/modify")
+                        "/server/supervisor/modify",
+                        "")
             );
             hokageServerVO.setOperationList(operations);
 
@@ -133,7 +136,8 @@ public class ServerDOConverter {
                 new HokageOperation(
                         OperationTypeEnum.confirm.name(),
                         "recycle",
-                        "/server/recycle")
+                        "/server/recycle",
+                        "")
             );
             serverVO.setOperationList(operations);
 

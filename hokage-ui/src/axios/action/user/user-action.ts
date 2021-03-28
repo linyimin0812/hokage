@@ -98,7 +98,7 @@ import { UserSearchFormType } from '../../../components/user/search'
 
      listSubordinate: (supervisorId: number): Promise<UserVO[]> => {
          return new Promise<UserVO[]>((resolve, reject) => {
-             const form: UserServerSearchForm = { id: supervisorId, username: '', label: '' }
+             const form: UserServerSearchForm = { operatorId: supervisorId, username: '', label: '' }
              UserService.listSubordinate(form).then(value => {
                  if (value.success) {
                      return resolve(value.data)

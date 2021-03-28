@@ -59,7 +59,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
 
     onGroupModalOk = (value: { name: string, description: string }) => {
         const form: UserServerOperateForm = {
-            id: getHokageUid(),
+            operatorId: getHokageUid(),
             serverGroup: {
                 name: value.name,
                 description: value.description || '',

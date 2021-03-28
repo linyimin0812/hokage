@@ -125,21 +125,18 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     @Override
     public ServiceResponse<List<HokageUserVO>> search(UserQuery query) {
 
-        List<HokageUserDO>  supervisorList = new ArrayList<>();
-
         if (UserRoleEnum.supervisor.getValue().equals(query.getRole())) {
-            supervisorList = userDao.querySupervisor(query);
+            List<HokageUserDO> supervisorList = userDao.querySupervisor(query);
+            List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
+            return success(userVOList);
         }
         if (UserRoleEnum.subordinate.getValue().equals(query.getRole())) {
-            supervisorList = userDao.querySubordinate(query);
-        }
-        if (CollectionUtils.isEmpty(supervisorList)) {
-            return success(Collections.emptyList());
+            List<HokageUserDO> subordinateList = userDao.querySubordinate(query);
+            List<HokageUserVO> userVOList = subordinateList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
+            return success(userVOList);
         }
 
-        List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
-
-        return success(userVOList);
+        return success(Collections.emptyList());
 
     }
 

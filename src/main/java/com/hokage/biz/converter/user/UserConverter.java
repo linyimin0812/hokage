@@ -135,17 +135,20 @@ public class UserConverter {
             // action info
             List<HokageOperation> operations = Arrays.asList(
                 new HokageOperation(
-                        OperationTypeEnum.link.name(),
-                        "view",
-                        "/user/supervisor/view"),
-                new HokageOperation(
                         OperationTypeEnum.modal.name(),
                         "addServer",
-                        "/supervisor/server/add"),
+                        "/supervisor/server/add",
+                        ""),
+                new HokageOperation(
+                        OperationTypeEnum.modal.name(),
+                        "recycleServer",
+                        "/supervisor/server/recycle",
+                        "确认回收服务器?"),
                 new HokageOperation(
                         OperationTypeEnum.confirm.name(),
-                        "recycleServer",
-                        "/supervisor/server/recycle")
+                        "delete",
+                        "/user/supervisor/delete",
+                        "确认删除管理员?")
             );
 
             hokageUserVO.setOperationList(operations);
@@ -204,15 +207,19 @@ public class UserConverter {
                 new HokageOperation(
                         OperationTypeEnum.link.name(),
                         "view",
-                        "/user/subordinate/view"),
+                        "/user/subordinate/view",
+                        ""),
                 new HokageOperation(
                         OperationTypeEnum.modal.name(),
                         "addServer",
-                        "/subordinate/server/add"),
+                        "/subordinate/server/add",
+                        ""),
                 new HokageOperation(
                         OperationTypeEnum.confirm.name(),
                         "deleteSubordinate",
-                        "/supervisor/subordinate/delete")
+                        "/supervisor/subordinate/delete",
+                        ""
+                )
             );
 
             hokageUserVO.setOperationList(operations);

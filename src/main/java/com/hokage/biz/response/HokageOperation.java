@@ -25,4 +25,9 @@ public class HokageOperation {
      */
     private String operationLink;
 
+    /**
+     * description
+     */
+    private String description;
+
 }

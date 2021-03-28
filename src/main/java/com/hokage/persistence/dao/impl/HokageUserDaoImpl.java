@@ -107,11 +107,19 @@ public class HokageUserDaoImpl implements HokageUserDao {
 
     @Override
     public List<HokageUserDO> querySupervisor(UserQuery query) {
-        return userMapper.querySupervisor(query);
+        List<HokageUserDO> supervisorList = userMapper.querySupervisor(query);
+        if (CollectionUtils.isEmpty(supervisorList)) {
+            return Collections.emptyList();
+        }
+        return supervisorList;
     }
 
     @Override
     public List<HokageUserDO> querySubordinate(UserQuery query) {
-        return userMapper.querySubordinate(query);
+        List<HokageUserDO> subordinateList = userMapper.querySubordinate(query);
+        if (CollectionUtils.isEmpty(subordinateList)) {
+            return Collections.emptyList();
+        }
+        return subordinateList;
     }
 }

@@ -26,6 +26,7 @@ export interface UserRegisterForm extends UserLoginForm{
 
 export interface UserVO {
     id: number,
+    key?: string,
     username: string,
     email: string,
     role: number,
@@ -39,18 +40,19 @@ export interface Operation {
     operationType: 'link' | 'confirm' | 'modal' | 'action',
     operationName: string,
     operationLink?: string,
-    operationAction?: Function
+    operationAction?: Function,
+    description?: string,
 }
 
 export interface UserServerOperateForm {
-    id: number,
+    operatorId?: number,
     serverIds?: number[],
     userIds?: number[],
-    serverGroup?: ServerGroup
+    serverGroup?: ServerGroup | string
 }
 
 export interface UserServerSearchForm {
-    id: number,
+    operatorId: number,
     username: string,
     label: string
 }

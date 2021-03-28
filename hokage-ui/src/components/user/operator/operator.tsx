@@ -12,7 +12,7 @@ import AddOperator from './add-operator'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
-import { breadcrumProps, columns, nestedColumn } from './column-definition'
+import { breadcrumbProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { getHokageUid } from '../../../utils'
 
@@ -34,17 +34,14 @@ export default class Operator extends React.Component<any, OperatorState> {
             expandedRowRender: () => {
                 return <Table columns={nestedColumn} dataSource={this.state.nestedTableDataSource} pagination={false} />;
             },
-            onExpand: (expanded: boolean, record: any) => {
-                const userVO: UserVO = record;
-
+            onExpand: (expanded: boolean, record: UserVO) => {
                 if (expanded) {
-                    // Why?
-                    const expandedRowKeys: ReactText[] = [record.key]
+                    const expandedRowKeys: ReactText[] = [record.key!]
 
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = expandedRowKeys
 
-                    this.setState({ ...this.state, nestedTableDataSource: userVO.serverVOList, expandable })
+                    this.setState({ ...this.state, nestedTableDataSource: record.serverVOList, expandable })
                 } else {
                     const expandable: TableExtendable = this.state.expandable
                     expandable.expandedRowKeys = []
@@ -66,6 +63,10 @@ export default class Operator extends React.Component<any, OperatorState> {
     searchOperator = (value?: UserSearchFormType) => {
         this.setState({loading: true})
         UserAction.supervisorSearch(value ? value : {}).then(supervisorList => {
+            supervisorList = (supervisorList || []).map(userVO => {
+                userVO.key = userVO.id + ''
+                return userVO
+            })
             this.setState({dataSource: supervisorList, loading: false})
         }).catch(err => {
             message.error(err)
@@ -96,7 +97,7 @@ export default class Operator extends React.Component<any, OperatorState> {
     onModalOk = (value: any) => {
 
         UserAction.addSupervisor({
-            id: getHokageUid(),
+            operatorId: getHokageUid(),
             serverIds: [],
             userIds: value.userIds || []
         }).then(value => {
@@ -128,7 +129,7 @@ export default class Operator extends React.Component<any, OperatorState> {
 
         return (
             <div>
-                <BreadcrumbCustom breadcrumProps= {breadcrumProps} />
+                <BreadcrumbCustom breadcrumProps= {breadcrumbProps} />
                 <UserSearch onFinish={this.onFinish} usernameType={'operator'} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row

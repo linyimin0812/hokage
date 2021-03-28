@@ -92,7 +92,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 
 	onModalOk = (value: {userIds: number[]}) => {
 		UserAction.addSubordinate({
-			id: getHokageUid(),
+			operatorId: getHokageUid(),
 			serverIds: [],
 			userIds: (value && value.userIds) || []
 		}).then(value => {

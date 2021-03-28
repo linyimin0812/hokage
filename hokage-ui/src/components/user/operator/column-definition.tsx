@@ -1,8 +1,13 @@
 import { Button, Tag } from 'antd'
 import { randomColor } from '../../../utils'
 import React from 'react'
+import { Operation, UserServerOperateForm } from '../../../axios/action/user/user-type'
+import { translate } from '../../../i18n'
+import { ConfirmModal } from '../../common/confirm-modal'
 import { BreadcrumbPrpos } from '../../bread-crumb-custom'
-import { Operation } from '../../../axios/action/user/user-type'
+import { FormModal } from '../../common/form-modal'
+import { FormInstance } from 'antd/lib/form'
+import { SelectServer } from '../../server/select-server'
 
 /**
  * @author linyimin
@@ -83,11 +88,46 @@ export const columns = [
         title: '操作',
         dataIndex: 'operationList',
         key: 'action',
-        render: (operationList: Operation[]) => operationList.map(operation => <Button type="link" href={operation.operationLink}>{operation.operationName}</Button>)
+        render: (operationList: Operation[]) => operationList.map(operation => {
+            if (operation.operationType === 'link') {
+                return <Button type="link" href={operation.operationLink}>{translate(operation.operationName)}</Button>
+            }
+
+            if (operation.operationType === 'confirm') {
+                return <ConfirmModal
+                            actionName={operation.operationName}
+                            title={operation.operationName}
+                            action={ async () => {alert('test')}}
+                            content={operation.description!}
+                       />
+            }
+            if (operation.operationType === 'modal') {
+                if (operation.operationName === 'recycleServer') {
+                    return (
+                        <FormModal
+                            actionName={operation.operationName}
+                            renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
+                            action={(value: UserServerOperateForm) => alert('回收：' + JSON.stringify(value))}
+                        />
+                    )
+                }
+                if (operation.operationName === 'addServer') {
+                    return (
+                        <FormModal
+                            actionName={operation.operationName}
+                            renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
+                            action={(value: UserServerOperateForm) => alert('添加：' + JSON.stringify(value))}
+                        />
+                    )
+                }
+            }
+            return null
+
+        })
     }
 ]
 
-export const breadcrumProps: BreadcrumbPrpos[] = [
+export const breadcrumbProps: BreadcrumbPrpos[] = [
     {
         name: '首页',
         link: '/app/index'

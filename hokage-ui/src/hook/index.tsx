@@ -1,8 +1,9 @@
 // user hook
 import { ServerAction } from '../axios/action/server/server-action'
 import { message } from 'antd'
-import { useEffect, useState } from 'react';
-import { Option } from '../axios/action/server/server-type'
+import { useEffect, useState } from 'react'
+import { Option, ServerSearchForm, ServerVO } from '../axios/action/server/server-type'
+import { getHokageRole, getHokageUid } from '../utils'
 
 export const useServerOptions = () => {
 
@@ -16,4 +17,21 @@ export const useServerOptions = () => {
         })
     }, [])
     return [serverOptions]
+}
+
+export const useServerList = () => {
+    const [serverList, setServerList] = useState<ServerVO[]>([])
+
+    useEffect(() => {
+        const form: ServerSearchForm = {
+            operatorId: getHokageUid(),
+            role: getHokageRole()
+        }
+        ServerAction.searchServer(form).then(value => {
+            setServerList(value || [])
+        }).catch(e => {
+            message.error('搜索服务器失败')
+        })
+    }, [])
+    return [serverList]
 }

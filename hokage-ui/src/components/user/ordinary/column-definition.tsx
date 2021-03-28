@@ -32,8 +32,8 @@ export const columns = [
     },
     {
         title: '姓名',
-        dataIndex: 'name',
-        key: 'name',
+        dataIndex: 'username',
+        key: 'username',
     },
     {
         title: '使用服务器数量',
