@@ -1,5 +1,5 @@
 import React from 'react'
-import { message, Row, Col } from 'antd'
+import { message, Row, Col, Spin } from 'antd'
 import ServerCard from './server-card'
 import ApplyServerPrompt from './apply-server-prompt'
 import ApplyAndSearchServer from './apply-and-search-server'
@@ -13,14 +13,16 @@ type FileServerProps = {
 
 type FileServerState = {
     isModalVisible: boolean,
-    dataSource: ServerVO[]
+    dataSource: ServerVO[],
+    loading: boolean
 }
 
 export default class ServerCardPanel extends React.Component<FileServerProps, FileServerState> {
 
     state = {
         isModalVisible: false,
-        dataSource: []
+        dataSource: [],
+        loading: true
     }
 
     componentDidMount() {
@@ -84,10 +86,10 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
 
     render() {
 
-        const { dataSource } = this.state
+        const { dataSource, loading } = this.state
 
         return (
-            <>
+            <Spin spinning={loading}>
                 {
                     (dataSource === undefined || dataSource.length === 0)
                         ?
@@ -101,7 +103,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
                         </div>
                 }
 
-            </>
+            </Spin>
         )
     }
 }
