@@ -136,9 +136,6 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 }
 
 // 重新设置连接之后组件的关联类型
-const HeaderCustomConnect: React.ComponentClass<
-	HeaderCustomProps,
-	HeaderCustomState
-	> = HeaderCustom
+const HeaderCustomConnect: React.ComponentClass<HeaderCustomProps, HeaderCustomState> = HeaderCustom
 
 export default withRouter(HeaderCustomConnect)

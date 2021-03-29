@@ -17,7 +17,7 @@ import {
 import { Models } from '../../../utils/model'
 import { ServiceResult } from '../../common'
 import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../utils'
-import { UserSearchFormType } from '../../../components/user/search'
+import { UserSearchFormType } from '../../../pages/user/search'
 
  export const UserAction = {
      login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {

@@ -8,16 +8,16 @@ export interface BreadcrumbPrpos {
 }
 
 export interface BreadcrumbCustomProps {
-	breadcrumProps?: BreadcrumbPrpos[]
+	breadcrumbProps?: BreadcrumbPrpos[]
 };
 class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
 
 	subBreadcrumb = () => {
-		const { breadcrumProps } = this.props
-		if (breadcrumProps === undefined) {
+		const { breadcrumbProps } = this.props
+		if (breadcrumbProps === undefined) {
 			return null
 		}
-		return breadcrumProps.map(prop => {
+		return breadcrumbProps.map(prop => {
 			return (
 				<Breadcrumb.Item>
 					{prop.link === undefined ? prop.name : <Link to={prop.link}>{prop.name}</Link>}

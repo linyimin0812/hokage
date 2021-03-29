@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
-import AllComponents from '../components'
+import AllComponents from '../pages'
 import routesConfig, { IFMenu, IFMenuBase } from './config'
 import queryString from 'query-string'
 
