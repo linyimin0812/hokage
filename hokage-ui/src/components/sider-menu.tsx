@@ -4,14 +4,14 @@ import { Link } from 'react-router-dom'
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { IFMenu } from '../routes/config'
 import { MenuProps } from 'antd/lib/menu'
-import { Icon } from '@ant-design/compatible'
+import Icon from '@ant-design/icons';
 
 const renderMenuItem = (
 	item: IFMenu // item.route 菜单单独跳转的路由
 ) => (
 	<Menu.Item key={item.key}>
 		<Link to={(item.route || item.key) + (item.query || '')}>
-			{item.icon && <Icon type={item.icon} />}
+			{item.icon && <Icon translate type={item.icon} />}
 			<span className="nav-text">{item.title}</span>
 		</Link>
 	</Menu.Item>
@@ -23,7 +23,7 @@ const renderSubMenu = (item: IFMenu) => {
 			key={item.key}
 			title={
 				<span>
-                    {item.icon && <Icon type={item.icon} />}
+                    {item.icon && <Icon translate type={item.icon} />}
 					<span className="nav-text">{item.title}</span>
                 </span>
 			}

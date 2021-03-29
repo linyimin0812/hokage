@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import screenfull from 'screenfull'
 import { Menu, Layout, Avatar, Row, Col, message } from 'antd'
-import {
+import Icon, {
 	FullscreenOutlined,
 	FullscreenExitOutlined,
 } from '@ant-design/icons'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { Icon } from '@ant-design/compatible'
 
 import { Models } from '../utils/model'
 import { UserAction } from '../axios/action'
@@ -81,6 +80,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 				<Row>
 					<Col span={1} style={{height: '65px'}}>
 						<Icon
+							translate
 							className="header_trigger custom-trigger"
 							type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'}
 							onClick={this.props.toggle}

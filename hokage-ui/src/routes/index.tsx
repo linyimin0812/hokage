@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 import DocumentTitle from 'react-document-title'
 import AllComponents from '../pages'
 import routesConfig, { IFMenu, IFMenuBase } from './config'
-import queryString from 'query-string'
+import queryString from 'querystring'
 
 
 export default class CRouter extends Component {
