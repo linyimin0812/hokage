@@ -7,7 +7,7 @@ interface ExecedBatCommandInfoPropsType {
     onCloseDrawer: (value: boolean) => void
 }
 
-interface ExecedBatCommandInfoStateType {
+interface ExecutedBatCommandInfoStateType {
     execType: string
 }
 
@@ -31,7 +31,7 @@ const formItemLayout = {
     },
 }
 
-export default class ExecedBatCommandInfo extends React.Component<ExecedBatCommandInfoPropsType, ExecedBatCommandInfoStateType> {
+export default class ExecedBatCommandInfo extends React.Component<ExecedBatCommandInfoPropsType, ExecutedBatCommandInfoStateType> {
 
     state = {
         execType: 'period'
