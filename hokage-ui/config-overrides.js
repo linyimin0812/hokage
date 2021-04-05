@@ -43,10 +43,13 @@ const devServerConfig = () => (config) => {
         // 服务开启gzip
         compress: true,
         proxy: {
-            '*': {
+            '/api/': {
                 target: 'http://localhost:8080',
                 changeOrigin: true,
-                ws: true
+                ws: true,
+                pathRewrite: {
+                    '^/api/': ''
+                }
             },
         },
     };

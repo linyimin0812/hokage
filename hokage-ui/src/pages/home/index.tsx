@@ -13,7 +13,6 @@ import {
 } from 'antd'
 import moment from 'moment'
 import BreadcrumbCustom, { BreadcrumbPrpos } from '../../components/bread-crumb-custom'
-import ServerInfo from './server-info'
 
 const data = [
 	{
@@ -159,7 +158,7 @@ class Index extends React.Component {
 					</Row>
 				</div>
 				<Divider style={{margin: '4px 0px'}} />
-				<ServerInfo />
+
 				<div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
 					<Divider orientation="left">我的服务器信息概览</Divider>
 					<Row gutter={16} >
@@ -234,7 +233,6 @@ class Index extends React.Component {
 				</div>
 
 				<Divider style={{margin: '4px 0px'}} />
-				<ServerInfo />
 
 				<div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
 					<Divider orientation="left">我的消息</Divider>

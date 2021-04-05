@@ -7,10 +7,6 @@
 
 import _ from 'lodash'
 
-interface StoreType {
-    [key: string]: any
-}
-
 export const Models = {
     _store:  { serverLabelColor: ['magenta', 'red', 'green', 'purple', '#f50'] },
 

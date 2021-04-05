@@ -5,6 +5,7 @@ import App from './app'
 import Index from './pages/login'
 
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default () => (
     <Router>
         <Switch>

@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Menu } from 'antd'
 import { Link } from 'react-router-dom'
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import { IFMenu } from '../routes/config'
 import { MenuProps } from 'antd/lib/menu'
-import Icon from '@ant-design/icons';
+import Icon from '@ant-design/icons'
 
 const renderMenuItem = (
 	item: IFMenu // item.route 菜单单独跳转的路由
@@ -41,52 +40,19 @@ type SiderMenuProps = MenuProps & {
 	onOpenChange: (v: string[]) => void;
 };
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default ({ menus, ...props }: SiderMenuProps) => {
-	const [dragItems, setDragItems] = useState(menus);
-	const reorder = (list: any, startIndex: number, endIndex: number) => {
-		const result = Array.from(list);
-		const [removed] = result.splice(startIndex, 1);
-		result.splice(endIndex, 0, removed);
-		return result;
-	};
-	const onDragEnd = (result: any) => {
-		// dropped outside the list
-		if (!result.destination) {
-			return;
-		}
-
-		const _items = reorder(dragItems, result.source.index, result.destination.index);
-		setDragItems(_items);
-	};
 	return (
-		<DragDropContext onDragEnd={onDragEnd}>
-			<Droppable droppableId="droppable">
-				{(provided, snapshot) => (
-					<div ref={provided.innerRef} {...provided.droppableProps}>
-						{dragItems.map((item: IFMenu, index: number) => (
-							<Draggable key={item.key} draggableId={item.key} index={index}>
-								{(provided, snapshot) => (
-									<div>
-										<div
-											ref={provided.innerRef}
-											{...provided.dragHandleProps}
-											{...provided.draggableProps}
-										>
-											<Menu {...props}>
-												{item.subs!
-													? renderSubMenu(item)
-													: renderMenuItem(item)}
-											</Menu>
-										</div>
-										{provided.placeholder}
-									</div>
-								)}
-							</Draggable>
-						))}
-						{provided.placeholder}
-					</div>
-				)}
-			</Droppable>
-		</DragDropContext>
+		<div>
+			{menus.map((item: IFMenu, index: number) => (
+				<div>
+					<Menu {...props} key={index}>
+						{item.subs!
+							? renderSubMenu(item)
+							: renderMenuItem(item)}
+					</Menu>
+				</div>
+			))}
+		</div>
 	);
 };
