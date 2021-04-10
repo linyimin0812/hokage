@@ -7,7 +7,7 @@
 
 import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
 import { ServiceParam, ServiceResult } from '../common'
-import { getHokageRole, getHokageUid } from '../../utils'
+import { getHokageRole, getHokageUid } from '../../libs'
 
 export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
     const service: {[name: string]: (data?: any, config?: AxiosRequestConfig)=> Promise<ServiceResult<any>>} = {}

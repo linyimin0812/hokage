@@ -1,6 +1,6 @@
 import { Models } from './model'
 import { Terminal } from 'xterm'
-import { UserRoleEnum } from '../axios/action/user/user-type';
+import { UserRoleEnum } from '../axios/action/user/user-type'
 
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
@@ -76,6 +76,20 @@ export const removeHokageRole = () => {
     window.localStorage.removeItem('hokageRole')
 }
 
+export const setHokagePermissions = (permissions: string[]) => {
+    window.localStorage.setItem('hokagePermission', JSON.stringify(permissions))
+}
+
+export const getHokagePermissions = (): string[] => {
+    const permissions = window.localStorage.getItem('hokagePermission') || '[]'
+    return JSON.parse(permissions)
+}
+
+export const removeHokagePermissions = () => {
+    window.localStorage.removeItem('hokagePermission')
+}
+
+// ssh连接加载动画
 export const xtermSpinner = (terminal: Terminal): NodeJS.Timeout => {
     const spinner = {
         "interval": 100,
@@ -125,3 +139,31 @@ export const xtermSpinner = (terminal: Terminal): NodeJS.Timeout => {
 }
 
 export const emptyFunction = () => {}
+
+export function hasPermissions(path: string): boolean {
+    const isSuper = getHokageRole() === UserRoleEnum.super_operator
+    const permissions = getHokagePermissions()
+    if (!path && isSuper) {
+        return true
+    }
+    for (let orItem of path.split('|')) {
+        if (isSubArray(permissions, orItem.split('&'))) {
+            return true
+        }
+    }
+    return false
+}
+
+/**
+ * 数组包含关系判断
+ * @param parent
+ * @param child
+ */
+export function isSubArray(parent: string[], child: string[]): boolean {
+    for (let item of child) {
+        if (!parent.includes(item)) {
+            return false
+        }
+    }
+    return true
+}

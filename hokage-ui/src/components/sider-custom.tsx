@@ -87,7 +87,6 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
 				breakpoint="lg"
 				collapsed={collapsed}
 				style={{ overflowY: 'auto' }}
-				className="sider-custom"
 			>
 				<div className="logo">
 					{

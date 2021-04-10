@@ -3,7 +3,7 @@ import { ServerAction } from '../axios/action/server/server-action'
 import { message } from 'antd'
 import { useEffect, useState } from 'react'
 import { Option, ServerSearchForm, ServerVO } from '../axios/action/server/server-type'
-import { getHokageRole, getHokageUid } from '../utils'
+import { getHokageRole, getHokageUid } from '../libs'
 
 export const useServerOptions = () => {
 

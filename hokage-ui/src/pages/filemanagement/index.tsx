@@ -1,4 +1,4 @@
-import BreadcrumbCustom, { BreadcrumbPrpos } from "../../components/bread-crumb-custom"
+import BreadcrumbCustom, { BreadcrumbPrpos } from "../../layout/bread-crumb-custom"
 import React from 'react'
 import FileManagement from "./file-management"
 import { Tabs } from "antd"

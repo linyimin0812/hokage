@@ -5,7 +5,7 @@ import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-typ
 import { column } from './column-definition'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { Operation } from '../../axios/action/user/user-type'
-import { getHokageRole, getHokageUid } from '../../utils'
+import { getHokageRole, getHokageUid } from '../../libs'
 
 type SshInfoProps = {
     addSshTerm: (record: ServerVO) => void

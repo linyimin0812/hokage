@@ -12,7 +12,7 @@ import {
 	Avatar
 } from 'antd'
 import moment from 'moment'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../components/bread-crumb-custom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
 
 const data = [
 	{

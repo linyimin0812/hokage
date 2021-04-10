@@ -1,13 +1,13 @@
 import React, { ReactText } from 'react'
 import { message, Table, Row, Col, Button, Divider } from 'antd'
-import BreadcrumbCustom from '../../../components/bread-crumb-custom'
+import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { AllServerSearch } from './search'
 import AddServer from '../add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerForm, ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { ServerAction } from '../../../axios/action/server/server-action'
-import { getHokageUid } from '../../../utils';
+import { getHokageUid } from '../../../libs';
 import { ServiceResult } from '../../../axios/common'
 import { searchServer } from '../util'
 
@@ -132,4 +132,4 @@ export default class AllServer extends React.Component<{}, AllServerState> {
         )
     }
 
-} 
+}

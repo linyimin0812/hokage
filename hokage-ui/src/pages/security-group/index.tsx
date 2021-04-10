@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../components/bread-crumb-custom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
 import EnterSecurity from './enter-security'
 import Header from './header'
 

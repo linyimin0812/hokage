@@ -1,4 +1,4 @@
-import BreadcrumbCustom from "../../components/bread-crumb-custom"
+import BreadcrumbCustom from "../../layout/bread-crumb-custom"
 import React from 'react'
 import { Tabs } from "antd"
 import WebSshServer from "./web-ssh-server"

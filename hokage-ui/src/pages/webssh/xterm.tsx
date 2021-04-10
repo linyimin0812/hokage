@@ -4,7 +4,7 @@ import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
 import { w3cwebsocket as W3cWebsocket, IMessageEvent, ICloseEvent } from 'websocket'
 import { ServerVO } from '../../axios/action/server/server-type'
-import { xtermSpinner } from '../../utils'
+import { xtermSpinner } from '../../libs'
 
 interface XtermPropsType {
     id: string,

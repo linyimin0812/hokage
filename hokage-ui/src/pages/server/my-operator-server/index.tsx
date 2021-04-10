@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { message, Table, Row, Col, Button, Divider } from 'antd'
-import BreadcrumbCustom from '../../../components/bread-crumb-custom'
+import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
 import { MyOperatorServerSearch } from './search'
@@ -160,4 +160,4 @@ export default class Index extends React.Component<{}, AllServerState> {
         )
     }
 
-} 
+}

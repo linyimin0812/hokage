@@ -1,7 +1,7 @@
-import { BreadcrumbPrpos } from '../../../components/bread-crumb-custom'
+import { BreadcrumbPrpos } from '../../../layout/bread-crumb-custom'
 import { Button, Tag } from 'antd'
 import React from 'react'
-import { randomColor } from '../../../utils'
+import { randomColor } from '../../../libs'
 import { Operation } from '../../../axios/action/user/user-type'
 
 /**

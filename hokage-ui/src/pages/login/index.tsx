@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Form, Input, message, Switch } from 'antd'
-import { Models } from '../../utils/model'
+import { Models } from '../../libs/model'
 import { UserAction } from '../../axios/action'
 
 const formItemLayout = {
@@ -41,7 +41,7 @@ interface LoginStateType {
 	subscribed: number	// 不知道为什么不能通过表单获取switch的值, 所以一个字段单独标识
 }
 
-export default class Index extends React.Component<any, LoginStateType>{
+export default class Login extends React.Component<any, LoginStateType>{
 
 	state = {
 		isLogin: true, // 默认是登录

@@ -8,7 +8,7 @@ import { UserServerOperateForm } from '../../axios/action/user/user-type'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { UserAction } from '../../axios/action'
 import { RadioChangeEvent } from 'antd/lib/radio'
-import { emptyFunction, getHokageUid } from '../../utils'
+import { emptyFunction, getHokageUid } from '../../libs'
 import { FileUpload } from '../common/file-upload'
 type AddServerPropTypes = {
     onModalOk: (value: any) => void,

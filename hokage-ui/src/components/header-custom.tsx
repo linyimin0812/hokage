@@ -7,7 +7,7 @@ import Icon, {
 } from '@ant-design/icons'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 
-import { Models } from '../utils/model'
+import { Models } from '../libs/model'
 import { UserAction } from '../axios/action'
 
 
@@ -72,7 +72,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
 	handleVisibleChange = (visible: boolean) => {
 		this.setState({ visible });
 	}
-	
+
 	render() {
 		const { isFullScreen } = this.state
 		return (

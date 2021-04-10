@@ -14,9 +14,9 @@ import {
     UserServerOperateForm,
     UserVO, UserRoleEnum,
 } from './user-type';
-import { Models } from '../../../utils/model'
+import { Models } from '../../../libs/model'
 import { ServiceResult } from '../../common'
-import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../utils'
+import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../libs'
 import { UserSearchFormType } from '../../../pages/user/search'
 
  export const UserAction = {
@@ -29,9 +29,9 @@ import { UserSearchFormType } from '../../../pages/user/search'
                     setHokageRole(data.role || UserRoleEnum.subordinate)
 					return resolve(value)
                 }
-                
+
                 return reject(value)
-				
+
             }).catch(err => {
 				return reject(err)
 			})

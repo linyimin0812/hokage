@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
-import BreadcrumbCustom from '../../../components/bread-crumb-custom'
+import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
 import { UserSearch, UserSearchFormType } from '../search'
 import {
     UserAddOutlined,
@@ -14,7 +14,7 @@ import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { breadcrumbProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { getHokageUid } from '../../../utils'
+import { getHokageUid } from '../../../libs'
 
 type OperatorState = {
     dataSource: UserVO[],

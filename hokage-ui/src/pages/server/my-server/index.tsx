@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { Table, Button, Row, Col, message, Divider } from 'antd'
-import BreadcrumbCustom from '../../../components/bread-crumb-custom'
+import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
 import { MyServerSearch } from './search'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
 import AddServer from '../add-server'

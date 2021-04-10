@@ -1,7 +1,7 @@
 import React from 'react'
 import ServerCardPanel from '../common/server-card-panel'
 import { ActionPanesType } from '../common/server-card'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../components/bread-crumb-custom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
 import { Tabs } from 'antd';
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'

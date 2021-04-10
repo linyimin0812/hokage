@@ -2,7 +2,7 @@ import React, { ReactText } from 'react'
 import { Table, Row, Col, Divider, Button } from 'antd'
 import './index.less'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../components/bread-crumb-custom'
+import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
 import Search from 'antd/lib/input/Search'
 import Action, { ActionProps } from './action'
 interface FileManagementState {

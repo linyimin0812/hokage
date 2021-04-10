@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
-import BreadcrumbCustom from '../../../components/bread-crumb-custom'
+import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
 import { UserSearch, UserSearchFormType } from '../search'
 import {
 	InfoCircleOutlined,
@@ -10,7 +10,7 @@ import { breadcrumbProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { UserAction } from '../../../axios/action'
-import { getHokageUid } from '../../../utils'
+import { getHokageUid } from '../../../libs'
 
 interface Expandable {
 	expandedRowKeys: ReactText[],
