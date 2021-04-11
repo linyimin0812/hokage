@@ -25,7 +25,7 @@ export const menus: MenusType[] = [
     { icon: 'folder', title: '文件管理', auth: 'app.web.file', path: '/app/web/file' },
     { icon: 'code', title: '批量任务', auth: 'app.web.task', path: '/app/web/task' },
     { icon: 'safety', title: '安全组', auth: 'app.server.security', path: '/app/server/security' },
-    { icon: 'picture', title: '资源监控', auth: 'app.server.monitor', path: '/app/server/monitor'},
+    { icon: 'monitor', title: '资源监控', auth: 'app.server.monitor', path: '/app/server/monitor'},
     { icon: 'cloud', title: '内网穿透', auth: 'app.server.network.penetration', path: '/app/server/network/penetration' }
 
 ]

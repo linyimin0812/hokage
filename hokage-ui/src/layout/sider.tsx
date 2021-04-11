@@ -3,10 +3,10 @@ import { menus, MenusType } from './menus'
 import { Layout, Menu } from 'antd'
 import { SelectInfo } from 'rc-menu/lib/interface'
 import history from '../libs/history'
-import Icon from '@ant-design/icons'
 import style from './layout.module.css'
 import logo from './logo.png'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { IconMap } from '../libs/icon-config'
 
 interface SiderPropsType {
     collapsed: boolean
@@ -46,9 +46,10 @@ class Sider extends React.Component<SiderPropsType, SiderStateType> {
     };
 
     makeItem = (menu: MenusType) => {
+        const Icon = IconMap[menu.icon]
         return (
             <Menu.Item key={menu.path}>
-                {menu.icon && <Icon translate type={menu.icon} />}
+                {menu.icon && Icon}
                 <Link to={menu.path!}>
                     <span className="nav-text">{menu.title}</span>
                 </Link>
@@ -57,8 +58,9 @@ class Sider extends React.Component<SiderPropsType, SiderStateType> {
     };
 
     makeSubMenu = (subMenu: MenusType) => {
+        const Icon = IconMap[subMenu.icon]
         return (
-            <Menu.SubMenu key={subMenu.title} title={<span><Icon translate={false} type={subMenu.icon} /><span>{subMenu.title}</span></span>}>
+            <Menu.SubMenu key={subMenu.title} title={<span>{Icon}<span>{subMenu.title}</span></span>}>
                 {subMenu.child!.map(menu => this.makeMenu(menu))}
             </Menu.SubMenu>
         )
