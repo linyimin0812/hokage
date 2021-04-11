@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import DocumentTitle from 'react-document-title'
 import { Layout } from 'antd'
 import Header from './layout/header'
-import Sider from './layout/sider';
-import { Router } from './routes/router';
+import Sider from './layout/sider'
+import { Router } from './routes/router'
 
 const { Content, Footer } = Layout
 
@@ -11,11 +11,6 @@ type AppProps = {
 }
 
 type AppState = {
-    auth: {
-        login: boolean, // loggin status
-        role: number, // user role
-        data: {}
-    }
     title: string,
     collapsed: boolean,
 }
@@ -24,20 +19,13 @@ export default class App extends Component<AppProps, AppState> {
     state = {
         collapsed: false,
         title: '',
-        auth: {
-            login: false,
-            role: 2,
-            data: {
-                name: 'banzhe'
-            }
-        }
-    };
+    }
 
     toggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
-        });
-    };
+        })
+    }
     render() {
         const { title } = this.state;
         return (
@@ -56,7 +44,7 @@ export default class App extends Component<AppProps, AppState> {
                     </Layout>
                 </Layout>
             </DocumentTitle>
-        );
+        )
     }
 }
 
