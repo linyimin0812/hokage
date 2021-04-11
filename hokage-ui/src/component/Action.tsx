@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link as ALink } from 'react-router-dom'
 import { Button as AButton, Divider } from 'antd'
+import { hasPermissions } from '../libs'
 
 class Action extends React.Component {
     static Link(props: any) {
@@ -11,16 +12,23 @@ class Action extends React.Component {
         return <AButton type={'link'} {...props} style={{padding: 0}} />
     }
 
-    _handle = (children: React.ReactNode[], el: React.ReactNode) => {
+    _canVisible = (path: string): boolean => {
+        return !path || hasPermissions(path)
+    }
+
+    _handle = (children: React.ReactElement[], el: React.ReactElement) => {
         const length = children.length
-        if (length !== 0) {
-            children.push(<Divider key={length} type={'vertical'} />)
+        if (this._canVisible(el.props.auth)) {
+            if (length !== 0) {
+                children.push(<Divider key={length} type={'vertical'} />)
+            }
+
+            children.push(el)
         }
-        children.push(el)
     }
 
     render() {
-        const children: React.ReactNode[] = []
+        const children: React.ReactElement[] = []
         if (Array.isArray(this.props.children)) {
             this.props.children.forEach(el => this._handle(children, el))
         } else {
