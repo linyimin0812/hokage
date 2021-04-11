@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router-dom'
-import ModuleRoutes from '../layout/routes'
+import ModuleRoutes from './routes'
 import { RouteParam } from '../libs'
 import NotFound from '../layout/not-found'
 import DocumentTitle from 'react-document-title';
