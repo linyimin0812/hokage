@@ -9,7 +9,7 @@ export interface BreadcrumbPrpos {
 
 export interface BreadcrumbProps {
 	breadcrumbProps?: BreadcrumbPrpos[]
-};
+}
 class BreadCrumb extends React.Component<BreadcrumbProps> {
 
 	subBreadcrumb = () => {
@@ -39,4 +39,4 @@ class BreadCrumb extends React.Component<BreadcrumbProps> {
 	}
 }
 
-export default BreadCrumb;
+export default BreadCrumb
