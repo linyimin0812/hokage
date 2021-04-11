@@ -29,14 +29,10 @@ class Action extends React.Component {
 
     render() {
         const children: React.ReactElement[] = []
-        if (Array.isArray(this.props.children)) {
-            this.props.children.forEach(el => this._handle(children, el))
-        } else {
-            this._handle(children, this.props.children as React.ReactElement)
-        }
+        const propsChildren: React.ReactElement[] = Array.isArray(this.props.children) ? this.props.children as React.ReactElement[] : [this.props.children as React.ReactElement]
+        propsChildren.forEach(el => this._handle(children, el))
         return (
             { children }
         )
     }
-
 }
