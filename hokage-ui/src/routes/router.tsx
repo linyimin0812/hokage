@@ -3,6 +3,8 @@ import { Route, Switch } from 'react-router-dom'
 import ModuleRoutes from '../layout/routes'
 import { RouteParam } from '../libs'
 import NotFound from '../layout/not-found'
+import DocumentTitle from 'react-document-title';
+import { menus, MenusType } from '../layout/menus';
 
 // 组合路由
 export const Router = () => {
@@ -17,9 +19,28 @@ export const Router = () => {
         }
         setRoutes(tempRoutes)
     }, [])
+
+    const findTitle = (path: string, menus: MenusType[]): string => {
+        const menuList = menus.flatMap(menu => menu.child ? [menu].concat(menu.child) : [menu])
+        const menu = menuList.find(menu => menu.path === path)
+        if (menu) {
+            return menu.title
+        }
+        return 'Hokage'
+    }
+
+    const renderComponent = (route: RouteParam) => {
+        const Component = route.component
+        return (
+            <DocumentTitle title={findTitle(route.path!, menus)}>
+                <Component />
+            </DocumentTitle>
+        )
+    }
+
     return (
         <Switch>
-            {routes.map(route => <Route exact strict path={route.path} key={route.path} component={route.component} /> )}
+            {routes.map(route => <Route exact strict path={route.path} key={route.path} render={() => {return renderComponent(route)}} />)}
             <Route component={NotFound} />
         </Switch>
     )
