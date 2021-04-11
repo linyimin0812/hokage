@@ -35,8 +35,7 @@
 .logo {
     height: 64px;
     line-height: 64px;
-    padding-left: 15px;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 .logo h1 {
@@ -47,10 +46,6 @@
     font-size: 20px;
     margin: 0 0 0 12px;
     font-weight: 600;
-}
-
-.logo img {
-    width: 50px;
 }
 
 .right {

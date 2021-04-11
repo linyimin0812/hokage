@@ -4,9 +4,9 @@ import { Layout, Menu } from 'antd'
 import { SelectInfo } from 'rc-menu/lib/interface'
 import history from '../libs/history'
 import style from './layout.module.css'
-import logo from './logo.png'
 import { Link } from 'react-router-dom'
 import { IconMap } from '../libs/icon-config'
+import logo from './logo.png'
 
 interface SiderPropsType {
     collapsed: boolean
@@ -70,7 +70,7 @@ class Sider extends React.Component<SiderPropsType, SiderStateType> {
         return (
             <Layout.Sider collapsed={this.props.collapsed} >
                 <div className={style.logo}>
-                    <img src={logo} alt={'logo'} />
+                    <img src={logo} alt="Logo" style={{width: '100%', height: '100%'}} />
                 </div>
                 <Menu
                     mode="inline"
