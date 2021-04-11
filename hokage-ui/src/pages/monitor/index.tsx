@@ -1,7 +1,7 @@
 import React from 'react'
 import ServerCardPanel from '../common/server-card-panel'
 import { ActionPanesType } from '../common/server-card'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import { Tabs } from 'antd';
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'
@@ -117,7 +117,7 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
         const { activeKey, actionPanes } = this.state
         return (
             <>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <Tabs
                     onChange={this.onChange}
                     activeKey={activeKey}

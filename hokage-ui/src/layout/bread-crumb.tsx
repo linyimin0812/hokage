@@ -7,10 +7,10 @@ export interface BreadcrumbPrpos {
 	link?: string
 }
 
-export interface BreadcrumbCustomProps {
+export interface BreadcrumbProps {
 	breadcrumbProps?: BreadcrumbPrpos[]
 };
-class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
+class BreadCrumb extends React.Component<BreadcrumbProps> {
 
 	subBreadcrumb = () => {
 		const { breadcrumbProps } = this.props
@@ -39,4 +39,4 @@ class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
 	}
 }
 
-export default BreadcrumbCustom;
+export default BreadCrumb;

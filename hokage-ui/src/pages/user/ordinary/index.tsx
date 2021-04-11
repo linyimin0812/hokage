@@ -1,6 +1,6 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
-import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
+import BreadCrumb from '../../../layout/bread-crumb'
 import { UserSearch, UserSearchFormType } from '../search'
 import {
 	InfoCircleOutlined,
@@ -124,7 +124,7 @@ export default class OrdinaryUser extends React.Component<any, OrdinaryUserState
 
 		return (
 			<div>
-				<BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+				<BreadCrumb breadcrumbProps={breadcrumbProps} />
 				<UserSearch onFinish={this.onFinish} usernameType={'ordinary'} />
 				<div style={{ backgroundColor: '#FFFFFF' }}>
 					<Row

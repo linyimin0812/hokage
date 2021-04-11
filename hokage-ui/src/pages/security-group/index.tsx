@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import EnterSecurity from './enter-security'
 import Header from './header'
 
@@ -38,7 +38,7 @@ export default class SecurityGroupHome extends React.Component<{}, SecurityGroup
     render() {
         return (
             <div>
-                <BreadcrumbCustom breadcrumbProps={breadcrumProps} />
+                <BreadCrumb breadcrumbProps={breadcrumProps} />
                 <Header onClick={this.onClick} onSearch={this.onSearch} />
                 <EnterSecurity isAddNew={this.state.isAddNew} cancelAddNew={this.cancelAddNew} />
             </div>

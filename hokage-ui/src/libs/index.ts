@@ -1,6 +1,7 @@
 import { Models } from './model'
 import { Terminal } from 'xterm'
 import { UserRoleEnum } from '../axios/action/user/user-type'
+import React from 'react'
 
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
@@ -166,4 +167,18 @@ export function isSubArray(parent: string[], child: string[]): boolean {
         }
     }
     return true
+}
+
+export interface RouteParam {
+    subPath: string,
+    path?: string,
+    component: any
+}
+
+export function createRoute(path: string, component: React.ReactNode) {
+    return { subPath: path, component }
+}
+
+export function createModuleRoute(prefix: string, route: RouteParam[]) {
+    return { prefix, route }
 }

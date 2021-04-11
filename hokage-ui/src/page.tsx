@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import NotFound from './pages/pages/not-found'
+import NotFound from './layout/not-found'
 import App from './app'
 import Login from './pages/login'
 

@@ -12,7 +12,7 @@ import {
 	Avatar
 } from 'antd'
 import moment from 'moment'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 
 const data = [
 	{
@@ -84,7 +84,7 @@ class Index extends React.Component {
 	render() {
 		return (
 			<div className="gutter-example button-demo">
-				<BreadcrumbCustom breadcrumbProps={breadcrumProps} />
+				<BreadCrumb breadcrumbProps={breadcrumProps} />
 				<div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
 					<Divider orientation="left">所有服务器信息概览</Divider>
 					<Row gutter={16} >

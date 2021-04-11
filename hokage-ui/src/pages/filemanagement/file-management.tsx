@@ -2,7 +2,7 @@ import React, { ReactText } from 'react'
 import { Table, Row, Col, Divider, Button } from 'antd'
 import './index.less'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import Search from 'antd/lib/input/Search'
 import Action, { ActionProps } from './action'
 interface FileManagementState {
@@ -240,7 +240,7 @@ export default class FileManagement extends React.Component<any, FileManagementS
                 >
                     {/* //TODO: 添加一个输入框,当点击这个时,显示,可以指定路径打开 */}
                     <Col span={12} style={{display:'inline-block'}}>
-                        <BreadcrumbCustom breadcrumbProps={this.retriveBreadcrumbProps()} />
+                        <BreadCrumb breadcrumbProps={this.retriveBreadcrumbProps()} />
                         <span>
               <Divider type="vertical" />
               共

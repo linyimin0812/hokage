@@ -1,6 +1,6 @@
 import { Button, Tag } from 'antd'
 import React from 'react'
-import { BreadcrumbPrpos } from '../../../layout/bread-crumb-custom'
+import { BreadcrumbPrpos } from '../../../layout/bread-crumb'
 import { randomColor } from '../../../libs'
 import { Operation } from '../../../axios/action/user/user-type'
 

@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { Table, Button, Row, Col, message, Divider } from 'antd'
-import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
+import BreadCrumb from '../../../layout/bread-crumb'
 import { MyServerSearch } from './search'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@ant-design/icons'
 import AddServer from '../add-server'
@@ -17,7 +17,7 @@ type MyServerState = {
     loading: boolean
 }
 
-export default class Index extends React.Component<any, MyServerState> {
+export default class MyServer extends React.Component<any, MyServerState> {
 
     state = {
         selectedRowKeys: [],
@@ -85,7 +85,7 @@ export default class Index extends React.Component<any, MyServerState> {
 
         return (
             <>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <MyServerSearch onFinish={this.onFinish} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row

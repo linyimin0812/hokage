@@ -1,4 +1,4 @@
-import BreadcrumbCustom, { BreadcrumbPrpos } from "../../layout/bread-crumb-custom"
+import BreadCrumb, { BreadcrumbPrpos } from "../../layout/bread-crumb"
 import React from 'react'
 import FileManagement from "./file-management"
 import { Tabs } from "antd"
@@ -96,7 +96,7 @@ export default class FileManagementHome extends React.Component<HomePropsType, F
         const { activeKey, actionPanes } = this.state
         return (
             <>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <Tabs
                     onChange={this.onChange}
                     activeKey={activeKey}

@@ -1,4 +1,4 @@
-import BreadcrumbCustom from "../../layout/bread-crumb-custom"
+import BreadCrumb from "../../layout/bread-crumb"
 import React from 'react'
 import { Tabs } from "antd"
 import WebSshServer from "./web-ssh-server"
@@ -94,7 +94,7 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
         const { activeKey, panes } = this.state
         return (
             <>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <Tabs
                     onChange={this.onChange}
                     activeKey={activeKey}

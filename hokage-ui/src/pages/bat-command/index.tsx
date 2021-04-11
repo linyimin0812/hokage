@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadcrumbCustom, { BreadcrumbPrpos } from '../../layout/bread-crumb-custom'
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import MyBatCommand from './my-bat-command';
 import { Tabs } from 'antd';
 import ExecutedBatCommand from './executed-bat-command';
@@ -18,7 +18,7 @@ export default class BatCommand extends React.Component {
 	render() {
 		return(
 			<div>
-				<BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+				<BreadCrumb breadcrumbProps={breadcrumbProps} />
 				<Tabs type="card">
 					<Tabs.TabPane tab="创建批量任务" key="create_bat_command">
 						<MyBatCommand />

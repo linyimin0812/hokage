@@ -1,5 +1,5 @@
 import React from 'react'
-import img from '../../style/imgs/404.png'
+import img from '../style/imgs/404.png'
 
 class NotFound extends React.Component {
     state = {

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import Routes from './routes'
 import DocumentTitle from 'react-document-title'
-import SiderCustom from './components/sider-custom'
-import HeaderCustom from './components/header-custom'
 import { Layout } from 'antd'
+import Header from './layout/header'
+import Sider from './layout/sider';
+import { Router } from './routes/router';
 
 const { Content, Footer } = Layout
 
@@ -40,19 +40,15 @@ export default class App extends Component<AppProps, AppState> {
     };
     render() {
         const { title } = this.state;
-        const { auth } = this.state;
         return (
             <DocumentTitle title={title}>
                 <Layout>
-                    <SiderCustom collapsed={this.state.collapsed} />
+                    {/*<SiderCustom collapsed={this.state.collapsed} />*/}
+                    <Sider collapsed={this.state.collapsed} />
                     <Layout className="layout" style={{ flexDirection: 'column' }}>
-                        <HeaderCustom
-                            toggle={this.toggle}
-                            collapsed={this.state.collapsed}
-                            user={auth.data || {}}
-                        />
+                        <Header toggle={this.toggle} collapsed={this.state.collapsed} />
                         <Content style={{ margin: '0 16px', overflow: 'initial', flex: '1 1 0' }}>
-                            <Routes />
+                            <Router />
                         </Content>
                         <Footer id={'ant-layout-footer'} style={{ textAlign: 'center', padding: '0px 0px' }}>
                             Server Management ©{new Date().getFullYear()} Created by github@linyimin-bupt

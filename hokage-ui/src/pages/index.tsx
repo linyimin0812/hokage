@@ -3,7 +3,7 @@ import Operator from './user/operator'
 import OrdinaryUser from './user/ordinary'
 import AllServers from './server/all-server'
 import MyServer from './server/my-server'
-import MyOperateServer from './server/my-operator-server'
+import OperateServer from './server/my-operator-server/operator-server'
 import FileManagementHome from './filemanagement'
 import WebSshHome from './webssh'
 import BatCommandHome from './bat-command'
@@ -18,7 +18,7 @@ export default {
     AllServers,
     FileManagementHome,
     MyServer,
-    MyOperateServer,
+    OperateServer,
     WebSshHome,
     BatCommandHome,
     SecurityGroupHome,

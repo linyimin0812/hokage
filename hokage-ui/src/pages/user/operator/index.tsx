@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
-import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
+import BreadCrumb from '../../../layout/bread-crumb'
 import { UserSearch, UserSearchFormType } from '../search'
 import {
     UserAddOutlined,
@@ -129,7 +129,7 @@ export default class Operator extends React.Component<any, OperatorState> {
 
         return (
             <div>
-                <BreadcrumbCustom breadcrumbProps= {breadcrumbProps} />
+                <BreadCrumb breadcrumbProps= {breadcrumbProps} />
                 <UserSearch onFinish={this.onFinish} usernameType={'operator'} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row

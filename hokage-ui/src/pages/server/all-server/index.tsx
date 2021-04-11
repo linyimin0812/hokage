@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { message, Table, Row, Col, Button, Divider } from 'antd'
-import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
+import BreadCrumb from '../../../layout/bread-crumb'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { AllServerSearch } from './search'
 import AddServer from '../add-server'
@@ -85,7 +85,7 @@ export default class AllServer extends React.Component<{}, AllServerState> {
 
         return (
             <div>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <AllServerSearch onFinish={this.onFinish} />
                 <div style={{ backgroundColor: '#FFFFFF' }}>
                     <Row

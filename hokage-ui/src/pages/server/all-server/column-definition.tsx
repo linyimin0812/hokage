@@ -2,7 +2,7 @@ import { Button, Tag } from 'antd'
 import React from 'react'
 import { randomColor } from '../../../libs'
 import { Operation } from '../../../axios/action/user/user-type'
-import { BreadcrumbPrpos } from '../../../layout/bread-crumb-custom'
+import { BreadcrumbPrpos } from '../../../layout/bread-crumb'
 
 /**
  * @author linyimin

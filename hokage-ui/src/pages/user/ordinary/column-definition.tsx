@@ -1,4 +1,4 @@
-import { BreadcrumbPrpos } from '../../../layout/bread-crumb-custom'
+import { BreadcrumbPrpos } from '../../../layout/bread-crumb'
 import { Button, Tag } from 'antd'
 import React from 'react'
 import { randomColor } from '../../../libs'

@@ -1,7 +1,12 @@
 import React from 'react'
 import { Avatar, Dropdown, Layout, Menu, message } from 'antd'
 import style from './layout.module.css'
-import Icon, { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons'
+import {
+    FullscreenExitOutlined,
+    FullscreenOutlined, LogoutOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+} from '@ant-design/icons'
 import history from '../libs/history'
 import { Models } from '../libs/model'
 import { UserAction } from '../axios/action'
@@ -17,6 +22,10 @@ export interface HeaderStateType {
 }
 
 export default class Header extends React.Component<HeaderPropsType, HeaderStateType> {
+
+    state = {
+        isFullScreen: false
+    }
 
     handleLogout = () => {
         const userInfo = Models.get('userInfo')
@@ -38,8 +47,8 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
     menu = () => {
         return (
             <Menu>
-                <Menu.Item onClick={this.handleLogout}>
-                    <Icon type={'layout'} style={{marginRight: 10}} translate />退出登录
+                <Menu.Item onClick={this.handleLogout} style={{textAlign: 'center'}}>
+                    <LogoutOutlined translate />退出登录
                 </Menu.Item>
             </Menu>
         )
@@ -65,6 +74,13 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
         }
     }
 
+    renderMenuFold = () => {
+        if (this.props.collapsed) {
+            return <MenuUnfoldOutlined translate />
+        }
+        return <MenuFoldOutlined translate />
+    }
+
     render() {
         const username = (Models.get('userInfo') ? Models.get('userInfo').username : 'Hokage')
         const { isFullScreen } = this.state
@@ -72,7 +88,7 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
             <Layout.Header style={{padding: 0}}>
                 <div className={style.header}>
                     <div className={style.trigger} onClick={this.props.toggle}>
-                        <Icon type={this.props.collapsed ? 'menu-unfold' : 'menu-fold'} translate />
+                        {this.renderMenuFold()}
                     </div>
                     <div className={style.right}>
                         <Dropdown overlay={this.menu}>
@@ -84,15 +100,15 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
                             </span>
                         </Dropdown>
                     </div>
-                </div>
-                <div className={style.right}>
-                    {
-                        isFullScreen ? (
-                            <FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
-                        ) : (
-                            <FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
-                        )
-                    }
+                    <div className={style.right}>
+                        {
+                            isFullScreen ? (
+                                <FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
+                            ) : (
+                                <FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
+                            )
+                        }
+                    </div>
                 </div>
             </Layout.Header>
         )

@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react'
 import { message, Table, Row, Col, Button, Divider } from 'antd'
-import BreadcrumbCustom from '../../../layout/bread-crumb-custom'
+import BreadCrumb from '../../../layout/bread-crumb'
 import { InfoCircleOutlined, SyncOutlined, PlusOutlined, MinusOutlined } from '@ant-design/icons'
 import { TableExtendable } from '../../common/table-extendable'
 import { MyOperatorServerSearch } from './search'
@@ -20,7 +20,7 @@ interface NestedTableDataSource {
     operationList: Operation[]
 }
 
-type AllServerState = {
+type OperatorServerState = {
     expandable: TableExtendable,
     nestedTableDataSource: NestedTableDataSource[],
     selectedRowKeys: ReactText[],
@@ -29,9 +29,9 @@ type AllServerState = {
     loading: boolean
 }
 
-export default class Index extends React.Component<{}, AllServerState> {
+export default class OperatorServer extends React.Component<{}, OperatorServerState> {
 
-    state: AllServerState = {
+    state: OperatorServerState = {
         expandable: {
             expandedRowKeys: [],
             expandedRowRender: () => {
@@ -113,7 +113,7 @@ export default class Index extends React.Component<{}, AllServerState> {
 
         return (
             <div>
-                <BreadcrumbCustom breadcrumbProps={breadcrumbProps} />
+                <BreadCrumb breadcrumbProps={breadcrumbProps} />
                 <>
                     <MyOperatorServerSearch onFinish={this.onFinish} />
                     <div style={{ backgroundColor: '#FFFFFF' }}>
