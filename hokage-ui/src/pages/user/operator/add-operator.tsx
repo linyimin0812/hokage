@@ -3,6 +3,7 @@ import { Modal, Form, Row, Col, Select, Button, message } from 'antd'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
 import { FormInstance } from 'antd/lib/form'
+import { observer } from 'mobx-react'
 
 type AddOperatorPropTypes = {
     onModalOk: (value: number[]) => void,
@@ -13,7 +14,7 @@ type AddOperatorPropTypes = {
 type AddOperatorStateType = {
     ordinaryUsers: Option[],
 }
-
+@observer
 export default class AddOperator extends React.Component<AddOperatorPropTypes, AddOperatorStateType> {
 
     state = {

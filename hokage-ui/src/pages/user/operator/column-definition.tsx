@@ -1,13 +1,9 @@
 import { Button, Tag } from 'antd'
 import { randomColor } from '../../../libs'
 import React from 'react'
-import { Operation, UserServerOperateForm } from '../../../axios/action/user/user-type'
-import { translate } from '../../../i18n'
-import { ConfirmModal } from '../../common/confirm-modal'
+import { Operation } from '../../../axios/action/user/user-type'
 import { BreadcrumbPrpos } from '../../../layout/bread-crumb'
-import { FormModal } from '../../common/form-modal'
-import { FormInstance } from 'antd/lib/form'
-import { SelectServer } from '../../server/select-server'
+import { Action } from '../../../component/Action';
 
 /**
  * @author linyimin
@@ -88,42 +84,49 @@ export const columns = [
         title: '操作',
         dataIndex: 'operationList',
         key: 'action',
-        render: (operationList: Operation[]) => operationList.map(operation => {
-            if (operation.operationType === 'link') {
-                return <Button type="link" href={operation.operationLink}>{translate(operation.operationName)}</Button>
-            }
-
-            if (operation.operationType === 'confirm') {
-                return <ConfirmModal
-                            actionName={operation.operationName}
-                            title={operation.operationName}
-                            action={ async () => {alert('test')}}
-                            content={operation.description!}
-                       />
-            }
-            if (operation.operationType === 'modal') {
-                if (operation.operationName === 'recycleServer') {
-                    return (
-                        <FormModal
-                            actionName={operation.operationName}
-                            renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
-                            action={(value: UserServerOperateForm) => alert('回收：' + JSON.stringify(value))}
-                        />
-                    )
-                }
-                if (operation.operationName === 'addServer') {
-                    return (
-                        <FormModal
-                            actionName={operation.operationName}
-                            renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
-                            action={(value: UserServerOperateForm) => alert('添加：' + JSON.stringify(value))}
-                        />
-                    )
-                }
-            }
-            return null
-
-        })
+        render: () => {
+            return (
+                <Action>
+                    <Action.Confirm actionName={'test'} title={'test'} action={async () => {alert('test')}} content={'test'} />
+                </Action>
+            )
+        },
+        // render: (operationList: Operation[]) => operationList.map(operation => {
+        //     if (operation.operationType === 'link') {
+        //         return <Button type="link" href={operation.operationLink}>{translate(operation.operationName)}</Button>
+        //     }
+        //
+        //     if (operation.operationType === 'confirm') {
+        //         return <ConfirmModal
+        //                     actionName={operation.operationName}
+        //                     title={operation.operationName}
+        //                     action={ async () => {alert('test')}}
+        //                     content={operation.description!}
+        //                />
+        //     }
+        //     if (operation.operationType === 'modal') {
+        //         if (operation.operationName === 'recycleServer') {
+        //             return (
+        //                 <FormModal
+        //                     actionName={operation.operationName}
+        //                     renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
+        //                     action={(value: UserServerOperateForm) => alert('回收：' + JSON.stringify(value))}
+        //                 />
+        //             )
+        //         }
+        //         if (operation.operationName === 'addServer') {
+        //             return (
+        //                 <FormModal
+        //                     actionName={operation.operationName}
+        //                     renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
+        //                     action={(value: UserServerOperateForm) => alert('添加：' + JSON.stringify(value))}
+        //                 />
+        //             )
+        //         }
+        //     }
+        //     return null
+        //
+        // })
     }
 ]
 

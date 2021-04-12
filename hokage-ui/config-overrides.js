@@ -5,6 +5,7 @@ const {
     disableEsLint,
     overrideDevServer,
     addWebpackAlias,
+    addDecoratorsLegacy
 } = require('customize-cra');
 
 //1、自定义环境变量REACT_APP_ENV配置
@@ -57,10 +58,12 @@ const devServerConfig = () => (config) => {
 
 module.exports = {
     webpack: override(
+        addDecoratorsLegacy(),
         // 6、集成antd的按需加载，新版（好像是4.0以后）的antd也可以不用设置了
         fixBabelImports('import', {
             libraryName: 'antd',
             style: true,
+            libraryDirectory: 'es',
         }),
         //7、样式模块化和antd主题修改等配置
         addLessLoader({

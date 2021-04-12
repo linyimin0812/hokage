@@ -2,14 +2,19 @@ import React from 'react'
 import { Link as ALink } from 'react-router-dom'
 import { Button as AButton, Divider } from 'antd'
 import { hasPermissions } from '../libs'
+import { ActionModalProps, ConfirmModal } from './confirm-modal';
 
-class Action extends React.Component {
+export class Action extends React.Component {
     static Link(props: any) {
         return <ALink {...props} />
     }
 
     static Button(props: any) {
         return <AButton type={'link'} {...props} style={{padding: 0}} />
+    }
+
+    static Confirm(props: ActionModalProps) {
+        return <ConfirmModal {...props} />
     }
 
     _canVisible = (path: string): boolean => {
@@ -31,8 +36,6 @@ class Action extends React.Component {
         const children: React.ReactElement[] = []
         const propsChildren: React.ReactElement[] = Array.isArray(this.props.children) ? this.props.children as React.ReactElement[] : [this.props.children as React.ReactElement]
         propsChildren.forEach(el => this._handle(children, el))
-        return (
-            { children }
-        )
+        return (children)
     }
 }
