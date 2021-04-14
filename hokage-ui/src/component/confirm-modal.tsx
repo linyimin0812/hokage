@@ -3,7 +3,6 @@ import { Button, message, Modal } from 'antd'
 import { translate } from '../i18n'
 
 export interface ActionModalProps {
-    actionName: string,
     title: string,
     action: () => Promise<void>,
     content: string
@@ -16,7 +15,7 @@ export const ConfirmModal = (props: ActionModalProps) => {
             try {
                 await props.action()
             } catch (e) {
-                message.error(`${translate(props.actionName)} error.`)
+                message.error(`${props.title} error.`)
                 console.log(JSON.stringify(e))
             }
         }
@@ -34,6 +33,6 @@ export const ConfirmModal = (props: ActionModalProps) => {
         })
     }
     return (
-        <Button type="link" onClick={onClick}>{translate(props.actionName)}</Button>
+        <Button type="link" onClick={onClick}>{translate(props.title)}</Button>
     )
 }

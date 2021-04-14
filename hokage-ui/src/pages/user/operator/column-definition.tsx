@@ -1,9 +1,11 @@
 import { Button, Tag } from 'antd'
 import { randomColor } from '../../../libs'
 import React from 'react'
-import { Operation } from '../../../axios/action/user/user-type'
+import { Operation, UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
 import { BreadcrumbPrpos } from '../../../layout/bread-crumb'
-import { Action } from '../../../component/Action';
+import { Action } from '../../../component/Action'
+import { SelectServer } from '../../server/select-server'
+import { FormInstance } from 'antd/lib/form'
 
 /**
  * @author linyimin
@@ -82,51 +84,28 @@ export const columns = [
     },
     {
         title: '操作',
-        dataIndex: 'operationList',
         key: 'action',
-        render: () => {
+        render: (_: any, record: UserVO) => {
             return (
                 <Action>
-                    <Action.Confirm actionName={'test'} title={'test'} action={async () => {alert('test')}} content={'test'} />
+                    <Action.Form
+                        title={'添加服务器'}
+                        renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
+                        action={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+                    />
+                    <Action.Form
+                        title={'回收服务器'}
+                        renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
+                        action={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+                    />
+                    <Action.Confirm
+                        title={'删除'}
+                        action={async () => {alert('TODO: 添加删除动作')}}
+                        content={`确定删除管理员${record.username}(${record.id})`}
+                    />
                 </Action>
             )
         },
-        // render: (operationList: Operation[]) => operationList.map(operation => {
-        //     if (operation.operationType === 'link') {
-        //         return <Button type="link" href={operation.operationLink}>{translate(operation.operationName)}</Button>
-        //     }
-        //
-        //     if (operation.operationType === 'confirm') {
-        //         return <ConfirmModal
-        //                     actionName={operation.operationName}
-        //                     title={operation.operationName}
-        //                     action={ async () => {alert('test')}}
-        //                     content={operation.description!}
-        //                />
-        //     }
-        //     if (operation.operationType === 'modal') {
-        //         if (operation.operationName === 'recycleServer') {
-        //             return (
-        //                 <FormModal
-        //                     actionName={operation.operationName}
-        //                     renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
-        //                     action={(value: UserServerOperateForm) => alert('回收：' + JSON.stringify(value))}
-        //                 />
-        //             )
-        //         }
-        //         if (operation.operationName === 'addServer') {
-        //             return (
-        //                 <FormModal
-        //                     actionName={operation.operationName}
-        //                     renderForm={(form: FormInstance) => { return <SelectServer form={form} /> }}
-        //                     action={(value: UserServerOperateForm) => alert('添加：' + JSON.stringify(value))}
-        //                 />
-        //             )
-        //         }
-        //     }
-        //     return null
-        //
-        // })
     }
 ]
 

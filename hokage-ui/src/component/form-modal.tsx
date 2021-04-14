@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { Button, Form, message, Modal } from 'antd'
-import { translate } from '../../i18n'
 import { FormInstance } from 'antd/lib/form'
-import { UserServerOperateForm } from '../../axios/action/user/user-type'
+import { UserServerOperateForm } from '../axios/action/user/user-type'
 
-interface FormModalProps {
-    actionName: string,
+export interface FormModalProps {
+    title: string,
     renderForm: (form: FormInstance) => React.ReactNode,
     action: (formValue: UserServerOperateForm) => void
 }
@@ -31,7 +30,7 @@ export const FormModal = (props: FormModalProps) => {
                 setVisible(false)
             } catch (e) {
                 if (!e.errorFields) {
-                    message.error(`${translate(props.actionName)} error.`)
+                    message.error(`${props.title} error.`)
                 }
                 console.log(JSON.stringify(e))
             } finally {
@@ -44,12 +43,12 @@ export const FormModal = (props: FormModalProps) => {
 
     return (
         <>
-            <Button type="link" onClick={onClick}>{translate(props.actionName)}</Button>
+            <Button type="link" onClick={onClick}>{props.title}</Button>
             <Modal
                 visible={visible}
-                title={translate(props.actionName)}
-                okText={translate('confirm')}
-                cancelText={translate('cancel')}
+                title={props.title}
+                okText={'confirm'}
+                cancelText={'cancel'}
                 onCancel={onCancel}
                 confirmLoading={confirmLoading}
                 onOk={onOk}

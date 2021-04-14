@@ -79,9 +79,7 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
                                 >
                                     {
                                         ordinaryUsers.map((option: Option, index) => {
-                                            return (
-                                                <Select.Option key={index} value={option.value}>{option.label}</Select.Option>
-                                            )
+                                            return <Select.Option key={index} value={option.value}>{option.label}</Select.Option>
                                         })
                                     }
                                 </Select>
@@ -89,17 +87,8 @@ export default class AddOperator extends React.Component<AddOperatorPropTypes, A
                         </Col>
                         <Col span={9}>
                             <Form.Item>
-                                <Button type="primary" htmlType="submit">
-                                    添加
-                                </Button>
-                                <Button
-                                    style={{
-                                        margin: '0 8px',
-                                    }}
-                                    onClick={this.reset}
-                                >
-                                    取消
-                                </Button>
+                                <Button type="primary" htmlType="submit">添加</Button>
+                                <Button style={{ margin: '0 8px' }} onClick={this.reset}>取消</Button>
                             </Form.Item>
                         </Col>
                     </Row>

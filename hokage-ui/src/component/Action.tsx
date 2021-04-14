@@ -2,7 +2,8 @@ import React from 'react'
 import { Link as ALink } from 'react-router-dom'
 import { Button as AButton, Divider } from 'antd'
 import { hasPermissions } from '../libs'
-import { ActionModalProps, ConfirmModal } from './confirm-modal';
+import { ActionModalProps, ConfirmModal } from './confirm-modal'
+import { FormModal, FormModalProps } from './form-modal'
 
 export class Action extends React.Component {
     static Link(props: any) {
@@ -15,6 +16,10 @@ export class Action extends React.Component {
 
     static Confirm(props: ActionModalProps) {
         return <ConfirmModal {...props} />
+    }
+
+    static Form(props: FormModalProps) {
+        return <FormModal {...props} />
     }
 
     _canVisible = (path: string): boolean => {
