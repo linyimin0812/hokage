@@ -7,14 +7,14 @@ import React from 'react'
 
 export const searchServer = (component: React.Component, form: ServerSearchForm = {}) => {
 
-    component.setState({loading: true})
-    form.operatorId = getHokageUid()
-    form.role = getHokageRole()
-    ServerAction.searchServer(form).then(result => {
-        result = (result || []).map(serverVO => {
-            serverVO.key = serverVO.id + ''
-            return serverVO
-        })
-        component.setState({dataSource: result})
-    }).catch(err => message.error(err)).finally(() => component.setState({loading: false}))
+  component.setState({loading: true})
+  form.operatorId = getHokageUid()
+  form.role = getHokageRole()
+  ServerAction.searchServer(form).then(result => {
+    result = (result || []).map(serverVO => {
+      serverVO.key = serverVO.id + ''
+      return serverVO
+    })
+    component.setState({dataSource: result})
+  }).catch(err => message.error(err)).finally(() => component.setState({loading: false}))
 }

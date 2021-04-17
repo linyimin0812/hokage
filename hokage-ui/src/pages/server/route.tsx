@@ -5,7 +5,7 @@ import MyOperatorServer from './my-operator-server/operator-server'
 
 
 export default [
-    createRoute('/all', AllServer),
-    createRoute('/operator', MyOperatorServer),
-    createRoute('/my', MyServer)
+  createRoute('/all', AllServer),
+  createRoute('/operator', MyOperatorServer),
+  createRoute('/my', MyServer)
 ]

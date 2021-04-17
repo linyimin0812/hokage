@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, Form, Row, Col, Select, Button, message } from 'antd'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
@@ -15,6 +15,23 @@ type AddOperatorStateType = {
   ordinaryUsers: Option[],
 }
 @observer
+// export const AddOperator = (props: AddOperatorPropTypes) => {
+//   const [ordinaryUsers, setOrdinaryUsers] = useState<Option[]>([])
+//
+//   useEffect(() => {
+//     UserAction.listAllSubordinate().then(userVOList => {
+//       const subordinateUserOptions: Option[] = userVOList.map(userVO => {
+//         return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
+//       })
+//       setOrdinaryUsers(subordinateUserOptions)
+//     }).catch(err => {
+//       message.error(err)
+//     })
+//   }, [])
+//
+//
+//
+// }
 export default class AddOperator extends React.Component<AddOperatorPropTypes, AddOperatorStateType> {
 
   state = {
