@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadCrumb, { BreadcrumbPrpos } from '../../../layout/bread-crumb';
+import BreadCrumb, { BreadcrumbPrpos } from '../../../layout/bread-crumb'
 import { UserSearch, UserSearchFormType } from '../search'
 import { TableExtendable } from '../../common/table-extendable'
 import { UserVO } from '../../../axios/action/user/user-type'
@@ -7,7 +7,7 @@ import { ServerVO } from '../../../axios/action/server/server-type'
 import { Toolbar } from './toolbar'
 import store from './store'
 import { observer } from 'mobx-react'
-import OperatorTable from './table';
+import OperatorTable from './table'
 
 type OperatorState = {
   dataSource: UserVO[],
