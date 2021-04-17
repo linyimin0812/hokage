@@ -2,8 +2,8 @@ import { observable } from 'mobx'
 import { ReactText } from 'react'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
-import { UserVO } from '../../../axios/action/user/user-type';
-import { UserSearchFormType } from '../search';
+import { UserVO } from '../../../axios/action/user/user-type'
+import { UserSearchFormType } from '../search'
 
 export class Store {
   @observable selectedRowKeys: ReactText[] = []
@@ -21,10 +21,9 @@ export class Store {
   fetchUserOptions = () => {
     this.isFetching = true
     UserAction.listAllSubordinate().then(userVOList => {
-      const subordinateUserOptions: Option[] = userVOList.map(userVO => {
+      this.userOptions = userVOList.map(userVO => {
         return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
       })
-      this.userOptions = subordinateUserOptions
     }).finally(() => this.isFetching = false)
   }
 
@@ -42,7 +41,6 @@ export class Store {
       this.records = supervisorList
     }).finally(() => { this.isFetching = false })
   }
-
 }
 
 export default new Store()

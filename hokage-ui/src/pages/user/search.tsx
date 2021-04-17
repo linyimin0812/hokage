@@ -38,12 +38,7 @@ export const UserSearch = (props: SearchProps) => {
       >
         <Row gutter={24}>
           <Col span={6} key="id">
-            <Form.Item
-              name="id"
-              label="id"
-              colon
-              {...formItemLayout}
-            >
+            <Form.Item name="id" label="id" colon {...formItemLayout}>
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
@@ -51,39 +46,23 @@ export const UserSearch = (props: SearchProps) => {
             <Form.Item
               name="username"
               label={props.usernameType === 'ordinary' ? '使用者姓名' : '管理员姓名'}
-              colon
-              {...formItemLayout}
+              colon{...formItemLayout}
             >
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
           <Col span={6} key="serverGroup">
-            <Form.Item
-              name="serverGroup"
-              label="服务器分组"
-              colon
-              {...formItemLayout}
-            >
+            <Form.Item name="serverGroup" label="服务器分组" colon {...formItemLayout}>
               <Select mode={'multiple'}>
-                {
-                  serverOptions.map(option => {
-                    return <Select.Option value={option.value}>{option.label}</Select.Option>
-                  })
-                }
+                {serverOptions.map(option => {
+                  return <Select.Option value={option.value}>{option.label}</Select.Option>
+                })}
               </Select>
             </Form.Item>
           </Col>
           <Col span={6} key="submit">
-            <Button type="primary" htmlType="submit">
-              Search
-            </Button>
-            <Button
-              style={{
-                margin: '0 8px',
-              }}
-              htmlType="button"
-              onClick={onReset}
-            >
+            <Button type="primary" htmlType="submit">Search</Button>
+            <Button style={{ margin: '0 8px', }} htmlType="button" onClick={onReset}>
               Clear
             </Button>
           </Col>

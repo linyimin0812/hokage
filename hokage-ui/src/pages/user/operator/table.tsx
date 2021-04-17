@@ -61,7 +61,9 @@ export default class OperatorTable extends React.Component {
 
   render() {
     return (
-      <Table rowKey={'id'} loading={store.isFetching}
+      <Table
+        rowKey={'id'}
+        loading={store.isFetching}
         dataSource={store.records}
         expandedRowRender={this.expandedRowRender}
       >
@@ -72,6 +74,5 @@ export default class OperatorTable extends React.Component {
         <Table.Column title={'操作'} render={this.actionRender} />
       </Table>
     )
-
   }
 }

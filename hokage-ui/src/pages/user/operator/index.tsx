@@ -17,16 +17,9 @@ type OperatorState = {
 }
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: '用户管理'
-  },
-  {
-    name: '服务器管理员'
-  }
+  { name: '首页', link: '/app/index' },
+  { name: '用户管理' },
+  { name: '服务器管理员' }
 ]
 
 @observer
