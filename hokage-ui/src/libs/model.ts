@@ -8,17 +8,17 @@
 import _ from 'lodash'
 
 export const Models = {
-    _store:  { serverLabelColor: ['magenta', 'red', 'green', 'purple', '#f50'] },
+  _store:  { serverLabelColor: ['magenta', 'red', 'green', 'purple', '#f50'] },
 
-    get: (key: string): any => {
-        return _.get(Models._store, key)
-    },
+  get: (key: string): any => {
+    return _.get(Models._store, key)
+  },
 
-    set: (key: string, value: any): void => {
-        _.set(Models._store, key, value)
-    },
+  set: (key: string, value: any): void => {
+    _.set(Models._store, key, value)
+  },
 
-    remove: (key: string | string[]): void => {
-        _.assign(Models._store, _.omit(Models._store, key))
-    }
+  remove: (key: string | string[]): void => {
+    _.assign(Models._store, _.omit(Models._store, key))
+  }
 }

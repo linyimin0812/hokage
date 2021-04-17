@@ -6,6 +6,6 @@ import './style/index.less'
 
 
 ReactDOM.render(
-        <Page />,
-    document.getElementById('root')
+  <Page />,
+  document.getElementById('root')
 )

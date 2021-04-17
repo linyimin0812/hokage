@@ -8,57 +8,57 @@
 import { ServerGroup, ServerVO } from '../server/server-type';
 
 export interface UserLoginForm {
-    email: string,
-    passwd: string
+  email: string,
+  passwd: string
 }
 
 
 export interface UserLogoutForm {
-    email: string
+  email: string
 }
 
 export interface UserRegisterForm extends UserLoginForm{
-    id?: number,
-    username: string,
-    role: number,
-    subscribed: number
+  id?: number,
+  username: string,
+  role: number,
+  subscribed: number
 }
 
 export interface UserVO {
-    id: number,
-    key?: string,
-    username: string,
-    email: string,
-    role: number,
-    serverNum: number,
-    serverLabelList: string[],
-    operationList: Operation[],
-    serverVOList: ServerVO[],
+  id: number,
+  key?: string,
+  username: string,
+  email: string,
+  role: number,
+  serverNum: number,
+  serverLabelList: string[],
+  operationList: Operation[],
+  serverVOList: ServerVO[],
 }
 
 export interface Operation {
-    operationType: 'link' | 'confirm' | 'modal' | 'action',
-    operationName: string,
-    operationLink?: string,
-    operationAction?: Function,
-    description?: string,
+  operationType: 'link' | 'confirm' | 'modal' | 'action',
+  operationName: string,
+  operationLink?: string,
+  operationAction?: Function,
+  description?: string,
 }
 
 export interface UserServerOperateForm {
-    operatorId?: number,
-    serverIds?: number[],
-    userIds?: number[],
-    serverGroup?: ServerGroup | string
+  operatorId?: number,
+  serverIds?: number[],
+  userIds?: number[],
+  serverGroup?: ServerGroup | string
 }
 
 export interface UserServerSearchForm {
-    operatorId: number,
-    username: string,
-    label: string
+  operatorId: number,
+  username: string,
+  label: string
 }
 
 export enum UserRoleEnum {
-    super_operator= 100,
-    supervisor = 1,
-    subordinate = 2
+  super_operator= 100,
+  supervisor = 1,
+  subordinate = 2
 }

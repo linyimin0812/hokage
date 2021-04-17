@@ -7,103 +7,99 @@ import { ServerVO } from '../../axios/action/server/server-type'
 import { searchServer } from '../server/util'
 
 type FileServerProps = {
-    actionName: string
-    action: (id: string) => void
+  actionName: string
+  action: (id: string) => void
 }
 
 type FileServerState = {
-    isModalVisible: boolean,
-    dataSource: ServerVO[],
-    loading: boolean
+  isModalVisible: boolean,
+  dataSource: ServerVO[],
+  loading: boolean
 }
 
 export default class ServerCardPanel extends React.Component<FileServerProps, FileServerState> {
 
-    state = {
-        isModalVisible: false,
-        dataSource: [],
-        loading: true
-    }
+  state = {
+    isModalVisible: false,
+    dataSource: [],
+    loading: true
+  }
 
-    componentDidMount() {
-        searchServer(this)
-    }
+  componentDidMount() {
+    searchServer(this)
+  }
 
-    applyServer = () => {
-        window.location.href = "/app/server/all"
-    }
+  applyServer = () => {
+    window.location.href = "/app/server/all"
+  }
 
-    onFinish = (value: any) => {
-        console.log(value)
-    }
+  onFinish = (value: any) => {
+    console.log(value)
+  }
 
-    resetFields = () => {
-        console.log("reset")
-    }
+  resetFields = () => {
+    console.log("reset")
+  }
 
-    delete = () => {
-        alert("delete operators bat")
-    }
+  delete = () => {
+    alert("delete operators bat")
+  }
 
-    sync = () => {
-        alert("sync operator")
-    }
+  sync = () => {
+    alert("sync operator")
+  }
 
-    onModalOk = (value: any) => {
-        console.log(value)
-        this.setState({ ...this.state, isModalVisible: false })
-        message.loading({ content: 'Loading...', key: 'addUser' });
-        setTimeout(() => {
-            message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
-        }, 2000)
-    }
+  onModalOk = (value: any) => {
+    console.log(value)
+    this.setState({ ...this.state, isModalVisible: false })
+    message.loading({ content: 'Loading...', key: 'addUser' });
+    setTimeout(() => {
+      message.success({ content: 'Loaded!', key: 'addUser', duration: 2 });
+    }, 2000)
+  }
 
-    onModalCancel = () => {
-        this.setState({ ...this.state, isModalVisible: false })
-        message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
-    }
+  onModalCancel = () => {
+    this.setState({ ...this.state, isModalVisible: false })
+    message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 });
+  }
 
-    enterFileManagement = () => {
-        alert('enter file management')
-    }
+  enterFileManagement = () => {
+    alert('enter file management')
+  }
 
-    renderServerCards = (dataSource: ServerVO[]) => {
-        return dataSource.map(serverVO => {
-            return (
-                <Col span={8}>
-                    <ServerCard
-                        account={serverVO.account}
-                        serverIp={serverVO.ip}
-                        description={serverVO.description}
-                        actionName={this.props.actionName}
-                        action={this.props.action}
-                    />
+  renderServerCards = (dataSource: ServerVO[]) => {
+    return dataSource.map(serverVO => {
+      return (
+        <Col span={8}>
+          <ServerCard
+            account={serverVO.account}
+            serverIp={serverVO.ip}
+            description={serverVO.description}
+            actionName={this.props.actionName}
+            action={this.props.action}
+          />
 
-                </Col>
-            )
-        })
-    }
-
-    render() {
-
-        const { dataSource, loading } = this.state
-
-        return (
-            <Spin spinning={loading}>
-                {
-                    (dataSource === undefined || dataSource.length === 0)
-                        ?
-                        <ApplyServerPrompt />
-                        :
-                        <div style={{ backgroundColor: '#FFFFFF' }}>
-                            <ApplyAndSearchServer />
-                            <Row gutter={24} style={{ margin: '5px 0px' }}>
-                                {this.renderServerCards(dataSource)}
-                            </Row>
-                        </div>
-                }
-
-            </Spin>
-        )
-    }
+        </Col>
+      )
+    })
+  }
+  render() {
+    const { dataSource, loading } = this.state
+    return (
+      <Spin spinning={loading}>
+        {
+          (dataSource === undefined || dataSource.length === 0)
+            ?
+            <ApplyServerPrompt />
+            :
+            <div style={{ backgroundColor: '#FFFFFF' }}>
+              <ApplyAndSearchServer />
+              <Row gutter={24} style={{ margin: '5px 0px' }}>
+                {this.renderServerCards(dataSource)}
+              </Row>
+            </div>
+        }
+      </Spin>
+    )
+  }
 }

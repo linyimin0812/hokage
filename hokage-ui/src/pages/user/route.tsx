@@ -3,6 +3,6 @@ import Operator from './operator'
 import OrdinaryUser from './ordinary'
 
 export default [
-    createRoute('/operator', Operator),
-    createRoute('/ordinary', OrdinaryUser)
+  createRoute('/operator', Operator),
+  createRoute('/ordinary', OrdinaryUser)
 ]

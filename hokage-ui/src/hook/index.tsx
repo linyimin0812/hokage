@@ -7,31 +7,31 @@ import { getHokageRole, getHokageUid } from '../libs'
 
 export const useServerOptions = () => {
 
-    const [serverOptions, setServerOptions] = useState<Option[]>([])
+  const [serverOptions, setServerOptions] = useState<Option[]>([])
 
-    useEffect(() => {
-        ServerAction.listServerLabelOptions().then(options => {
-            setServerOptions(options || [])
-        }).catch((err) => {
-            message.error(err)
-        })
-    }, [])
-    return [serverOptions]
+  useEffect(() => {
+    ServerAction.listServerLabelOptions().then(options => {
+      setServerOptions(options || [])
+    }).catch((err) => {
+      message.error(err)
+    })
+  }, [])
+  return [serverOptions]
 }
 
 export const useServerList = () => {
-    const [serverList, setServerList] = useState<ServerVO[]>([])
+  const [serverList, setServerList] = useState<ServerVO[]>([])
 
-    useEffect(() => {
-        const form: ServerSearchForm = {
-            operatorId: getHokageUid(),
-            role: getHokageRole()
-        }
-        ServerAction.searchServer(form).then(value => {
-            setServerList(value || [])
-        }).catch(e => {
-            message.error('搜索服务器失败')
-        })
-    }, [])
-    return [serverList]
+  useEffect(() => {
+    const form: ServerSearchForm = {
+      operatorId: getHokageUid(),
+      role: getHokageRole()
+    }
+    ServerAction.searchServer(form).then(value => {
+      setServerList(value || [])
+    }).catch(e => {
+      message.error('搜索服务器失败')
+    })
+  }, [])
+  return [serverList]
 }

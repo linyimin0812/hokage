@@ -7,117 +7,114 @@ import { breadcrumbProps } from './column-definition'
 import { ServerVO } from '../../axios/action/server/server-type'
 
 interface PanesType {
-    title: string,
-    content: JSX.Element,
-    key: string,
-    closable?: boolean
+  title: string,
+  content: JSX.Element,
+  key: string,
+  closable?: boolean
 }
 
 interface WebSshState {
-    panes: PanesType[],
-    activeKey: string
+  panes: PanesType[],
+  activeKey: string
 }
 
 export default class WebSshHome extends React.Component<any, WebSshState> {
-    constructor(props: any) {
-        super(props)
-        this.state = {
-            panes: [{
-                key: '1',
-                content: <WebSshServer addSshTerm={this.addPane} />,
-                title: '我的服务器',
-                closable: false
-            }],
-            activeKey: '1'
-        }
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      panes: [{
+        key: '1',
+        content: <WebSshServer addSshTerm={this.addPane} />,
+        title: '我的服务器',
+        closable: false
+      }],
+      activeKey: '1'
     }
+  }
 
 
 
-    onChange = (activeKey: string) => {
-        this.setState({
-            activeKey: activeKey
+  onChange = (activeKey: string) => {
+    this.setState({
+      activeKey: activeKey
+    })
+  }
+  /**
+   * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
+   */
+  addPane = (record: ServerVO) => {
+    const { panes } = this.state
+
+    const id = `${record.ip} (${record.account})`
+
+    if (!panes.some(pane => pane.key === id)) {
+      const pane: PanesType = {
+        key: id,
+        content: <Xterm id={id} server={record} />,
+        title: id
+      }
+      panes.push(pane)
+    }
+    this.setState({
+      panes,
+      activeKey: id
+    })
+  }
+
+  onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
+    let { activeKey, panes } = this.state
+    switch(action) {
+      case 'remove':
+        let lastKeyIndex: number = 0
+        panes.forEach((pane, i) => {
+          if (pane.key === targetKey) {
+            lastKeyIndex = i -1
+          }
         })
-    }
-    /**
-     * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
-     */
-    addPane = (record: ServerVO) => {
-        const { panes } = this.state
-
-        const id = `${record.ip} (${record.account})`
-
-        if (!panes.some(pane => pane.key === id)) {
-            const pane: PanesType = {
-                key: id,
-                content: <Xterm id={id} server={record} />,
-                title: id
-            }
-            panes.push(pane)
+        const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
+        if (targetKey === activeKey && newPanes.length) {
+          lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
+          activeKey = newPanes[lastKeyIndex].key
         }
+
         this.setState({
-            panes,
-            activeKey: id
+          panes: newPanes,
+          activeKey
         })
+        break
+      default:
+        break
     }
+  }
 
-    onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-        let { activeKey, panes } = this.state
-        switch(action) {
-            case 'remove':
-                let lastKeyIndex: number = 0
-                panes.forEach((pane, i) => {
-                    if (pane.key === targetKey) {
-                        lastKeyIndex = i -1
-                    }
-                })
+  render() {
+    const { activeKey, panes } = this.state
+    return (
+      <>
+        <BreadCrumb breadcrumbProps={breadcrumbProps} />
+        <Tabs
+          onChange={this.onChange}
+          activeKey={activeKey}
+          type="editable-card"
+          hideAdd
+          onEdit={this.onEdit}
+        >
+          {
+            panes.map(pane => {
+              return (
+                <Tabs.TabPane
+                  tab={pane.title}
+                  key={pane.key}
+                  closable={pane.closable}
 
-                const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
-
-                if (targetKey === activeKey && newPanes.length) {
-                    lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-                    activeKey = newPanes[lastKeyIndex].key
-                }
-
-                this.setState({
-                    panes: newPanes,
-                    activeKey
-                })
-                break
-            default:
-                break
-        }
-
-    }
-
-    render() {
-        const { activeKey, panes } = this.state
-        return (
-            <>
-                <BreadCrumb breadcrumbProps={breadcrumbProps} />
-                <Tabs
-                    onChange={this.onChange}
-                    activeKey={activeKey}
-                    type="editable-card"
-                    hideAdd
-                    onEdit={this.onEdit}
                 >
-                    {
-                        panes.map(pane => {
-                            return (
-                                <Tabs.TabPane
-                                    tab={pane.title}
-                                    key={pane.key}
-                                    closable={pane.closable}
-
-                                >
-                                    {pane.content}
-                                </Tabs.TabPane>
-                            )
-                        })
-                    }
-                </Tabs>
-            </>
-        )
-    }
+                  {pane.content}
+                </Tabs.TabPane>
+              )
+            })
+          }
+        </Tabs>
+      </>
+    )
+  }
 }

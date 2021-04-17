@@ -4,92 +4,92 @@ import { formItemLayout } from '../common/table-layout'
 import { useServerOptions } from '../../hook'
 
 interface SearchFormType {
-    id: string,
-    username: string,
-    serverGroup: string[],
-    operatorId: number
+  id: string,
+  username: string,
+  serverGroup: string[],
+  operatorId: number
 }
 
 type SearchProps = {
-    onFinish: (value: Partial<SearchFormType>) => void,
-    usernameType: 'operator' | 'ordinary'
+  onFinish: (value: Partial<SearchFormType>) => void,
+  usernameType: 'operator' | 'ordinary'
 }
 
 export type UserSearchFormType = Partial<SearchFormType>
 
 export const UserSearch = (props: SearchProps) => {
 
-    const [serverOptions] = useServerOptions()
-    const [form] = Form.useForm()
+  const [serverOptions] = useServerOptions()
+  const [form] = Form.useForm()
 
-    const onFinish = (formValue: Partial<SearchFormType>) => {
-        props.onFinish(formValue)
-    }
+  const onFinish = (formValue: Partial<SearchFormType>) => {
+    props.onFinish(formValue)
+  }
 
-    const onReset = () => { form.resetFields() }
+  const onReset = () => { form.resetFields() }
 
-    return (
-        <div style={{ backgroundColor: '#FFFFFF' }}>
-            <Divider orientation="left">{props.usernameType === 'ordinary' ? '服务器使用者信息查询' : '管理员信息查询'}</Divider>
-            <Form
-                name="operator-search"
-                onFinish={onFinish}
-                form={form}
+  return (
+    <div style={{ backgroundColor: '#FFFFFF' }}>
+      <Divider orientation="left">{props.usernameType === 'ordinary' ? '服务器使用者信息查询' : '管理员信息查询'}</Divider>
+      <Form
+        name="operator-search"
+        onFinish={onFinish}
+        form={form}
+      >
+        <Row gutter={24}>
+          <Col span={6} key="id">
+            <Form.Item
+              name="id"
+              label="id"
+              colon
+              {...formItemLayout}
             >
-                <Row gutter={24}>
-                    <Col span={6} key="id">
-                        <Form.Item
-                            name="id"
-                            label="id"
-                            colon
-                            {...formItemLayout}
-                        >
-                            <Input placeholder="请输入" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6} key="username">
-                        <Form.Item
-                            name="username"
-                            label={props.usernameType === 'ordinary' ? '使用者姓名' : '管理员姓名'}
-                            colon
-                            {...formItemLayout}
-                        >
-                            <Input placeholder="请输入" />
-                        </Form.Item>
-                    </Col>
-                    <Col span={6} key="serverGroup">
-                        <Form.Item
-                            name="serverGroup"
-                            label="服务器分组"
-                            colon
-                            {...formItemLayout}
-                        >
-                            <Select mode={'multiple'}>
-                                {
-                                    serverOptions.map(option => {
-                                        return <Select.Option value={option.value}>{option.label}</Select.Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
-                    <Col span={6} key="submit">
-                        <Button type="primary" htmlType="submit">
-                            Search
-                        </Button>
-                        <Button
-                            style={{
-                                margin: '0 8px',
-                            }}
-                            htmlType="button"
-                            onClick={onReset}
-                        >
-                            Clear
-                        </Button>
-                    </Col>
-                </Row>
-            </Form>
-        </div>
-    )
+              <Input placeholder="请输入" />
+            </Form.Item>
+          </Col>
+          <Col span={6} key="username">
+            <Form.Item
+              name="username"
+              label={props.usernameType === 'ordinary' ? '使用者姓名' : '管理员姓名'}
+              colon
+              {...formItemLayout}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+          </Col>
+          <Col span={6} key="serverGroup">
+            <Form.Item
+              name="serverGroup"
+              label="服务器分组"
+              colon
+              {...formItemLayout}
+            >
+              <Select mode={'multiple'}>
+                {
+                  serverOptions.map(option => {
+                    return <Select.Option value={option.value}>{option.label}</Select.Option>
+                  })
+                }
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={6} key="submit">
+            <Button type="primary" htmlType="submit">
+              Search
+            </Button>
+            <Button
+              style={{
+                margin: '0 8px',
+              }}
+              htmlType="button"
+              onClick={onReset}
+            >
+              Clear
+            </Button>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+  )
 
 }
