@@ -1,12 +1,13 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Table, Tag } from 'antd';
+import { Table, Tag } from 'antd'
 import store from './store'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { randomColor } from '../../../libs';
+import { randomColor } from '../../../libs'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../../server/select-server'
+import { ServerVO } from '../../../axios/action/server/server-type'
 
 @observer
 export default class OperatorTable extends React.Component {
@@ -24,8 +25,18 @@ export default class OperatorTable extends React.Component {
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'使用人数'} dataIndex={'userNum'} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
-      <Table.Column title={'操作'} render={this.actionRender} />
+      <Table.Column title={'操作'} render={this.nestedActionRender} />
     </Table>
+  }
+
+  nestedActionRender = (record: ServerVO) => {
+    return <Action>
+      <Action.Confirm
+        title={'删除'}
+        action={async () => {alert('TODO: 添加删除动作')}}
+        content={`确定删除服务器${record.ip}(${record.id})`}
+      />
+    </Action>
   }
 
   serverStatusRender = (status: string) => {

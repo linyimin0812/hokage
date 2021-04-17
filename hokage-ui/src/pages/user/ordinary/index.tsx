@@ -1,7 +1,7 @@
 import React, { ReactNode, ReactText } from 'react'
 import { Table, Row, Col, Button, message } from 'antd'
 import BreadCrumb from '../../../layout/bread-crumb'
-import { UserSearch, UserSearchFormType } from '../search'
+import { UserSearch, UserSearchFormType } from '../common/search'
 import {
   InfoCircleOutlined,
   UsergroupDeleteOutlined,

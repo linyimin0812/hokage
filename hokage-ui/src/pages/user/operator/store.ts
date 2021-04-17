@@ -3,7 +3,7 @@ import { ReactText } from 'react'
 import { Option } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
-import { UserSearchFormType } from '../search'
+import { UserSearchFormType } from '../common/search'
 
 export class Store {
   @observable selectedRowKeys: ReactText[] = []

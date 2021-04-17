@@ -17,7 +17,7 @@ import {
 import { Models } from '../../../libs/model'
 import { ServiceResult } from '../../common'
 import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../libs'
-import { UserSearchFormType } from '../../../pages/user/search'
+import { UserSearchFormType } from '../../../pages/user/common/search'
 
 export const UserAction = {
   login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -29,9 +29,7 @@ export const UserAction = {
           setHokageRole(data.role || UserRoleEnum.subordinate)
           return resolve(value)
         }
-
         return reject(value)
-
       }).catch(err => {
         return reject(err)
       })
