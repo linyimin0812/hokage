@@ -128,7 +128,7 @@ public class UserConverter {
                     .distinct()
                     .collect(Collectors.toList());
 
-            hokageUserVO.setServerLabelList(serverLabels);
+            hokageUserVO.setServerGroupList(serverLabels);
             hokageUserVO.setServerNum(serverVOList.size());
             hokageUserVO.setServerVOList(serverVOList);
 
@@ -198,7 +198,7 @@ public class UserConverter {
                     .distinct()
                     .collect(Collectors.toList());
 
-            hokageUserVO.setServerLabelList(serverLabels);
+            hokageUserVO.setServerGroupList(serverLabels);
             hokageUserVO.setServerNum(serverVOList.size());
             hokageUserVO.setServerVOList(serverVOList);
 

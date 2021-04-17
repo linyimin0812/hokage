@@ -36,9 +36,9 @@ public class HokageUserVO {
      */
     private Integer serverNum;
     /**
-     * labels of server
+     * groups of server
      */
-    private List<String> serverLabelList;
+    private List<String> serverGroupList;
     /**
      * operation list
      */
