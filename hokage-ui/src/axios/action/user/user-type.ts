@@ -31,7 +31,7 @@ export interface UserVO {
   email: string,
   role: number,
   serverNum: number,
-  serverLabelList: string[],
+  serverGroupList: string[],
   operationList: Operation[],
   serverVOList: ServerVO[],
 }

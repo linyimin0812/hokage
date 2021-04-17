@@ -20,7 +20,8 @@ export const ConfirmModal = (props: ActionModalProps) => {
     }
     confirmAction()
   }
-  const onClick = () => {
+  const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    event.stopPropagation()
     Modal.confirm({
       onOk: onOk,
       okText: 'confirm',

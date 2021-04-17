@@ -1,15 +1,13 @@
-import React, { ReactText } from 'react'
-import { Table, message } from 'antd'
-import BreadCrumb from '../../../layout/bread-crumb'
+import React from 'react'
+import BreadCrumb, { BreadcrumbPrpos } from '../../../layout/bread-crumb';
 import { UserSearch, UserSearchFormType } from '../search'
 import { TableExtendable } from '../../common/table-extendable'
-import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
-import { breadcrumbProps, columns, nestedColumn } from './column-definition'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { Toolbar } from './toolbar'
 import store from './store'
 import { observer } from 'mobx-react'
+import OperatorTable from './table';
 
 type OperatorState = {
   dataSource: UserVO[],
@@ -18,73 +16,31 @@ type OperatorState = {
   loading: boolean,
 }
 
+const breadcrumbProps: BreadcrumbPrpos[] = [
+  {
+    name: '首页',
+    link: '/app/index'
+  },
+  {
+    name: '用户管理'
+  },
+  {
+    name: '服务器管理员'
+  }
+]
+
 @observer
 export default class Operator extends React.Component<any, OperatorState> {
 
-  state: OperatorState = {
-    dataSource: [],
-    expandable: {
-      expandedRowKeys: [],
-      expandedRowRender: () => {
-        return <Table columns={nestedColumn} dataSource={this.state.nestedTableDataSource} pagination={false} />;
-      },
-      onExpand: (expanded: boolean, record: UserVO) => {
-        if (expanded) {
-          const expandedRowKeys: ReactText[] = [record.key!]
-
-          const expandable: TableExtendable = this.state.expandable
-          expandable.expandedRowKeys = expandedRowKeys
-
-          this.setState({ ...this.state, nestedTableDataSource: record.serverVOList, expandable })
-        } else {
-          const expandable: TableExtendable = this.state.expandable
-          expandable.expandedRowKeys = []
-
-          this.setState({ ...this.state, expandable })
-        }
-      }
-    },
-    nestedTableDataSource: [],
-    loading: false,
-  }
-
   componentDidMount() {
-    this.searchOperator({})
-  }
-
-  searchOperator = (value?: UserSearchFormType) => {
-    this.setState({loading: true})
-    UserAction.supervisorSearch(value ? value : {}).then(supervisorList => {
-      supervisorList = (supervisorList || []).map(userVO => {
-        userVO.key = userVO.id + ''
-        return userVO
-      })
-      this.setState({dataSource: supervisorList, loading: false})
-    }).catch(err => {
-      message.error(err)
-    })
+    store.fetchRecords()
   }
 
   onFinish = (value: UserSearchFormType) => {
-    this.searchOperator(value)
-  }
-
-  onSelectChange = (selectedRowKeys: ReactText[], selectedRows: any[]) => {
-    store.selectedRowKeys = selectedRowKeys
-    // TODO: 从selectRows中获取选择的目标数据,然后进行相关操作
+    store.fetchRecords(value)
   }
 
   render() {
-
-    const { dataSource, loading } = this.state
-    const rowSelection = {
-      selectedRowKeys: store.selectedRowKeys,
-      onChange: this.onSelectChange,
-      selections: [
-        Table.SELECTION_ALL,
-        Table.SELECTION_INVERT,
-      ],
-    };
 
     return (
       <div>
@@ -92,14 +48,7 @@ export default class Operator extends React.Component<any, OperatorState> {
         <UserSearch onFinish={this.onFinish} usernameType={'operator'} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
           <Toolbar />
-          <Table
-            rowSelection={rowSelection}
-            columns={columns}
-            dataSource={dataSource}
-            loading={loading}
-            expandable={this.state.expandable}
-            pagination={false}
-          />
+          <OperatorTable />
         </div>
       </div>
     )

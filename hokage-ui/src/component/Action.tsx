@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link as ALink } from 'react-router-dom'
-import { Button as AButton, Divider } from 'antd'
+import { Button as AButton, Divider } from 'antd';
 import { hasPermissions } from '../libs'
 import { ActionModalProps, ConfirmModal } from './confirm-modal'
 import { FormModal, FormModalProps } from './form-modal'
@@ -11,7 +11,10 @@ export class Action extends React.Component {
   }
 
   static Button(props: any) {
-    return <AButton type={'link'} {...props} style={{padding: 0}} />
+    const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      event.stopPropagation()
+    }
+    return <AButton onClick={onClick} type={'link'} {...props} style={{padding: 0}} />
   }
 
   static Confirm(props: ActionModalProps) {

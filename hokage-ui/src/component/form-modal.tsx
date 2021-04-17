@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Form, message, Modal } from 'antd'
+import { Button, Form, Modal } from 'antd'
 import { FormInstance } from 'antd/lib/form'
 import { UserServerOperateForm } from '../axios/action/user/user-type'
 
@@ -14,7 +14,10 @@ export const FormModal = (props: FormModalProps) => {
   const [visible, setVisible] = useState(false)
   const [confirmLoading, setConfirmLoading] = useState(false)
 
-  const onClick = () => { setVisible(true) }
+  const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    event.stopPropagation()
+    setVisible(true)
+  }
 
   const onCancel = () => {
     form.resetFields()
@@ -28,11 +31,6 @@ export const FormModal = (props: FormModalProps) => {
         formValue = await form.validateFields()
         await props.action(formValue)
         setVisible(false)
-      } catch (e) {
-        if (!e.errorFields) {
-          message.error(`${props.title} error.`)
-        }
-        console.log(JSON.stringify(e))
       } finally {
         setConfirmLoading(false)
       }
