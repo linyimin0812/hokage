@@ -7,7 +7,6 @@ import SecurityGroupRoutes from '../pages/security-group/route'
 import ServerRoutes from '../pages/server/route'
 import UserRoutes from '../pages/user/route'
 import WebSshRoutes from '../pages/webssh/route'
-import LoginRoute from '../pages/login/route'
 import { createModuleRoute } from '../libs'
 
 export default [
@@ -20,5 +19,4 @@ export default [
   createModuleRoute('/app/server', ServerRoutes),
   createModuleRoute('/app/user', UserRoutes),
   createModuleRoute('/app/web', WebSshRoutes),
-  createModuleRoute('/app', LoginRoute)
 ]

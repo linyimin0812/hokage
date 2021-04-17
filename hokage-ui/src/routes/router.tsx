@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import ModuleRoutes from './routes'
 import { RouteParam } from '../libs'
-import NotFound from '../layout/not-found'
 import DocumentTitle from 'react-document-title'
 import { menus, MenusType } from '../layout/menus'
+import NotFound from '../layout/not-found'
 
 // 组合路由
 export const Router = () => {

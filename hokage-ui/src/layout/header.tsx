@@ -7,10 +7,9 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from '@ant-design/icons'
-import history from '../libs/history'
-import { Models } from '../libs/model'
 import { UserAction } from '../axios/action'
 import screenfull from 'screenfull'
+import { getHokageUserInfo, removeHokageUserInfo } from '../libs'
 
 export interface HeaderPropsType {
   toggle: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void,
@@ -28,14 +27,14 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
   }
 
   handleLogout = () => {
-    const userInfo = Models.get('userInfo')
+    const userInfo = getHokageUserInfo()
 
     UserAction.logout({email: userInfo.email}).then(value => {
       if (value) {
-        // 跳转到登录页
-        history.push('/app/login')
-        Models.remove('userInfo')
+        removeHokageUserInfo()
         message.success(`${userInfo.username}已退出`)
+        // 跳转到登录页
+        window.location.href = '/app/login'
         return
       }
     }).catch(err => {
@@ -82,7 +81,7 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
   }
 
   render() {
-    const username = (Models.get('userInfo') ? Models.get('userInfo').username : 'Hokage')
+    const username = (getHokageUserInfo() ? getHokageUserInfo().username : 'Hokage')
     const { isFullScreen } = this.state
     return (
       <Layout.Header style={{padding: 0}}>
@@ -101,13 +100,8 @@ export default class Header extends React.Component<HeaderPropsType, HeaderState
             </Dropdown>
           </div>
           <div className={style.right}>
-            {
-              isFullScreen ? (
-                <FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
-              ) : (
-                <FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />
-              )
-            }
+            {isFullScreen ? <FullscreenExitOutlined translate="true" onClick={this.exitFullScreen} style={{paddingRight: '64px', color: 'black'}} />
+              :<FullscreenOutlined translate="true" onClick={this.screenFull} style={{paddingRight: '64px', color: 'black'}} />}
           </div>
         </div>
       </Layout.Header>

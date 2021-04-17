@@ -1,6 +1,6 @@
 import { Models } from './model'
 import { Terminal } from 'xterm'
-import { UserRoleEnum } from '../axios/action/user/user-type'
+import { UserRegisterForm, UserRoleEnum } from '../axios/action/user/user-type'
 import React from 'react'
 
 export const queryString = () => {
@@ -88,6 +88,19 @@ export const getHokagePermissions = (): string[] => {
 
 export const removeHokagePermissions = () => {
   window.localStorage.removeItem('hokagePermission')
+}
+
+export const setHokageUserInfo = (userInfo: string) => {
+  window.localStorage.setItem("userInfo", userInfo)
+}
+
+export const getHokageUserInfo = (): UserRegisterForm => {
+  const info = window.localStorage.getItem("userInfo") as string
+  return JSON.parse(info) as UserRegisterForm
+}
+
+export const removeHokageUserInfo = () => {
+  window.localStorage.removeItem('userInfo')
 }
 
 // ssh连接加载动画
