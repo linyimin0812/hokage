@@ -25,7 +25,6 @@ export default class OperatorTable extends React.Component {
       <Table.Column title={'使用人数'} dataIndex={'userNum'} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
       <Table.Column title={'操作'} render={this.actionRender} />
-      <Table.Column title={'使用人数'} dataIndex={'userNum'} />
     </Table>
   }
 

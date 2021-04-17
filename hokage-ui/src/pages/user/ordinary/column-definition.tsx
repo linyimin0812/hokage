@@ -42,7 +42,7 @@ export const columns = [
   },
   {
     title: '标签',
-    dataIndex: 'serverLabelList',
+    dataIndex: 'serverGroupList',
     key: 'serverLabelList',
     render: (serverLabelList: string[]) => {
       return (
