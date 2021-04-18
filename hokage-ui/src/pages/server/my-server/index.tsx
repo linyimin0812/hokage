@@ -6,7 +6,7 @@ import { InfoCircleOutlined, MinusOutlined, PlusOutlined, SyncOutlined } from '@
 import AddServer from '../common/add-server'
 import { breadcrumbProps, columns } from './column-definition'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
-import AddAccount from '../add-account'
+import AddAccount from '../common/add-account'
 import { searchServer } from '../util'
 
 type MyServerState = {

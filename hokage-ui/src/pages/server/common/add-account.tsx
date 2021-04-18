@@ -6,7 +6,7 @@
  */
 import React from 'react'
 import { Form, Input, Modal, Select, Radio, Button } from 'antd'
-import { Option } from '../../axios/action/server/server-type'
+import { Option } from '../../../axios/action/server/server-type'
 import { RadioChangeEvent } from 'antd/lib/radio'
 import Dragger from 'antd/lib/upload/Dragger'
 import { InboxOutlined } from '@ant-design/icons/lib'
@@ -51,12 +51,7 @@ export default class AddAccount extends React.Component<AddAccountPropsType, Add
     const { isModalVisible } = this.props
     const { serverOptions, passwordHidden, keyHidden } = this.state
     return (
-      <Modal
-        title="添加账号"
-        visible={isModalVisible}
-        footer={null}
-        closable={false}
-      >
+      <Modal title="添加账号" visible={isModalVisible} footer={null} closable={false}>
         <Form
           name="addAccountForm"
           onFinish={this.props.onModalOk}
@@ -98,15 +93,8 @@ export default class AddAccount extends React.Component<AddAccountPropsType, Add
 
           <Form.Item wrapperCol={{ span: 24 }}>
             <div style={{textAlign: 'center'}}>
-              <Button type="primary" htmlType="submit">
-                添加
-              </Button>
-              <Button
-                style={{ margin: '0 8px' }}
-                onClick={() => this.props.onModalCancel()}
-              >
-                取消
-              </Button>
+              <Button type="primary" htmlType="submit">添加</Button>
+              <Button style={{ margin: '0 8px' }} onClick={() => this.props.onModalCancel()}>取消</Button>
             </div>
           </Form.Item>
         </Form>

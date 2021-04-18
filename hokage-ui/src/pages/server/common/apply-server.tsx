@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Form, Select, Button, Input } from 'antd'
-import { Option } from '../../axios/action/server/server-type'
+import { Option } from '../../../axios/action/server/server-type'
 
 type ApplyPropTypes = {
   onModalOk: (value: any) => void,
@@ -26,12 +26,7 @@ export default class ApplyServer extends React.Component<ApplyPropTypes, ApplySt
     const { isModalVisible } = this.props
     const { serverOptions } = this.state
     return (
-      <Modal
-        title="批量申请服务器"
-        visible={isModalVisible}
-        footer={null}
-        closable={false}
-      >
+      <Modal title="批量申请服务器" visible={isModalVisible} footer={null} closable={false}>
         <Form
           name="applyServerForm"
           onFinish={this.props.onModalOk}
@@ -61,7 +56,9 @@ export default class ApplyServer extends React.Component<ApplyPropTypes, ApplySt
           </Form.Item>
           <Form.Item label={' '} name="operateContent" initialValue={[]} colon={false} required >
             <Select placeholder={"请选择(支持多选)"} mode={'multiple'}>
-              {serverOptions.map((serverOption, index) => <Select.Option value={serverOption.value} key={index}>{serverOption.label}</Select.Option> )}
+              {serverOptions.map((serverOption, index) => {
+                return <Select.Option value={serverOption.value} key={index}>{serverOption.label}</Select.Option>
+              })}
             </Select>
           </Form.Item>
           <Form.Item label={'申请理由'} name="reason" initialValue={[]} required >
@@ -69,17 +66,8 @@ export default class ApplyServer extends React.Component<ApplyPropTypes, ApplySt
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
             <div style={{textAlign: 'center'}}>
-              <Button type="primary" htmlType="submit">
-                申请
-              </Button>
-              <Button
-                style={{
-                  margin: '0 8px',
-                }}
-                onClick={this.props.onModalCancel}
-              >
-                取消
-              </Button>
+              <Button type="primary" htmlType="submit">申请</Button>
+              <Button style={{ margin: '0 8px' }} onClick={this.props.onModalCancel}>取消</Button>
             </div>
           </Form.Item>
         </Form>

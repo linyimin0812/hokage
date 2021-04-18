@@ -6,7 +6,7 @@ import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-t
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
-import { SelectServer } from '../../server/select-server'
+import { SelectServer } from '../../server/common/select-server'
 import { observer } from 'mobx-react'
 @observer
 export default class OrdinaryTable extends React.Component {

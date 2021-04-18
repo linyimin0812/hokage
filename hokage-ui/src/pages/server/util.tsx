@@ -1,6 +1,6 @@
 /* @ts-ignore */
 import { ServerSearchForm } from '../../axios/action/server/server-type'
-import { getHokageRole, getHokageUid } from '../../libs';
+import { getHokageRole, getHokageUid } from '../../libs'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { message } from 'antd'
 import React from 'react'

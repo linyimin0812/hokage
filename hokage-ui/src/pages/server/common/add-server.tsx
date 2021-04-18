@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, Form, Select, Button, Input, Tooltip, Divider, message, Radio } from 'antd'
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { QuestionCircleOutlined } from '@ant-design/icons'
 import isIP from 'is-ip'
 import { PlusOutlined } from '@ant-design/icons/lib'
 import { Option, ServerGroupOption } from '../../../axios/action/server/server-type'
@@ -77,7 +77,6 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
           isAddGroup: false,
         })
       })
-
   }
 
   loginTypeChange = (e: RadioChangeEvent) => {
@@ -87,7 +86,6 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
     if (e.target.value === 0) {
       this.setState({ passwordHidden: false, keyHidden: true })
     }
-
     if (e.target.value === 1) {
       this.setState({ passwordHidden: true, keyHidden: false })
     }

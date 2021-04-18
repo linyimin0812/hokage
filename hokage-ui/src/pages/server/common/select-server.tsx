@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Select } from 'antd'
-import { ServerVO } from '../../axios/action/server/server-type'
-import { useServerList } from '../../hook'
+import { ServerVO } from '../../../axios/action/server/server-type'
+import { useServerList } from '../../../hook'
 import { FormInstance } from 'antd/lib/form'
 
 export interface SelectServerProps {
