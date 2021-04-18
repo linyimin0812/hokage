@@ -25,62 +25,36 @@ export const MyServerSearch = (props: SearchPropTypes) => {
       >
         <Row gutter={24} style={{ width: '100%' }}>
           <Col span={6} key="hostname">
-            <Form.Item
-              name="hoatname"
-              label="主机名"
-            >
+            <Form.Item name="hoatname" label="主机名">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
           <Col span={6} key="domain">
-            <Form.Item
-              name="domain"
-              label="域名"
-            >
+            <Form.Item name="domain" label="域名">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
           <Col span={6} key="ipAddress">
-            <Form.Item
-              name="ipAddress"
-              label="ip地址"
-            >
+            <Form.Item name="ipAddress" label="ip地址">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
           <Col span={6} key="serverGroup">
-            <Form.Item
-              name="serverGroup"
-              label="服务器分组"
-            >
+            <Form.Item name="serverGroup" label="服务器分组">
               <Select mode={'multiple'}>
-                {
-                  serverOptions.map(option => {
-                    return <Select.Option value={option.value}>{option.label}</Select.Option>
-                  })
-                }
+                {serverOptions.map(option => {
+                  return <Select.Option value={option.value}>{option.label}</Select.Option>})}
               </Select>
             </Form.Item>
           </Col>
           <Col span={6} key="account">
-            <Form.Item
-              name="account"
-              label="登录账号"
-            >
+            <Form.Item name="account" label="登录账号">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
           <Col span={4} key="submit">
-            <Button type="primary" htmlType="submit">
-              Search
-            </Button>
-            <Button
-              style={{
-                margin: '0 8px',
-              }}
-              onClick={onReset}
-              htmlType="button"
-            >
+            <Button type="primary" htmlType="submit">Search</Button>
+            <Button style={{ margin: '0 8px' }} onClick={onReset} htmlType="button">
               Clear
             </Button>
           </Col>
