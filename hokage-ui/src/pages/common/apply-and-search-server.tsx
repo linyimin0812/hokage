@@ -1,7 +1,7 @@
 import React, { ReactText } from 'react'
 import { Button, Col, Divider, Input, message, Row } from 'antd'
 import { InfoCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons/lib'
-import AddServer from '../server/add-server'
+import AddServer from '../server/common/add-server'
 
 interface ApplyAndSearchServerStateType {
   isModalVisible: boolean

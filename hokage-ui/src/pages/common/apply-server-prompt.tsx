@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Divider, message, Result } from 'antd'
 import { PlusOutlined } from '@ant-design/icons/lib'
-import AddServer from '../server/add-server'
+import AddServer from '../server/common/add-server'
 
 interface ApplyServerPromptStateType {
   isModalVisible: boolean

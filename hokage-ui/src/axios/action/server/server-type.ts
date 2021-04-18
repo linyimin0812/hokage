@@ -27,7 +27,6 @@ export interface ServerVO {
   sshPort: string,
   serverGroupList: string[],
   description: string,
-  labels: string[],
   supervisorList: string[],
   supervisorIdList: number[],
   subordinateList: string[],

@@ -3,13 +3,13 @@ import { Modal, Form, Select, Button, Input, Tooltip, Divider, message, Radio } 
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import isIP from 'is-ip'
 import { PlusOutlined } from '@ant-design/icons/lib'
-import { Option, ServerGroupOption } from '../../axios/action/server/server-type'
-import { UserServerOperateForm } from '../../axios/action/user/user-type'
-import { ServerAction } from '../../axios/action/server/server-action'
-import { UserAction } from '../../axios/action'
+import { Option, ServerGroupOption } from '../../../axios/action/server/server-type'
+import { UserServerOperateForm } from '../../../axios/action/user/user-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
+import { UserAction } from '../../../axios/action'
 import { RadioChangeEvent } from 'antd/lib/radio'
-import { emptyFunction, getHokageUid } from '../../libs'
-import { FileUpload } from '../common/file-upload'
+import { emptyFunction, getHokageUid } from '../../../libs'
+import { FileUpload } from '../../common/file-upload'
 type AddServerPropTypes = {
   onModalOk: (value: any) => void,
   onModalCancel: () => void,

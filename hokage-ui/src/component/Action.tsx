@@ -1,9 +1,14 @@
 import React from 'react'
 import { Link as ALink } from 'react-router-dom'
-import { Button as AButton, Divider } from 'antd';
+import { Button as AButton, Divider } from 'antd'
 import { hasPermissions } from '../libs'
 import { ActionModalProps, ConfirmModal } from './confirm-modal'
 import { FormModal, FormModalProps } from './form-modal'
+
+export type RequestProps = {
+  title: string,
+  action: Function
+}
 
 export class Action extends React.Component {
   static Link(props: any) {
@@ -23,6 +28,14 @@ export class Action extends React.Component {
 
   static Form(props: FormModalProps) {
     return <FormModal {...props} />
+  }
+
+  static Request(props: RequestProps) {
+    const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+      event.stopPropagation()
+      props.action()
+    }
+    return <AButton onClick={onClick} type={'link'} style={{padding: 0}}>{props.title}</AButton>
   }
 
   _canVisible = (path: string): boolean => {
