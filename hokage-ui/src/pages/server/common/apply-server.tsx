@@ -36,6 +36,7 @@ export default class ApplyServer extends React.Component<ApplyPropTypes, ApplySt
           <Form.Item label={'操作权限'} name="operatePermission" initialValue={[]} required>
             <Select placeholder={"请选择"}>
               <Select.Option value={'addAccount'}>添加账号</Select.Option>
+              <Select.Option value={'addOperator'}>添加管理员</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item label={'权限期限'} name="permissionDuration" initialValue={[]} required>

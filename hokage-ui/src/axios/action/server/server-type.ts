@@ -33,7 +33,16 @@ export interface ServerVO {
   subordinateIdList: number[],
   userNum: number,
   status: string,
+  userList: ServerUserVO[]
   operationList: Operation[],
+}
+
+export interface ServerUserVO {
+  id: number,
+  username: string,
+  account: string,
+  applyTime: string,
+  lastLoginTime: string
 }
 
 export interface ServerGroup {

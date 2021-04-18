@@ -1,7 +1,7 @@
 import { createRoute } from '../../libs'
 import AllServer from './all-server'
 import MyServer from './my-server'
-import MyOperatorServer from './my-operator-server/operator-server'
+import MyOperatorServer from './operator-server'
 
 
 export default [
