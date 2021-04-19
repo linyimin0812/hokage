@@ -43,7 +43,7 @@ export default class Toolbar extends React.Component {
             已选择{<span style={{ color: "blue" }}>{store.selectedRowKeys.length}</span>}项
           </span>
         </Col>
-        <Col span={16} >
+        <Col span={16} style={{padding: '0 0'}} >
           <span style={{ float: 'right' }}>
             {store.selectedRowKeys.length > 0 ? ([
                 <Button icon={<MinusOutlined translate="true" />} onClick={this.delete}>批量删除</Button>, <Divider type="vertical" />]) : null}
