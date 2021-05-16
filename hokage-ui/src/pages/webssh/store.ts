@@ -1,14 +1,17 @@
 import { observable } from 'mobx'
 import { ReactText } from 'react'
-import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type';
-import { getHokageRole, getHokageUid } from '../../libs';
-import { ServerAction } from '../../axios/action/server/server-action';
-import { message } from 'antd';
+import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-type'
+import { getHokageRole, getHokageUid } from '../../libs'
+import { ServerAction } from '../../axios/action/server/server-action'
+import { message } from 'antd'
+import { PanesType } from './index'
 
 class Store {
   @observable selectedRowKeys: ReactText[] = []
   @observable isFetching: boolean = false
   @observable records: ServerVO[] = []
+  @observable panes: PanesType[] = []
+  @observable activeKey: string = '1'
 
   fetchRecords = () => {
     this.isFetching = true

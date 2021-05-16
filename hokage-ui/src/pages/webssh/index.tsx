@@ -1,90 +1,76 @@
 import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import React from 'react'
 import { Tabs } from "antd"
-import WebSshServer from "./table"
-import Xterm from "./xterm"
+import { observer } from 'mobx-react'
+import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
+import Xterm from './xterm'
+import WebSshServer from './table'
+import { Terminal } from 'xterm';
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
   { name: 'Web终端' }
 ]
 
-interface PanesType {
+export interface PanesType {
   title: string,
   content: JSX.Element,
   key: string,
+  terminal?: Terminal,
   closable?: boolean
 }
+@observer
+export default class WebSshHome extends React.Component {
 
-interface WebSshState {
-  panes: PanesType[],
-  activeKey: string
-}
-
-export default class WebSshHome extends React.Component<any, WebSshState> {
   constructor(props: any) {
     super(props)
-    this.state = {
-      panes: [{
+    if (!store.panes || store.panes.length === 0) {
+      store.panes = [{
         key: '1',
         content: <WebSshServer addSshTerm={this.addPane} />,
         title: '我的服务器',
         closable: false
-      }],
-      activeKey: '1'
+      }]
     }
   }
 
-
-
   onChange = (activeKey: string) => {
-    this.setState({
-      activeKey: activeKey
-    })
+    store.activeKey = activeKey
   }
+
   /**
    * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
    */
   addPane = (record: ServerVO) => {
-    const { panes } = this.state
-
     const id = `${record.ip} (${record.account})`
 
-    if (!panes.some(pane => pane.key === id)) {
+    if (!store.panes.some(pane => pane.key === id)) {
       const pane: PanesType = {
         key: id,
         content: <Xterm id={id} server={record} />,
         title: id
       }
-      panes.push(pane)
+      store.panes.push(pane)
     }
-    this.setState({
-      panes,
-      activeKey: id
-    })
+    store.activeKey = id
   }
 
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-    let { activeKey, panes } = this.state
     switch(action) {
       case 'remove':
         let lastKeyIndex: number = 0
-        panes.forEach((pane, i) => {
+        store.panes.forEach((pane, i) => {
           if (pane.key === targetKey) {
             lastKeyIndex = i -1
           }
         })
-        const newPanes: PanesType[] = panes.filter(pane => pane.key !== targetKey)
-        if (targetKey === activeKey && newPanes.length) {
+        const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== targetKey)
+        if (targetKey === store.activeKey && newPanes.length) {
           lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          activeKey = newPanes[lastKeyIndex].key
+          store.activeKey = newPanes[lastKeyIndex].key
         }
-
-        this.setState({
-          panes: newPanes,
-          activeKey
-        })
+        store.panes = newPanes
         break
       default:
         break
@@ -92,12 +78,11 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
   }
 
   render() {
-    const { activeKey, panes } = this.state
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
-        <Tabs onChange={this.onChange} activeKey={activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
-          {panes.map(pane => {
+        <Tabs onChange={this.onChange} activeKey={store.activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
+          {store.panes.map(pane => {
               return <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                   {pane.content}
                 </Tabs.TabPane>
