@@ -1,10 +1,14 @@
-import BreadCrumb from "../../layout/bread-crumb"
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import React from 'react'
 import { Tabs } from "antd"
-import WebSshServer from "./web-ssh-server"
+import WebSshServer from "./table"
 import Xterm from "./xterm"
-import { breadcrumbProps } from './column-definition'
 import { ServerVO } from '../../axios/action/server/server-type'
+
+const breadcrumbProps: BreadcrumbPrpos[] = [
+  { name: '首页', link: '/app/index' },
+  { name: 'Web终端' }
+]
 
 interface PanesType {
   title: string,
@@ -92,27 +96,12 @@ export default class WebSshHome extends React.Component<any, WebSshState> {
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
-        <Tabs
-          onChange={this.onChange}
-          activeKey={activeKey}
-          type="editable-card"
-          hideAdd
-          onEdit={this.onEdit}
-        >
-          {
-            panes.map(pane => {
-              return (
-                <Tabs.TabPane
-                  tab={pane.title}
-                  key={pane.key}
-                  closable={pane.closable}
-
-                >
+        <Tabs onChange={this.onChange} activeKey={activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
+          {panes.map(pane => {
+              return <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                   {pane.content}
                 </Tabs.TabPane>
-              )
-            })
-          }
+            })}
         </Tabs>
       </>
     )

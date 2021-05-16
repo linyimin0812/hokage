@@ -10,16 +10,19 @@ export type RequestProps = {
   action: Function
 }
 
+type ButtonProps = RequestProps
+
 export class Action extends React.Component {
   static Link(props: any) {
     return <ALink {...props} />
   }
 
-  static Button(props: any) {
+  static Button(props: ButtonProps) {
     const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
       event.stopPropagation()
+      props.action()
     }
-    return <AButton onClick={onClick} type={'link'} {...props} style={{padding: 0}} />
+    return <AButton onClick={onClick} type={'link'} style={{padding: 0}}>{props.title}</AButton>
   }
 
   static Confirm(props: ActionModalProps) {

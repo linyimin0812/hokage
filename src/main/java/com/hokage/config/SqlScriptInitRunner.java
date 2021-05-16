@@ -129,7 +129,7 @@ public class SqlScriptInitRunner implements CommandLineRunner {
         }
     }
     @Data
-    private class LogPrintWriter extends Writer {
+    private static class LogPrintWriter extends Writer {
 
         private Logger logger;
         private Level level;
