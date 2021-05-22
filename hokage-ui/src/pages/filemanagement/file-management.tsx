@@ -1,9 +1,8 @@
 import React, { ReactText } from 'react'
-import { Table, Row, Col, Divider } from 'antd'
+import { Table } from 'antd'
 import './index.less'
 import { FolderOutlined, FolderOpenOutlined } from '@ant-design/icons'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
-import Search from 'antd/lib/input/Search'
+import { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import Action, { ActionProps } from './action'
 import { FileOperation } from './file-operation';
 interface FileManagementState {
@@ -185,18 +184,6 @@ export default class FileManagement extends React.Component<any, FileManagementS
     })
   }
 
-  retriveBreadcrumbProps = () => {
-    const { currentDir } = this.state
-    const breadcrumProps: BreadcrumbPrpos[] = new Array<BreadcrumbPrpos>()
-    currentDir.split('/').forEach((name: string) => {
-      const prop: BreadcrumbPrpos = {
-        name: name
-      }
-      breadcrumProps.push(prop)
-    })
-    return breadcrumProps
-  }
-
   getActionPosition = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     const left = event.clientX
     const top = event.clientY
@@ -234,37 +221,7 @@ export default class FileManagement extends React.Component<any, FileManagementS
             :
             null
         }
-        <Row
-          gutter={24}
-          align="middle"
-          style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}
-        >
-          {/* //TODO: 添加一个输入框,当点击这个时,显示,可以指定路径打开 */}
-          <Col span={12} style={{display:'inline-block'}}>
-            <BreadCrumb breadcrumbProps={this.retriveBreadcrumbProps()} />
-            <span>
-              <Divider type="vertical" />
-              共
-              {<span style={{ color: "blue" }}>{8}</span>}
-              个目录与
-              {<span style={{ color: "blue" }}>{10}</span>}
-              个文件, 大小
-              {<span style={{ color: "blue" }}>100.00</span>}
-              MB
-            </span>
-          </Col>
-          <Col span={12}>
-              <span style={{ float: 'right' }}>
-                <Search
-                  placeholder="查找文件"
-                  onSearch={value => console.log(value)}
-                  enterButton
-                  style={{ width: 400 }}
-                />
-              </span>
-          </Col>
-        </Row>
-        <FileOperation />
+        <FileOperation currentDir={this.state.currentDir} />
         <Table
           style={{ cursor: 'pointer' }}
           columns={columns}
