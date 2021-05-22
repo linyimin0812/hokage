@@ -74,7 +74,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
                   <>
                     <Button icon={<MinusOutlined translate="true" />} onClick={this.delete}>
                       批量删除
-                    </Button>,
+                    </Button>
                     <Divider type="vertical" />
                   </>
                 ) : (
@@ -86,7 +86,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
                     <Button key="4" icon={<PlusOutlined translate="true" />} onClick={this.add}>
                       添加服务器
                     </Button>
-                    <Divider type="vertical" />,
+                    <Divider type="vertical" />
                     <Input.Search placeholder="服务器地址" onSearch={value => console.log(value)} style={{ width: '280px' }} />
                   </>
                 )

@@ -6,13 +6,8 @@ import ServerCardPanel from "../common/server-card-panel"
 import { ActionPanesType } from '../common/server-card'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: '文件管理'
-  }
+  { name: '首页', link: '/app/index' },
+  { name: '文件管理' }
 ]
 
 interface HomePropsType {
@@ -107,11 +102,7 @@ export default class FileManagementHome extends React.Component<HomePropsType, F
           {
             actionPanes.map(pane => {
               return (
-                <Tabs.TabPane
-                  tab={pane.title}
-                  key={pane.key}
-                  closable={pane.closable}
-                >
+                <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
                   {pane.content}
                 </Tabs.TabPane>
               )
