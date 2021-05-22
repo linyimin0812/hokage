@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Col, Divider, Row } from 'antd'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb';
+import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import Search from 'antd/lib/input/Search'
 
 type FileOperationPropsType = {
