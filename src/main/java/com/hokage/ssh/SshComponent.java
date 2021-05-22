@@ -70,13 +70,11 @@ public class SshComponent {
 
     /**
      * 处理来自xterm发来的字符
-     * @param payload message content
+     * @param message message content
      * @param session ws session
      */
-    public void handleMsgFromXterm(String payload, WebSocketSession session) {
+    public void handleMsgFromXterm(WebSocketMessage<String> message, WebSocketSession session) {
         try {
-            WebSocketMessage<String> message = JSON.parseObject(payload, new TypeReference<WebSocketMessage<String>>(){});
-
             // xterm发起连接请求信息
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_INIT.getValue())) {
 
