@@ -89,9 +89,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
       <Spin spinning={loading}>
         {
           (dataSource === undefined || dataSource.length === 0)
-            ?
-            <ApplyServerPrompt />
-            :
+            ? <ApplyServerPrompt /> :
             <div style={{ backgroundColor: '#FFFFFF' }}>
               <ApplyAndSearchServer />
               <Row gutter={24} style={{ margin: '5px 0px' }}>

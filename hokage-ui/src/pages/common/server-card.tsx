@@ -26,34 +26,14 @@ export default class ServerCard extends React.Component<ServerCardPropsType> {
             <Col span={16}>
               <div>
                 <Card.Meta
-                  avatar={
-                    <Avatar
-                      style={{
-                        backgroundColor: "#F56A00",
-                        verticalAlign: "middle"
-                      }}
-                      size="large"
-                    >
-                      {account}
-                    </Avatar>
-                  }
+                  avatar={<Avatar style={{ backgroundColor: "#F56A00", verticalAlign: "middle" }} size="large">{account}</Avatar>}
                   title={serverIp}
                   description={description}
                 />
               </div>
             </Col>
-            <Col
-              span={8}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Button
-                type={'link'}
-                onClick={ () => { action(`${serverIp} (${account})`) } }
-              >
+            <Col span={8} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Button type={'link'} onClick={ () => { action(`${serverIp} (${account})`) } }>
                 {actionName}
               </Button>
             </Col>

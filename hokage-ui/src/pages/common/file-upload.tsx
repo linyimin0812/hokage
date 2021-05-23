@@ -10,10 +10,7 @@ type FileUploadPropsType = {
 export class FileUpload extends React.Component<FileUploadPropsType> {
   showProgress = () => {
     return {
-      strokeColor: {
-        '0%': '#108ee9',
-        '100%': '#87d068',
-      },
+      strokeColor: { '0%': '#108ee9', '100%': '#87d068' },
       strokeWidth: 3,
       format: (percent: number | undefined) => `${percent ? parseFloat(percent.toFixed(2)) : 0}%`,
     }
