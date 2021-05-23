@@ -9,29 +9,15 @@ export default class Index extends React.Component<any, any>{
     return (
       <div>
         <Row gutter={12}>
-          <Col span={8}>
-            <BasicInfo title={"基本信息"} />
-          </Col>
-          <Col span={8}>
-            <AccountInfo />
-          </Col>
-          <Col span={8}>
-            <LoginAccountInfo />
-          </Col>
+          <Col span={8}><BasicInfo title={"基本信息"} /></Col>
+          <Col span={8}><AccountInfo /></Col>
+          <Col span={8}><LoginAccountInfo /></Col>
         </Row>
-
         <Divider />
-
         <Row gutter={12}>
-          <Col span={8}>
-            <BasicInfo title={"CPU信息"} />
-          </Col>
-          <Col span={8}>
-            <BasicInfo title={"内存信息"} />
-          </Col>
-          <Col span={8}>
-            <BasicInfo title={"磁盘信息"} />
-          </Col>
+          <Col span={8}><BasicInfo title={"CPU信息"} /></Col>
+          <Col span={8}><BasicInfo title={"内存信息"} /></Col>
+          <Col span={8}><BasicInfo title={"磁盘信息"} /></Col>
         </Row>
       </div>
     )

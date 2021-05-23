@@ -11,26 +11,15 @@ export default class Index extends React.Component<any, any>{
     return (
       <div>
         <Row gutter={12}>
-          <Col span={8}>
-            <InterfaceInfo />
-          </Col>
-          <Col span={8}>
-            <ARPCacheTable />
-          </Col>
-          <Col span={8}>
-            <ConnectionInfo />
-          </Col>
-
+          <Col span={8}><InterfaceInfo /></Col>
+          <Col span={8}><ARPCacheTable /></Col>
+          <Col span={8}><ConnectionInfo /></Col>
         </Row>
         <Divider />
         <Row>
-          <Col span={10}>
-            <DownloadSpeed />
-          </Col>
+          <Col span={10}><DownloadSpeed /></Col>
           <Col span={2} />
-          <Col span={10}>
-            <UploadSpeed />
-          </Col>
+          <Col span={10}><UploadSpeed /></Col>
           <Col span={2} />
         </Row>
       </div>

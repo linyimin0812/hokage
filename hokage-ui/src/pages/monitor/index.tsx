@@ -2,19 +2,14 @@ import React from 'react'
 import ServerCardPanel from '../common/server-card-panel'
 import { ActionPanesType } from '../common/server-card'
 import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
-import { Tabs } from 'antd';
+import { Tabs } from 'antd'
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'
 import Network from './network'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: '资源监控'
-  }
+  { name: '首页', link: '/app/index' },
+  { name: '资源监控' }
 ]
 
 type StateType = {
@@ -39,22 +34,13 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
   renderMonitorPage = () => {
     return (
       <Tabs defaultActiveKey="2" tabPosition="left" >
-        <Tabs.TabPane
-          tab={ <span>基本信息</span> }
-          key="1"
-        >
+        <Tabs.TabPane tab={ <span>基本信息</span> } key="1">
           <BasicInfo />
         </Tabs.TabPane>
-        <Tabs.TabPane
-          tab={ <span>系统状态</span> }
-          key="2"
-        >
+        <Tabs.TabPane tab={ <span>系统状态</span> } key="2">
           <SystemStatus />
         </Tabs.TabPane>
-        <Tabs.TabPane
-          tab={ <span>网络信息</span> }
-          key="3"
-        >
+        <Tabs.TabPane tab={ <span>网络信息</span> } key="3">
           <Network />
         </Tabs.TabPane>
       </Tabs>
@@ -94,14 +80,11 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
             lastKeyIndex = i - 1
           }
         })
-
         const newPanes: ActionPanesType[] = actionPanes.filter(pane => pane.key !== targetKey)
-
         if (targetKey === activeKey && newPanes.length) {
           lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
           activeKey = newPanes[lastKeyIndex].key
         }
-
         this.setState({
           actionPanes: newPanes,
           activeKey
@@ -110,34 +93,26 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
       default:
         return
     }
+  }
 
+  renderActionPanes = () => {
+    const { actionPanes } = this.state
+    return actionPanes.map(pane => {
+      return (
+        <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+          {pane.content}
+        </Tabs.TabPane>
+      )
+    })
   }
 
   render() {
-    const { activeKey, actionPanes } = this.state
+    const { activeKey } = this.state
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
-        <Tabs
-          onChange={this.onChange}
-          activeKey={activeKey}
-          type="editable-card"
-          hideAdd
-          onEdit={this.onEdit}
-        >
-          {
-            actionPanes.map(pane => {
-              return (
-                <Tabs.TabPane
-                  tab={pane.title}
-                  key={pane.key}
-                  closable={pane.closable}
-                >
-                  {pane.content}
-                </Tabs.TabPane>
-              )
-            })
-          }
+        <Tabs onChange={this.onChange} activeKey={activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
+          { this.renderActionPanes() }
         </Tabs>
       </>
     )
