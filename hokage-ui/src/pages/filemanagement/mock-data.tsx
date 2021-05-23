@@ -33,4 +33,68 @@ export const fileDataList: Record[] = [
     permission: '-rw-r--r--',
     modifiedTime: '20200421 04:21'
   },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
+  {
+    key: '/home/linyimin/public/',
+    fileName: 'public/',
+    size: '4096',
+    owner: 'linyimin',
+    permission: '-rw-r--r--',
+    modifiedTime: '20200421 04:21'
+  },
 ]
