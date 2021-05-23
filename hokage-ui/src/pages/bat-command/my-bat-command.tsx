@@ -1,6 +1,6 @@
 import React from 'react'
-import { Button, Divider, Table } from 'antd';
-import EditBatCommand from './edit-bat-command';
+import { Button, Divider, Table } from 'antd'
+import EditBatCommand from './edit-bat-command'
 
 interface MyBatCommandStateType {
     isCreate: boolean// 创建新的批量任务
@@ -34,7 +34,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
           <Table.Column title="操作" dataIndex="action" />
         </Table>
       </div>
-    );
+    )
   }
 
 }

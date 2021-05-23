@@ -1,7 +1,7 @@
 import React from 'react'
-import { Table, Tag } from 'antd';
-import EditBatCommand from './edit-bat-command';
-import ExecedBatCommandInfo from './execed-bat-commandInfo';
+import { Table, Tag } from 'antd'
+import EditBatCommand from './edit-bat-command'
+import ExecutedBatCommandInfo from './executed-bat-commandInfo'
 
 interface ExecutedBatCommandStateType {
   isModalVisible: boolean, // 弹窗显示任务信息
@@ -105,7 +105,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
           <Table.Column title="操作" dataIndex="id" render={this.renderAction} />
         </Table>
         <EditBatCommand isEdit={false} isVisible={isModalVisible} onChange={(value: boolean) => {this.setState({isModalVisible: value})}} />
-        <ExecedBatCommandInfo isVisible={isDrawerVisible} onCloseDrawer={(value: boolean) => {this.setState({isDrawerVisible: value})}} />
+        <ExecutedBatCommandInfo isVisible={isDrawerVisible} onCloseDrawer={(value: boolean) => {this.setState({isDrawerVisible: value})}} />
       </div>
     );
   }

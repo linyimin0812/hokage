@@ -1,7 +1,7 @@
 import React from 'react'
-import { Button, Divider, Form, Input, Modal, Select, Switch } from 'antd';
+import { Button, Divider, Form, Input, Modal, Select, Switch } from 'antd'
 import Editor from '@monaco-editor/react'
-import { FormInstance } from 'antd/lib/form';
+import { FormInstance } from 'antd/lib/form'
 
 // 表单数据类型
 interface FormDataType {
@@ -40,22 +40,8 @@ interface EditBatCommandStateType {
 
 // 表单样式
 const formItemLayout = {
-  labelCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 4,
-    },
-  },
-  wrapperCol: {
-    xs: {
-      span: 24,
-    },
-    sm: {
-      span: 20,
-    },
-  },
+  labelCol: { xs: { span: 24 }, sm: { span: 4 } },
+  wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
 }
 
 export default class EditBatCommand extends React.Component<EditBatCommandPropsType, EditBatCommandStateType> {
@@ -103,13 +89,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
     const { isVisible, isEdit } = this.props
     const { isTiming, isPeriod } = this.state
     return (
-      <Modal
-        title="任务编辑"
-        visible={isVisible}
-        onCancel={this.onCancel}
-        footer={null}
-        width={800}
-      >
+      <Modal title="任务编辑" visible={isVisible} onCancel={this.onCancel} footer={null} width={800}>
         <Form
           {...formItemLayout}
           onValuesChange={this.onValueChange}
@@ -119,24 +99,16 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
           <Form.Item
             name="name"
             label="任务名称"
-
             rules={[{ required: true, message: "任务名称不能为空" }]}
-
           >
             <Input style={{width: "50%"}} disabled={!isEdit} />
           </Form.Item>
-          <Form.Item
-            name="type"
-            label="任务类型"
-          >
+          <Form.Item name="type" label="任务类型">
             <Select style={{width: "50%"}} disabled={!isEdit} >
               <Select.Option value="shell">shell</Select.Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            name="execType"
-            label="执行类型"
-          >
+          <Form.Item name="execType" label="执行类型">
             <Select style={{width: "50%"}} disabled={!isEdit} >
               <Select.Option value="timing">定时</Select.Option>
               <Select.Option value="period">周期</Select.Option>
@@ -144,37 +116,24 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
           </Form.Item>
           {
             isTiming ? (
-              <Form.Item
-                name="execTime"
-                label="执行时间"
-              >
+              <Form.Item name="execTime" label="执行时间">
                 <Input placeholder="时间单位为分钟" style={{width: "50%"}} disabled={!isEdit} />
               </Form.Item>
             ) : null
           }
           {
             isPeriod ? ([
-              <Form.Item
-                name="execTime"
-                label="执行周期"
-              >
+              <Form.Item name="execTime" label="执行周期">
                 <Input placeholder="cron表达式" style={{width: "50%"}} disabled={!isEdit} />
               </Form.Item>,
-              <Form.Item
-                name="useCron"
-                label="使用Cron"
-              >
+              <Form.Item name="useCron" label="使用Cron">
                 <Switch onChange={(value: boolean) => { this.setState({ isUseCron: value }) }} disabled={!isEdit} />
                 <span>&nbsp;<span style={{color: "red"}}>*</span>&nbsp;开启Cron,会直接把命令放到crontab中进行周期控制, 不会返回任务结果</span>
               </Form.Item>
             ]) : null
           }
 
-          <Form.Item
-            name="servers"
-            initialValue={[]}
-            label="执行机器"
-          >
+          <Form.Item name="servers" initialValue={[]} label="执行机器">
             <Select
               mode="multiple"
               style={{ width: '50%' }}
@@ -185,29 +144,21 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="execCommand"
-            label="执行内容"
-          >
+          <Form.Item name="execCommand" label="执行内容">
             <Editor
               language="shell"
               theme="vs-dark"
               height="200px"
               editorDidMount={ (getEditorValue: () => string): void => { this.setState({ getEditorText: getEditorValue }) }}
               options={{readOnly: !isEdit}}
-
             />
           </Form.Item>
           {
             isEdit ? (
               <Form.Item style={{textAlign: "center"}} >
-                <Button type="primary" htmlType="submit">
-                  保存
-                </Button>
+                <Button type="primary" htmlType="submit">保存</Button>
                 <Divider type="vertical" />
-                <Button type="primary" onClick={this.onCancel}>
-                  取消
-                </Button>
+                <Button type="primary" onClick={this.onCancel}>取消</Button>
               </Form.Item>
             ) : null
           }
