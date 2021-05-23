@@ -1,6 +1,6 @@
 import { observable } from 'mobx'
 import { ActionProps } from './menu-context';
-import { ActionPanesType } from '../common/server-card';
+import { ActionPanesType } from '../common/server-card'
 
 class Store {
   @observable currentDir: string = ''
