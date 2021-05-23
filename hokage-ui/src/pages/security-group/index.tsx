@@ -4,13 +4,8 @@ import EnterSecurity from './enter-security'
 import Header from './header'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
-  {
-    name: '首页',
-    link: '/app/index'
-  },
-  {
-    name: '安全组'
-  }
+  { name: '首页', link: '/app/index' },
+  { name: '安全组' }
 ]
 
 interface SecurityGroupHomeSateType {
