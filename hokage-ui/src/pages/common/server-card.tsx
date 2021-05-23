@@ -17,25 +17,27 @@ interface ServerCardPropsType {
 }
 
 export default class ServerCard extends React.Component<ServerCardPropsType> {
+
+  renderCardMeta = () => {
+    const { serverIp, description, account } = this.props
+    return (
+      <Card.Meta
+        avatar={<Avatar style={{ backgroundColor: "#F56A00", verticalAlign: "middle" }} size="large">{account}</Avatar>}
+        title={serverIp}
+        description={description}
+      />
+    )
+  }
+
   render() {
-    const { account, serverIp, description, action, actionName } = this.props
+    const { account, serverIp, action, actionName } = this.props
     return (
       <div>
         <Card>
           <Row gutter={24}>
-            <Col span={16}>
-              <div>
-                <Card.Meta
-                  avatar={<Avatar style={{ backgroundColor: "#F56A00", verticalAlign: "middle" }} size="large">{account}</Avatar>}
-                  title={serverIp}
-                  description={description}
-                />
-              </div>
-            </Col>
+            <Col span={16}><div>{ this.renderCardMeta() }</div></Col>
             <Col span={8} style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Button type={'link'} onClick={ () => { action(`${serverIp} (${account})`) } }>
-                {actionName}
-              </Button>
+              <Button type={'link'} onClick={ () => { action(`${serverIp} (${account})`) } }>{actionName}</Button>
             </Col>
           </Row>
         </Card>

@@ -78,26 +78,30 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
             actionName={this.props.actionName}
             action={this.props.action}
           />
-
         </Col>
       )
     })
   }
-  render() {
-    const { dataSource, loading } = this.state
+
+  renderServerCardPanel = () => {
+    const { dataSource } = this.state
+    if (!dataSource || dataSource.length === 0) {
+      return <ApplyServerPrompt />
+    }
     return (
-      <Spin spinning={loading}>
-        {
-          (dataSource === undefined || dataSource.length === 0)
-            ? <ApplyServerPrompt /> :
-            <div style={{ backgroundColor: '#FFFFFF' }}>
-              <ApplyAndSearchServer />
-              <Row gutter={24} style={{ margin: '5px 0px' }}>
-                {this.renderServerCards(dataSource)}
-              </Row>
-            </div>
-        }
-      </Spin>
+      <div style={{ backgroundColor: '#FFFFFF' }}>
+        <ApplyAndSearchServer />
+        <Row gutter={24} style={{ margin: '5px 0px' }}>
+          {this.renderServerCards(dataSource)}
+        </Row>
+      </div>
+    )
+  }
+
+  render() {
+    const { loading } = this.state
+    return (
+      <Spin spinning={loading}>{ this.renderServerCardPanel() }</Spin>
     )
   }
 }

@@ -39,12 +39,46 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
     setTimeout(() => {
       message.success({ content: 'Loaded!', key: 'addServer', duration: 2 })
     }, 2000);
-  };
+  }
 
   onModalCancel = () => {
     this.setState({ isModalVisible: false });
     message.warning({ content: '添加用户已经取消!', key: 'addUser', duration: 2 })
-  };
+  }
+
+  renderServerAction = () => {
+    return (
+      <>
+        <Button key="3" icon={<PlusOutlined translate="true" />} onClick={this.applyServer}>申请服务器</Button>
+        <Divider type="vertical" />
+        <Button key="4" icon={<PlusOutlined translate="true" />} onClick={this.add}>添加服务器</Button>
+        <Divider type="vertical" />
+        <Input.Search placeholder="服务器地址" onSearch={value => console.log(value)} style={{ width: '280px' }} />
+      </>
+    )
+  }
+
+  renderSelectionAction = () => {
+    return (
+      <>
+        <Button icon={<MinusOutlined translate="true" />} onClick={this.delete}>批量删除</Button>
+        <Divider type="vertical" />
+      </>
+    )
+  }
+
+  renderSelectionTitle = () => {
+    const { selectionKeys } = this.props
+    if (!selectionKeys) {
+      return null
+    }
+    return (
+      <span>
+        <InfoCircleOutlined translate="true" style={{ color: '#1890ff' }} />已选择{<span style={{ color: 'blue' }}>{selectionKeys.length}</span>}项
+      </span>
+    )
+  }
+
 
   render() {
 
@@ -54,36 +88,12 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
     return (
       <>
         <Row gutter={24} style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', padding: '4px 0px' }}>
-          <Col span={8} style={{ display: 'flex', alignItems: 'center' }}>
-            {
-              selectionKeys !== undefined ? (<span>
-                <InfoCircleOutlined translate="true" style={{ color: '#1890ff' }} />
-                已选择{<span style={{ color: 'blue' }}>{selectionKeys.length}</span>}项
-              </span>) : null
-            }
-          </Col>
+          <Col span={8} style={{ display: 'flex', alignItems: 'center' }}>{ this.renderSelectionTitle() }</Col>
           <Col span={16}>
-            <span style={{ float: 'right' }}>
-              {
-                (selectionKeys || []).length > 0 ? (
-                  <>
-                    <Button icon={<MinusOutlined translate="true" />} onClick={this.delete}>批量删除</Button>
-                    <Divider type="vertical" />
-                  </>
-                ) : (
-                  <>
-                    <Button key="3" icon={<PlusOutlined translate="true" />} onClick={this.applyServer}>申请服务器</Button>
-                    <Divider type="vertical" />
-                    <Button key="4" icon={<PlusOutlined translate="true" />} onClick={this.add}>添加服务器</Button>
-                    <Divider type="vertical" />
-                    <Input.Search placeholder="服务器地址" onSearch={value => console.log(value)} style={{ width: '280px' }} />
-                  </>
-                )
-              }
-            </span>
+            <span style={{ float: 'right' }}>{(selectionKeys || []).length > 0 ? this.renderSelectionAction() : this.renderServerAction()}</span>
           </Col>
         </Row>
-          <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+        <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
       </>
     )
   }
