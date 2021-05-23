@@ -59,7 +59,7 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
           align="middle"
           style={{ backgroundColor: '#FFFFFF', border: '#FFFFFF', margin: '0px 0px', padding: '8px 8px' }}
         >
-          <Col span={16}>
+          <Col span={16} style={{padding: '0px 0px'}}>
           <span style={{paddingRight: '8px'}}>
             <Button>上传</Button>
           </span>
@@ -76,7 +76,7 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
             <Button>工作目录</Button>
           </span>
           </Col>
-          <Col span={8}>
+          <Col span={8} style={{padding: '0px 0px'}}>
           <span style={{ float: 'right' }}>
             <Button>回收站</Button>
           </span>

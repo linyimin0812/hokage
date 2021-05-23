@@ -1,9 +1,11 @@
 import BreadCrumb, { BreadcrumbPrpos } from "../../layout/bread-crumb"
 import React from 'react'
-import FileManagement from "./file-management"
+import FileTable from "./table"
 import { Tabs } from "antd"
 import ServerCardPanel from "../common/server-card-panel"
 import { ActionPanesType } from '../common/server-card'
+import store from './store';
+import { observer } from 'mobx-react'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
@@ -15,71 +17,50 @@ interface HomePropsType {
   initActiveKey: string,
   addActionPanel: (id: string) => void
 }
-
-interface FileManagementState {
-  actionPanes: ActionPanesType[],
-  activeKey: string
-}
-
-export default class FileManagementHome extends React.Component<HomePropsType, FileManagementState> {
-  constructor(props: any) {
+@observer
+export default class FileManagementHome extends React.Component<HomePropsType> {
+  constructor(props: HomePropsType) {
     super(props)
-    this.state = {
-      actionPanes: [{
-        key: '1',
-        content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
-        title: '我的服务器',
-        closable: false
-      }],
-      activeKey: '1'
-    }
+    store.actionPanes = [{
+      key: '1',
+      content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
+      title: '我的服务器',
+      closable: false
+    }]
+    store.activeKey = '1'
   }
 
   onChange = (activeKey: string) => {
-    this.setState({
-      activeKey: activeKey
-    })
+    store.activeKey = activeKey
   }
 
   addPane = (id: string) => {
-    const { actionPanes } = this.state
-    if (!actionPanes.some(pane => pane.key === id)) {
+    if (!store.actionPanes.some(pane => pane.key === id)) {
       const pane: ActionPanesType = {
         key: id,
-        content: <FileManagement />,
+        content: <FileTable />,
         title: id
       }
-      actionPanes.push(pane)
+      store.actionPanes.push(pane)
     }
-
-    this.setState({
-      actionPanes: actionPanes,
-      activeKey: id
-    })
+    store.activeKey = id
   }
 
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-    let { activeKey, actionPanes } = this.state
     switch(action) {
       case 'remove':
         let lastKeyIndex: number = 0
-        actionPanes.forEach((pane, i) => {
+        store.actionPanes.forEach((pane, i) => {
           if (pane.key === targetKey) {
             lastKeyIndex = i -1
           }
         })
-
-        const newPanes: ActionPanesType[] = actionPanes.filter(pane => pane.key !== targetKey)
-
-        if (targetKey === activeKey && newPanes.length) {
+        const newPanes: ActionPanesType[] = store.actionPanes.filter(pane => pane.key !== targetKey)
+        if (targetKey === store.activeKey && newPanes.length) {
           lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          activeKey = newPanes[lastKeyIndex].key
+          store.activeKey = newPanes[lastKeyIndex].key
         }
-
-        this.setState({
-          actionPanes: newPanes,
-          activeKey
-        })
+        store.actionPanes = newPanes
         break
       case 'add':
         break
@@ -87,27 +68,28 @@ export default class FileManagementHome extends React.Component<HomePropsType, F
 
   }
 
+  renderActionPanel = () => {
+    return store.actionPanes.map(pane => {
+      return (
+        <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+          {pane.content}
+        </Tabs.TabPane>
+      )
+    })
+  }
+
   render() {
-    const { activeKey, actionPanes } = this.state
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <Tabs
           onChange={this.onChange}
-          activeKey={activeKey}
+          activeKey={store.activeKey}
           type="editable-card"
           hideAdd
           onEdit={this.onEdit}
         >
-          {
-            actionPanes.map(pane => {
-              return (
-                <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-                  {pane.content}
-                </Tabs.TabPane>
-              )
-            })
-          }
+          { this.renderActionPanel() }
         </Tabs>
       </>
     )
