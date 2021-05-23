@@ -7,7 +7,7 @@ export interface ActionProps {
   record: Record | undefined
 }
 
-export default class Action extends React.Component<ActionProps> {
+export default class MenuContext extends React.Component<ActionProps> {
   render() {
     const { left, top } = this.props
     return (

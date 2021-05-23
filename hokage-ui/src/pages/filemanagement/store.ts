@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { ActionProps } from './action';
+import { ActionProps } from './menu-context';
 import { ActionPanesType } from '../common/server-card';
 
 class Store {

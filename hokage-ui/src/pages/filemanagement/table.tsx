@@ -2,7 +2,7 @@ import React from 'react'
 import { Table } from 'antd'
 import './index.less'
 import { BreadcrumbPrpos } from '../../layout/bread-crumb'
-import Action from './action'
+import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
 import { fileDataList } from './mock-data'
 import { observer } from 'mobx-react'
@@ -71,7 +71,7 @@ export default class FileTable extends React.Component {
 
     return (
       <div>
-        { store.actionProps.left !== undefined ? <Action {...store.actionProps} /> : null }
+        { store.actionProps.left !== undefined ? <MenuContext {...store.actionProps} /> : null }
         <FileOperation currentDir={store.currentDir} />
         <Table
           style={{ cursor: 'pointer' }}
