@@ -83,11 +83,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
             </span>
           </Col>
         </Row>
-          <AddServer
-            onModalOk={this.onModalOk}
-            onModalCancel={this.onModalCancel}
-            isModalVisible={isModalVisible}
-          />
+          <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
       </>
     )
   }
