@@ -123,7 +123,7 @@ public class SshComponent {
      * @param connectionInfo ssh connection information
      * @param session websocket session
      */
-    public void connectToSsh(WebSocketAndSshSession webSocketAndSshSession, SshConnectionInfo connectionInfo, WebSocketSession session) {
+    public void connectToSsh(WebSocketAndSshSession webSocketAndSshSession, SshConnectionInfo connectionInfo, WebSocketSession session) throws IOException {
 
         Properties config = new Properties();
         // jsch的特性,如果没有这个配置,无法完成ssh连接
@@ -160,10 +160,12 @@ public class SshComponent {
 
         } catch (Exception e) {
             log.error("connect to ssh error", e);
+            sendToWebSocket(session, e.getMessage().getBytes(StandardCharsets.UTF_8));
         } finally {
             if (Objects.nonNull(jSchSession)) {
                 jSchSession.disconnect();
             }
+            session.close();
         }
     }
 
