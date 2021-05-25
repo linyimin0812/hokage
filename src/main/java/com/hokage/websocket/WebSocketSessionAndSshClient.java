@@ -1,7 +1,6 @@
 package com.hokage.websocket;
 
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.JSch;
+import com.hokage.ssh.SshClient;
 import lombok.Data;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -10,11 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
  * @author yiminlin
  */
 @Data
-public class WebSocketAndSshSession {
+public class WebSocketSessionAndSshClient {
     private WebSocketSession webSocketSession;
-    private JSch jSch;
-    /**
-     * jsch channel
-     */
-    private Channel channel;
+    private SshClient sshClient;
 }

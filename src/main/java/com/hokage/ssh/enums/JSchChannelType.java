@@ -9,7 +9,8 @@ public enum  JSchChannelType {
     /**
      * shell
      */
-    SHELL("shell");
+    SHELL("shell"),
+    EXEC("exec");
 
     private final String value;
     JSchChannelType(String value) {

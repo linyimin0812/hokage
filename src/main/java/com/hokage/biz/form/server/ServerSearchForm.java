@@ -24,7 +24,7 @@ public class ServerSearchForm extends PageQuery {
     private String hostname;
 
     /**
-     * domain
+     * domainServerSearchForm
      */
     private String domain;
 

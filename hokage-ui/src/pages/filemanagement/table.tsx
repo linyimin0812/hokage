@@ -7,6 +7,7 @@ import { FileOperation } from './file-operation'
 import { fileDataList } from './mock-data'
 import { observer } from 'mobx-react'
 import store from './store'
+import { ServerVO } from '../../axios/action/server/server-type'
 
 export interface Record {
   key: string,
@@ -17,8 +18,12 @@ export interface Record {
   modifiedTime: string,
 }
 
+type FileTablePropsType = {
+  serverVO: ServerVO
+}
+
 @observer
-export default class FileTable extends React.Component {
+export default class FileTable extends React.Component<FileTablePropsType> {
 
   componentWillMount = () => {
     // 左键按下时
@@ -68,7 +73,6 @@ export default class FileTable extends React.Component {
   }
 
   render() {
-
     return (
       <div>
         { store.actionProps.left !== undefined ? <MenuContext {...store.actionProps} /> : null }

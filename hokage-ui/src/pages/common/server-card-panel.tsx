@@ -8,7 +8,7 @@ import { searchServer } from '../server/util'
 
 type FileServerProps = {
   actionName: string
-  action: (id: string) => void
+  action: (serverVO: ServerVO) => void
 }
 
 type FileServerState = {
@@ -72,9 +72,7 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
       return (
         <Col span={8}>
           <ServerCard
-            account={serverVO.account}
-            serverIp={serverVO.ip}
-            description={serverVO.description}
+            serverVO={serverVO}
             actionName={this.props.actionName}
             action={this.props.action}
           />

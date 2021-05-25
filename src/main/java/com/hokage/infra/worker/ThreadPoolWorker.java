@@ -22,12 +22,13 @@ public class ThreadPoolWorker {
     @PostConstruct
     public void init() {
         ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("ssh-worker-pool").build();
+        int coreNum = Runtime.getRuntime().availableProcessors();
         executorPool = new ThreadPoolExecutor(
-                8,
-                32,
+                coreNum,
+                coreNum,
                 60,
                 TimeUnit.MINUTES,
-                new LinkedBlockingQueue<Runnable>(1024),
+                new LinkedBlockingQueue<Runnable>(coreNum),
                 factory,
                 new ThreadPoolExecutor.AbortPolicy()
         );

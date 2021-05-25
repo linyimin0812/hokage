@@ -6,6 +6,7 @@ import ServerCardPanel from "../common/server-card-panel"
 import { ActionPanesType } from '../common/server-card'
 import store from './store';
 import { observer } from 'mobx-react'
+import { ServerVO } from '../../axios/action/server/server-type'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
@@ -34,11 +35,12 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
     store.activeKey = activeKey
   }
 
-  addPane = (id: string) => {
+  addPane = (serverVO: ServerVO) => {
+    const id = `${serverVO.ip}(${serverVO.account})`
     if (!store.actionPanes.some(pane => pane.key === id)) {
       const pane: ActionPanesType = {
         key: id,
-        content: <FileTable />,
+        content: <FileTable serverVO={serverVO} />,
         title: id
       }
       store.actionPanes.push(pane)

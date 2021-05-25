@@ -6,6 +6,7 @@ import { Tabs } from 'antd'
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'
 import Network from './network'
+import { ServerVO } from '../../axios/action/server/server-type';
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
@@ -47,7 +48,8 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
     )
   }
 
-  addPane = (id: string) => {
+  addPane = (serverVO: ServerVO) => {
+    const id = `${serverVO.ip}(${serverVO.account})`
     const { actionPanes } = this.state
     if (!actionPanes.some(pane => pane.key === id)) {
       const pane: ActionPanesType = {

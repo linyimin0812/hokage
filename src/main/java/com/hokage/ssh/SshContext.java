@@ -6,7 +6,7 @@ import lombok.Data;
  * @author yiminlin
  */
 @Data
-public class SshConnectionInfo {
+public class SshContext {
     /**
      * server id, primary key
      */
