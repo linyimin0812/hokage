@@ -12,4 +12,5 @@ import org.springframework.web.socket.WebSocketSession;
 public class WebSocketSessionAndSshClient {
     private WebSocketSession webSocketSession;
     private SshClient sshClient;
+    private boolean processing;
 }

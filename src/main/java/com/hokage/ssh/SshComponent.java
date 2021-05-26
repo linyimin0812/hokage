@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -63,18 +64,14 @@ public class SshComponent {
      */
     private static final Map<String, List<WebSocketSessionAndSshClient>> SSH_SOCKET_SESSIONS = new ConcurrentHashMap<>();
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 50)
     public void scheduleSshMessageProcessThread() {
         if (WEB_SOCKET_SESSIONS.isEmpty()) {
             return;
         }
         int channelShellNum = WEB_SOCKET_SESSIONS.size();
         int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
-        // TODO: 存在一个问题，当添加处理线程的时候，原先的ssh连接会被多个线程处理
-        int activeThreadNum = worker.getExecutorPool().getActiveCount();
-        if (activeThreadNum == 0  || activeThreadNum < threadNum) {
-            receiveFromSsh(threadNum);
-        }
+        receiveFromSsh(threadNum);
     }
 
     /**
@@ -199,21 +196,25 @@ public class SshComponent {
 
     private void receiveFromSsh(int threadNum) {
         IntStream.range(0, threadNum).forEach(index -> {
+            List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
+            int fromIndex = channelShellNumPerThread * index;
+            if (fromIndex >= clients.size()) {
+                return;
+            }
+            int toIndex = channelShellNumPerThread * (index + 1);
+            if (toIndex > clients.size()) {
+                toIndex = clients.size();
+            }
+            clients = clients.subList(fromIndex, toIndex);
+
+            if (CollectionUtils.isEmpty(clients)) {
+                return;
+            }
+
+            List<WebSocketSessionAndSshClient> finalClients = clients;
             worker.getExecutorPool().execute(() -> {
-                while (true) {
-                    List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
-                    int fromIndex = channelShellNumPerThread * index;
-                    if (fromIndex >= clients.size()) {
-                        continue;
-                    }
-                    int toIndex = channelShellNumPerThread * (index + 1);
-                    if (toIndex > clients.size()) {
-                        toIndex = clients.size();
-                    }
-                    clients = clients.subList(fromIndex, toIndex);
-                    for (WebSocketSessionAndSshClient socketAndClient : clients) {
-                        processReceiveMessageFromSsh(socketAndClient);
-                    }
+                for (WebSocketSessionAndSshClient socketAndClient : finalClients) {
+                    processReceiveMessageFromSsh(socketAndClient);
                 }
             });
         });
@@ -223,6 +224,9 @@ public class SshComponent {
         synchronized (this) {
             return WEB_SOCKET_SESSIONS.values().stream()
                     .filter(socketAndClient -> {
+                        if (socketAndClient.isProcessing()) {
+                            return false;
+                        }
                         SshClient sshClient = socketAndClient.getSshClient();
                         try {
                             return Objects.nonNull(sshClient) && sshClient.getShell().isConnected();
@@ -238,6 +242,7 @@ public class SshComponent {
     private void processReceiveMessageFromSsh(WebSocketSessionAndSshClient socketAndClient) {
         SshClient client = socketAndClient.getSshClient();
         WebSocketSession session = socketAndClient.getWebSocketSession();
+        socketAndClient.setProcessing(true);
         try {
             // 读取shell的数据
             InputStream input = client.getShellContext().getInputStream();
@@ -253,6 +258,8 @@ public class SshComponent {
         } catch (Exception e) {
             SshContext context = client.getContext();
             log.error(String.format("retrieve shell error. account: %s, ip: %s, port: %s.", context.getAccount(), context.getIp(), context.getSshPort() ), e);
+        } finally {
+            socketAndClient.setProcessing(false);
         }
     }
 
