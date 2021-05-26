@@ -13,12 +13,12 @@ import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
-import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -45,6 +45,9 @@ public class SshComponent {
 
     private ThreadPoolWorker worker;
 
+    @Value("${ssh.shell.channel.input.stream.per.thread}")
+    private int channelShellNumPerThread;
+
     @Autowired
     public void setPool(ThreadPoolWorker worker) {
         this.worker = worker;
@@ -60,11 +63,19 @@ public class SshComponent {
      */
     private static final Map<String, List<WebSocketSessionAndSshClient>> SSH_SOCKET_SESSIONS = new ConcurrentHashMap<>();
 
-    @PostConstruct
-    public void init() {
-        receiveFromSsh();
+    @Scheduled(fixedDelay = 1000)
+    public void scheduleSshMessageProcessThread() {
+        if (WEB_SOCKET_SESSIONS.isEmpty()) {
+            return;
+        }
+        int channelShellNum = WEB_SOCKET_SESSIONS.size();
+        int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
+        // TODO: 存在一个问题，当添加处理线程的时候，原先的ssh连接会被多个线程处理
+        int activeThreadNum = worker.getExecutorPool().getActiveCount();
+        if (activeThreadNum == 0  || activeThreadNum < threadNum) {
+            receiveFromSsh(threadNum);
+        }
     }
-
 
     /**
      * @param session ws session
@@ -80,7 +91,7 @@ public class SshComponent {
      * @param message message content
      * @param session ws session
      */
-    public void handleMsgFromXterm(WebSocketMessage<String> message, WebSocketSession session) throws JSchException {
+    public void handleMsgFromXterm(WebSocketMessage<String> message, WebSocketSession session) throws Exception {
         try {
 
             // xterm发起连接请求信息
@@ -151,7 +162,7 @@ public class SshComponent {
      * @param message message from xterm
      * @throws IOException exception
      */
-    public void sendToSsh(WebSocketSession session, WebSocketMessage<String> message) throws IOException, JSchException {
+    public void sendToSsh(WebSocketSession session, WebSocketMessage<String> message) throws Exception {
         WebSocketSessionAndSshClient websocketAndClient = WEB_SOCKET_SESSIONS.get(session.getId());
         SshClient client = websocketAndClient.getSshClient();
         ChannelShell shell = client.getShell();
@@ -175,7 +186,7 @@ public class SshComponent {
      * 关闭WebSocket连接,并关闭ssh连接
      * @param session websocket session
      */
-    public void close(WebSocketSession session) throws JSchException {
+    public void close(WebSocketSession session) throws Exception {
         WebSocketSessionAndSshClient socketAndClient = WEB_SOCKET_SESSIONS.get(session.getId());
         if (Objects.nonNull(socketAndClient)) {
             SshClient client = socketAndClient.getSshClient();
@@ -186,18 +197,16 @@ public class SshComponent {
         }
     }
 
-    private void receiveFromSsh() {
-        int coreNum = Runtime.getRuntime().availableProcessors();
-        IntStream.range(0, coreNum).forEach(index -> {
+    private void receiveFromSsh(int threadNum) {
+        IntStream.range(0, threadNum).forEach(index -> {
             worker.getExecutorPool().execute(() -> {
                 while (true) {
                     List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
-                    int pageSize = clients.size() / coreNum + 1;
-                    int fromIndex = pageSize * index;
+                    int fromIndex = channelShellNumPerThread * index;
                     if (fromIndex >= clients.size()) {
                         continue;
                     }
-                    int toIndex = pageSize * (index + 1);
+                    int toIndex = channelShellNumPerThread * (index + 1);
                     if (toIndex > clients.size()) {
                         toIndex = clients.size();
                     }
@@ -217,7 +226,7 @@ public class SshComponent {
                         SshClient sshClient = socketAndClient.getSshClient();
                         try {
                             return Objects.nonNull(sshClient) && sshClient.getShell().isConnected();
-                        } catch (JSchException e) {
+                        } catch (Exception e) {
                             SshContext context = sshClient.getContext();
                             log.warn(String.format("account: %s, ip: %s, port: %s is not connected.", context.getAccount(), context.getIp(), context.getSshPort() ), e);
                             return false;
@@ -230,20 +239,17 @@ public class SshComponent {
         SshClient client = socketAndClient.getSshClient();
         WebSocketSession session = socketAndClient.getWebSocketSession();
         try {
-            ChannelShell shell = client.getShell();
             // 读取shell的数据
-            InputStream input = shell.getInputStream();
+            InputStream input = client.getShellContext().getInputStream();
             byte[] buf = new byte[32 * 1024];
-            do {
-                while (input.available() > 0) {
-                    int length = input.read(buf);
-                    if (length < 0) {
-                        sendToWebSocket(session, "\r\nssh链接已断开".getBytes(StandardCharsets.UTF_8));
-                        break;
-                    }
-                    sendToWebSocket(session, Arrays.copyOfRange(buf, 0, length));
+            while (input.available() > 0) {
+                int length = input.read(buf);
+                if (length < 0) {
+                    sendToWebSocket(session, "\r\nssh链接已断开".getBytes(StandardCharsets.UTF_8));
+                    break;
                 }
-            } while (!shell.isClosed());
+                sendToWebSocket(session, Arrays.copyOfRange(buf, 0, length));
+            }
         } catch (Exception e) {
             SshContext context = client.getContext();
             log.error(String.format("retrieve shell error. account: %s, ip: %s, port: %s.", context.getAccount(), context.getIp(), context.getSshPort() ), e);

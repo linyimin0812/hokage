@@ -18,7 +18,7 @@ public class SshClient {
     private final JSch jSch;
     private final SshContext context;
     private Session session;
-    private ChannelShell shell;
+    private ChannelShellContext shellContext;
     private ChannelExec exec;
 
     public SshClient(SshContext context) throws JSchException {
@@ -55,14 +55,19 @@ public class SshClient {
         return session;
     }
 
-    public ChannelShell getShell() throws JSchException {
-        if (Objects.nonNull(shell) && (shell.isConnected() || shell.isClosed())) {
-            return shell;
+    public ChannelShellContext getShellContext() throws Exception {
+        if (Objects.isNull(shellContext)) {
+            this.session = getSession();
+            ChannelShell shell = (ChannelShell) this.session.openChannel(JSchChannelType.SHELL.getValue());
+            shell.connect(30 * 1000);
+            this.shellContext = new ChannelShellContext(shell);
+            return shellContext;
         }
-        this.session = getSession();
-        shell = (ChannelShell) this.session.openChannel(JSchChannelType.SHELL.getValue());
-        shell.connect(30 * 1000);
-        return shell;
+        return shellContext;
+    }
+
+    public ChannelShell getShell() throws Exception {
+        return getShellContext().getShell();
     }
 
     public ChannelExec getExec() throws JSchException {
