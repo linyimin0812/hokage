@@ -18,12 +18,12 @@ import java.util.List;
 @Component
 public class LinuxCommand extends AbstractCommand {
     @Override
-    OsTypeEnum os() {
+    public OsTypeEnum os() {
         return OsTypeEnum.linux;
     }
 
     @Override
-    String ls(String dir, List<LsOptionEnum> optionList) {
+    public String ls(String dir, List<LsOptionEnum> optionList) {
         dir = ObjectUtils.defaultIfNull(dir, HOME);
         String option = CollectionUtils.isEmpty(optionList) ? StringUtils.EMPTY : "-" + StringUtils.join(optionList, "");
         return ("ls -al --time-style=full ${option} ${dir}" + " | " +

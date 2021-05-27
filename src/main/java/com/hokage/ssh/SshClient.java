@@ -1,5 +1,7 @@
 package com.hokage.ssh;
 
+import com.hokage.ssh.context.ChannelShellContext;
+import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,6 @@ public class SshClient {
     private final SshContext context;
     private Session session;
     private ChannelShellContext shellContext;
-    private ChannelExec exec;
 
     public SshClient(SshContext context) throws Exception {
         if (!checkServerReachable(context)) {
@@ -75,16 +76,6 @@ public class SshClient {
 
     public ChannelShell getShell() throws Exception {
         return getShellContext().getShell();
-    }
-
-    public ChannelExec getExec() throws JSchException {
-        if (Objects.nonNull(exec) && exec.isConnected()) {
-            return exec;
-        }
-        this.session = getSession();
-        exec = (ChannelExec) this.session.openChannel(JSchChannelType.SHELL.getValue());
-        exec.connect();
-        return exec;
     }
 
     public SshContext getContext() {

@@ -1,4 +1,4 @@
-package com.hokage.ssh;
+package com.hokage.ssh.context;
 
 import com.hokage.websocket.domain.TerminalSize;
 import lombok.Data;

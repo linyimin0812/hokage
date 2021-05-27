@@ -11,23 +11,9 @@ import java.util.List;
  * @date 2021/05/27 12:28 am
  * @description abstract command, support darwin and linux
  **/
-public abstract class AbstractCommand {
+public abstract class AbstractCommand implements Command {
 
 public static final String HOME = "~";
-
-    /**
-     * specify os type
-     * @return os type
-     */
-    abstract OsTypeEnum os();
-
-    /**
-     * list directory contents
-     * @param dir directory to list
-     * @param optionList command option
-     * @return ls command execute result content
-     */
-    abstract String ls(String dir, List<LsOptionEnum> optionList);
 
     /**
      * a default ls command
@@ -43,7 +29,7 @@ public static final String HOME = "~";
      * acquire operating system type
      * @return os name: darwin, linux and unknown
      */
-    public String uname() {
+    public static String uname() {
         return "uname -s" + " | " + "tr A-Z a-z" + " | " +
                "awk '$0 ~ /darwin/ {print \"darwin\"}" +
                     "$0 ~ /linux/ {print \"linux\"}" +

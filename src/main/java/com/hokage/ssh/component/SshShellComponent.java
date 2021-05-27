@@ -1,4 +1,4 @@
-package com.hokage.ssh;
+package com.hokage.ssh.component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -7,6 +7,8 @@ import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.ServiceResponse;
 import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dataobject.HokageServerDO;
+import com.hokage.ssh.SshClient;
+import com.hokage.ssh.context.SshContext;
 import com.hokage.websocket.WebSocketSessionAndSshClient;
 import com.hokage.websocket.WebSocketMessage;
 import com.hokage.websocket.domain.TerminalSize;
