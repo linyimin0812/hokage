@@ -13,7 +13,12 @@ public enum WebSocketMessageType {
     /**
      * command from
      */
-    XTERM_SSH_DATA("xtermSshData");
+    XTERM_SSH_DATA("xtermSshData"),
+
+    /**
+     * x-term resize
+     */
+    XTERM_SSH_RESIZE("xtermSshResize");
 
     private final String value;
 

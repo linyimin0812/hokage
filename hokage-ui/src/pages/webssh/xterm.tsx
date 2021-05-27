@@ -33,6 +33,13 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         data: text
       }))
     })
+    terminal.onResize(({ cols, rows }) => {
+      client.send(JSON.stringify({
+        type: 'xtermSshResize',
+        data: { cols: cols, rows: rows }
+      }))
+    })
+    window.onresize = () => fitAddon.fit()
   }
 
   initClient = (terminal: Terminal): W3cWebsocket => {
@@ -52,6 +59,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
           ip: server.ip,
           sshPort: server.sshPort,
           account: server.account,
+          size: { cols: terminal.cols, rows: terminal.rows }
         }
       }))
     }
@@ -66,7 +74,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     }
 
     client.onclose = (_: ICloseEvent) => {
-      terminal.writeln('\rconnection closed.')
+      terminal.writeln('\rwebsocket connection closed.')
     }
 
     return client

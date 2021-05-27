@@ -1,5 +1,6 @@
 package com.hokage.ssh;
 
+import com.hokage.websocket.domain.TerminalSize;
 import lombok.Data;
 
 /**
@@ -31,4 +32,6 @@ public class SshContext {
      * password
      */
     private String passwd;
+
+    private TerminalSize size;
 }

@@ -35,7 +35,6 @@ public class SshClient {
         this.session = jSch.getSession(context.getAccount(), context.getIp(), Integer.parseInt(context.getSshPort()));
         this.session.setConfig(config);
         this.session.setPassword(context.getPasswd());
-//        this.session.setServerAliveInterval(3 * 1000);
         this.session.connect(30 * 1000);
     }
 
@@ -60,6 +59,8 @@ public class SshClient {
             this.session = getSession();
             ChannelShell shell = (ChannelShell) this.session.openChannel(JSchChannelType.SHELL.getValue());
             shell.connect(30 * 1000);
+            // set terminal window dimension
+            shell.setPtySize(context.getSize().getCols(), context.getSize().getRows(), 640, 480);
             this.shellContext = new ChannelShellContext(shell);
             return shellContext;
         }

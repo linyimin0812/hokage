@@ -1,6 +1,7 @@
 package com.hokage.ssh;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.ServiceResponse;
@@ -8,6 +9,7 @@ import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.websocket.WebSocketSessionAndSshClient;
 import com.hokage.websocket.WebSocketMessage;
+import com.hokage.websocket.domain.TerminalSize;
 import com.hokage.websocket.enums.WebSocketMessageType;
 import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
@@ -94,16 +96,43 @@ public class SshShellComponent {
             // xterm发起连接请求信息
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_INIT.getValue())) {
                 initSshClient(session, message);
+                return;
             }
 
             // 处理xterm输入的字符
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_DATA.getValue())) {
                 sendToSsh(session, message);
+                return;
             }
+
+            // resize terminal
+            if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_RESIZE.getValue())) {
+                resizeTerminal(session, message);
+                return;
+            }
+
+            log.error("unsupported data: {}", message);
+
         } catch (Exception e) {
             log.error("handle message exception", e);
             this.close(session);
         }
+    }
+
+    private void resizeTerminal(WebSocketSession session, WebSocketMessage<String> message) throws Exception {
+        if (!WEB_SOCKET_SESSIONS.containsKey(session.getId())) {
+            return;
+        }
+        WebSocketSessionAndSshClient socketAndSshClient = WEB_SOCKET_SESSIONS.get(session.getId());
+        if (Objects.isNull(socketAndSshClient.getSshClient()) || Objects.isNull(socketAndSshClient.getSshClient().getShell())) {
+            return;
+        }
+        ChannelShell shell = socketAndSshClient.getSshClient().getShell();
+        TerminalSize size = JSONObject.parseObject(message.getData(), TerminalSize.class);
+        if (Objects.isNull(size.getCols()) || Objects.isNull(size.getRows())) {
+            return;
+        }
+        shell.setPtySize(size.getCols(), size.getRows(), 640, 480);
     }
 
     private void initSshClient(WebSocketSession session, WebSocketMessage<String> message) {
