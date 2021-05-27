@@ -4,6 +4,9 @@ import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -21,7 +24,10 @@ public class SshClient {
     private ChannelShellContext shellContext;
     private ChannelExec exec;
 
-    public SshClient(SshContext context) throws JSchException {
+    public SshClient(SshContext context) throws Exception {
+        if (!checkServerReachable(context)) {
+            throw new RuntimeException(String.format("ip: %s, port: %s is unreachable.\r\n", context.getIp(), context.getSshPort()));
+        }
         this.jSch = new JSch();
         this.context = context;
         this.sessionConfig();
@@ -85,4 +91,23 @@ public class SshClient {
         return context;
     }
 
+    /**
+     * check the ssh socket reachable
+     * @param context ssh context
+     * @return is reachable: true/false
+     * @throws IOException
+     */
+    private boolean checkServerReachable(SshContext context) throws IOException {
+        Socket socket = new Socket();
+        try {
+            socket.connect(new InetSocketAddress(context.getIp(), Integer.parseInt(context.getSshPort())), 5 * 1000);
+            return true;
+        } catch (Exception e) {
+            return false;
+        } finally {
+            if (socket.isConnected()) {
+                socket.close();
+            }
+        }
+    }
 }
