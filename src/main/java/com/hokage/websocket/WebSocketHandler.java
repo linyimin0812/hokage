@@ -28,7 +28,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private static final char DEL_ENCODE = '\u007F';
 
-    private Map<WebSocketSession, StringBuilder> sessionCommand = new HashMap<>();
+    private final Map<WebSocketSession, StringBuilder> sessionCommand = new HashMap<>();
     @Autowired
     public void setSshService(SshShellComponent service) {
         this.sshService = service;
