@@ -2,7 +2,7 @@ package com.hokage.websocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
-import com.hokage.ssh.SshComponent;
+import com.hokage.ssh.SshShellComponent;
 import com.hokage.websocket.enums.WebSocketMessageType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,13 +24,13 @@ import java.util.Map;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
-    private SshComponent sshService;
+    private SshShellComponent sshService;
 
     private static final char DEL_ENCODE = '\u007F';
 
     private Map<WebSocketSession, StringBuilder> sessionCommand = new HashMap<>();
     @Autowired
-    public void setSshService(SshComponent service) {
+    public void setSshService(SshShellComponent service) {
         this.sshService = service;
     }
 

@@ -35,7 +35,7 @@ import java.util.stream.IntStream;
 
 @Slf4j
 @Component
-public class SshComponent {
+public class SshShellComponent {
 
     private HokageServerService serverService;
 
