@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @author yiminlin
- * @date 2021/05/27 12:36 上午
+ * @date 2021/05/27 12:36 am
  * @description  linux command
  **/
 @Component
