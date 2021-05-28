@@ -23,8 +23,6 @@ public static final String HOME = "~";
         return ls(HOME, Collections.emptyList());
     }
 
-
-
     /**
      * acquire operating system type
      * @return os name: darwin, linux and unknown

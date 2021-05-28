@@ -38,7 +38,11 @@ public class CommandDispatcher implements ApplicationContextAware {
     }
 
     public AbstractCommand dispatch(SshClient client) throws Exception {
-        OsTypeEnum os = OsTypeEnum.parse(component.execute(client, AbstractCommand.uname()));
+        CommandResult execResult = component.execute(client, AbstractCommand.uname());
+        if (!execResult.isSuccess()) {
+            throw new RuntimeException(String.format("execute uname error. exitStatus: %s, error: %s", execResult.getExitStatus(), execResult.getMsg()));
+        }
+        OsTypeEnum os = OsTypeEnum.parse(execResult.getContent());
         if (Objects.isNull(os)) {
             throw new RuntimeException("os type can't be empty.");
         }
