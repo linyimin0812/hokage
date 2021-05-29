@@ -55,7 +55,6 @@ public class HokageServerCacheDao extends BaseCacheDao {
     @PostConstruct
     public void init() throws Exception {
         serverKey2SshClient = buildDefaultLocalCache();
-//        this.activeCacheRefresh();
         scheduledWorker.getScheduledService().scheduleAtFixedRate(() -> {
             try {
                 this.activeCacheRefresh();
