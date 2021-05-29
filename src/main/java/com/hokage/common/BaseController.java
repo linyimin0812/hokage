@@ -9,25 +9,23 @@ package com.hokage.common;
 public class BaseController {
     /**
      * normal response
-     * @param data
-     * @param <T>
-     * @return
+     * @param data response content
+     * @param <T> response content type
+     * @return this
      */
     protected  <T> ResultVO<T> success(T data) {
-        ResultVO<T> resultVO = new ResultVO<>(true, "00000", null, data);
-        return resultVO;
+        return new ResultVO<>(true, "00000", null, data);
     }
 
     /**
      * fail response
-     * @param code
-     * @param msg
-     * @param <T>
-     * @return
+     * @param code result code
+     * @param msg fail message
+     * @param <T> response content type
+     * @return this
      */
     protected <T> ResultVO<T> fail(String code, String msg) {
-        ResultVO<T> resultVO = new ResultVO<>(false, code, msg, null);
-        return resultVO;
+        return new ResultVO<>(false, code, msg, null);
     }
 
 }

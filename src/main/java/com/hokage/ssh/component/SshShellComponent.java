@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.ServiceResponse;
-import com.hokage.infra.worker.ThreadPoolWorker;
+import com.hokage.infra.worker.SshThreadPoolWorker;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.context.SshContext;
@@ -48,13 +48,13 @@ public class SshShellComponent {
         this.serverService = serverService;
     }
 
-    private ThreadPoolWorker worker;
+    private SshThreadPoolWorker worker;
 
     @Value("${ssh.shell.channel.input.stream.per.thread}")
     private int channelShellNumPerThread;
 
     @Autowired
-    public void setPool(ThreadPoolWorker worker) {
+    public void setPool(SshThreadPoolWorker worker) {
         this.worker = worker;
     }
 
@@ -146,7 +146,7 @@ public class SshShellComponent {
                 websocketAndClient = connectToSsh(websocketAndClient, context, session);
                 WEB_SOCKET_SESSIONS.put(session.getId(), websocketAndClient);
             } catch (Exception e) {
-                log.error("ssh连接出错", e);
+                log.error("SshShellComponent.initSshClient error. err: {}", e.getMessage());
                 WEB_SOCKET_SESSIONS.remove(session.getId());
             }
         }
@@ -175,12 +175,14 @@ public class SshShellComponent {
             socketAndSshClient.setSshClient(new SshClient(context));
             return socketAndSshClient;
         } catch (Exception e) {
-            log.error("connect to ssh error", e);
-            sendToWebSocket(session, e.getMessage().getBytes(StandardCharsets.UTF_8));
-            session.close();
+            log.error("connect to ssh error. err: {}", e.getMessage());
+            sendToWebSocket(session, (e.getMessage() + "\r\n").getBytes(StandardCharsets.UTF_8));
             return null;
         } finally {
             WEB_SOCKET_SESSIONS.remove(session.getId());
+            if (session.isOpen()) {
+                session.close();
+            }
         }
     }
 

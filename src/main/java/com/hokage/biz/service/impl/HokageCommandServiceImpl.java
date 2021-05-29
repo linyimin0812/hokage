@@ -6,8 +6,6 @@ import com.hokage.ssh.component.SshExecComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-
 /**
  * @author yiminlin
  * @date 2021/05/28 11:37 pm
@@ -26,10 +24,5 @@ public class HokageCommandServiceImpl implements HokageCommandService {
     @Autowired
     public void setExecComponent(SshExecComponent execComponent) {
         this.execComponent = execComponent;
-    }
-
-    @PostConstruct
-    public void init() {
-        // TODO: 缓存所有服务器ssh client
     }
 }

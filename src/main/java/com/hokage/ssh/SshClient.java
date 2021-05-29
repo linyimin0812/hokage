@@ -20,18 +20,24 @@ import java.util.Properties;
  */
 @Slf4j
 public class SshClient {
-    private final JSch jSch;
-    private final SshContext context;
+    private JSch jSch;
+    private SshContext context;
     private Session session;
     private ChannelShellContext shellContext;
 
     public SshClient(SshContext context) throws Exception {
-        if (!checkServerReachable(context)) {
-            throw new RuntimeException(String.format("ip: %s, port: %s is unreachable.\r\n", context.getIp(), context.getSshPort()));
-        }
-        this.jSch = new JSch();
+        this(context, false);
+    }
+
+    public SshClient(SshContext context, boolean ignored) throws Exception {
         this.context = context;
-        this.sessionConfig();
+        if (!ignored) {
+            if (!checkServerReachable(context)) {
+                throw new RuntimeException(String.format("ip: %s, port: %s is unreachable.", context.getIp(), context.getSshPort()));
+            }
+            this.jSch = new JSch();
+            this.sessionConfig();
+        }
     }
 
     private void sessionConfig() throws JSchException {
@@ -45,7 +51,7 @@ public class SshClient {
         this.session.connect(30 * 1000);
     }
 
-    public Session getSession() throws JSchException {
+    public Session getSessionOrCreate() throws JSchException {
         try {
             ChannelExec testChannel = (ChannelExec) this.session.openChannel(JSchChannelType.EXEC.getValue());
             testChannel.setCommand("true");
@@ -61,9 +67,13 @@ public class SshClient {
         return session;
     }
 
+    public Session getSession() {
+        return this.session;
+    }
+
     public ChannelShellContext getShellContext() throws Exception {
         if (Objects.isNull(shellContext)) {
-            this.session = getSession();
+            this.session = getSessionOrCreate();
             ChannelShell shell = (ChannelShell) this.session.openChannel(JSchChannelType.SHELL.getValue());
             shell.connect(30 * 1000);
             // set terminal window dimension

@@ -42,7 +42,11 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectAll() {
-        return serverMapper.selectAll();
+        List<HokageServerDO> serverDOList = serverMapper.selectAll();
+        if (CollectionUtils.isEmpty(serverDOList)) {
+            return Collections.emptyList();
+        }
+        return serverDOList;
     }
 
     @Override

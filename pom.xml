@@ -127,6 +127,12 @@
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-antrun-plugin</artifactId>
 			<version>3.0.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>sisu-guava</artifactId>
+					<groupId>org.sonatype.sisu</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.alibaba/druid-spring-boot-starter -->

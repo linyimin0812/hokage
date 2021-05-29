@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Data
 @Component
-public class ThreadPoolWorker {
+public class SshThreadPoolWorker {
     private ThreadPoolExecutor executorPool = null;
 
     @PostConstruct

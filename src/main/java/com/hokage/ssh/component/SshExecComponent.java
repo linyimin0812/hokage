@@ -7,7 +7,6 @@ import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -15,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yiminlin
@@ -32,15 +32,13 @@ public class SshExecComponent {
 
     public CommandResult execute(SshClient client, String command) throws Exception {
 
-        Session session = null;
         ChannelExec exec = null;
         InputStream in = null;
         InputStream err = null;
-
         Stopwatch stopwatch = null;
 
         try {
-            session = client.getSession();
+            Session session = client.getSessionOrCreate();
             exec = (ChannelExec) session.openChannel(JSchChannelType.EXEC.getValue());
             exec.setPty(false);
 
@@ -51,25 +49,18 @@ public class SshExecComponent {
 
             String buf = null;
             StringBuilder sb = new StringBuilder();
-            stopwatch = new Stopwatch().start();
+            stopwatch =  Stopwatch.createStarted();
             exec.connect(TIME_OUT);
 
-            while ((buf = reader.readLine()) != null) {
+            while ((buf = reader.readLine()) != null || (buf = errReader.readLine()) != null) {
                 sb.append(buf);
-                if (System.currentTimeMillis() - stopwatch.elapsedMillis() > TIME_OUT) {
-                    log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
-                    break;
-                }
-            }
-            while ((buf = errReader.readLine()) != null) {
-                sb.append(buf);
-                if (System.currentTimeMillis() - stopwatch.elapsedMillis() > TIME_OUT) {
+                if (System.currentTimeMillis() - stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                     log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
                     break;
                 }
             }
 
-            if (System.currentTimeMillis() - stopwatch.elapsedMillis() > TIME_OUT) {
+            if (System.currentTimeMillis() - stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                 return CommandResult.timeout(sb.toString(), exec.getExitStatus());
             }
 
