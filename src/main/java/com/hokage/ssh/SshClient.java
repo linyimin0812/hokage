@@ -71,7 +71,7 @@ public class SshClient {
         return this.session;
     }
 
-    public ChannelShellContext getShellContext() throws Exception {
+    public ChannelShellContext getShellContextOrCreate() throws Exception {
         if (Objects.isNull(shellContext)) {
             this.session = getSessionOrCreate();
             ChannelShell shell = (ChannelShell) this.session.openChannel(JSchChannelType.SHELL.getValue());
@@ -84,11 +84,23 @@ public class SshClient {
         return shellContext;
     }
 
-    public ChannelShell getShell() throws Exception {
-        return getShellContext().getShell();
+    public ChannelShellContext getShellContext() {
+        return this.shellContext;
     }
 
-    public SshContext getContext() {
+    public ChannelShell getShellOrCreate() throws Exception {
+        return getShellContextOrCreate().getShell();
+    }
+
+    public ChannelShell getShell() {
+        ChannelShellContext shellContext = this.getShellContext();
+        if (Objects.isNull(shellContext)) {
+            return null;
+        }
+        return shellContext.getShell();
+    }
+
+    public SshContext getSshContext() {
         return context;
     }
 

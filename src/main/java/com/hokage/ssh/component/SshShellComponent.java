@@ -3,9 +3,10 @@ package com.hokage.ssh.component;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.google.common.base.Stopwatch;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.ServiceResponse;
-import com.hokage.infra.worker.SshThreadPoolWorker;
+import com.hokage.infra.worker.SshShellThreadPoolWorker;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.context.SshContext;
@@ -48,13 +49,15 @@ public class SshShellComponent {
         this.serverService = serverService;
     }
 
-    private SshThreadPoolWorker worker;
+    private SshShellThreadPoolWorker worker;
 
     @Value("${ssh.shell.channel.input.stream.per.thread}")
     private int channelShellNumPerThread;
+    @Value("${ssh.shell.result.reading.timeout.millis}")
+    private int shellResultReadingTimeoutMillis;
 
     @Autowired
-    public void setPool(SshThreadPoolWorker worker) {
+    public void setPool(SshShellThreadPoolWorker worker) {
         this.worker = worker;
     }
 
@@ -103,7 +106,7 @@ public class SshShellComponent {
 
             // 处理xterm输入的字符
             if (StringUtils.equals(message.getType(), WebSocketMessageType.XTERM_SSH_DATA.getValue())) {
-                sendToSsh(session, message);
+               sendToSsh(session, message);
                 return;
             }
 
@@ -126,10 +129,10 @@ public class SshShellComponent {
             return;
         }
         WebSocketSessionAndSshClient socketAndSshClient = WEB_SOCKET_SESSIONS.get(session.getId());
-        if (Objects.isNull(socketAndSshClient.getSshClient()) || Objects.isNull(socketAndSshClient.getSshClient().getShell())) {
+        if (Objects.isNull(socketAndSshClient.getSshClient()) || Objects.isNull(socketAndSshClient.getSshClient().getShellOrCreate())) {
             return;
         }
-        ChannelShell shell = socketAndSshClient.getSshClient().getShell();
+        ChannelShell shell = socketAndSshClient.getSshClient().getShellOrCreate();
         TerminalSize size = JSONObject.parseObject(message.getData(), TerminalSize.class);
         if (Objects.isNull(size.getCols()) || Objects.isNull(size.getRows())) {
             return;
@@ -172,7 +175,9 @@ public class SshShellComponent {
      */
     public WebSocketSessionAndSshClient connectToSsh(WebSocketSessionAndSshClient socketAndSshClient, SshContext context, WebSocketSession session) throws IOException {
         try {
-            socketAndSshClient.setSshClient(new SshClient(context));
+            SshClient client = new SshClient(context);
+            client.getShellContextOrCreate();
+            socketAndSshClient.setSshClient(client);
             return socketAndSshClient;
         } catch (Exception e) {
             log.error("connect to ssh error. err: {}", e.getMessage());
@@ -180,9 +185,6 @@ public class SshShellComponent {
             return null;
         } finally {
             WEB_SOCKET_SESSIONS.remove(session.getId());
-            if (session.isOpen()) {
-                session.close();
-            }
         }
     }
 
@@ -195,7 +197,7 @@ public class SshShellComponent {
     public void sendToSsh(WebSocketSession session, WebSocketMessage<String> message) throws Exception {
         WebSocketSessionAndSshClient websocketAndClient = WEB_SOCKET_SESSIONS.get(session.getId());
         SshClient client = websocketAndClient.getSshClient();
-        ChannelShell shell = client.getShell();
+        ChannelShell shell = client.getShellOrCreate();
 
         OutputStream output = shell.getOutputStream();
         output.write(message.getData().getBytes());
@@ -262,9 +264,9 @@ public class SshShellComponent {
                         }
                         SshClient sshClient = socketAndClient.getSshClient();
                         try {
-                            return Objects.nonNull(sshClient) && sshClient.getShell().isConnected();
+                            return Objects.nonNull(sshClient) && Objects.nonNull(sshClient.getShell()) && sshClient.getShell().isConnected();
                         } catch (Exception e) {
-                            SshContext context = sshClient.getContext();
+                            SshContext context = sshClient.getSshContext();
                             log.warn(String.format("account: %s, ip: %s, port: %s is not connected.", context.getAccount(), context.getIp(), context.getSshPort() ), e);
                             return false;
                         }
@@ -276,23 +278,27 @@ public class SshShellComponent {
         SshClient client = socketAndClient.getSshClient();
         WebSocketSession session = socketAndClient.getWebSocketSession();
         socketAndClient.setProcessing(true);
+        Stopwatch stopwatch = Stopwatch.createStarted();
         try {
             // 读取shell的数据
-            InputStream input = client.getShellContext().getInputStream();
+            InputStream input = client.getShellContextOrCreate().getInputStream();
             byte[] buf = new byte[32 * 1024];
-            while (input.available() > 0) {
+            boolean timeout = false;
+            while (input.available() > 0 && !timeout) {
                 int length = input.read(buf);
                 if (length < 0) {
                     sendToWebSocket(session, "\r\nssh链接已断开".getBytes(StandardCharsets.UTF_8));
                     break;
                 }
                 sendToWebSocket(session, Arrays.copyOfRange(buf, 0, length));
+                timeout = stopwatch.elapsed(TimeUnit.MILLISECONDS) > shellResultReadingTimeoutMillis;
             }
         } catch (Exception e) {
-            SshContext context = client.getContext();
+            SshContext context = client.getSshContext();
             log.error(String.format("retrieve shell error. account: %s, ip: %s, port: %s.", context.getAccount(), context.getIp(), context.getSshPort() ), e);
         } finally {
             socketAndClient.setProcessing(false);
+            stopwatch.stop();
         }
     }
 

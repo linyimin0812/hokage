@@ -16,12 +16,12 @@ import java.util.concurrent.TimeUnit;
  */
 @Data
 @Component
-public class SshThreadPoolWorker {
+public class SshShellThreadPoolWorker {
     private ThreadPoolExecutor executorPool = null;
 
     @PostConstruct
     public void init() {
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("ssh-worker-pool").build();
+        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("shell-worker-pool").build();
         int coreNum = Runtime.getRuntime().availableProcessors();
         executorPool = new ThreadPoolExecutor(
                 coreNum,

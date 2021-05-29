@@ -24,26 +24,26 @@ import java.util.Map;
 @Component
 public class WebSocketHandler extends TextWebSocketHandler {
 
-    private SshShellComponent sshService;
+    private SshShellComponent shellComponent;
 
     private static final char DEL_ENCODE = '\u007F';
 
     private final Map<WebSocketSession, StringBuilder> sessionCommand = new HashMap<>();
     @Autowired
-    public void setSshService(SshShellComponent service) {
-        this.sshService = service;
+    public void setShellComponent(SshShellComponent service) {
+        this.shellComponent = service;
     }
 
     @Override
     public void afterConnectionEstablished(@NonNull  WebSocketSession session) throws Exception {
         super.afterConnectionEstablished(session);
-        sshService.add(session);
+        shellComponent.add(session);
     }
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, TextMessage message) throws Exception {
         WebSocketMessage<String> textMessage = JSON.parseObject(message.getPayload(), new TypeReference<WebSocketMessage<String>>(){});
-        sshService.handleMsgFromXterm(textMessage, session);
+        shellComponent.handleMsgFromXterm(textMessage, session);
         logCommand(session, textMessage);
     }
 
@@ -61,6 +61,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     private void logCommand(WebSocketSession session, WebSocketMessage<String> textMessage) {
 
         if (StringUtils.equals(WebSocketMessageType.XTERM_SSH_INIT.getValue(), textMessage.getType())) {
+            log.info("connect to ssh: {}", textMessage.getData());
             return;
         }
 

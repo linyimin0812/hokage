@@ -47,20 +47,20 @@ public class SshExecComponent {
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
             BufferedReader errReader = new BufferedReader(new InputStreamReader(err, StandardCharsets.UTF_8));
 
-            String buf = null;
+            String buf;
             StringBuilder sb = new StringBuilder();
             stopwatch =  Stopwatch.createStarted();
             exec.connect(TIME_OUT);
 
             while ((buf = reader.readLine()) != null || (buf = errReader.readLine()) != null) {
                 sb.append(buf);
-                if (System.currentTimeMillis() - stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
+                if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                     log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
                     break;
                 }
             }
 
-            if (System.currentTimeMillis() - stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
+            if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                 return CommandResult.timeout(sb.toString(), exec.getExitStatus());
             }
 
