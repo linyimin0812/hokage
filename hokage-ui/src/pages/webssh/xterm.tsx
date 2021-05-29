@@ -81,18 +81,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
   }
 
   render () {
-
-    // const layoutHeight = document.getElementsByClassName('ant-layout-content')[0].clientHeight
-    // const breadcrumbHeight = document.getElementsByClassName('ant-breadcrumb')[0].clientHeight
-    // const tabsNavHeight = document.getElementsByClassName('ant-tabs-nav')[0].clientHeight
-    // const footerHeight = document.getElementsByClassName('ant-layout-footer')[0].clientHeight || 0
-    //
-    // let height = '75vh';
-    // if (layoutHeight && breadcrumbHeight && tabsNavHeight) {
-    //   height = layoutHeight - breadcrumbHeight - tabsNavHeight - 2 * footerHeight + 'px'
-    // }
-
-    return <div id={this.props.id} style={{ padding: '0 0'}} />
+    return <div id={this.props.id} style={{ padding: '0 0', height: '100%' }} />
   }
 
 }

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.TypeReference;
 import com.google.common.base.Stopwatch;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.ServiceResponse;
+import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.SshShellThreadPoolWorker;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
@@ -19,12 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,15 +51,23 @@ public class SshShellComponent {
     }
 
     private SshShellThreadPoolWorker worker;
+    private ScheduledThreadPoolWorker scheduledServiceWorker;
 
     @Value("${ssh.shell.channel.input.stream.per.thread}")
     private int channelShellNumPerThread;
     @Value("${ssh.shell.result.reading.timeout.millis}")
     private int shellResultReadingTimeoutMillis;
+    @Value("${ssh.shell.process.interval.millis}")
+    private int shellProcessIntervalMillis;
 
     @Autowired
     public void setPool(SshShellThreadPoolWorker worker) {
         this.worker = worker;
+    }
+
+    @Autowired
+    public void setScheduledServiceWorker(ScheduledThreadPoolWorker worker) {
+        this.scheduledServiceWorker = worker;
     }
 
     /**
@@ -66,19 +75,16 @@ public class SshShellComponent {
      */
     private static final Map<String, WebSocketSessionAndSshClient> WEB_SOCKET_SESSIONS = new ConcurrentHashMap<>();
 
-    /**
-     * ip_port_account --> List<WebSocketAndSshSession>
-     */
-    private static final Map<String, List<WebSocketSessionAndSshClient>> SSH_SOCKET_SESSIONS = new ConcurrentHashMap<>();
-
-    @Scheduled(fixedDelay = 50)
-    public void scheduleSshMessageProcessThread() {
-        if (WEB_SOCKET_SESSIONS.isEmpty()) {
-            return;
-        }
-        int channelShellNum = WEB_SOCKET_SESSIONS.size();
-        int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
-        receiveFromSsh(threadNum);
+    @PostConstruct
+    public void init() {
+        scheduledServiceWorker.getScheduledService().scheduleAtFixedRate(() -> {
+            if (WEB_SOCKET_SESSIONS.isEmpty()) {
+                return;
+            }
+            int channelShellNum = WEB_SOCKET_SESSIONS.size();
+            int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
+            receiveFromSsh(threadNum);
+        }, 0, shellProcessIntervalMillis, TimeUnit.MILLISECONDS);
     }
 
     /**
