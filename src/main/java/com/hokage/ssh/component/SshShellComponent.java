@@ -153,6 +153,9 @@ public class SshShellComponent {
         if (Objects.nonNull(websocketAndClient)) {
             try {
                 websocketAndClient = connectToSsh(websocketAndClient, context, session);
+                if (Objects.isNull(websocketAndClient)) {
+                    return;
+                }
                 WEB_SOCKET_SESSIONS.put(session.getId(), websocketAndClient);
             } catch (Exception e) {
                 log.error("SshShellComponent.initSshClient error. err: {}", e.getMessage());
@@ -188,6 +191,7 @@ public class SshShellComponent {
         } catch (Exception e) {
             log.error("connect to ssh error. err: {}", e.getMessage());
             sendToWebSocket(session, (e.getMessage() + "\r\n").getBytes(StandardCharsets.UTF_8));
+            session.close();
             return null;
         } finally {
             WEB_SOCKET_SESSIONS.remove(session.getId());
