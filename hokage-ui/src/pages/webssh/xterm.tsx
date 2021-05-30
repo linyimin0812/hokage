@@ -62,7 +62,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         break
       }
 
-      if (pane.status !== 2) {
+      if (pane.status === 2) {
         return
       }
       pane.title = <span><CloseCircleTwoTone translate />{this.props.titleContent}</span>
