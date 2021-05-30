@@ -44,12 +44,6 @@ import java.util.stream.IntStream;
 public class SshShellComponent {
 
     private HokageServerService serverService;
-
-    @Autowired
-    public void setServerService(HokageServerService serverService) {
-        this.serverService = serverService;
-    }
-
     private SshShellThreadPoolWorker worker;
     private ScheduledThreadPoolWorker scheduledServiceWorker;
 
@@ -59,6 +53,11 @@ public class SshShellComponent {
     private int shellResultReadingTimeoutMillis;
     @Value("${ssh.shell.process.interval.millis}")
     private int shellProcessIntervalMillis;
+
+    @Autowired
+    public void setServerService(HokageServerService serverService) {
+        this.serverService = serverService;
+    }
 
     @Autowired
     public void setPool(SshShellThreadPoolWorker worker) {
@@ -83,7 +82,11 @@ public class SshShellComponent {
             }
             int channelShellNum = WEB_SOCKET_SESSIONS.size();
             int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
-            receiveFromSsh(threadNum);
+            try {
+                receiveFromSsh(threadNum);
+            } catch (Exception e) {
+                log.error("scheduledServiceWorker.getScheduledService().scheduleAtFixedRate error. err: {}", e.getMessage());
+            }
         }, 0, shellProcessIntervalMillis, TimeUnit.MILLISECONDS);
     }
 
@@ -130,6 +133,12 @@ public class SshShellComponent {
         }
     }
 
+    /**
+     * resize ssh terminal
+     * @param session websocket session
+     * @param message window size from web ssh terminal
+     * @throws Exception ssh operate exception
+     */
     private void resizeTerminal(WebSocketSession session, WebSocketMessage<String> message) throws Exception {
         if (!WEB_SOCKET_SESSIONS.containsKey(session.getId())) {
             return;
@@ -146,6 +155,11 @@ public class SshShellComponent {
         shell.setPtySize(size.getCols(), size.getRows(), 640, 480);
     }
 
+    /**
+     * init a ssh client
+     * @param session websocket session
+     * @param message ssh connection information from web ssh terminal
+     */
     private void initSshClient(WebSocketSession session, WebSocketMessage<String> message) {
         SshContext context = acquireSshContext(message.getData());
         WebSocketSessionAndSshClient websocketAndClient = WEB_SOCKET_SESSIONS.get(session.getId());
@@ -164,6 +178,11 @@ public class SshShellComponent {
         }
     }
 
+    /**
+     * acquire ssh connection password and assemble as ssh context
+     * @param data ssh connection from web ssh terminal
+     * @return ssh context
+     */
     private SshContext acquireSshContext(String data) {
         SshContext context = JSON.parseObject(data, new TypeReference<SshContext>(){});
         // retrieve ssh password
@@ -239,32 +258,25 @@ public class SshShellComponent {
         }
     }
 
+    /**
+     * handle message from ssh
+     * @param threadNum total thread num to handle message from ssh
+     */
     private void receiveFromSsh(int threadNum) {
+        final List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
         IntStream.range(0, threadNum).forEach(index -> {
-            List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
-            int fromIndex = channelShellNumPerThread * index;
-            if (fromIndex >= clients.size()) {
+            List<WebSocketSessionAndSshClient> subClients = pageClients(clients, index);
+            if (CollectionUtils.isEmpty(subClients)) {
                 return;
             }
-            int toIndex = channelShellNumPerThread * (index + 1);
-            if (toIndex > clients.size()) {
-                toIndex = clients.size();
-            }
-            clients = clients.subList(fromIndex, toIndex);
-
-            if (CollectionUtils.isEmpty(clients)) {
-                return;
-            }
-
-            List<WebSocketSessionAndSshClient> finalClients = clients;
-            worker.getExecutorPool().execute(() -> {
-                for (WebSocketSessionAndSshClient socketAndClient : finalClients) {
-                    processReceiveMessageFromSsh(socketAndClient);
-                }
-            });
+            dispatchClient(subClients);
         });
     }
 
+    /**
+     * acquire active ssh client
+     * @return active ssh client list
+     */
     private List<WebSocketSessionAndSshClient> acquireActiveSshClient() {
         synchronized (this) {
             return WEB_SOCKET_SESSIONS.values().stream()
@@ -284,6 +296,11 @@ public class SshShellComponent {
         }
     }
 
+    /**
+     * handle message from ssh input stream
+     * use timeout to avoid blocking
+     * @param socketAndClient websocket session and ssh client
+     */
     private void processReceiveMessageFromSsh(WebSocketSessionAndSshClient socketAndClient) {
         SshClient client = socketAndClient.getSshClient();
         WebSocketSession session = socketAndClient.getWebSocketSession();
@@ -312,4 +329,54 @@ public class SshShellComponent {
         }
     }
 
+    /**
+     * page client
+     * @param clients all activate ssh client
+     * @param pageNum from 0
+     * @return client sublist
+     */
+    private List<WebSocketSessionAndSshClient> pageClients(List<WebSocketSessionAndSshClient> clients, int pageNum) {
+        int fromIndex = channelShellNumPerThread * pageNum;
+        if (fromIndex >= clients.size()) {
+            return Collections.emptyList();
+        }
+        int toIndex = channelShellNumPerThread * (pageNum + 1);
+        if (toIndex > clients.size()) {
+            toIndex = clients.size();
+        }
+        return clients.subList(fromIndex, toIndex);
+    }
+
+    /**
+     * dispatch ssh input stream to thread
+     * @param clients sublist client
+     */
+    private void dispatchClient(List<WebSocketSessionAndSshClient> clients) {
+        try {
+            worker.getExecutorPool().execute(() -> {
+                for (WebSocketSessionAndSshClient socketAndClient : clients) {
+                    processReceiveMessageFromSsh(socketAndClient);
+                }
+            });
+        } catch (Exception e) {
+            if (e instanceof RejectedExecutionException ) {
+                for (WebSocketSessionAndSshClient client : clients) {
+                    WebSocketSession webSocketSession = client.getWebSocketSession();
+                    Session session = client.getSshClient().getSession();
+                    try {
+                        session.disconnect();
+                        if (webSocketSession.isOpen()) {
+                            webSocketSession.close();
+                        }
+                    } catch (Exception ignored) {
+
+                    } finally {
+                        WEB_SOCKET_SESSIONS.remove(webSocketSession.getId());
+                    }
+                }
+            } else {
+                log.error("worker.getExecutorPool().execute error. err: {}", e.getMessage());
+            }
+        }
+    }
 }

@@ -23,14 +23,7 @@ interface XtermStateType {
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
 
   componentDidMount = ()=> {
-    const { id } = this.props
-    const terminal = new Terminal({cursorBlink: true})
-    const fitAddon = new FitAddon();
-    terminal.loadAddon(fitAddon)
-    terminal.open(document.getElementById(id)!)
-    fitAddon.fit()
-    terminal.focus()
-    this.setState({ spinner: xtermSpinner(terminal) })
+    const terminal = this.initTerminal()
     const client = this.initClient(terminal)
     terminal.onData((text: string, _: void) => {
       client.send(JSON.stringify({
@@ -44,7 +37,63 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         data: { cols: cols, rows: rows }
       }))
     })
+  }
+
+  componentWillUnmount() {
+
+  }
+
+  initTerminal = () => {
+    const { id } = this.props
+    const terminal = new Terminal({cursorBlink: true})
+    const fitAddon = new FitAddon();
+    terminal.loadAddon(fitAddon)
+    terminal.open(document.getElementById(id)!)
+    fitAddon.fit()
+    terminal.focus()
+    this.setState({ spinner: xtermSpinner(terminal) })
     window.onresize = () => fitAddon.fit()
+    return terminal
+  }
+
+  initClient = (terminal: Terminal): W3cWebsocket => {
+    let protocol = 'ws://'
+    if (window.location.protocol === 'https') {
+      protocol = 'wss://'
+    }
+    const endpoint = protocol + '127.0.0.1:8080/ws/ssh'
+    const client: W3cWebsocket = new W3cWebsocket(endpoint)
+
+    client.onopen = () => {
+      const { server } = this.props
+      const data = this.assembleSshContext(server, terminal)
+      client.send(JSON.stringify({ type: 'xtermSshInit', data: data }))
+    }
+    client.onmessage = (message: IMessageEvent) => {
+      this.renderPaneTitle(true)
+      terminal.write(message.data.toString())
+    }
+
+    client.onerror = (error: Error) => {
+      this.renderPaneTitle(false)
+      terminal.writeln('\rError: ' + JSON.stringify(error))
+    }
+
+    client.onclose = (_: ICloseEvent) => {
+      this.renderPaneTitle(false)
+      terminal.writeln('\rwebsocket connection closed.')
+    }
+
+    return client
+  }
+
+  assembleSshContext = (server: ServerVO, terminal: Terminal) => {
+    const size = { cols: 480, rows: 680 }
+    if (terminal && terminal.cols && terminal.rows) {
+      size.cols = terminal.cols
+      size.rows = terminal.rows
+    }
+    return { id: server.id, ip: server.ip, sshPort: server.sshPort, account: server.account, size: size }
   }
 
   renderPaneTitle = (success: boolean) => {
@@ -71,46 +120,6 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     }
     store.panes = observable.array(panes)
     clearInterval(this.state.spinner)
-  }
-
-  initClient = (terminal: Terminal): W3cWebsocket => {
-    let protocol = 'ws://'
-    if (window.location.protocol === 'https') {
-      protocol = 'wss://'
-    }
-    const endpoint = protocol + '127.0.0.1:8080/ws/ssh'
-    const client: W3cWebsocket = new W3cWebsocket(endpoint)
-
-    client.onopen = () => {
-      const { server } = this.props
-      client.send(JSON.stringify({
-        type: 'xtermSshInit',
-        data: {
-          id: server.id,
-          ip: server.ip,
-          sshPort: server.sshPort,
-          account: server.account,
-          size: { cols: terminal.cols, rows: terminal.rows }
-        }
-      }))
-    }
-
-    client.onmessage = (message: IMessageEvent) => {
-      this.renderPaneTitle(true)
-      terminal.write(message.data.toString())
-    }
-
-    client.onerror = (error: Error) => {
-      this.renderPaneTitle(false)
-      terminal.writeln('\rError: ' + JSON.stringify(error))
-    }
-
-    client.onclose = (_: ICloseEvent) => {
-      this.renderPaneTitle(false)
-      terminal.writeln('\rwebsocket connection closed.')
-    }
-
-    return client
   }
 
   render () {
