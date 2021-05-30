@@ -2,19 +2,24 @@ import React from 'react'
 import 'xterm/css/xterm.css'
 import { Terminal } from 'xterm'
 import { FitAddon } from 'xterm-addon-fit'
-import { w3cwebsocket as W3cWebsocket, IMessageEvent, ICloseEvent } from 'websocket'
+import { ICloseEvent, IMessageEvent, w3cwebsocket as W3cWebsocket } from 'websocket'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { xtermSpinner } from '../../libs'
+import { observable, toJS } from 'mobx'
+import store from './store'
+import { observer } from 'mobx-react'
+import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons'
 
 interface XtermPropsType {
   id: string,
-  server: ServerVO
+  server: ServerVO,
+  titleContent: string
 }
 
 interface XtermStateType {
   spinner: NodeJS.Timeout
 }
-
+@observer
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
 
   componentDidMount = ()=> {
@@ -42,6 +47,32 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     window.onresize = () => fitAddon.fit()
   }
 
+  renderPaneTitle = (success: boolean) => {
+    let panes = toJS(store.panes)
+    for (const pane of panes) {
+      if (pane.key !== this.props.id) {
+        continue
+      }
+      if (success) {
+        if (pane.status === 1) {
+          return
+        }
+        pane.title = <span><CheckCircleTwoTone translate />{this.props.titleContent}</span>
+        pane.status = 1
+        break
+      }
+
+      if (pane.status !== 2) {
+        return
+      }
+      pane.title = <span><CloseCircleTwoTone translate />{this.props.titleContent}</span>
+      pane.status = 2
+      break
+    }
+    store.panes = observable.array(panes)
+    clearInterval(this.state.spinner)
+  }
+
   initClient = (terminal: Terminal): W3cWebsocket => {
     let protocol = 'ws://'
     if (window.location.protocol === 'https') {
@@ -65,15 +96,17 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     }
 
     client.onmessage = (message: IMessageEvent) => {
-      clearInterval(this.state.spinner)
+      this.renderPaneTitle(true)
       terminal.write(message.data.toString())
     }
 
     client.onerror = (error: Error) => {
+      this.renderPaneTitle(false)
       terminal.writeln('\rError: ' + JSON.stringify(error))
     }
 
     client.onclose = (_: ICloseEvent) => {
+      this.renderPaneTitle(false)
       terminal.writeln('\rwebsocket connection closed.')
     }
 

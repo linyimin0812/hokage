@@ -4,7 +4,16 @@ import { ServerSearchForm, ServerVO } from '../../axios/action/server/server-typ
 import { getHokageRole, getHokageUid } from '../../libs'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { message } from 'antd'
-import { PanesType } from './index'
+import { Terminal } from 'xterm'
+
+export interface PanesType {
+  title: string | JSX.Element,
+  content: JSX.Element,
+  key: string,
+  terminal?: Terminal,
+  closable?: boolean,
+  status?: number, // 0-连接中, 1-已连接， 2-断开连接
+}
 
 class Store {
   @observable selectedRowKeys: ReactText[] = []

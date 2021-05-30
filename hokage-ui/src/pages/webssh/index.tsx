@@ -2,24 +2,18 @@ import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import React from 'react'
 import { Tabs } from "antd"
 import { observer } from 'mobx-react'
-import store from './store'
+import store, { PanesType } from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
 import Xterm from './xterm'
 import WebSshServer from './table'
-import { Terminal } from 'xterm';
+import { LoadingOutlined } from '@ant-design/icons'
+import { v4 as uuid } from 'uuid'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
   { name: 'Web终端' }
 ]
 
-export interface PanesType {
-  title: string,
-  content: JSX.Element,
-  key: string,
-  terminal?: Terminal,
-  closable?: boolean
-}
 @observer
 export default class WebSshHome extends React.Component {
 
@@ -43,13 +37,14 @@ export default class WebSshHome extends React.Component {
    * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
    */
   addPane = (record: ServerVO) => {
-    const id = `${record.ip} (${record.account})`
+    const titleContent = `${record.ip} (${record.account})`
+    const id = uuid()
 
     if (!store.panes.some(pane => pane.key === id)) {
       const pane: PanesType = {
         key: id,
-        content: <Xterm id={id} server={record} />,
-        title: id
+        content: <Xterm id={id} server={record} titleContent={titleContent} />,
+        title: <span><LoadingOutlined translate />{titleContent}</span>,
       }
       store.panes.push(pane)
     }
