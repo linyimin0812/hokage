@@ -21,7 +21,7 @@ public class SshShellThreadPoolWorker {
 
     @PostConstruct
     public void init() {
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("shell-worker-pool").build();
+        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("shell-worker-pool-%d").build();
         int coreNum = Runtime.getRuntime().availableProcessors();
         executorPool = new ThreadPoolExecutor(
                 coreNum,

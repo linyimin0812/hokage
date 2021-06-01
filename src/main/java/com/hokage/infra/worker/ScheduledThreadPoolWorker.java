@@ -19,7 +19,7 @@ public class ScheduledThreadPoolWorker {
 
     @PostConstruct
     public void init() {
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("scheduled-service-worker-pool").build();
+        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("scheduled-service-worker-pool-%d").build();
         scheduledService = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), factory);
     }
 }

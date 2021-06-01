@@ -47,8 +47,6 @@ public class SshShellComponent {
     private SshShellThreadPoolWorker worker;
     private ScheduledThreadPoolWorker scheduledServiceWorker;
 
-    @Value("${ssh.shell.channel.input.stream.per.thread}")
-    private int channelShellNumPerThread;
     @Value("${ssh.shell.result.reading.timeout.millis}")
     private int shellResultReadingTimeoutMillis;
     @Value("${ssh.shell.process.interval.millis}")
@@ -76,14 +74,15 @@ public class SshShellComponent {
 
     @PostConstruct
     public void init() {
+        int coreNum = Runtime.getRuntime().availableProcessors();
         scheduledServiceWorker.getScheduledService().scheduleAtFixedRate(() -> {
             if (WEB_SOCKET_SESSIONS.isEmpty()) {
                 return;
             }
-            int channelShellNum = WEB_SOCKET_SESSIONS.size();
-            int threadNum = channelShellNum  / channelShellNumPerThread <= 0 ? 1 : channelShellNum  / channelShellNumPerThread;
+            int channelShellNum = acquireActiveSshClient().size();
+            int pageSize = channelShellNum / coreNum + 1;
             try {
-                receiveFromSsh(threadNum);
+                receiveFromSsh(pageSize);
             } catch (Exception e) {
                 log.error("scheduledServiceWorker.getScheduledService().scheduleAtFixedRate error. err: {}", e.getMessage());
             }
@@ -260,12 +259,13 @@ public class SshShellComponent {
 
     /**
      * handle message from ssh
-     * @param threadNum total thread num to handle message from ssh
+     * @param pageSize page size, how many client can process by a thread
      */
-    private void receiveFromSsh(int threadNum) {
+    private void receiveFromSsh(int pageSize) {
+        int coreNum = Runtime.getRuntime().availableProcessors();
         final List<WebSocketSessionAndSshClient> clients = acquireActiveSshClient();
-        IntStream.range(0, threadNum).forEach(index -> {
-            List<WebSocketSessionAndSshClient> subClients = pageClients(clients, index);
+        IntStream.range(0, coreNum).forEach(index -> {
+            List<WebSocketSessionAndSshClient> subClients = pageClients(clients, pageSize, index);
             if (CollectionUtils.isEmpty(subClients)) {
                 return;
             }
@@ -333,14 +333,15 @@ public class SshShellComponent {
      * page client
      * @param clients all activate ssh client
      * @param pageNum from 0
+     * @param pageSize page size, how many client can process by a thread
      * @return client sublist
      */
-    private List<WebSocketSessionAndSshClient> pageClients(List<WebSocketSessionAndSshClient> clients, int pageNum) {
-        int fromIndex = channelShellNumPerThread * pageNum;
+    private List<WebSocketSessionAndSshClient> pageClients(List<WebSocketSessionAndSshClient> clients, int pageSize,  int pageNum) {
+        int fromIndex = pageSize * pageNum;
         if (fromIndex >= clients.size()) {
             return Collections.emptyList();
         }
-        int toIndex = channelShellNumPerThread * (pageNum + 1);
+        int toIndex = pageSize * (pageNum + 1);
         if (toIndex > clients.size()) {
             toIndex = clients.size();
         }
