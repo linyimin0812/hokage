@@ -50,6 +50,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
+        // TODO: 移除所有的websocket and client
         sessionCommand.remove(session);
     }
 

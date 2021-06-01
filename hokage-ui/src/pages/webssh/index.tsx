@@ -29,6 +29,19 @@ export default class WebSshHome extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener('beforeunload', this.onbeforeunload)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.onbeforeunload)
+  }
+
+
+  onbeforeunload = (ev: BeforeUnloadEvent) => {
+    ev.returnValue = true
+  }
+
   onChange = (activeKey: string) => {
     store.activeKey = activeKey
   }
