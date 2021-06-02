@@ -128,7 +128,6 @@ public class SshShellComponent {
 
         } catch (Exception e) {
             log.error("handle message exception", e);
-            this.close(session);
         }
     }
 
@@ -248,13 +247,23 @@ public class SshShellComponent {
      */
     public void close(WebSocketSession session) throws Exception {
         WebSocketSessionAndSshClient socketAndClient = WEB_SOCKET_SESSIONS.get(session.getId());
-        if (Objects.nonNull(socketAndClient)) {
-            SshClient client = socketAndClient.getSshClient();
-            if (Objects.nonNull(client) && Objects.nonNull(client.getShell())) {
-                client.getShell().disconnect();
-            }
-            WEB_SOCKET_SESSIONS.remove(session.getId());
+        WEB_SOCKET_SESSIONS.remove(session.getId());
+        if (Objects.isNull(socketAndClient)) {
+            return;
         }
+        SshClient client = socketAndClient.getSshClient();
+        if (Objects.isNull(client)) {
+            return;
+        }
+        Session sshSession = client.getSession();
+        if (Objects.isNull(sshSession)) {
+            return;
+        }
+        ChannelShell shell = client.getShell();
+        if (Objects.nonNull(shell)) {
+            shell.disconnect();
+        }
+        sshSession.disconnect();
     }
 
     /**

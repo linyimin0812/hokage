@@ -28,7 +28,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private static final char DEL_ENCODE = '\u007F';
 
-    private final Map<WebSocketSession, StringBuilder> sessionCommand = new HashMap<>();
+    private final Map<String, StringBuilder> sessionCommand = new HashMap<>();
     @Autowired
     public void setShellComponent(SshShellComponent service) {
         this.shellComponent = service;
@@ -36,7 +36,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(@NonNull  WebSocketSession session) throws Exception {
-        super.afterConnectionEstablished(session);
+        log.info("websocket: {} connection is established.", session.getId());
         shellComponent.add(session);
     }
 
@@ -49,9 +49,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
-        super.afterConnectionClosed(session, status);
-        // TODO: 移除所有的websocket and client
-        sessionCommand.remove(session);
+        log.info("websocket: {} is close, status: {}", session.getId(), status);
+        sessionCommand.remove(session.getId());
+        shellComponent.close(session);
     }
 
     /**
@@ -66,16 +66,16 @@ public class WebSocketHandler extends TextWebSocketHandler {
             return;
         }
 
-        if (!sessionCommand.containsKey(session)) {
-            sessionCommand.put(session, new StringBuilder());
+        if (!sessionCommand.containsKey(session.getId())) {
+            sessionCommand.put(session.getId(), new StringBuilder());
         }
-        StringBuilder sb = sessionCommand.get(session);
+        StringBuilder sb = sessionCommand.get(session.getId());
         // remove character
         if (textMessage.getData().charAt(0) == DEL_ENCODE && sb.length() > 0) {
             sb.deleteCharAt(sb.length() - 1);
         } else if (StringUtils.equals(textMessage.getData(), StringUtils.CR)) {
-            log.info("recv command: {}", sessionCommand.get(session).toString());
-            sessionCommand.put(session, new StringBuilder());
+            log.info("recv command: {}", sessionCommand.get(session.getId()).toString());
+            sessionCommand.put(session.getId(), new StringBuilder());
         } else {
             sb.append(textMessage.getData());
         }
