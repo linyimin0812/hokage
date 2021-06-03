@@ -10,7 +10,7 @@ import { serviceConfig } from './service-wrap'
 
 const serviceInfo: { [name: string]: ServiceParam} = {
   // list all server label
-  'listServerLabel': {
+  'list': {
     url: '/server/file/list',
     method: 'POST'
   },

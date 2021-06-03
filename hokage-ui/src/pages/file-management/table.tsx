@@ -4,19 +4,12 @@ import './index.less'
 import { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
-import { fileDataList } from './mock-data'
+// import { fileDataList } from './mock-data'
 import { observer } from 'mobx-react'
 import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
-
-export interface Record {
-  key: string,
-  fileName: string,
-  size: string | number,
-  owner: string,
-  permission: string,
-  modifiedTime: string,
-}
+import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type';
+import { getHokageUid } from '../../libs';
 
 type FileTablePropsType = {
   serverVO: ServerVO
@@ -27,15 +20,26 @@ export default class FileTable extends React.Component<FileTablePropsType> {
 
   componentWillMount = () => {
     // 左键按下时
-    window.addEventListener("mousedown", (event) => {
-      if (event.button === 0 && store.actionProps.left !== undefined) {
-        store.actionProps = {
-          left: undefined,
-          top: undefined,
-          record: undefined
-        }
+    window.addEventListener("mousedown", this.onMouseDown)
+    const { serverVO } = this.props
+    const form: FileOperateForm = {
+      operatorId: getHokageUid(),
+      ip: serverVO.ip,
+      sshPort: serverVO.sshPort,
+      account: serverVO.account,
+      curDir: '~'
+    }
+    store.listDir(form)
+  }
+
+  onMouseDown = (event: MouseEvent) => {
+    if (event.button === 0 && store.actionProps.left !== undefined) {
+      store.actionProps = {
+        left: undefined,
+        top: undefined,
+        record: undefined
       }
-    })
+    }
   }
 
   getActionPosition = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -61,12 +65,12 @@ export default class FileTable extends React.Component<FileTablePropsType> {
     return breadcrumbProps
   }
 
-  onDoubleClick = (record: Record) => {
+  onDoubleClick = (record: FileVO) => {
     // TODO: 文件夹则打开文件夹
     // TODO: 普通文本文件直接打开
   }
 
-  onContextMenu = (record: Record, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  onContextMenu = (record: FileVO, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault()
     const { left, top } = this.getActionPosition(event)
     store.actionProps = { left, top, record }
@@ -79,20 +83,21 @@ export default class FileTable extends React.Component<FileTablePropsType> {
         <FileOperation currentDir={store.currentDir} />
         <Table
           style={{ cursor: 'pointer' }}
-          dataSource={fileDataList}
+          dataSource={store.records}
           pagination={false}
-          onRow={(record: Record) => {
+          loading={store.loading}
+          onRow={(record: FileVO) => {
             return {
               onDoubleClick: _ => this.onDoubleClick(record),
               onContextMenu: event => this.onContextMenu(record, event)
             }
           }}
         >
-          <Table.Column title={'文件名'} dataIndex={'fileName'} />
+          <Table.Column title={'文件名'} dataIndex={'name'} />
           <Table.Column title={'大小'} dataIndex={'size'} />
-          <Table.Column title={'权限'} dataIndex={'permission'} />
+          <Table.Column title={'权限'} dataIndex={'typeAndPermission'} />
           <Table.Column title={'所有者'} dataIndex={'owner'} />
-          <Table.Column title={'修改时间'} dataIndex={'modifiedTime'} />
+          <Table.Column title={'修改时间'} dataIndex={'lastAccessTime'} />
         </Table>
       </div>
     )

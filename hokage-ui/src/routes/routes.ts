@@ -1,5 +1,5 @@
 import BatCommandRoutes from '../pages/bat-command/route'
-import FileManagementRoutes from '../pages/filemanagement/route'
+import FileManagementRoutes from '../pages/file-management/route'
 import HomeRoutes from '../pages/home/route'
 import MonitorRoutes from '../pages/monitor/route'
 import PenetrationRoutes from '../pages/penetration/route'
