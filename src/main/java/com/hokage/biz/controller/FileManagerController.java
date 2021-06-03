@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,17 +26,17 @@ import java.util.Optional;
 @RestController
 public class FileManagerController extends BaseController {
 
-    private HokageFileManagementService fileManagementService;
+    private HokageFileManagementService fileService;
 
     @Autowired
     public void setFileManagementService(HokageFileManagementService fileManagementService) {
-        this.fileManagementService = fileManagementService;
+        this.fileService = fileManagementService;
     }
 
     @RequestMapping(value = "/server/file/list", method = RequestMethod.POST)
     public ResultVO<List<HokageFileVO>> searchServer(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<List<HokageFileVO>> response = fileManagementService.list(serverKey, form.getCurDir(), Collections.EMPTY_LIST);
+        ServiceResponse<List<HokageFileVO>> response = fileService.list(serverKey, form.getCurDir(), new ArrayList<>());
 
         if (response.getSucceeded()) {
             return success(response.getData());
