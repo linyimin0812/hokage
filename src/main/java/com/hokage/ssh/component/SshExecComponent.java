@@ -40,8 +40,9 @@ public class SshExecComponent {
         try {
             Session session = client.getSessionOrCreate();
             exec = (ChannelExec) session.openChannel(JSchChannelType.EXEC.getValue());
-            exec.setPty(false);
 
+            exec.setPty(false);
+            exec.setCommand(command);
             in = exec.getInputStream();
             err = exec.getErrStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));

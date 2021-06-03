@@ -12,4 +12,11 @@ import lombok.Data;
 @Data
 public class HokageFileVO {
 
+    private String typeAndPermission;
+    private String owner;
+    private String group;
+    private Long size;
+    private String lastAccessTime;
+    private String name;
+
 }

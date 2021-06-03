@@ -41,7 +41,11 @@ public enum ResultCodeEnum {
     /**
      * server file management error code
      */
-    SERVER_NO_FOUND("F-0001", "server is not found.");
+    SERVER_NO_FOUND("F-0001", "server is not found."),
+    COMMAND_EXECUTED_FAILED("F-0002", "command execute failed.")
+
+
+    ;
 
     private String code;
     private String msg;

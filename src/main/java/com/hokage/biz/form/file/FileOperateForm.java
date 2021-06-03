@@ -16,4 +16,8 @@ public class FileOperateForm {
     private String account;
     private String curDir;
     private String action;
+
+    public String buildKey() {
+        return String.format("%s_%s_%s", ip, sshPort, account);
+    }
 }
