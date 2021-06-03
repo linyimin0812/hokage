@@ -24,4 +24,28 @@ public interface Command {
      * @return ls command execute result content
      */
     String ls(String dir, List<LsOptionEnum> optionList);
+
+    /**
+     * acquire memory information
+     * @return memory information
+     */
+    String memInfo();
+
+    /**
+     * acquire server bandwidth
+     * @return server bandwidth json string
+     */
+    String bandwidth();
+
+    /**
+     * acquire process information
+     * @return process information
+     */
+    String process();
+
+    /**
+     * calculate download transfer rate
+     * @return download transfer rate
+     */
+    String downloadTransferRate();
 }

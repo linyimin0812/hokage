@@ -22,4 +22,24 @@ public class DarwinCommand extends AbstractCommand {
     public String ls(String dir, List<LsOptionEnum> optionList) {
         return null;
     }
+
+    @Override
+    public String memInfo() {
+        return null;
+    }
+
+    @Override
+    public String bandwidth() {
+        return null;
+    }
+
+    @Override
+    public String process() {
+        return null;
+    }
+
+    @Override
+    public String downloadTransferRate() {
+        return null;
+    }
 }

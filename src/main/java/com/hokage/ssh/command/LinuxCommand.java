@@ -40,9 +40,52 @@ public class LinuxCommand extends AbstractCommand {
                 .replace("${dir}", dir);
     }
 
+    @Override
+    public String memInfo() {
+        return "cat /proc/meminfo" + " | " +
+                "awk '{out=\"\"; for(i=1;i<=NF;i++) {out=out$i} print out;}'" + " | " +
+                "awk -F: 'BEGIN {print \"{\"} {print \"\\\"\"$1\"\\\": \\\"\"$2\"\\\",\"} END {print \"}\"}'" + " | " +
+                "sed 'N;$s/,\\n/\\n/;P;D';"
+                ;
+    }
+
+    @Override
+    public String bandwidth() {
+        return "cat /proc/net/dev" + " | " +
+                "awk -F: 'NR>2 {print $1\" \"$2}'" + " | " +
+                "awk 'BEGIN {print \"[\"} " +
+                "{print \"{" +
+                "\\\"interface\\\": \\\"\"$1\"\\\", " +
+                "\\\"rx\\\": \"$2\", " +
+                "\\\"tx\\\": \"$10\"},\"} " +
+                "END {print \"]\"}'" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
+    @Override
+    public String process() {
+        return "ps axo pid,user,pcpu,rss,vsz,lstart,stat,comm" + " | " +
+                "awk 'BEGIN {print \"[\"} NR>1 {printf \"{" +
+                "\\\"pid\\\": \"$1\", \\\"user\\\": \\\"\"$2\"\\\", " +
+                "\\\"cpu\\\": \"$3\", \\\"rss\\\": \"$4\", " +
+                "\\\"vsz\\\": \"$5\", \\\"started\\\": \\\"\"$6\" \"$7\" \"$8\" \"$9\" \"$10\"\\\", " +
+                "\\\"stat\\\": \\\"\"$11\"\\\"," +
+                "\\\"command\\\":\"; out=$12; for(i=13;i<=NF;i++) {out=out$i} print \"\\\"\"out\"\\\"},\";} " +
+                "END {print \"]\"}'"+ " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
+    @Override
+    public String downloadTransferRate() {
+        return null;
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
+        System.out.println(command.memInfo());
+        System.out.println(command.bandwidth());
+        System.out.println(command.process());
     }
 
 
