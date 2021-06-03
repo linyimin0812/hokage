@@ -35,7 +35,13 @@ public enum ResultCodeEnum {
      */
     SERVER_UPLOAD_FILE_ERROR("C-001", "file is empty."),
 
-    SUCCESS("0000", "success");
+    SUCCESS("0000", "success"),
+
+
+    /**
+     * server file management error code
+     */
+    SERVER_NO_FOUND("F-0001", "server is not found.");
 
     private String code;
     private String msg;

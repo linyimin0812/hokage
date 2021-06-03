@@ -31,6 +31,6 @@ public static final String HOME = "~";
         return "uname -s" + " | " + "tr A-Z a-z" + " | " +
                "awk '$0 ~ /darwin/ {print \"darwin\"}" +
                     "$0 ~ /linux/ {print \"linux\"}" +
-                    "$0 !~ /darwin|linux/ {print \"unknown\"}";
+                    "$0 !~ /darwin|linux/ {print \"unknown\"}'";
     }
 }

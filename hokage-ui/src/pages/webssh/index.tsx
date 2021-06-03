@@ -29,10 +29,6 @@ export default class WebSshHome extends React.Component {
     }
   }
 
-  componentDidMount() {
-    window.addEventListener('beforeunload', this.onbeforeunload)
-  }
-
   componentWillUnmount() {
     window.removeEventListener('beforeunload', this.onbeforeunload)
   }
@@ -62,6 +58,8 @@ export default class WebSshHome extends React.Component {
       store.panes.push(pane)
     }
     store.activeKey = id
+    window.removeEventListener('beforeunload', this.onbeforeunload)
+    window.addEventListener('beforeunload', this.onbeforeunload)
   }
 
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
@@ -79,6 +77,9 @@ export default class WebSshHome extends React.Component {
           store.activeKey = newPanes[lastKeyIndex].key
         }
         store.panes = newPanes
+        if (newPanes.length === 0) {
+          window.removeEventListener('beforeunload', this.onbeforeunload)
+        }
         break
       default:
         break

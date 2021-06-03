@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,13 +65,32 @@ public class HokageServerCacheDao extends BaseCacheDao {
         }, 0, cacheRefreshIntervalSecond, TimeUnit.SECONDS);
     }
 
+    public Optional<SshClient> get(String key) {
+        SshClient client = serverKey2SshClient.getIfPresent(key);
+        if (Objects.nonNull(client)) {
+            return Optional.of(client);
+        }
+        return Optional.empty();
+    }
+
+    public void put(String key, SshClient sshClient) {
+        if (Objects.isNull(sshClient)) {
+            throw new RuntimeException("cache value can't be null");
+        }
+        serverKey2SshClient.put(key, sshClient);
+    }
+
     /**
      * build cache key
      * @param serverDO server object
      * @return ip_port_account
      */
     private String buildKey(HokageServerDO serverDO) {
-        return serverDO.getIp() + "_" + serverDO.getSshPort() + "_" + serverDO.getAccount();
+        return buildKey(serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount());
+    }
+
+    public String buildKey(String ip, String port, String account) {
+        return ip + "_" + port + "_" + account;
     }
 
     /**

@@ -12,6 +12,7 @@ import lombok.Data;
 public class FileOperateForm {
     private Long operatorId;
     private String ip;
+    private String sshPort;
     private String account;
     private String curDir;
     private String action;
