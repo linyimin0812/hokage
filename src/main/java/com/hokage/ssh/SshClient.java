@@ -21,7 +21,7 @@ import java.util.Properties;
 @Slf4j
 public class SshClient {
     private JSch jSch;
-    private SshContext context;
+    private final SshContext context;
     private Session session;
     private ChannelShellContext shellContext;
 
@@ -67,7 +67,7 @@ public class SshClient {
         return session;
     }
 
-    public Session getSession() {
+    public Session getSessionIfPresent() {
         return this.session;
     }
 
@@ -84,7 +84,7 @@ public class SshClient {
         return shellContext;
     }
 
-    public ChannelShellContext getShellContext() {
+    public ChannelShellContext getShellContextIfPresent() {
         return this.shellContext;
     }
 
@@ -92,8 +92,8 @@ public class SshClient {
         return getShellContextOrCreate().getShell();
     }
 
-    public ChannelShell getShell() {
-        ChannelShellContext shellContext = this.getShellContext();
+    public ChannelShell getShellIfPresent() {
+        ChannelShellContext shellContext = this.getShellContextIfPresent();
         if (Objects.isNull(shellContext)) {
             return null;
         }

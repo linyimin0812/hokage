@@ -255,11 +255,11 @@ public class SshShellComponent {
         if (Objects.isNull(client)) {
             return;
         }
-        Session sshSession = client.getSession();
+        Session sshSession = client.getSessionIfPresent();
         if (Objects.isNull(sshSession)) {
             return;
         }
-        ChannelShell shell = client.getShell();
+        ChannelShell shell = client.getShellIfPresent();
         if (Objects.nonNull(shell)) {
             shell.disconnect();
         }
@@ -295,7 +295,7 @@ public class SshShellComponent {
                         }
                         SshClient sshClient = socketAndClient.getSshClient();
                         try {
-                            return Objects.nonNull(sshClient) && Objects.nonNull(sshClient.getShell()) && sshClient.getShell().isConnected();
+                            return Objects.nonNull(sshClient) && Objects.nonNull(sshClient.getShellIfPresent()) && sshClient.getShellIfPresent().isConnected();
                         } catch (Exception e) {
                             SshContext context = sshClient.getSshContext();
                             log.warn(String.format("account: %s, ip: %s, port: %s is not connected.", context.getAccount(), context.getIp(), context.getSshPort() ), e);
@@ -372,7 +372,7 @@ public class SshShellComponent {
             if (e instanceof RejectedExecutionException ) {
                 for (WebSocketSessionAndSshClient client : clients) {
                     WebSocketSession webSocketSession = client.getWebSocketSession();
-                    Session session = client.getSshClient().getSession();
+                    Session session = client.getSshClient().getSessionIfPresent();
                     try {
                         session.disconnect();
                         if (webSocketSession.isOpen()) {

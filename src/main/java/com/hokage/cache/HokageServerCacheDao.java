@@ -146,7 +146,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 .forEach(serverKey -> {
                     try {
                         SshClient client = serverKey2SshClient.getIfPresent(serverKey);
-                        if (Objects.nonNull(client) && Objects.nonNull(client.getSession())) {
+                        if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
                             client.getSessionOrCreate().disconnect();
                         }
                     } catch (Exception ignored) {
