@@ -31,10 +31,10 @@ class BreadCrumb extends React.Component<BreadcrumbProps> {
 
     return (
       <span>
-        		<Breadcrumb style={{ margin: '12px 0', display:'inline-block' }}>
-          			{this.subBreadcrumb()}
-        		</Breadcrumb>
-      		</span>
+        <Breadcrumb style={{ margin: '12px 0', display:'inline-block' }}>
+            {this.subBreadcrumb()}
+        </Breadcrumb>
+      </span>
     );
   }
 }

@@ -4,12 +4,11 @@ import './index.less'
 import { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
-// import { fileDataList } from './mock-data'
 import { observer } from 'mobx-react'
 import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
-import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type';
-import { getHokageUid } from '../../libs';
+import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type'
+import { getHokageUid } from '../../libs'
 
 type FileTablePropsType = {
   serverVO: ServerVO

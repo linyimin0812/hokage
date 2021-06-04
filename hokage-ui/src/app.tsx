@@ -35,7 +35,7 @@ export default class App extends Component<AppProps, AppState> {
           <Sider collapsed={this.state.collapsed} />
           <Layout className="layout" style={{ flexDirection: 'column' }}>
             <Header toggle={this.toggle} collapsed={this.state.collapsed} />
-            <Content style={{ margin: '0 16px', overflow: 'initial', flex: '1 1 0' }}>
+            <Content style={{ margin: '0 16px', overflow: 'scroll', flex: '1 1 0' }}>
               <Router />
             </Content>
             <Footer id={'ant-layout-footer'} style={{ textAlign: 'center', padding: '0px 0px' }}>

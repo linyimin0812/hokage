@@ -8,6 +8,7 @@ import Xterm from './xterm'
 import WebSshServer from './table'
 import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuid } from 'uuid'
+import './index.less'
 
 const breadcrumbProps: BreadcrumbPrpos[] = [
   { name: '首页', link: '/app/index' },
