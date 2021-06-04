@@ -1,10 +1,19 @@
 export interface FileVO {
+  curDir: string,
+  filePropertyList: FileProperty[],
+  directoryNum: number,
+  fileNum: number,
+  totalSize: string
+}
+
+export interface FileProperty {
   key: string,
   name: string,
   owner: string,
   group: string,
-  typeAndPermission: string,
-  size: number,
+  type: 'directory' | 'file',
+  permission: string,
+  size: string,
   lastAccessTime: string
 }
 

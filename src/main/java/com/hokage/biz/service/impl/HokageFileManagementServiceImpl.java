@@ -1,7 +1,9 @@
 package com.hokage.biz.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hokage.biz.converter.file.SshProperty2WebProperty;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.response.file.HokageFileProperty;
 import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.biz.service.HokageFileManagementService;
 import com.hokage.cache.HokageServerCacheDao;
@@ -13,8 +15,9 @@ import com.hokage.ssh.command.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.domain.FileProperty;
 import com.hokage.ssh.enums.LsOptionEnum;
+import com.hokage.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +37,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     private HokageServerCacheDao serverCacheDao;
     private CommandDispatcher dispatcher;
     private SshExecComponent execComponent;
+    private SshProperty2WebProperty fileConverter;
 
     @Autowired
     public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
@@ -50,35 +54,50 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         this.execComponent = execComponent;
     }
 
+    @Autowired
+    public void setFileConverter(SshProperty2WebProperty fileConverter) {
+        this.fileConverter = fileConverter;
+    }
+
 
     @Override
-    public ServiceResponse<List<HokageFileVO>> list(String serverKey, String dir, List<LsOptionEnum> options) {
-        ServiceResponse<List<HokageFileVO>> response = new ServiceResponse<>();
+    public ServiceResponse<HokageFileVO> list(String serverKey, String dir, List<LsOptionEnum> options) {
+        ServiceResponse<HokageFileVO> response = new ServiceResponse<>();
         Optional<SshClient> optional = serverCacheDao.get(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
 
         SshClient client = optional.get();
-        CommandResult result = null;
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            result = execComponent.execute(client, command.ls(dir, options));
-            if (!result.isSuccess()) {
-                String errMsg= String.format("exiStatus: %s, msg: %s", result.getExitStatus(), result.getMsg());
+            CommandResult lsResult = execComponent.execute(client, command.ls(dir, options));
+            CommandResult pwdResult = execComponent.execute(client, command.pwd(dir));
+            if (!lsResult.isSuccess() || !pwdResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", lsResult.getExitStatus(), lsResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
             }
+            return response.success(assembleFileVO(lsResult, pwdResult));
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.list failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
-        List<FileProperty> fileList = JSONArray.parseArray(result.getContent(), FileProperty.class);
-        List<HokageFileVO> fileVOList = fileList.stream().map(property -> {
-            HokageFileVO fileVO = new HokageFileVO();
-            BeanUtils.copyProperties(property, fileVO);
-            return fileVO;
-        }).collect(Collectors.toList());
+    }
 
-        return response.success(fileVOList);
+    private HokageFileVO assembleFileVO(CommandResult lsResult, CommandResult pwdResult) {
+
+        List<FileProperty> fileList = JSONArray.parseArray(lsResult.getContent(), FileProperty.class);
+
+        List<HokageFileProperty> propertyList = fileList.stream().map(property -> fileConverter.doForward(property)).collect(Collectors.toList());
+        String curDir = pwdResult.getContent();
+        long directoryNum = propertyList.stream().filter(property -> StringUtils.equals(property.getType(), "directory")).count();
+        long fileNum = propertyList.stream().filter(property -> StringUtils.equals(property.getType(), "file")).count();
+        long totalSize = fileList.stream().mapToLong(FileProperty::getSize).sum();
+        String readableSize = FileUtil.humanReadable(totalSize);
+
+        HokageFileVO fileVO = new HokageFileVO();
+        fileVO.setCurDir(curDir).setFileNum(fileNum).setDirectoryNum(directoryNum).setFilePropertyList(propertyList).setTotalSize(readableSize);
+
+        return fileVO;
     }
 }

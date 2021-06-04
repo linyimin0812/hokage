@@ -19,5 +19,5 @@ public interface HokageFileManagementService {
      * @param options ls command options
      * @return directory content list
      */
-    ServiceResponse<List<HokageFileVO>> list(String serverKey, String dir, List<LsOptionEnum> options);
+    ServiceResponse<HokageFileVO> list(String serverKey, String dir, List<LsOptionEnum> options);
 }

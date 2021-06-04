@@ -90,16 +90,16 @@ export default class WebSshHome extends React.Component {
   render() {
     return (
       <div className={'ant-layout-content'} style={{ height: '100%' }}>
-        <div className={'ant-web-ssh-breadcrumb'}>
-          <BreadCrumb breadcrumbProps={breadcrumbProps} />
+        <BreadCrumb breadcrumbProps={breadcrumbProps} />
+        <div className={'antd-tabs-content'} >
+          <Tabs onChange={this.onChange} activeKey={store.activeKey} type="editable-card" hideAdd onEdit={this.onEdit} style={{ height: '100%' }}>
+            {store.panes.map(pane => {
+              return <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
+                {pane.content}
+              </Tabs.TabPane>
+            })}
+          </Tabs>
         </div>
-        <Tabs onChange={this.onChange} activeKey={store.activeKey} type="editable-card" hideAdd onEdit={this.onEdit} style={{ height: '100%' }}>
-          {store.panes.map(pane => {
-            return <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-              {pane.content}
-            </Tabs.TabPane>
-          })}
-        </Tabs>
       </div>
     )
   }

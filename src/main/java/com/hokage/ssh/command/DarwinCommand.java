@@ -42,4 +42,9 @@ public class DarwinCommand extends AbstractCommand {
     public String downloadTransferRate() {
         return null;
     }
+
+    @Override
+    public String pwd(String dir) {
+        return null;
+    }
 }

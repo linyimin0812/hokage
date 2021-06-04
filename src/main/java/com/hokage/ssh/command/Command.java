@@ -48,4 +48,11 @@ public interface Command {
      * @return download transfer rate
      */
     String downloadTransferRate();
+
+    /**
+     * acquire dir path
+     * @param dir may be relative path or absolute path
+     * @return absolute path
+     */
+    String pwd(String dir);
 }

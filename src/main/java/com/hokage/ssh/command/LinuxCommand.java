@@ -80,6 +80,11 @@ public class LinuxCommand extends AbstractCommand {
         return null;
     }
 
+    @Override
+    public String pwd(String dir) {
+        return String.format("cd %s; pwd;", dir);
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());

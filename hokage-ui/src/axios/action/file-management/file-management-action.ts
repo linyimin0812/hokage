@@ -4,10 +4,10 @@ import { FileOperateForm, FileVO } from './file-management-type'
 
 
 export const FileManagementAction ={
-  list: (form: FileOperateForm): Promise<FileVO[]> => {
-    return new Promise<FileVO[]>(async (resolve, reject) => {
+  list: (form: FileOperateForm): Promise<FileVO> => {
+    return new Promise<FileVO>(async (resolve, reject) => {
       try {
-        const result: ServiceResult<FileVO[]> = await FileManagementService.list(form)
+        const result: ServiceResult<FileVO> = await FileManagementService.list(form)
         if (!result.success) {
           return reject(result.msg)
         }

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Menu } from 'antd'
-import { FileVO } from '../../axios/action/file-management/file-management-type'
+import { FileProperty } from '../../axios/action/file-management/file-management-type'
 export interface ActionProps {
   left: string | undefined,
   top: string | undefined,
-  record: FileVO | undefined
+  record: FileProperty | undefined
 }
 
 export default class MenuContext extends React.Component<ActionProps> {

@@ -1,6 +1,9 @@
 package com.hokage.biz.response.file;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 /**
  * @author linyimin
@@ -10,13 +13,11 @@ import lombok.Data;
  */
 
 @Data
+@Accessors(chain = true)
 public class HokageFileVO {
-
-    private String typeAndPermission;
-    private String owner;
-    private String group;
-    private Long size;
-    private String lastAccessTime;
-    private String name;
-
+    private String curDir;
+    private List<HokageFileProperty> filePropertyList;
+    private Long directoryNum;
+    private Long fileNum;
+    private String totalSize;
 }

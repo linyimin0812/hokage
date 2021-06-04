@@ -4,15 +4,18 @@ import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import Search from 'antd/lib/input/Search'
 
 type FileOperationPropsType = {
-  currentDir: string
+  curDir: string,
+  fileNum: number,
+  directoryNum: number,
+  totalSize: string
 }
 
 export class FileOperation extends React.Component<FileOperationPropsType> {
 
   retrieveBreadcrumbProps = () => {
-    const { currentDir } = this.props
+    const { curDir } = this.props
     const breadcrumbProps: BreadcrumbPrpos[] = new Array<BreadcrumbPrpos>()
-    currentDir.split('/').forEach((name: string) => {
+    curDir.split('/').forEach((name: string) => {
       const prop: BreadcrumbPrpos = {
         name: name
       }
@@ -22,6 +25,7 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
   }
 
   render() {
+    const { fileNum, directoryNum, totalSize } = this.props
     return (
       <>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}>
@@ -30,9 +34,9 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
             <BreadCrumb breadcrumbProps={this.retrieveBreadcrumbProps()} />
             <span>
               <Divider type="vertical" />
-              共{<span style={{ color: "blue" }}>{8}</span>}
-              个目录与{<span style={{ color: "blue" }}>{10}</span>}
-              个文件, 大小{<span style={{ color: "blue" }}>100.00</span>}MB
+              共{<span style={{ color: "blue" }}>{directoryNum}</span>}
+              个目录与{<span style={{ color: "blue" }}>{fileNum}</span>}
+              个文件, 大小{<span style={{ color: "blue" }}>{totalSize}</span>}
             </span>
           </Col>
           <Col span={12}>
