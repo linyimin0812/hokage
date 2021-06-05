@@ -1,6 +1,6 @@
 import React from 'react'
 import { Drawer, Form, Tabs } from 'antd'
-import Editor from '@monaco-editor/react'
+import Editor from 'react-monaco-editor'
 
 interface ExecutedBatCommandInfoPropsType {
   isVisible: boolean,

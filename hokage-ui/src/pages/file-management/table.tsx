@@ -106,7 +106,7 @@ export default class FileTable extends React.Component<FileTablePropsType> {
     const { id, serverVO } = this.props
     const pane = store.panes.find(pane => pane.key === id)
     if (!pane || pane.listDirFailed) {
-      return <Result status={'500'} title={'500'} subTitle="无法获取文件信息，请检查服务器是否可用" />
+      return <Result status={'500'} title={'500'} subTitle={`无法获取文件信息，请检查服务器${serverVO.account}@${serverVO.ip}是否可用`} />
     }
     const fileVO = pane.fileVO!
     return (
