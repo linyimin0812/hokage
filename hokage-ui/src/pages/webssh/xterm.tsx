@@ -23,6 +23,11 @@ interface XtermStateType {
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
 
   componentDidMount = ()=> {
+    const pane = toJS(store.panes).find(pane => pane.key === this.props.id && pane.terminal)
+    if (pane) {
+      pane.terminal?.open(document.getElementById(this.props.id)!)
+      return
+    }
     const terminal = this.initTerminal()
     const client = this.initClient(terminal)
     terminal.onData((text: string, _: void) => {
@@ -39,10 +44,6 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     })
   }
 
-  componentWillUnmount() {
-
-  }
-
   initTerminal = () => {
     const { id } = this.props
     const terminal = new Terminal({cursorBlink: true})
@@ -53,6 +54,13 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     terminal.focus()
     this.setState({ spinner: xtermSpinner(terminal) })
     window.onresize = () => fitAddon.fit()
+    const panes = toJS(store.panes).map(pane => {
+      if (pane.key === this.props.id) {
+        pane.terminal = terminal
+      }
+      return pane
+    })
+    store.panes = observable.array(panes)
     return terminal
   }
 
@@ -125,5 +133,4 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
   render () {
     return <div id={this.props.id} style={{ padding: '0 0', height: '100%' }} />
   }
-
 }
