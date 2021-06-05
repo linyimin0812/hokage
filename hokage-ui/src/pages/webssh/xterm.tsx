@@ -23,11 +23,11 @@ interface XtermStateType {
 export default class Xterm extends React.Component<XtermPropsType, XtermStateType> {
 
   componentDidMount = ()=> {
-    const pane = toJS(store.panes).find(pane => pane.key === this.props.id && pane.terminal)
-    if (pane) {
-      pane.terminal?.open(document.getElementById(this.props.id)!)
+
+    if (!this.isNeedToInit()) {
       return
     }
+
     const terminal = this.initTerminal()
     const client = this.initClient(terminal)
     terminal.onData((text: string, _: void) => {
@@ -42,18 +42,35 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
         data: { cols: cols, rows: rows }
       }))
     })
+
+    this.postInit(terminal, client)
+  }
+
+  isNeedToInit = (): boolean => {
+    const pane = toJS(store.panes).find(pane => pane.key === this.props.id && pane.terminal)
+    if (pane) {
+      pane.terminal?.open(document.getElementById(this.props.id)!)
+      return false
+    }
+    return true
+  }
+
+  postInit = (terminal: Terminal, client: W3cWebsocket) => {
+    const panes = toJS(store.panes).map(pane => {
+      if (pane.key === this.props.id) {
+        pane.terminal = terminal
+        pane.websocket = client
+      }
+      return pane
+    })
+    store.panes = observable.array(panes)
   }
 
   initTerminal = () => {
     const { id } = this.props
     const terminal = new Terminal({cursorBlink: true})
-    const fitAddon = new FitAddon();
-    terminal.loadAddon(fitAddon)
     terminal.open(document.getElementById(id)!)
-    fitAddon.fit()
-    terminal.focus()
     this.setState({ spinner: xtermSpinner(terminal) })
-    window.onresize = () => fitAddon.fit()
     const panes = toJS(store.panes).map(pane => {
       if (pane.key === this.props.id) {
         pane.terminal = terminal
@@ -62,6 +79,14 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     })
     store.panes = observable.array(panes)
     return terminal
+  }
+
+  terminalFit = (terminal: Terminal) => {
+    const fitAddon = new FitAddon();
+    terminal.loadAddon(fitAddon)
+    fitAddon.fit()
+    terminal.focus()
+    window.onresize = () => fitAddon.fit()
   }
 
   initClient = (terminal: Terminal): W3cWebsocket => {
@@ -74,6 +99,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
 
     client.onopen = () => {
       const { server } = this.props
+      this.terminalFit(terminal)
       const data = this.assembleSshContext(server, terminal)
       client.send(JSON.stringify({ type: 'xtermSshInit', data: data }))
     }

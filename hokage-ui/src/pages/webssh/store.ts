@@ -5,12 +5,15 @@ import { getHokageRole, getHokageUid } from '../../libs'
 import { ServerAction } from '../../axios/action/server/server-action'
 import { message } from 'antd'
 import { Terminal } from 'xterm'
+import { w3cwebsocket } from 'websocket';
 
 export interface PanesType {
   title: string | JSX.Element,
   content: JSX.Element,
   key: string,
+  server?: string,
   terminal?: Terminal,
+  websocket?: w3cwebsocket
   closable?: boolean,
   status?: number, // 0-连接中, 1-已连接， 2-断开连接
 }

@@ -1,6 +1,6 @@
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import React from 'react'
-import { Tabs } from "antd"
+import { Modal, Tabs } from 'antd';
 import { observer } from 'mobx-react'
 import store, { PanesType } from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
@@ -9,6 +9,7 @@ import WebSshServer from './table'
 import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuid } from 'uuid'
 import './index.less'
+import { toJS } from 'mobx'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -54,6 +55,7 @@ export default class WebSshHome extends React.Component {
       const pane: PanesType = {
         key: id,
         content: <Xterm id={id} server={record} titleContent={titleContent} />,
+        server: `${record.account}@${record.ip}`,
         title: <span><LoadingOutlined translate />{titleContent}</span>,
       }
       store.panes.push(pane)
@@ -66,25 +68,37 @@ export default class WebSshHome extends React.Component {
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
     switch(action) {
       case 'remove':
-        let lastKeyIndex: number = 0
-        store.panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastKeyIndex = i -1
-          }
+        const pane = toJS(store.panes).find(pane => pane.key === targetKey);
+        if (!pane) {
+          break
+        }
+        Modal.confirm({
+          title: '关闭ssh连接确认',
+          content: `确认关闭ssh连接: ${pane.server} ?`,
+          onOk: () => this.closeTerminal(targetKey, pane)
         })
-        const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== targetKey)
-        if (targetKey === store.activeKey && newPanes.length) {
-          lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          store.activeKey = newPanes[lastKeyIndex].key
-        }
-        store.panes = newPanes
-        if (newPanes.length === 0) {
-          window.removeEventListener('beforeunload', this.onbeforeunload)
-        }
         break
       default:
         break
     }
+  }
+  closeTerminal = (key: any, pane: PanesType) => {
+    let lastKeyIndex: number = 0
+    store.panes.forEach((pane, i) => {
+      if (pane.key === key) {
+        lastKeyIndex = i -1
+      }
+    })
+    const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== key)
+    if (key === store.activeKey && newPanes.length) {
+      lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
+      store.activeKey = newPanes[lastKeyIndex].key
+    }
+    store.panes = newPanes
+    if (newPanes.length === 0) {
+      window.removeEventListener('beforeunload', this.onbeforeunload)
+    }
+    pane.websocket?.close()
   }
 
   render() {
