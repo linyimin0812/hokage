@@ -77,10 +77,10 @@ export default class ExecutedBatCommandInfo extends React.Component<ExecutedBatC
         </Form>
         <Tabs type="card">
           <Tabs.TabPane tab="命令脚本" key="bat_command">
-            <Editor language="shell" theme="vs-dark" height="200px" options={{readOnly: true}} value="ls -lh" />
+            <Editor language="shell" height="200px" options={{readOnly: true}} value="ls -lh" />
           </Tabs.TabPane>
           <Tabs.TabPane tab="结果输出" key="bat_command_result">
-            <Editor language="shell" theme="vs-dark" height="200px" options={{readOnly: true}} value={`jdk jdk1.8.0_251 test.sh`} />
+            <Editor language="shell" height="200px" options={{readOnly: true}} value={`jdk jdk1.8.0_251 test.sh`} />
           </Tabs.TabPane>
         </Tabs>
       </Drawer>
