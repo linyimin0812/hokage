@@ -1,5 +1,6 @@
 package com.hokage.biz.service;
 
+import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.enums.LsOptionEnum;
@@ -20,4 +21,12 @@ public interface HokageFileManagementService {
      * @return directory content list
      */
     ServiceResponse<HokageFileVO> list(String serverKey, String dir, List<LsOptionEnum> options);
+
+    /**
+     * open a file
+     * @param serverKey: ip_sshPort_account
+     * @param curDir: opened file path
+     * @return file content vo
+     */
+    ServiceResponse<FileContentVO> open(String serverKey, String curDir);
 }

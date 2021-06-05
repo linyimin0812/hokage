@@ -3,6 +3,7 @@ package com.hokage.biz.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.hokage.biz.converter.file.SshProperty2WebProperty;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileProperty;
 import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.biz.service.HokageFileManagementService;
@@ -67,7 +68,6 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
-
         SshClient client = optional.get();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
@@ -80,6 +80,29 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             return response.success(assembleFileVO(lsResult, pwdResult));
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.list failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceResponse<FileContentVO> open(String serverKey, String curDir) {
+        ServiceResponse<FileContentVO> response = new ServiceResponse<>();
+        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        if (!optional.isPresent()) {
+            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+        }
+        SshClient client = optional.get();
+        try {
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult catResult = execComponent.execute(client, command.cat(curDir));
+
+            if (!catResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", catResult.getExitStatus(), catResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            return response.success(assembleFileContentVO(catResult, curDir));
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.cat failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
     }
@@ -99,5 +122,19 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         fileVO.setCurDir(curDir).setFileNum(fileNum).setDirectoryNum(directoryNum).setFilePropertyList(propertyList).setTotalSize(readableSize);
 
         return fileVO;
+    }
+
+    private FileContentVO assembleFileContentVO(CommandResult catResult, String path) {
+
+        int lastIndex = StringUtils.lastIndexOf(path, '/');
+        String name = StringUtils.substring(path, lastIndex + 1);
+
+        lastIndex = StringUtils.lastIndexOf(name, '.');
+        String type = StringUtils.lowerCase(StringUtils.substring(name, lastIndex + 1));
+
+        FileContentVO contentVO = new FileContentVO();
+        contentVO.setName(name).setType(type).setContent(catResult.getContent());
+
+        return contentVO;
     }
 }

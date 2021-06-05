@@ -7,6 +7,7 @@ import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
@@ -54,18 +55,20 @@ public class SshExecComponent {
             exec.connect(TIME_OUT);
 
             while ((buf = reader.readLine()) != null || (buf = errReader.readLine()) != null) {
-                sb.append(buf);
+                sb.append(buf).append('\n');
                 if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                     log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
                     break;
                 }
             }
 
+            String result = StringUtils.chomp(sb.toString());
+
             if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
-                return CommandResult.timeout(sb.toString(), exec.getExitStatus());
+                return CommandResult.timeout(result, exec.getExitStatus());
             }
 
-            return CommandResult.success(sb.toString(), exec.getExitStatus());
+            return CommandResult.success(result, exec.getExitStatus());
 
         } catch (Exception e) {
             log.warn("SshExecCommand.execute error. sshClient: {}, command: {}, error: {}", client, command, e);

@@ -33,4 +33,13 @@ public static final String HOME = "~";
                     "$0 ~ /linux/ {print \"linux\"}" +
                     "$0 !~ /darwin|linux/ {print \"unknown\"}'";
     }
+
+    /**
+     * acquire file content
+     * @param dir file path, may be relative path or absolute path
+     * @return file content
+     */
+    public String cat(String dir) {
+        return String.format("cat %s;", dir);
+    }
 }

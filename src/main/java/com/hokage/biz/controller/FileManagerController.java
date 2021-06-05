@@ -1,6 +1,7 @@
 package com.hokage.biz.controller;
 
 import com.hokage.biz.form.file.FileOperateForm;
+import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.biz.service.HokageFileManagementService;
 import com.hokage.common.BaseController;
@@ -32,9 +33,21 @@ public class FileManagerController extends BaseController {
     }
 
     @RequestMapping(value = "/server/file/list", method = RequestMethod.POST)
-    public ResultVO<HokageFileVO> searchServer(@RequestBody FileOperateForm form) throws Exception {
+    public ResultVO<HokageFileVO> listFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
         ServiceResponse<HokageFileVO> response = fileService.list(serverKey, form.getCurDir(), new ArrayList<>());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
+    }
+
+    @RequestMapping(value = "/server/file/open", method = RequestMethod.POST)
+    public ResultVO<FileContentVO> openFile(@RequestBody FileOperateForm form) throws Exception {
+        String serverKey = form.buildKey();
+        ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getCurDir());
 
         if (response.getSucceeded()) {
             return success(response.getData());
