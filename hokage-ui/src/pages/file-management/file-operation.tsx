@@ -7,6 +7,7 @@ import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
+import { ReloadOutlined } from '@ant-design/icons';
 
 type FileOperationPropsType = {
   id: string,
@@ -38,6 +39,18 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
       sshPort: serverVO.sshPort,
       account: serverVO.account,
       curDir: '/' + paths.join('/')
+    }
+    store.listDir(id, form)
+  }
+
+  refresh = () => {
+    const { id, serverVO, fileVO } = this.props
+    const form: FileOperateForm = {
+      operatorId: getHokageUid(),
+      ip: serverVO.ip,
+      sshPort: serverVO.sshPort,
+      account: serverVO.account,
+      curDir: fileVO.curDir
     }
     store.listDir(id, form)
   }
@@ -74,9 +87,9 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
             <span style={{paddingRight: '8px'}}><Button>新建</Button></span>
             <span style={{paddingRight: '8px'}}><Button>分享</Button></span>
           </Col>
-          {/*<Col span={8} style={{padding: '0px 0px'}}>*/}
-          {/*  <span style={{ float: 'right' }}><Button>回收站</Button></span>*/}
-          {/*</Col>*/}
+          <Col span={8} style={{padding: '0px 0px'}}>
+            <span style={{ float: 'right' }}><Button onClick={this.refresh}><ReloadOutlined translate />刷新</Button></span>
+          </Col>
         </Row>
       </>
     )
