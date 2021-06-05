@@ -3,6 +3,7 @@ import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import MyBatCommand from './my-bat-command'
 import { Tabs } from 'antd'
 import ExecutedBatCommand from './executed-bat-command'
+import './index.less'
 
 const breadcrumbProps: BreadcrumbProps[] = [
 	{ name: '首页', link: '/app/index' },

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Form, Input, Modal, Select, Switch } from 'antd'
+import { Button, Divider, Form, Input, Modal, Select, Spin, Switch } from 'antd';
 import Editor from '@monaco-editor/react'
 import { FormInstance } from 'antd/lib/form'
 
@@ -147,10 +147,10 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
           <Form.Item name="execCommand" label="执行内容">
             <Editor
               language="shell"
-              theme="vs-dark"
               height="200px"
               editorDidMount={ (getEditorValue: () => string): void => { this.setState({ getEditorText: getEditorValue }) }}
               options={{readOnly: !isEdit}}
+              loading={<Spin />}
             />
           </Form.Item>
           {
