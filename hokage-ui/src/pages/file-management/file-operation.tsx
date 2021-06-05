@@ -2,22 +2,24 @@ import React from 'react'
 import { Button, Col, Divider, Row } from 'antd'
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import Search from 'antd/lib/input/Search'
-import store from './store';
-import { observer } from 'mobx-react';
+import store from './store'
+import { observer } from 'mobx-react'
+import { ServerVO } from '../../axios/action/server/server-type'
+import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type';
+import { getHokageUid } from '../../libs';
 
 type FileOperationPropsType = {
-  curDir: string,
-  fileNum: number,
-  directoryNum: number,
-  totalSize: string
+  id: string,
+  serverVO: ServerVO,
+  fileVO: FileVO
 }
 @observer
 export class FileOperation extends React.Component<FileOperationPropsType> {
 
   retrieveBreadcrumbProps = () => {
-    const { curDir } = this.props
+    const { fileVO } = this.props
     const breadcrumbProps: BreadcrumbProps[] = new Array<BreadcrumbProps>()
-    curDir.split('/').forEach((name: string) => {
+    fileVO.curDir.split('/').forEach((name: string) => {
       const prop: BreadcrumbProps = {
         name: name
       }
@@ -27,12 +29,24 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
   }
 
   clickBreadcrumb = (pathIndex: number) => {
-    const paths: string[] = store.currentDir.split('/').filter((path, index) => index <= pathIndex)
-    store.currentDir = paths.join('/')
+    const { id, serverVO } = this.props
+    const pane = store.panes.find(pane => pane.key === this.props.id)!
+    const paths: string[] = pane.fileVO?.curDir.split('/').filter((path, index) => index <= pathIndex)!
+    const form: FileOperateForm = {
+      operatorId: getHokageUid(),
+      ip: serverVO.ip,
+      sshPort: serverVO.sshPort,
+      account: serverVO.account,
+      curDir: '/' + paths.join('/')
+    }
+    store.listDir(id, form)
   }
 
   render() {
-    const { fileNum, directoryNum, totalSize } = this.props
+    const { fileNum, directoryNum, totalSize } = this.props.fileVO
+    if (!totalSize) {
+      return null
+    }
     return (
       <>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}>
@@ -44,7 +58,7 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
               共{<span style={{ color: "blue" }}>{directoryNum}</span>}
               个目录与{<span style={{ color: "blue" }}>{fileNum}</span>}
               个文件, 大小{<span style={{ color: "blue" }}>{totalSize}</span>}
-            </span>
+          </span>
           </Col>
           <Col span={4}>
             <span style={{ float: 'right' }}>

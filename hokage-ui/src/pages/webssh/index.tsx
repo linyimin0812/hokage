@@ -48,15 +48,13 @@ export default class WebSshHome extends React.Component {
    * 需要传入一个服务器的唯一标识,用于连接服务器获取文件信息
    */
   addPane = (record: ServerVO) => {
-    const titleContent = `${record.ip} (${record.account})`
     const id = uuid()
-
     if (!store.panes.some(pane => pane.key === id)) {
       const pane: PanesType = {
         key: id,
-        content: <Xterm id={id} server={record} titleContent={titleContent} />,
+        content: <Xterm id={id} server={record} titleContent={`${record.account}@${record.ip}`} />,
         server: `${record.account}@${record.ip}`,
-        title: <span><LoadingOutlined translate />{titleContent}</span>,
+        title: <span><LoadingOutlined translate />{`${record.account}@${record.ip}`}</span>,
       }
       store.panes.push(pane)
     }

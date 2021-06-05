@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table } from 'antd'
+import { Result, Table } from 'antd'
 import './index.less'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
@@ -11,6 +11,7 @@ import { getHokageUid } from '../../libs'
 import { FileTextOutlined, FolderOutlined } from '@ant-design/icons'
 
 type FileTablePropsType = {
+  id: string,
   serverVO: ServerVO
 }
 
@@ -28,8 +29,10 @@ export default class FileTable extends React.Component<FileTablePropsType> {
       account: serverVO.account,
       curDir: '~'
     }
-    store.listDir(form)
+    store.listDir(this.props.id, form)
   }
+
+
 
   onMouseDown = (event: MouseEvent) => {
     if (event.button === 0 && store.actionProps.left !== undefined) {
@@ -56,16 +59,17 @@ export default class FileTable extends React.Component<FileTablePropsType> {
   onDoubleClick = (record: FileProperty) => {
     // TODO: 文件夹则打开文件夹
     // TODO: 普通文本文件直接打开
-    const { serverVO } = this.props
+    const { serverVO, id } = this.props
+    const pane = store.panes.find(pane => pane.key === id)!
     if (record.type === 'directory') {
       const form: FileOperateForm = {
         operatorId: getHokageUid(),
         ip: serverVO.ip,
         sshPort: serverVO.sshPort,
         account: serverVO.account,
-        curDir: store.currentDir + '/' + record.name
+        curDir: pane.fileVO!.curDir + '/' + record.name
       }
-      store.listDir(form)
+      store.listDir(id, form)
     } else {
       alert(`open file ${record.name}`)
     }
@@ -95,13 +99,19 @@ export default class FileTable extends React.Component<FileTablePropsType> {
   }
 
   render() {
+    const { id, serverVO } = this.props
+    const pane = store.panes.find(pane => pane.key === id)
+    if (!pane || pane.listDirFailed) {
+      return <Result status={'500'} title={'500'} subTitle="无法获取文件信息，请检查服务器是否可用" />
+    }
+    const fileVO = pane.fileVO!
     return (
       <div>
         { store.actionProps.left !== undefined ? <MenuContext {...store.actionProps} /> : null }
-        <FileOperation curDir={store.currentDir} fileNum={store.fileNum} directoryNum={store.directoryNum} totalSize={store.totalSize} />
+        <FileOperation id={id} serverVO={serverVO} fileVO={fileVO} />
         <Table
           style={{ cursor: 'pointer' }}
-          dataSource={store.records}
+          dataSource={fileVO.filePropertyList}
           pagination={false}
           loading={store.loading}
           onRow={(record: FileProperty) => {

@@ -3,10 +3,10 @@ import React from 'react'
 import FileTable from "./table"
 import { Tabs } from "antd"
 import ServerCardPanel from "../common/server-card-panel"
-import { ActionPanesType } from '../common/server-card'
-import store from './store';
+import store, { PanesType } from './store'
 import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
+import { v4 as uuid } from 'uuid'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -14,7 +14,7 @@ const breadcrumbProps: BreadcrumbProps[] = [
 ]
 
 interface HomePropsType {
-  initActionPanes: ActionPanesType[],
+  initActionPanes: PanesType[],
   initActiveKey: string,
   addActionPanel: (id: string) => void
 }
@@ -22,7 +22,7 @@ interface HomePropsType {
 export default class FileManagementHome extends React.Component<HomePropsType> {
   constructor(props: HomePropsType) {
     super(props)
-    store.actionPanes = [{
+    store.panes = [{
       key: '1',
       content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
       title: '我的服务器',
@@ -36,14 +36,15 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
   }
 
   addPane = (serverVO: ServerVO) => {
-    const id = `${serverVO.ip}(${serverVO.account})`
-    if (!store.actionPanes.some(pane => pane.key === id)) {
-      const pane: ActionPanesType = {
+    const id = uuid()
+    if (!store.panes.some(pane => pane.key === id)) {
+      const pane: PanesType = {
         key: id,
-        content: <FileTable serverVO={serverVO} />,
-        title: id
+        title: `${serverVO.account}@${serverVO.ip}`,
+        content: <FileTable serverVO={serverVO} id={id} />,
+        fileVO: { curDir: '~', filePropertyList: [], directoryNum: 0, fileNum: 0, totalSize: '' }
       }
-      store.actionPanes.push(pane)
+      store.panes.push(pane)
     }
     store.activeKey = id
   }
@@ -52,17 +53,17 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
     switch(action) {
       case 'remove':
         let lastKeyIndex: number = 0
-        store.actionPanes.forEach((pane, i) => {
+        store.panes.forEach((pane, i) => {
           if (pane.key === targetKey) {
             lastKeyIndex = i -1
           }
         })
-        const newPanes: ActionPanesType[] = store.actionPanes.filter(pane => pane.key !== targetKey)
+        const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== targetKey)
         if (targetKey === store.activeKey && newPanes.length) {
           lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
           store.activeKey = newPanes[lastKeyIndex].key
         }
-        store.actionPanes = newPanes
+        store.panes = newPanes
         break
       case 'add':
         break
@@ -71,12 +72,8 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
   }
 
   renderActionPanel = () => {
-    return store.actionPanes.map(pane => {
-      return (
-        <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
-          {pane.content}
-        </Tabs.TabPane>
-      )
+    return store.panes.map(pane => {
+      return <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>{pane.content}</Tabs.TabPane>
     })
   }
 
@@ -84,13 +81,7 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
-        <Tabs
-          onChange={this.onChange}
-          activeKey={store.activeKey}
-          type="editable-card"
-          hideAdd
-          onEdit={this.onEdit}
-        >
+        <Tabs onChange={this.onChange} activeKey={store.activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
           { this.renderActionPanel() }
         </Tabs>
       </>
