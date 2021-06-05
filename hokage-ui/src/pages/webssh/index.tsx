@@ -64,20 +64,16 @@ export default class WebSshHome extends React.Component {
   }
 
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-    switch(action) {
-      case 'remove':
-        const pane = toJS(store.panes).find(pane => pane.key === targetKey);
-        if (!pane) {
-          break
-        }
-        Modal.confirm({
-          title: '关闭ssh连接确认',
-          content: `确认关闭ssh连接: ${pane.server} ?`,
-          onOk: () => this.closeTerminal(targetKey, pane)
-        })
-        break
-      default:
-        break
+    if (action === 'remove') {
+      const pane = toJS(store.panes).find(pane => pane.key === targetKey);
+      if (!pane) {
+        return
+      }
+      Modal.confirm({
+        title: '关闭ssh连接确认',
+        content: `确认关闭ssh连接: ${pane.server} ?`,
+        onOk: () => this.closeTerminal(targetKey, pane)
+      })
     }
   }
   closeTerminal = (key: any, pane: PanesType) => {

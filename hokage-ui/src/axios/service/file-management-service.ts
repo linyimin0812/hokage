@@ -14,6 +14,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/server/file/list',
     method: 'POST'
   },
+  'open': {
+    url: '/server/file/open',
+    method: 'POST'
+  }
 }
 
 export const FileManagementService = serviceConfig(serviceInfo)

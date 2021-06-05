@@ -1,6 +1,6 @@
 import { FileManagementService } from '../../service/file-management-service'
 import { ServiceResult } from '../../common'
-import { FileOperateForm, FileVO } from './file-management-type'
+import { FileContentVO, FileOperateForm, FileVO } from './file-management-type'
 
 
 export const FileManagementAction ={
@@ -11,9 +11,23 @@ export const FileManagementAction ={
         if (!result.success) {
           return reject(result.msg)
         }
-        resolve(result.data)
+        resolve(result.data!)
       } catch (err) {
         reject('获取文件信息失败')
+      }
+    })
+  },
+
+  open: (form: FileOperateForm): Promise<FileContentVO> => {
+    return new Promise<FileContentVO>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<FileContentVO> = await FileManagementService.open(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('获取文件内容失败')
       }
     })
   },

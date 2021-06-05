@@ -1,22 +1,34 @@
 import React from 'react'
-import { Result, Table } from 'antd'
+import { message, Result, Table } from 'antd';
 import './index.less'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
 import { observer } from 'mobx-react'
 import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
-import { FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
+import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type';
 import { getHokageUid } from '../../libs'
 import { FileTextOutlined, FolderOutlined } from '@ant-design/icons'
+import { FileReader } from './file-reader'
+import { FileManagementAction } from '../../axios/action/file-management/file-management-action';
 
 type FileTablePropsType = {
   id: string,
   serverVO: ServerVO
 }
 
+type FileTableStateType = {
+  fileReaderVisible: boolean,
+  contentVO: FileContentVO
+}
+
 @observer
-export default class FileTable extends React.Component<FileTablePropsType> {
+export default class FileTable extends React.Component<FileTablePropsType, FileTableStateType> {
+
+  state = {
+    fileReaderVisible: false,
+    contentVO: {} as FileContentVO
+  }
 
   componentWillMount = () => {
     // 左键按下时
@@ -63,19 +75,12 @@ export default class FileTable extends React.Component<FileTablePropsType> {
   onDoubleClick = (record: FileProperty) => {
     // TODO: 文件夹则打开文件夹
     // TODO: 普通文本文件直接打开
-    const { serverVO, id } = this.props
-    const pane = store.panes.find(pane => pane.key === id)!
+    const { id } = this.props
+    const form: FileOperateForm = this.assembleFileOperateForm(record.name)
     if (record.type === 'directory') {
-      const form: FileOperateForm = {
-        operatorId: getHokageUid(),
-        ip: serverVO.ip,
-        sshPort: serverVO.sshPort,
-        account: serverVO.account,
-        curDir: pane.fileVO!.curDir + '/' + record.name
-      }
       store.listDir(id, form)
     } else {
-      alert(`open file ${record.name}`)
+      this.openFile(form)
     }
   }
 
@@ -83,6 +88,28 @@ export default class FileTable extends React.Component<FileTablePropsType> {
     event.preventDefault()
     const { left, top } = this.getActionPosition(event)
     store.actionProps = { left, top, record }
+  }
+
+  openFile = (form: FileOperateForm): void => {
+
+    FileManagementAction.open(form).then(contentVO => {
+      this.setState({ fileReaderVisible: true, contentVO: contentVO })
+    }).catch(e => {
+      message.error(e)
+    })
+  }
+
+  assembleFileOperateForm = (name: string): FileOperateForm => {
+    const { serverVO, id } = this.props
+    const pane = store.panes.find(pane => pane.key === id)!
+    const form: FileOperateForm = {
+      operatorId: getHokageUid(),
+      ip: serverVO.ip,
+      sshPort: serverVO.sshPort,
+      account: serverVO.account,
+      curDir: pane.fileVO!.curDir + '/' + name
+    }
+    return form
   }
 
   renderName = (record: FileProperty) => {
@@ -104,6 +131,7 @@ export default class FileTable extends React.Component<FileTablePropsType> {
 
   render() {
     const { id, serverVO } = this.props
+    const { contentVO, fileReaderVisible } = this.state
     const pane = store.panes.find(pane => pane.key === id)
     if (!pane || pane.listDirFailed) {
       return <Result status={'500'} title={'500'} subTitle={`无法获取文件信息，请检查服务器${serverVO.account}@${serverVO.ip}是否可用`} />
@@ -112,6 +140,7 @@ export default class FileTable extends React.Component<FileTablePropsType> {
     return (
       <div>
         { store.actionProps.left !== undefined ? <MenuContext {...store.actionProps} /> : null }
+        <FileReader visible={fileReaderVisible} contentVO={contentVO} close={() => {this.setState({ fileReaderVisible: false })}} />
         <FileOperation id={id} serverVO={serverVO} fileVO={fileVO} />
         <Table
           style={{ cursor: 'pointer' }}

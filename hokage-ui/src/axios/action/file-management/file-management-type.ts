@@ -24,3 +24,9 @@ export interface FileOperateForm {
   account: string,
   curDir: string,
 }
+
+export interface FileContentVO {
+  name: string,
+  type: string,
+  content: string
+}
