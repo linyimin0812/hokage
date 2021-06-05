@@ -1,9 +1,9 @@
 import React from 'react'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import EnterSecurity from './enter-security'
 import Header from './header'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '安全组' }
 ]

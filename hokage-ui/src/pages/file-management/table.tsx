@@ -1,7 +1,6 @@
 import React from 'react'
 import { Table } from 'antd'
 import './index.less'
-import { BreadcrumbPrpos } from '../../layout/bread-crumb'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
 import { observer } from 'mobx-react'
@@ -54,17 +53,6 @@ export default class FileTable extends React.Component<FileTablePropsType> {
     }
   }
 
-  retrieveBreadcrumbProps = () => {
-    const breadcrumbProps: BreadcrumbPrpos[] = []
-    store.currentDir.split('/').forEach((name: string) => {
-      const prop: BreadcrumbPrpos = {
-        name: name
-      }
-      breadcrumbProps.push(prop)
-    })
-    return breadcrumbProps
-  }
-
   onDoubleClick = (record: FileProperty) => {
     // TODO: 文件夹则打开文件夹
     // TODO: 普通文本文件直接打开
@@ -91,9 +79,19 @@ export default class FileTable extends React.Component<FileTablePropsType> {
 
   renderName = (record: FileProperty) => {
     if (record.type === 'directory') {
-      return <span><FileTextOutlined translate />{` ${record.name}`}</span>
+      return (
+        <div onClick={() => this.onDoubleClick(record)} style={{cursor: 'pointer'}}>
+          <FolderOutlined translate style={{color: '#1890ff'}} />
+          <span style={{color: '#1890ff', paddingLeft: 5}}>{record.name}</span>
+        </div>
+      )
     }
-    return <span><FolderOutlined translate />{` ${record.name}`}</span>
+    return (
+      <React.Fragment>
+        <FileTextOutlined translate />
+        <span style={{paddingLeft: 5}} >{record.name}</span>
+      </React.Fragment>
+    )
   }
 
   render() {
@@ -115,7 +113,6 @@ export default class FileTable extends React.Component<FileTablePropsType> {
           scroll={{ y: 'calc(100vh - 350px)' }}
         >
           <Table.Column title={'文件名'} render={this.renderName} />
-          <Table.Column title={'类型'} dataIndex={'type'} />
           <Table.Column title={'大小'} dataIndex={'size'} />
           <Table.Column title={'权限'} dataIndex={'permission'} />
           <Table.Column title={'所有者'} dataIndex={'owner'} />

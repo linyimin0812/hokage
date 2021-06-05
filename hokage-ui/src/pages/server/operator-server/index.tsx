@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadCrumb, { BreadcrumbPrpos } from '../../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../../layout/bread-crumb'
 import { MyOperatorServerSearch } from './search'
 import { ServerSearchForm } from '../../../axios/action/server/server-type'
 import OperatorServerTable from './table'
@@ -7,7 +7,7 @@ import store from './store'
 import Toolbar from './toolbar'
 import { observer } from 'mobx-react'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '我的服务器' },
   { name: '我管理的服务器' }

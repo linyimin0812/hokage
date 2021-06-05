@@ -1,14 +1,14 @@
 import React from 'react'
 import ServerCardPanel from '../common/server-card-panel'
 import { ActionPanesType } from '../common/server-card'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import { Tabs } from 'antd'
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'
 import Network from './network'
 import { ServerVO } from '../../axios/action/server/server-type';
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '资源监控' }
 ]

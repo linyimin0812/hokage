@@ -1,10 +1,10 @@
 import React from 'react'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import MyBatCommand from './my-bat-command'
 import { Tabs } from 'antd'
 import ExecutedBatCommand from './executed-bat-command'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
 	{ name: '首页', link: '/app/index' },
 	{ name: '批量任务' }
 ]

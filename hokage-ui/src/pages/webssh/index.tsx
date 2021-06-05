@@ -1,4 +1,4 @@
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import React from 'react'
 import { Tabs } from "antd"
 import { observer } from 'mobx-react'
@@ -10,7 +10,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuid } from 'uuid'
 import './index.less'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: 'Web终端' }
 ]

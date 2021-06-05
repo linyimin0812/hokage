@@ -1,5 +1,5 @@
 import React from 'react'
-import BreadCrumb, { BreadcrumbPrpos } from '../../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../../layout/bread-crumb'
 import { UserSearch, UserSearchFormType } from '../common/search'
 import { getHokageUid } from '../../../libs'
 import Toolbar from './toolbar';
@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 import store from './store'
 import OrdinaryTable from './table'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '用户管理' },
   { name: '服务器使用者' },

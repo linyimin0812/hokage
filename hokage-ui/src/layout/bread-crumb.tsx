@@ -1,25 +1,28 @@
 import React from 'react'
 import { Breadcrumb } from 'antd'
 import { Link } from 'react-router-dom'
-
-export interface BreadcrumbPrpos {
-  name: string,
-  link?: string
-}
+import { HomeOutlined } from '@ant-design/icons';
 
 export interface BreadcrumbProps {
-  breadcrumbProps?: BreadcrumbPrpos[]
+  name: string,
+  link?: string,
 }
-class BreadCrumb extends React.Component<BreadcrumbProps> {
+
+export interface BreadcrumbPropsType {
+  breadcrumbProps?: BreadcrumbProps[],
+  type?: 'path',
+  onClick?: (index: number) => void
+}
+class BreadCrumb extends React.Component<BreadcrumbPropsType> {
 
   subBreadcrumb = () => {
-    const { breadcrumbProps } = this.props
+    const { breadcrumbProps, onClick } = this.props
     if (breadcrumbProps === undefined) {
       return null
     }
-    return breadcrumbProps.map(prop => {
+    return breadcrumbProps.map((prop, index) => {
       return (
-        <Breadcrumb.Item>
+        <Breadcrumb.Item href={'#'} onClick={() => { if (onClick) onClick(index)}}>
           {prop.link === undefined ? prop.name : <Link to={prop.link}>{prop.name}</Link>}
         </Breadcrumb.Item>
       )
@@ -27,12 +30,24 @@ class BreadCrumb extends React.Component<BreadcrumbProps> {
     })
   }
 
-  render() {
+  renderHomeIcon = () => {
+    const { type, onClick } = this.props
+    if (!type || type !== 'path') {
+      return null
+    }
+    return (
+      <Breadcrumb.Item href="#" onClick={() => { if (onClick) onClick(0)}}>
+        <HomeOutlined translate />
+      </Breadcrumb.Item>
+    )
+  }
 
+  render() {
     return (
       <span>
         <Breadcrumb style={{ margin: '12px 0', display:'inline-block' }}>
-            {this.subBreadcrumb()}
+          {this.renderHomeIcon()}
+          {this.subBreadcrumb()}
         </Breadcrumb>
       </span>
     );

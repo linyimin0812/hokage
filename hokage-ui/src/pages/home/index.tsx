@@ -12,7 +12,7 @@ import {
   Avatar
 } from 'antd'
 import moment from 'moment'
-import BreadCrumb, { BreadcrumbPrpos } from '../../layout/bread-crumb'
+import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 
 const data = [
   {
@@ -73,7 +73,7 @@ const data = [
   },
 ]
 
-const breadcrumProps: BreadcrumbPrpos[] = [
+const breadcrumProps: BreadcrumbProps[] = [
   {
     name: '首页',
     link: '/app/index'

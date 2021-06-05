@@ -1,4 +1,4 @@
-import BreadCrumb, { BreadcrumbPrpos } from "../../layout/bread-crumb"
+import BreadCrumb, { BreadcrumbProps } from "../../layout/bread-crumb"
 import React from 'react'
 import FileTable from "./table"
 import { Tabs } from "antd"
@@ -8,7 +8,7 @@ import store from './store';
 import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
 
-const breadcrumbProps: BreadcrumbPrpos[] = [
+const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '文件管理' }
 ]
