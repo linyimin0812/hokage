@@ -23,7 +23,7 @@ class Store {
   }
 
   @observable panes: PanesType[] = []
-  @observable activeKey: string = ''
+  @observable activeKey: string = 'my-server'
 
   @observable loading: boolean = false
 

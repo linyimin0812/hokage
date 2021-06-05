@@ -5,8 +5,8 @@ import Search from 'antd/lib/input/Search'
 import store from './store'
 import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
-import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type';
-import { getHokageUid } from '../../libs';
+import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type'
+import { getHokageUid } from '../../libs'
 
 type FileOperationPropsType = {
   id: string,
@@ -44,7 +44,7 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
 
   render() {
     const { fileNum, directoryNum, totalSize } = this.props.fileVO
-    if (!totalSize) {
+    if (!directoryNum) {
       return null
     }
     return (

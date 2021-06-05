@@ -29,6 +29,10 @@ export default class FileTable extends React.Component<FileTablePropsType> {
       account: serverVO.account,
       curDir: '~'
     }
+    const pane = store.panes.find(pane => pane.key === this.props.id)
+    if (pane && pane.fileVO?.directoryNum) {
+      return
+    }
     store.listDir(this.props.id, form)
   }
 

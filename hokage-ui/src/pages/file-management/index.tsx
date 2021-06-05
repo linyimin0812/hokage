@@ -22,13 +22,14 @@ interface HomePropsType {
 export default class FileManagementHome extends React.Component<HomePropsType> {
   constructor(props: HomePropsType) {
     super(props)
-    store.panes = [{
-      key: '1',
-      content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
-      title: '我的服务器',
-      closable: false
-    }]
-    store.activeKey = '1'
+    if (!store.panes || store.panes.length === 0) {
+      store.panes = [{
+        key: 'my-server',
+        content: <ServerCardPanel actionName={'文件管理'} action={this.addPane} />,
+        title: '我的服务器',
+        closable: false
+      }]
+    }
   }
 
   onChange = (activeKey: string) => {
@@ -50,25 +51,20 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
   }
 
   onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
-    switch(action) {
-      case 'remove':
-        let lastKeyIndex: number = 0
-        store.panes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastKeyIndex = i -1
-          }
-        })
-        const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== targetKey)
-        if (targetKey === store.activeKey && newPanes.length) {
-          lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          store.activeKey = newPanes[lastKeyIndex].key
+    if (action === 'remove') {
+      let lastKeyIndex: number = 0
+      store.panes.forEach((pane, i) => {
+        if (pane.key === targetKey) {
+          lastKeyIndex = i -1
         }
-        store.panes = newPanes
-        break
-      case 'add':
-        break
+      })
+      const newPanes: PanesType[] = store.panes.filter(pane => pane.key !== targetKey)
+      if (targetKey === store.activeKey && newPanes.length) {
+        lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
+        store.activeKey = newPanes[lastKeyIndex].key
+      }
+      store.panes = newPanes
     }
-
   }
 
   renderActionPanel = () => {
