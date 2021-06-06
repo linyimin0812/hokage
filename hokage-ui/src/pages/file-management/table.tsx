@@ -133,7 +133,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const type = record.type === 'file' ? '文件' : '文件夹'
     return (
       <Action>
-        <Action.Request title={<span><DownloadOutlined translate />下载</span>} action={() => {alert('指定服务器')}} />
+        <Action.Request title={<span><DownloadOutlined translate />下载</span>} action={() => {this.downloadFile(record)}} />
         <Action.Confirm
           title={<span><DeleteOutlined translate />删除</span>}
           action={() => this.removeFile(record)}
@@ -160,6 +160,22 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }).catch(e => {
       message.error(`${type}: ${curDir}/${record.name}删除失败, err: ${e}`)
     }).finally(() => store.loading = false)
+  }
+
+  downloadFile = (record: FileProperty) => {
+    const { ip, sshPort, account } = this.props.serverVO
+    const serverKey = `${ip}_${sshPort}_${account}`
+    const pane = store.panes.find(pane => pane.key === this.props.id)!
+    const curDir = pane.fileVO!.curDir
+    const file = `${curDir}/${record.name}`
+    const link = document.createElement('a')
+    link.href = `/api/server/file/download?serverKey=${serverKey}&file=${file}`
+    document.body.appendChild(link)
+    const evt = document.createEvent("MouseEvents")
+    evt.initEvent("click", false, false)
+    link.dispatchEvent(evt)
+    document.body.removeChild(link)
+    message.warning('即将开始下载，请勿重复点击。')
   }
 
   render() {

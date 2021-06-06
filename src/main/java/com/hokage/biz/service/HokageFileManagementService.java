@@ -5,6 +5,8 @@ import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.enums.LsOptionEnum;
 
+import java.io.BufferedInputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -37,4 +39,13 @@ public interface HokageFileManagementService {
      * @return true if remove success otherwise false
      */
     ServiceResponse<Boolean> rm(String serverKey, String curDir);
+
+    /**
+     * download file
+     * @param serverKey ip_sshPort_account
+     * @param file file path which is downloaded
+     * @param os short for output stream
+     * @return  Void
+     */
+    ServiceResponse<Void> download(String serverKey, String file, OutputStream os);
 }

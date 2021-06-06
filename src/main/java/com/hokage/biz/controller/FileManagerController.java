@@ -7,14 +7,13 @@ import com.hokage.biz.service.HokageFileManagementService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author linyimin
@@ -22,6 +21,7 @@ import java.util.List;
  * @email linyimin520812@gmail.com
  * @description
  */
+@Slf4j
 @RestController
 public class FileManagerController extends BaseController {
 
@@ -66,5 +66,18 @@ public class FileManagerController extends BaseController {
         }
 
         return fail(response.getCode(), response.getMsg());
+    }
+
+    @RequestMapping(value = "/server/file/download", method = RequestMethod.GET)
+    public void downloadFile(HttpServletResponse response,
+                                          @RequestParam("serverKey") String serverKey,
+                                          @RequestParam("file") String file) throws Exception {
+        response.reset();
+        response.setContentType("application/octet-stream");
+        response.setCharacterEncoding("utf-8");
+        response.setHeader("Content-Disposition", "attachment;filename=" + file );
+
+        OutputStream os  = response.getOutputStream();
+        fileService.download(serverKey, file, os);
     }
 }

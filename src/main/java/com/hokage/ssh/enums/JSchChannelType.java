@@ -10,7 +10,8 @@ public enum  JSchChannelType {
      * shell
      */
     SHELL("shell"),
-    EXEC("exec");
+    EXEC("exec"),
+    SFTP("sftp");
 
     private final String value;
     JSchChannelType(String value) {

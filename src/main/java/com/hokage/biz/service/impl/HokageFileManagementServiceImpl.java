@@ -1,7 +1,6 @@
 package com.hokage.biz.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.hokage.biz.converter.file.SshProperty2WebProperty;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.response.file.FileContentVO;
@@ -15,6 +14,7 @@ import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
 import com.hokage.ssh.command.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
+import com.hokage.ssh.component.SshSftpComponent;
 import com.hokage.ssh.domain.FileProperty;
 import com.hokage.ssh.enums.LsOptionEnum;
 import com.hokage.util.FileUtil;
@@ -24,6 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedInputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +45,8 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     private HokageServerCacheDao serverCacheDao;
     private CommandDispatcher dispatcher;
     private SshExecComponent execComponent;
+    private SshSftpComponent sftpComponent;
+
     private SshProperty2WebProperty fileConverter;
 
     @Autowired
@@ -58,6 +62,11 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     @Autowired
     public void setExecComponent(SshExecComponent execComponent) {
         this.execComponent = execComponent;
+    }
+
+    @Autowired
+    public void setSftpComponent(SshSftpComponent sftpComponent) {
+        this.sftpComponent = sftpComponent;
     }
 
     @Autowired
@@ -132,6 +141,23 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.rm failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceResponse<Void> download(String serverKey, String file, OutputStream os) {
+        ServiceResponse<Void> response = new ServiceResponse<>();
+        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        if (!optional.isPresent()) {
+            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+        }
+        SshClient client = optional.get();
+        try {
+            sftpComponent.download(client, file, os);
+            return response;
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.download failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.FILE_DOWNLOAD_FAILED.getCode(), e.getMessage());
         }
     }
 
