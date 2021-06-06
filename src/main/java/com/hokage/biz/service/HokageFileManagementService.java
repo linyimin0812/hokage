@@ -29,4 +29,12 @@ public interface HokageFileManagementService {
      * @return file content vo
      */
     ServiceResponse<FileContentVO> open(String serverKey, String curDir);
+
+    /**
+     * remove file or directory
+     * @param serverKey ip_sshPort_account
+     * @param curDir file or directory path
+     * @return true if remove success otherwise false
+     */
+    ServiceResponse<Boolean> rm(String serverKey, String curDir);
 }

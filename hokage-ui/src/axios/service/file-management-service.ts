@@ -17,6 +17,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'open': {
     url: '/server/file/open',
     method: 'POST'
+  },
+  'remove': {
+    url: '/server/file/rm',
+    method: 'POST'
   }
 }
 

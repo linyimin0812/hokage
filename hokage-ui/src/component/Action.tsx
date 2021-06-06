@@ -6,7 +6,7 @@ import { ActionModalProps, ConfirmModal } from './confirm-modal'
 import { FormModal, FormModalProps } from './form-modal'
 
 export type RequestProps = {
-  title: string,
+  title: string | JSX.Element,
   action: Function
 }
 

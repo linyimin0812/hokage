@@ -31,4 +31,17 @@ export const FileManagementAction ={
       }
     })
   },
+  remove: (form: FileOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await FileManagementService.remove(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('删除文件失败')
+      }
+    })
+  },
 }

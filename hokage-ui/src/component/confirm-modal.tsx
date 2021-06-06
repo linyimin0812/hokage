@@ -1,33 +1,21 @@
 import React from 'react'
-import { Button, message, Modal } from 'antd'
+import { Button, Modal } from 'antd'
+import './index.less'
 
 export interface ActionModalProps {
-  title: string,
-  action: () => Promise<void>,
+  title: string | JSX.Element,
+  action: () => void,
   content: string
 }
 
 export const ConfirmModal = (props: ActionModalProps) => {
 
-  const onOk = (_: React.MouseEvent<HTMLElement>) => {
-    const confirmAction = async () => {
-      try {
-        await props.action()
-      } catch (e) {
-        message.error(`${props.title} error.`)
-        console.log(JSON.stringify(e))
-      }
-    }
-    confirmAction()
-  }
   const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.stopPropagation()
     Modal.confirm({
-      onOk: onOk,
+      onOk: () => { props.action() },
       okText: 'confirm',
       cancelText: 'cancel',
-      closable: false,
-      maskClosable: false,
       content: props.content,
       title: props.title
     })

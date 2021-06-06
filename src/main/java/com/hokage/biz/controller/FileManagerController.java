@@ -55,4 +55,16 @@ public class FileManagerController extends BaseController {
 
         return fail(response.getCode(), response.getMsg());
     }
+
+    @RequestMapping(value = "/server/file/rm", method = RequestMethod.POST)
+    public ResultVO<Boolean> rmFile(@RequestBody FileOperateForm form) throws Exception {
+        String serverKey = form.buildKey();
+        ServiceResponse<Boolean> response = fileService.rm(serverKey, form.getCurDir());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
+    }
 }

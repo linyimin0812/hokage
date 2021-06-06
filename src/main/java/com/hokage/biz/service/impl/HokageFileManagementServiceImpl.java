@@ -113,6 +113,28 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         }
     }
 
+    @Override
+    public ServiceResponse<Boolean> rm(String serverKey, String curDir) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        if (!optional.isPresent()) {
+            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+        }
+        SshClient client = optional.get();
+        try {
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult rmResult = execComponent.execute(client, command.rm(curDir));
+            if (!rmResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", rmResult.getExitStatus(), rmResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            return response.success(Boolean.TRUE);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.rm failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    }
+
     private HokageFileVO assembleFileVO(CommandResult lsResult, CommandResult pwdResult) {
 
         List<FileProperty> fileList = JSONArray.parseArray(lsResult.getContent(), FileProperty.class);

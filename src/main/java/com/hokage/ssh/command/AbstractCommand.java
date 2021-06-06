@@ -55,4 +55,13 @@ public abstract class AbstractCommand implements Command {
         String command = "wc -l ${dir}" + " | awk '{print $1}';";
         return command.replace("${dir}", path);
     }
+
+    /**
+     * remove file or directory
+     * @param path file or directory path, may be relative path or absolute path
+     * @return
+     */
+    public String rm(String path) {
+        return String.format("rm -rf %s;", path);
+    }
 }

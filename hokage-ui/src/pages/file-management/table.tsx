@@ -8,9 +8,10 @@ import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
-import { FileTextOutlined, FolderOutlined } from '@ant-design/icons'
+import { DeleteOutlined, DownloadOutlined, FileTextOutlined, FolderOutlined } from '@ant-design/icons'
 import { FileReader } from './file-reader'
 import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
+import { Action } from '../../component/Action'
 
 type FileTablePropsType = {
   id: string,
@@ -47,8 +48,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }
     store.listDir(this.props.id, form)
   }
-
-
 
   onMouseDown = (event: MouseEvent) => {
     if (event.button === 0 && store.actionProps.left !== undefined) {
@@ -128,6 +127,41 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     )
   }
 
+  renderAction = (record: FileProperty) => {
+    const pane = store.panes.find(pane => pane.key === this.props.id)!
+    const curDir = pane.fileVO!.curDir
+    const type = record.type === 'file' ? '文件' : '文件夹'
+    return (
+      <Action>
+        <Action.Request title={<span><DownloadOutlined translate />下载</span>} action={() => {alert('指定服务器')}} />
+        <Action.Confirm
+          title={<span><DeleteOutlined translate />删除</span>}
+          action={() => this.removeFile(record)}
+          content={`确定删除${type}: ${curDir}/${record.name}`}
+        />
+      </Action>
+    )
+  }
+
+  removeFile = (record: FileProperty) => {
+    const pane = store.panes.find(pane => pane.key === this.props.id)!
+    const curDir = pane.fileVO!.curDir
+    const type = record.type === 'file' ? '文件' : '文件夹'
+    store.loading = true
+    let form = this.assembleFileOperateForm(record.name)
+    FileManagementAction.remove(form).then(result => {
+      if (result) {
+        message.info(`${type}: ${curDir}/${record.name}已删除`)
+        form = this.assembleFileOperateForm('')
+        store.listDir(this.props.id, form)
+      } else {
+        message.error(`${type}: ${curDir}/${record.name}删除失败`)
+      }
+    }).catch(e => {
+      message.error(`${type}: ${curDir}/${record.name}删除失败, err: ${e}`)
+    }).finally(() => store.loading = false)
+  }
+
   render() {
     const { id, serverVO } = this.props
     const { contentVO, fileReaderVisible } = this.state
@@ -159,6 +193,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
           <Table.Column title={'权限'} dataIndex={'permission'} />
           <Table.Column title={'所有者'} dataIndex={'owner'} />
           <Table.Column title={'修改时间'} dataIndex={'lastAccessTime'} />
+          <Table.Column title={'操作'} render={this.renderAction} />
         </Table>
       </div>
     )
