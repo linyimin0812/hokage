@@ -94,13 +94,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         SshClient client = optional.get();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult catResult = execComponent.execute(client, command.cat(curDir));
+            CommandResult headResult = execComponent.execute(client, command.head(curDir));
 
-            if (!catResult.isSuccess()) {
-                String errMsg= String.format("exiStatus: %s, msg: %s", catResult.getExitStatus(), catResult.getMsg());
+            if (!headResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", headResult.getExitStatus(), headResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
             }
-            return response.success(assembleFileContentVO(catResult, curDir));
+            return response.success(assembleFileContentVO(headResult, curDir));
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.cat failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());

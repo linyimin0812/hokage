@@ -39,7 +39,7 @@ public static final String HOME = "~";
      * @param dir file path, may be relative path or absolute path
      * @return file content
      */
-    public String cat(String dir) {
-        return String.format("cat %s;", dir);
+    public String head(String dir) {
+        return String.format("head -n 500 %s;", dir);
     }
 }

@@ -7,6 +7,7 @@ import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.context.SshContext;
+import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,15 @@ public class HokageServerCacheDao extends BaseCacheDao {
     private void activeNewServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap) throws Exception {
         // new add server list
         List<String> newServerKeyList = serverKey2ServerMap.keySet().stream()
-                .filter(serverKey -> !serverKey2SshClientMap.containsKey(serverKey))
+                .filter(serverKey -> {
+                    // new server
+                    if (!serverKey2SshClientMap.containsKey(serverKey)) {
+                        return true;
+                    }
+                    // server which is loss connection
+                    Session session = serverKey2SshClientMap.get(serverKey).getSessionIfPresent();
+                    return Objects.isNull(session) || !session.isConnected();
+                })
                 .collect(Collectors.toList());
 
         for (String serverKey : newServerKeyList) {
