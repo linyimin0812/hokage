@@ -14,4 +14,6 @@ public class FileContentVO {
     private String name;
     private String type;
     private String content;
+    private Long curLine;
+    private Long totalLine;
 }

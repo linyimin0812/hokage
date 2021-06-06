@@ -1,19 +1,21 @@
 package com.hokage.ssh.command;
 
-import com.hokage.ssh.enums.LsOptionEnum;
-import com.hokage.ssh.enums.OsTypeEnum;
-
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * @author yiminlin
  * @date 2021/05/27 12:28 am
  * @description abstract command, support darwin and linux
  **/
+@Component
 public abstract class AbstractCommand implements Command {
 
-public static final String HOME = "~";
+    public static final String HOME = "~";
+
+    @Value("${file.management.preview.line}")
+    private String previewLine;
 
     /**
      * a default ls command
@@ -39,7 +41,18 @@ public static final String HOME = "~";
      * @param dir file path, may be relative path or absolute path
      * @return file content
      */
-    public String head(String dir) {
-        return String.format("head -n 500 %s;", dir);
+    public String preview(String dir) {
+        String command = "head -n ${previewLine} ${dir};";
+        return command.replace("${dir}", dir).replace("${previewLine}", previewLine);
+    }
+
+    /**
+     * acquire file line number
+     * @param path file path,  may be relative path or absolute path
+     * @return file line number
+     */
+    public String wc(String path) {
+        String command = "wc -l ${dir}" + " | awk '{print $1}';";
+        return command.replace("${dir}", path);
     }
 }

@@ -28,5 +28,7 @@ export interface FileOperateForm {
 export interface FileContentVO {
   name: string,
   type: string,
-  content: string
+  content: string,
+  curLine: number,
+  totalLine: number,
 }

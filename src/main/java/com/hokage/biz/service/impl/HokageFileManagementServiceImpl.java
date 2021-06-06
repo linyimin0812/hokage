@@ -1,6 +1,7 @@
 package com.hokage.biz.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.hokage.biz.converter.file.SshProperty2WebProperty;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.response.file.FileContentVO;
@@ -20,6 +21,7 @@ import com.hokage.util.FileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class HokageFileManagementServiceImpl implements HokageFileManagementService {
+
+    @Value("${file.management.preview.line}")
+    private String previewLine;
 
     private HokageServerCacheDao serverCacheDao;
     private CommandDispatcher dispatcher;
@@ -94,13 +99,14 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         SshClient client = optional.get();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult headResult = execComponent.execute(client, command.head(curDir));
+            CommandResult wcResult = execComponent.execute(client, command.wc(curDir));
+            CommandResult previewResult = execComponent.execute(client, command.preview(curDir));
 
-            if (!headResult.isSuccess()) {
-                String errMsg= String.format("exiStatus: %s, msg: %s", headResult.getExitStatus(), headResult.getMsg());
+            if (!previewResult.isSuccess() || !wcResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", previewResult.getExitStatus(), previewResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
             }
-            return response.success(assembleFileContentVO(headResult, curDir));
+            return response.success(assembleFileContentVO(wcResult, previewResult, curDir));
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.cat failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
@@ -124,7 +130,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         return fileVO;
     }
 
-    private FileContentVO assembleFileContentVO(CommandResult catResult, String path) {
+    private FileContentVO assembleFileContentVO(CommandResult wcResult, CommandResult previewResult, String path) {
 
         int lastIndex = StringUtils.lastIndexOf(path, '/');
         String name = StringUtils.substring(path, lastIndex + 1);
@@ -133,7 +139,10 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         String type = StringUtils.lowerCase(StringUtils.substring(name, lastIndex + 1));
 
         FileContentVO contentVO = new FileContentVO();
-        contentVO.setName(name).setType(type).setContent(catResult.getContent());
+        contentVO.setName(name).setType(type)
+                .setContent(previewResult.getContent())
+                .setTotalLine(Long.parseLong(wcResult.getContent()))
+                .setCurLine(Long.parseLong(previewLine));
 
         return contentVO;
     }

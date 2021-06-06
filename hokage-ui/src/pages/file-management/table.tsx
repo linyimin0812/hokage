@@ -1,16 +1,16 @@
 import React from 'react'
-import { message, Result, Table } from 'antd';
+import { message, Result, Table } from 'antd'
 import './index.less'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
 import { observer } from 'mobx-react'
 import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
-import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type';
+import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
 import { FileTextOutlined, FolderOutlined } from '@ant-design/icons'
 import { FileReader } from './file-reader'
-import { FileManagementAction } from '../../axios/action/file-management/file-management-action';
+import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
 
 type FileTablePropsType = {
   id: string,
@@ -91,25 +91,24 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   openFile = (form: FileOperateForm): void => {
-
+    store.loading = true
     FileManagementAction.open(form).then(contentVO => {
       this.setState({ fileReaderVisible: true, contentVO: contentVO })
     }).catch(e => {
       message.error(e)
-    })
+    }).finally(() => store.loading = false)
   }
 
   assembleFileOperateForm = (name: string): FileOperateForm => {
     const { serverVO, id } = this.props
     const pane = store.panes.find(pane => pane.key === id)!
-    const form: FileOperateForm = {
+    return {
       operatorId: getHokageUid(),
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
       curDir: pane.fileVO!.curDir + '/' + name
     }
-    return form
   }
 
   renderName = (record: FileProperty) => {

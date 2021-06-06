@@ -91,7 +91,7 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.memInfo());
         System.out.println(command.bandwidth());
         System.out.println(command.process());
+//        System.out.println(command.preview("/root/.presto_history"));
+        System.out.println(command.wc("/root/.presto_history"));
     }
-
-
 }
