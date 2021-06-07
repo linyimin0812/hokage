@@ -167,6 +167,8 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   downloadFile = (record: FileProperty) => {
     store.loading = true
+    setTimeout(() => store.loading = false, 10000)
+
     const { id } = this.props.serverVO
 
     if (record.type === 'directory') {
@@ -183,8 +185,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     link.dispatchEvent(evt)
     document.body.removeChild(link)
     message.warning('即将开始下载，请勿重复点击。')
-
-    setTimeout(() => store.loading = false, 5000)
   }
 
   downloadDirectory = (record: FileProperty) => {
