@@ -12,6 +12,7 @@ import { DeleteOutlined, DownloadOutlined, FileTextOutlined, FolderOutlined } fr
 import { FileReader } from './file-reader'
 import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
 import { Action } from '../../component/Action'
+import path from 'path'
 
 type FileTablePropsType = {
   id: string,
@@ -75,7 +76,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     // TODO: 文件夹则打开文件夹
     // TODO: 普通文本文件直接打开
     const { id } = this.props
-    const form: FileOperateForm = this.assembleFileOperateForm(record.name)
+    const form: FileOperateForm = this.assembleFileOperateForm(record)
     if (record.type === 'directory') {
       store.listDir(id, form)
     } else {
@@ -98,15 +99,15 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }).finally(() => store.loading = false)
   }
 
-  assembleFileOperateForm = (name: string): FileOperateForm => {
-    const { serverVO, id } = this.props
-    const pane = store.panes.find(pane => pane.key === id)!
+  assembleFileOperateForm = (record: FileProperty): FileOperateForm => {
+    const { serverVO } = this.props
+    const { name, curDir } = record
     return {
       operatorId: getHokageUid(),
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: pane.fileVO!.curDir + '/' + name
+      curDir: path.resolve(curDir, name)
     }
   }
 
@@ -128,8 +129,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   renderAction = (record: FileProperty) => {
-    const pane = store.panes.find(pane => pane.key === this.props.id)!
-    const curDir = pane.fileVO!.curDir
     const type = record.type === 'file' ? '文件' : '文件夹'
     return (
       <Action>
@@ -137,37 +136,34 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
         <Action.Confirm
           title={<span><DeleteOutlined translate />删除</span>}
           action={() => this.removeFile(record)}
-          content={`确定删除${type}: ${curDir}/${record.name}`}
+          content={`确定删除${type}: ${path.resolve(record.curDir, record.name)}`}
         />
       </Action>
     )
   }
 
   removeFile = (record: FileProperty) => {
-    const pane = store.panes.find(pane => pane.key === this.props.id)!
-    const curDir = pane.fileVO!.curDir
+    const { curDir, name } = record
     const type = record.type === 'file' ? '文件' : '文件夹'
     store.loading = true
-    let form = this.assembleFileOperateForm(record.name)
+    let form = this.assembleFileOperateForm(record)
     FileManagementAction.remove(form).then(result => {
       if (result) {
-        message.info(`${type}: ${curDir}/${record.name}已删除`)
-        form = this.assembleFileOperateForm('')
+        message.info(`${type}: ${path.resolve(curDir, name)}已删除`)
+        form = this.assembleFileOperateForm(record)
         store.listDir(this.props.id, form)
       } else {
-        message.error(`${type}: ${curDir}/${record.name}删除失败`)
+        message.error(`${type}: ${path.resolve(curDir, name)}删除失败`)
       }
     }).catch(e => {
-      message.error(`${type}: ${curDir}/${record.name}删除失败, err: ${e}`)
+      message.error(`${type}: ${path.resolve(curDir, name)}删除失败, err: ${e}`)
     }).finally(() => store.loading = false)
   }
 
   downloadFile = (record: FileProperty) => {
     const { ip, sshPort, account } = this.props.serverVO
     const serverKey = `${ip}_${sshPort}_${account}`
-    const pane = store.panes.find(pane => pane.key === this.props.id)!
-    const curDir = pane.fileVO!.curDir
-    const file = `${curDir}/${record.name}`
+    const file = path.resolve(record.curDir, record.name)
     const link = document.createElement('a')
     link.href = `/api/server/file/download?serverKey=${serverKey}&file=${file}`
     document.body.appendChild(link)

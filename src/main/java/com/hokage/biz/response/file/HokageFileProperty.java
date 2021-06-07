@@ -16,4 +16,5 @@ public class HokageFileProperty {
     private String group;
     private String size;
     private String lastAccessTime;
+    private String curDir;
 }

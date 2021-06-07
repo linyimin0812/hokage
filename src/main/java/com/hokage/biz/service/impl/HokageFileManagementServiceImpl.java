@@ -164,9 +164,14 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     private HokageFileVO assembleFileVO(CommandResult lsResult, CommandResult pwdResult) {
 
         List<FileProperty> fileList = JSONArray.parseArray(lsResult.getContent(), FileProperty.class);
-
-        List<HokageFileProperty> propertyList = fileList.stream().map(property -> fileConverter.doForward(property)).collect(Collectors.toList());
         String curDir = pwdResult.getContent();
+
+        List<HokageFileProperty> propertyList = fileList.stream().map(property -> {
+            HokageFileProperty fileProperty = fileConverter.doForward(property);
+            fileProperty.setCurDir(curDir);
+            return fileProperty;
+        }).collect(Collectors.toList());
+
         long directoryNum = propertyList.stream().filter(property -> StringUtils.equals(property.getType(), "directory")).count();
         long fileNum = propertyList.stream().filter(property -> StringUtils.equals(property.getType(), "file")).count();
         long totalSize = fileList.stream().mapToLong(FileProperty::getSize).sum();

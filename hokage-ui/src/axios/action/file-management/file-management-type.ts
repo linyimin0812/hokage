@@ -14,7 +14,8 @@ export interface FileProperty {
   type: 'directory' | 'file',
   permission: string,
   size: string,
-  lastAccessTime: string
+  lastAccessTime: string,
+  curDir: string
 }
 
 export interface FileOperateForm {
