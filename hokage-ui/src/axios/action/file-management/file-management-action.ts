@@ -44,4 +44,17 @@ export const FileManagementAction ={
       }
     })
   },
+  tar: (form: FileOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await FileManagementService.tar(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('打包文件失败')
+      }
+    })
+  },
 }

@@ -42,10 +42,18 @@ public interface HokageFileManagementService {
 
     /**
      * download file
-     * @param serverKey ip_sshPort_account
+     * @param id server primary key id
      * @param file file path which is downloaded
      * @param os short for output stream
-     * @return  Void
+     * @return  download success - true, otherwise false
      */
-    ServiceResponse<Void> download(String serverKey, String file, OutputStream os);
+    ServiceResponse<Boolean> download(Long id, String file, OutputStream os);
+
+    /**
+     * package folder
+     * @param serverKey ip_sshPort_account
+     * @param path directory path
+     * @return package success is true, otherwise false
+     */
+    ServiceResponse<Boolean> tar(String serverKey, String path);
 }

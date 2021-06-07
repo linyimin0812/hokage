@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Collections;
@@ -62,6 +63,16 @@ public abstract class AbstractCommand implements Command {
      * @return
      */
     public String rm(String path) {
-        return String.format("rm -rf %s;", path);
+        return String.format("rm -r %s;", path);
+    }
+
+    /**
+     * package folder
+     * @param path folder path
+     */
+    public static String tar(String path) {
+        String fileName = StringUtils.substring(path, StringUtils.lastIndexOf(path, '/') + 1);
+        String dir = StringUtils.substring(path, 0, StringUtils.lastIndexOf(path, '/'));
+        return String.format("cd %s; tar -zcvf %s.tar.gz %s;", dir, fileName, fileName);
     }
 }

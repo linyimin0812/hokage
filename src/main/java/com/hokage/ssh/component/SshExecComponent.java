@@ -68,7 +68,10 @@ public class SshExecComponent {
                 return CommandResult.timeout(result, exec.getExitStatus());
             }
 
-            return CommandResult.success(result, exec.getExitStatus());
+            if (exec.getExitStatus() == 0) {
+                return CommandResult.success(result, exec.getExitStatus());
+            }
+            return CommandResult.failed(result, exec.getExitStatus());
 
         } catch (Exception e) {
             log.warn("SshExecCommand.execute error. sshClient: {}, command: {}, error: {}", client, command, e);

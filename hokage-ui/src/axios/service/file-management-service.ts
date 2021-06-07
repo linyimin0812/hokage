@@ -21,6 +21,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'remove': {
     url: '/server/file/rm',
     method: 'POST'
+  },
+  'tar': {
+    url: '/server/file/tar',
+    method: 'POST'
   }
 }
 

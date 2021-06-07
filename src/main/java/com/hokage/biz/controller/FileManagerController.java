@@ -8,6 +8,7 @@ import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,14 +71,29 @@ public class FileManagerController extends BaseController {
 
     @RequestMapping(value = "/server/file/download", method = RequestMethod.GET)
     public void downloadFile(HttpServletResponse response,
-                                          @RequestParam("serverKey") String serverKey,
+                                          @RequestParam("id") Long id,
                                           @RequestParam("file") String file) throws Exception {
         response.reset();
         response.setContentType("application/octet-stream");
         response.setCharacterEncoding("utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + file );
+
+        String fileName = StringUtils.substring(file, StringUtils.lastIndexOf(file, '/') + 1);
+
+        response.setHeader("Content-Disposition", "attachment;filename=" + fileName );
 
         OutputStream os  = response.getOutputStream();
-        fileService.download(serverKey, file, os);
+        fileService.download(id, file, os);
+    }
+
+    @RequestMapping(value = "/server/file/tar", method = RequestMethod.POST)
+    public ResultVO<Boolean> packageFile(@RequestBody FileOperateForm form) throws Exception {
+        String serverKey = form.buildKey();
+        ServiceResponse<Boolean> response = fileService.tar(serverKey, form.getCurDir());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
     }
 }

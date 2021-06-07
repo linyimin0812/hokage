@@ -130,6 +130,9 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   renderAction = (record: FileProperty) => {
     const type = record.type === 'file' ? '文件' : '文件夹'
+    if (['.', '..'].includes(record.name)) {
+      return null
+    }
     return (
       <Action>
         <Action.Request title={<span><DownloadOutlined translate />下载</span>} action={() => {this.downloadFile(record)}} />
@@ -150,7 +153,9 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     FileManagementAction.remove(form).then(result => {
       if (result) {
         message.info(`${type}: ${path.resolve(curDir, name)}已删除`)
-        form = this.assembleFileOperateForm(record)
+        const cloneRecord = Object.assign({}, record)
+        cloneRecord.name = ''
+        form = this.assembleFileOperateForm(cloneRecord)
         store.listDir(this.props.id, form)
       } else {
         message.error(`${type}: ${path.resolve(curDir, name)}删除失败`)
@@ -161,17 +166,41 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   downloadFile = (record: FileProperty) => {
-    const { ip, sshPort, account } = this.props.serverVO
-    const serverKey = `${ip}_${sshPort}_${account}`
+    store.loading = true
+    const { id } = this.props.serverVO
+
+    if (record.type === 'directory') {
+      this.downloadDirectory(record)
+      return
+    }
+
     const file = path.resolve(record.curDir, record.name)
     const link = document.createElement('a')
-    link.href = `/api/server/file/download?serverKey=${serverKey}&file=${file}`
+    link.href = `/api/server/file/download?id=${id}&file=${file}`
     document.body.appendChild(link)
     const evt = document.createEvent("MouseEvents")
     evt.initEvent("click", false, false)
     link.dispatchEvent(evt)
     document.body.removeChild(link)
     message.warning('即将开始下载，请勿重复点击。')
+
+    setTimeout(() => store.loading = false, 5000)
+  }
+
+  downloadDirectory = (record: FileProperty) => {
+    store.loading = true
+    const form = this.assembleFileOperateForm(record)
+    FileManagementAction.tar(form).then(result => {
+      if (result) {
+        const cloneRecord = Object.assign({}, record)
+        cloneRecord.name = `${record.name}.tar.gz`
+        cloneRecord.type = 'file'
+        this.downloadFile(cloneRecord)
+      } else {
+        message.error(`打包文件夹${form.curDir}失败`)
+      }
+    }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
+      .finally(() => store.loading = false)
   }
 
   render() {
