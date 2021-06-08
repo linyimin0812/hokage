@@ -25,7 +25,6 @@ export class FileUpload extends React.Component<FileUploadPropsType> {
     return (
       <Upload
         name={name}
-        accept={'file'}
         action={action}
         onChange={this.props.onChange}
         progress={this.showProgress()}

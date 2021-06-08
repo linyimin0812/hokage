@@ -153,7 +153,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
             <Input.Password placeholder="请输入账号密码" />
           </Form.Item>
           <Form.Item hidden={keyHidden} name="passwd" label=" " required>
-            <FileUpload name={'sshKeyFile'} action={'/app/file/upload'} prompt={'点击上传密钥文件'} onChange={emptyFunction} />
+            <FileUpload name={'sshKeyFile'} action={'/api/app/file/upload'} prompt={'点击上传密钥文件'} onChange={emptyFunction} />
           </Form.Item>
 
           <Form.Item name="serverGroupList" label="指定分组" hasFeedback>

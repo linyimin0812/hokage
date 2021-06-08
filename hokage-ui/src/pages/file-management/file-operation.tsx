@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, Col, Divider, Row } from 'antd'
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
-import Search from 'antd/lib/input/Search'
 import store from './store'
 import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
@@ -9,6 +8,7 @@ import { FileOperateForm, FileVO } from '../../axios/action/file-management/file
 import { getHokageUid } from '../../libs'
 import { ReloadOutlined } from '@ant-design/icons'
 import path from 'path'
+import { FileUpload } from '../common/file-upload';
 
 type FileOperationPropsType = {
   id: string,
@@ -78,15 +78,17 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
   }
 
   render() {
-    const { fileNum, directoryNum, totalSize } = this.props.fileVO
+    const { fileVO, serverVO } = this.props
+    const { fileNum, directoryNum, totalSize, curDir } = fileVO
     if (!directoryNum) {
       return null
     }
+    const action = `/api/server/file/upload?curDir=${curDir}&id=${serverVO.id}`
     return (
       <>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}>
           {/* //TODO: 添加一个输入框,当点击这个时,显示,可以指定路径打开 */}
-          <Col span={20} style={{display:'inline-block'}}>
+          <Col span={24} style={{display:'inline-block'}}>
             <BreadCrumb breadcrumbProps={this.retrieveBreadcrumbProps()} type={'path'} onClick={this.clickBreadcrumb} />
             <span>
               <Divider type="vertical" />
@@ -95,17 +97,12 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
               个文件, 大小{<span style={{ color: "blue" }}>{totalSize}</span>}
           </span>
           </Col>
-          <Col span={4}>
-            <span style={{ float: 'right' }}>
-              <Search placeholder="查找文件" onSearch={value => console.log(value)} enterButton />
-            </span>
-          </Col>
         </Row>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#FFFFFF', border: '#FFFFFF', margin: '0px 0px', padding: '8px 8px' }}>
           <Col span={16} style={{padding: '0px 0px'}}>
             <span style={{paddingRight: '8px'}}><Button onClick={this.goHome}>工作目录</Button></span>
             <span style={{paddingRight: '8px'}}><Button onClick={this.goPrevious}>上一步</Button></span>
-            <span style={{paddingRight: '8px'}}><Button>上传</Button></span>
+            <span style={{paddingRight: '8px', display: 'inline-flex'}}><FileUpload name={'file'} action={action} prompt={'上传'} /></span>
             <span style={{paddingRight: '8px'}}><Button disabled>新建</Button></span>
             <span style={{paddingRight: '8px'}}><Button disabled>分享</Button></span>
           </Col>
