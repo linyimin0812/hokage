@@ -9,14 +9,24 @@ import { getHokageUid } from '../../libs'
 import { ReloadOutlined } from '@ant-design/icons'
 import path from 'path'
 import { FileUpload } from '../common/file-upload';
+import { UploadChangeParam } from 'antd/lib/upload/interface'
 
 type FileOperationPropsType = {
   id: string,
   serverVO: ServerVO,
   fileVO: FileVO
 }
+
+type FileOperationStateType = {
+  showUploadList: boolean
+}
+
 @observer
-export class FileOperation extends React.Component<FileOperationPropsType> {
+export class FileOperation extends React.Component<FileOperationPropsType, FileOperationStateType> {
+
+  state = {
+    showUploadList: false
+  }
 
   retrieveBreadcrumbProps = () => {
     const { fileVO } = this.props
@@ -77,8 +87,20 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
     this.goPath(path.resolve(curDir, '..'))
   }
 
+  onUploadChange = (info: UploadChangeParam) => {
+    const status = info.file.status
+    if (status === 'done' || status === 'success') {
+      this.setState({showUploadList: false})
+      const { curDir } = this.props.fileVO
+      this.goPath(curDir)
+    } else {
+      this.setState({showUploadList: true})
+    }
+  }
+
   render() {
     const { fileVO, serverVO } = this.props
+    const { showUploadList } = this.state
     const { fileNum, directoryNum, totalSize, curDir } = fileVO
     if (!directoryNum) {
       return null
@@ -102,7 +124,9 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
           <Col span={16} style={{padding: '0px 0px'}}>
             <span style={{paddingRight: '8px'}}><Button onClick={this.goHome}>工作目录</Button></span>
             <span style={{paddingRight: '8px'}}><Button onClick={this.goPrevious}>上一步</Button></span>
-            <span style={{paddingRight: '8px', display: 'inline-flex'}}><FileUpload name={'file'} action={action} prompt={'上传'} /></span>
+            <span style={{paddingRight: '8px', display: 'inline-flex'}}>
+              <FileUpload showUploadList={showUploadList} name={'file'} action={action} prompt={'上传'} multiple onChange={this.onUploadChange} />
+            </span>
             <span style={{paddingRight: '8px'}}><Button disabled>新建</Button></span>
             <span style={{paddingRight: '8px'}}><Button disabled>分享</Button></span>
           </Col>

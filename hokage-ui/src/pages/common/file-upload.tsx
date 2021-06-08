@@ -8,7 +8,8 @@ type FileUploadPropsType = {
   action: string,
   prompt: string,
   onChange?: (uploadChangeParam: UploadChangeParam) => void,
-  multiple?: boolean
+  multiple?: boolean,
+  showUploadList?: boolean
 }
 
 export class FileUpload extends React.Component<FileUploadPropsType> {
@@ -21,7 +22,7 @@ export class FileUpload extends React.Component<FileUploadPropsType> {
   }
 
   render() {
-    const { name, action, prompt, multiple } = this.props
+    const { name, action, prompt, multiple, showUploadList } = this.props
     return (
       <Upload
         name={name}
@@ -29,6 +30,7 @@ export class FileUpload extends React.Component<FileUploadPropsType> {
         onChange={this.props.onChange}
         progress={this.showProgress()}
         multiple={multiple}
+        showUploadList={showUploadList === undefined ? true : showUploadList}
       >
         <Button icon={<UploadOutlined translate />}>{prompt}</Button>
       </Upload>
