@@ -4,7 +4,11 @@ import { UploadOutlined } from '@ant-design/icons'
 import { UploadChangeParam } from 'antd/lib/upload'
 
 type FileUploadPropsType = {
-  onChange: (uploadChangeParam: UploadChangeParam) => void
+  name: string,
+  action: string,
+  prompt: string,
+  onChange?: (uploadChangeParam: UploadChangeParam) => void,
+  multiple?: boolean
 }
 
 export class FileUpload extends React.Component<FileUploadPropsType> {
@@ -17,16 +21,17 @@ export class FileUpload extends React.Component<FileUploadPropsType> {
   }
 
   render() {
+    const { name, action, prompt, multiple } = this.props
     return (
       <Upload
-        name={'sshKeyFile'}
+        name={name}
         accept={'file'}
-        action={'/app/file/upload'}
+        action={action}
         onChange={this.props.onChange}
         progress={this.showProgress()}
-        multiple={false}
+        multiple={multiple}
       >
-        <Button icon={<UploadOutlined translate />}>点击上传密钥文件</Button>
+        <Button icon={<UploadOutlined translate />}>{prompt}</Button>
       </Upload>
     )
   }

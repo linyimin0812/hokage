@@ -7,7 +7,8 @@ import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons'
+import path from 'path'
 
 type FileOperationPropsType = {
   id: string,
@@ -55,6 +56,27 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
     store.listDir(id, form)
   }
 
+  goPath = (path: string) => {
+    const { id, serverVO} = this.props
+    const form: FileOperateForm = {
+      operatorId: getHokageUid(),
+      ip: serverVO.ip,
+      sshPort: serverVO.sshPort,
+      account: serverVO.account,
+      curDir: path
+    }
+    store.listDir(id, form)
+  }
+
+  goHome = () => {
+    this.goPath('~')
+  }
+
+  goPrevious = () => {
+    const { curDir } = this.props.fileVO
+    this.goPath(path.resolve(curDir, '..'))
+  }
+
   render() {
     const { fileNum, directoryNum, totalSize } = this.props.fileVO
     if (!directoryNum) {
@@ -81,11 +103,11 @@ export class FileOperation extends React.Component<FileOperationPropsType> {
         </Row>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#FFFFFF', border: '#FFFFFF', margin: '0px 0px', padding: '8px 8px' }}>
           <Col span={16} style={{padding: '0px 0px'}}>
-            <span style={{paddingRight: '8px'}}><Button>工作目录</Button></span>
-            <span style={{paddingRight: '8px'}}><Button>上一步</Button></span>
+            <span style={{paddingRight: '8px'}}><Button onClick={this.goHome}>工作目录</Button></span>
+            <span style={{paddingRight: '8px'}}><Button onClick={this.goPrevious}>上一步</Button></span>
             <span style={{paddingRight: '8px'}}><Button>上传</Button></span>
-            <span style={{paddingRight: '8px'}}><Button>新建</Button></span>
-            <span style={{paddingRight: '8px'}}><Button>分享</Button></span>
+            <span style={{paddingRight: '8px'}}><Button disabled>新建</Button></span>
+            <span style={{paddingRight: '8px'}}><Button disabled>分享</Button></span>
           </Col>
           <Col span={8} style={{padding: '0px 0px'}}>
             <span style={{ float: 'right' }}><Button onClick={this.refresh}><ReloadOutlined translate />刷新</Button></span>
