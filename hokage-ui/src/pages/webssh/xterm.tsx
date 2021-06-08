@@ -86,7 +86,11 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     terminal.loadAddon(fitAddon)
     fitAddon.fit()
     terminal.focus()
-    window.onresize = () => fitAddon.fit()
+    window.onresize = () => {
+      try {
+        fitAddon.fit()
+      } catch (e) {}
+    }
   }
 
   initClient = (terminal: Terminal): W3cWebsocket => {
