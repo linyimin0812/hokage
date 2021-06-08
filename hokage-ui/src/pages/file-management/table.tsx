@@ -8,7 +8,14 @@ import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
-import { DeleteOutlined, DownloadOutlined, FileTextOutlined, FolderOutlined } from '@ant-design/icons'
+import {
+  DeleteFilled,
+  DownloadOutlined,
+  EyeFilled,
+  FileTextOutlined,
+  FolderOpenFilled,
+  FolderOutlined,
+} from '@ant-design/icons'
 import { FileReader } from './file-reader'
 import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
 import { Action } from '../../component/Action'
@@ -131,18 +138,26 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   renderAction = (record: FileProperty) => {
     const type = record.type === 'file' ? '文件' : '文件夹'
     if (['.', '..'].includes(record.name)) {
-      return null
+      return <Action.Request title={<span><FolderOpenFilled translate /></span>} action={() => this.onDoubleClick(record)} />
     }
     return (
       <Action>
-        <Action.Request title={<span><DownloadOutlined translate />下载</span>} action={() => {this.downloadFile(record)}} />
+        {this.renderSpecifyAction(record)}
+        <Action.Request title={<span><DownloadOutlined translate /></span>} action={() => {this.downloadFile(record)}} />
         <Action.Confirm
-          title={<span><DeleteOutlined translate />删除</span>}
+          title={<span><DeleteFilled translate style={{color: 'red'}} /></span>}
           action={() => this.removeFile(record)}
           content={`确定删除${type}: ${path.resolve(record.curDir, record.name)}`}
         />
       </Action>
     )
+  }
+
+  renderSpecifyAction = (record: FileProperty) => {
+    if (record.type === 'file') {
+      return <Action.Request title={<span><EyeFilled translate /></span>} action={() => this.onDoubleClick(record)} />
+    }
+    return <Action.Request title={<span><FolderOpenFilled translate /></span>} action={() => this.onDoubleClick(record)} />
   }
 
   removeFile = (record: FileProperty) => {
