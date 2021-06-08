@@ -80,8 +80,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   onDoubleClick = (record: FileProperty) => {
-    // TODO: 文件夹则打开文件夹
-    // TODO: 普通文本文件直接打开
     const { id } = this.props
     const form: FileOperateForm = this.assembleFileOperateForm(record)
     if (record.type === 'directory') {
