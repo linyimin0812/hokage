@@ -27,7 +27,7 @@ export class FileReader extends React.Component<FileReaderPropsType> {
       return null
     }
     return (
-      <Modal width={'1000px'} title={this.renderModalTitle(contentVO)} visible={visible} footer={null} onCancel={close}>
+      <Modal width={'1200px'} title={this.renderModalTitle(contentVO)} visible={visible} footer={null} onCancel={close}>
         <Editor height={'500px'} options={{readOnly: true}} value={contentVO.content} />
       </Modal>
     )

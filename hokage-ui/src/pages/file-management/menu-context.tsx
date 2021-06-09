@@ -1,39 +1,75 @@
 import React from 'react'
-import { Menu } from 'antd'
 import { FileProperty } from '../../axios/action/file-management/file-management-type'
-export interface ActionProps {
-  left: string | undefined,
-  top: string | undefined,
-  record: FileProperty | undefined
-}
+import FileTable from './table'
+import { message, Modal } from 'antd';
+import store from './store';
+import { observer } from 'mobx-react'
+import path from 'path'
+import { DeleteFilled } from '@ant-design/icons';
 
+export interface ActionProps {
+  visible: boolean,
+  left?: string,
+  top?: string,
+  record?: FileProperty,
+  fileTable?: FileTable
+}
+@observer
 export default class MenuContext extends React.Component<ActionProps> {
+
+  onOpenClick = () => {
+    const { record, fileTable } = this.props
+    if (!fileTable || !record) {
+      message.error('打开失败')
+    }
+    store.actionProps = { visible: false }
+    fileTable!.onDoubleClick(record!)
+  }
+
+  onDownloadClick = () => {
+    const { record, fileTable } = this.props
+    if (!fileTable || !record) {
+      message.error('下载失败')
+    }
+    store.actionProps = { visible: false }
+    fileTable!.downloadFile(record!)
+  }
+
+  onDeleteClick = () => {
+    const { record, fileTable } = this.props
+    if (!fileTable || !record) {
+      message.error('删除失败')
+    }
+    store.actionProps = { visible: false }
+    const type = record!.type === 'file' ? '文件' : '文件夹'
+    Modal.confirm({
+      onOk: () => { fileTable!.removeFile(record!) },
+      okText: 'confirm',
+      cancelText: 'cancel',
+      content: `确定删除${type}: ${path.resolve(record?.curDir!, record?.name!)}`,
+      title: <span><DeleteFilled translate style={{color: 'red'}} /></span>
+    })
+  }
+
   render() {
-    const { left, top } = this.props
+    const { visible, left, top } = this.props
+    if (!visible) {
+      return null
+    }
     return (
-      <Menu
-        mode="vertical"
-        className="file-action-menu"
-        style={{
-          position: 'fixed',
-          width: '100px',
-          top: top,
-          left: left,
-          backgroundColor: '#dcdcdc',
-          border: '1px solid #778899',
-          borderRadius: 8,
-          overflow: 'auto',
-          zIndex: 1,
-        }}
-      >
-        <Menu.Item className="file-action-menu-item" key="open">打开</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="rename">重命名</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="share">分享</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="permission">权限</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="compress">压缩</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="download">下载</Menu.Item>
-        <Menu.Item className="file-action-menu-item" key="delete">删除</Menu.Item>
-      </Menu>
+      <div className={'contextMenu'} style={{ left: left, top: top }}>
+        <div className={'contextMenu--option'} onClick={this.onOpenClick}>打开</div>
+        <div className={'contextMenu--option'} onClick={this.onDownloadClick}>下载</div>
+        <div className={'contextMenu--separator'} />
+        <div className={'contextMenu--option contextMenu--option__disabled'}>重命名</div>
+        <div className={'contextMenu-separator'} />
+        <div className={'contextMenu--option contextMenu--option__disabled'}>分享</div>
+        <div className={'contextMenu--separator'} />
+        <div className={'contextMenu--option contextMenu--option__disabled'}>权限</div>
+        <div className={'contextMenu--option contextMenu--option__disabled'}>压缩</div>
+        <div className={'contextMenu--separator'} />
+        <div className={'contextMenu--option'} onClick={this.onDeleteClick}>删除</div>
+      </div>
     )
   }
 }

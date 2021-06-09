@@ -16,11 +16,7 @@ export interface PanesType {
 class Store {
 
   @observable isActionVisible: boolean = false
-  @observable actionProps: ActionProps = {
-    left: undefined,
-    top: undefined,
-    record: undefined
-  }
+  @observable actionProps: ActionProps = { visible: false }
 
   @observable panes: PanesType[] = []
   @observable activeKey: string = 'my-server'

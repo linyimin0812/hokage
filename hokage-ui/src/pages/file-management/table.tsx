@@ -41,7 +41,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   componentWillMount = () => {
     // 左键按下时
-    window.addEventListener("mousedown", this.onMouseDown)
+    window.addEventListener("click", this.onClick)
     const { serverVO } = this.props
     const form: FileOperateForm = {
       operatorId: getHokageUid(),
@@ -50,33 +50,46 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
       account: serverVO.account,
       curDir: '~'
     }
-    const pane = store.panes.find(pane => pane.key === this.props.id)
-    if (pane && pane.fileVO?.directoryNum) {
-      return
-    }
     store.listDir(this.props.id, form)
   }
 
-  onMouseDown = (event: MouseEvent) => {
-    if (event.button === 0 && store.actionProps.left !== undefined) {
-      store.actionProps = {
-        left: undefined,
-        top: undefined,
-        record: undefined
-      }
+  componentWillUnmount() {
+    window.removeEventListener("click", this.onClick)
+  }
+
+  onClick = (event: any) => {
+    if (!event) {
+      return
     }
+    const className = JSON.stringify(event.target.className)
+    if (!className.includes('contextMenu--option')) {
+      store.actionProps = { visible: false }
+    }
+
   }
 
   getActionPosition = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    const left = event.clientX
-    const top = event.clientY
-    const ww = document.documentElement.clientWidth
-    const wh = document.documentElement.clientHeight
+    // 触点相对浏览器可视区域的左上角距离
+    const clickX = event.clientX
+    const clickY = event.clientY
 
-    return {
-      top: ((wh - top > 300) ? top : (top - 330)) + 'px',
-      left: ((ww - left > 100) ? left : (left - 100)) + 'px'
-    }
+    // 当前窗口的高度+宽度
+    const screenH = window.innerHeight
+    const screenW = window.innerWidth
+
+    // 菜单栏高度+宽度
+    const contextW = 100
+    const contextH = 205
+
+    // right为true, 说明鼠标点击的位置到浏览器的右边界的宽度可以放下菜单，否则菜单放到左边
+    // bottom为true, 说明鼠标点击位置到浏览器的下边界的高度可以放下菜单，否则菜单放在上边
+    const right = (screenW - clickX) > contextW
+    const bottom = (screenH - clickY) > contextH
+
+    const left = right ? `${clickX}px` : `${clickX - contextW}px`
+    const top = bottom ? `${clickY}px` : `${clickY - contextH}px`
+
+    return { visible: true, top: top, left: left }
   }
 
   onDoubleClick = (record: FileProperty) => {
@@ -91,8 +104,8 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   onContextMenu = (record: FileProperty, event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.preventDefault()
-    const { left, top } = this.getActionPosition(event)
-    store.actionProps = { left, top, record }
+    const { visible, left, top } = this.getActionPosition(event)
+    store.actionProps = { left, top, record, visible, fileTable: this }
   }
 
   openFile = (form: FileOperateForm): void => {
@@ -201,7 +214,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   downloadDirectory = (record: FileProperty) => {
-    store.loading = true
     const form = this.assembleFileOperateForm(record)
     FileManagementAction.tar(form).then(result => {
       if (result) {
@@ -213,7 +225,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
         message.error(`打包文件夹${form.curDir}失败`)
       }
     }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
-      .finally(() => store.loading = false)
   }
 
   render() {
@@ -226,7 +237,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const fileVO = pane.fileVO!
     return (
       <div>
-        { store.actionProps.left !== undefined ? <MenuContext {...store.actionProps} /> : null }
+        <MenuContext {...store.actionProps} />
         <FileReader visible={fileReaderVisible} contentVO={contentVO} close={() => {this.setState({ fileReaderVisible: false })}} />
         <FileOperation id={id} serverVO={serverVO} fileVO={fileVO} />
         <Table
