@@ -53,4 +53,27 @@ public class SshSftpComponent {
             }
         }
     }
+
+    /**
+     * upload a file
+     * @param client ssh client
+     * @param dst upload destination path
+     * @param src upload file input stream
+     */
+    public void upload(SshClient client, String dst, InputStream src) {
+        ChannelSftp sftp = null;
+        try {
+            Session session = client.getSessionOrCreate();
+            sftp = (ChannelSftp) session.openChannel(JSchChannelType.SFTP.getValue());
+            sftp.connect();
+            sftp.put(src, dst);
+        } catch (Exception e) {
+            log.error("SshSftpComponent.upload error: {}", e.getMessage());
+            throw new RuntimeException("upload file error. err: " + e.getMessage());
+        } finally {
+            if (Objects.nonNull(sftp)) {
+                sftp.disconnect();
+            }
+        }
+    }
 }

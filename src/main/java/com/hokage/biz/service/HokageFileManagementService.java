@@ -6,6 +6,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.enums.LsOptionEnum;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
@@ -56,4 +57,13 @@ public interface HokageFileManagementService {
      * @return package success is true, otherwise false
      */
     ServiceResponse<Boolean> tar(String serverKey, String path);
+
+    /**
+     * upload a file to server
+     * @param id server primary key id
+     * @param dst upload destination path
+     * @param src upload file input stream
+     * @return true - upload success otherwise false
+     */
+    ServiceResponse<Boolean> upload(Long id, String dst, InputStream src);
 }

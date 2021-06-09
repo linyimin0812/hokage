@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
@@ -201,6 +202,33 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.tar failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_TAR_FAILED.getCode(), e.getMessage());
+        }
+    }
+
+    @Override
+    public ServiceResponse<Boolean> upload(Long id, String dst, InputStream src) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        HokageServerDO serverDO = serverDao.selectById(id);
+        if (Objects.isNull(serverDO)) {
+            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+        }
+        SshContext context = new SshContext();
+        BeanUtils.copyProperties(serverDO, context);
+        SshClient client = null;
+        try {
+            client = new SshClient(context);
+            sftpComponent.upload(client, dst, src);
+            return response.success(Boolean.TRUE);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.upload failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.FILE_UPLOAD_FAILED.getCode(), e.getMessage());
+        } finally {
+            if (Objects.nonNull(client)) {
+                Session session = client.getSessionIfPresent();
+                if (Objects.nonNull(session)) {
+                    session.disconnect();
+                }
+            }
         }
     }
 

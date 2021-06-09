@@ -1,5 +1,6 @@
 package com.hokage.biz.controller;
 
+import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.form.file.FileOperateForm;
 import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileVO;
@@ -7,14 +8,24 @@ import com.hokage.biz.service.HokageFileManagementService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
+import com.hokage.persistence.dataobject.HokageServerSshKeyContentDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * @author linyimin
@@ -95,5 +106,26 @@ public class FileManagerController extends BaseController {
         }
 
         return fail(response.getCode(), response.getMsg());
+    }
+
+    @RequestMapping(value = "/server/file/upload", method = RequestMethod.POST)
+    public ResultVO<Boolean> uploadFile(@RequestParam(value = "file") MultipartFile file,@RequestParam("id") Long id,  @RequestParam("curDir") String curDir) throws IOException {
+
+        if (file.isEmpty()) {
+            return fail(ResultCodeEnum.SERVER_UPLOAD_FILE_ERROR.getCode(), ResultCodeEnum.SERVER_UPLOAD_FILE_ERROR.getMsg());
+        }
+        InputStream in = file.getInputStream();
+
+        String fileName = ObjectUtils.defaultIfNull(file.getOriginalFilename(), "");
+        String dst = Paths.get(curDir).resolve(fileName).toAbsolutePath().toString();
+
+        ServiceResponse<Boolean> response = fileService.upload(id, dst, in);
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+
+        return fail(response.getCode(), response.getMsg());
+
     }
 }

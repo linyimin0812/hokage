@@ -44,7 +44,8 @@ public enum ResultCodeEnum {
     SERVER_NO_FOUND("F-0001", "server is not found."),
     COMMAND_EXECUTED_FAILED("F-0002", "command execute failed."),
     FILE_DOWNLOAD_FAILED("F-0003", "download file execute failed."),
-    FILE_TAR_FAILED("F-0004", "package folder failed.")
+    FILE_TAR_FAILED("F-0004", "package folder failed."),
+    FILE_UPLOAD_FAILED("F-0005", "upload file execute failed."),
     ;
 
     private String code;
