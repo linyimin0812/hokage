@@ -8,7 +8,6 @@ import com.hokage.biz.service.HokageFileManagementService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
-import com.hokage.persistence.dataobject.HokageServerSshKeyContentDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -20,12 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author linyimin
@@ -48,12 +43,7 @@ public class FileManagerController extends BaseController {
     public ResultVO<HokageFileVO> listFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
         ServiceResponse<HokageFileVO> response = fileService.list(serverKey, form.getCurDir(), new ArrayList<>());
-
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
+        return response(response);
     }
 
     @RequestMapping(value = "/server/file/open", method = RequestMethod.POST)
@@ -61,11 +51,7 @@ public class FileManagerController extends BaseController {
         String serverKey = form.buildKey();
         ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getCurDir());
 
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
+        return response(response);
     }
 
     @RequestMapping(value = "/server/file/rm", method = RequestMethod.POST)
@@ -73,11 +59,7 @@ public class FileManagerController extends BaseController {
         String serverKey = form.buildKey();
         ServiceResponse<Boolean> response = fileService.rm(serverKey, form.getCurDir());
 
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
+        return response(response);
     }
 
     @RequestMapping(value = "/server/file/download", method = RequestMethod.GET)
@@ -101,11 +83,7 @@ public class FileManagerController extends BaseController {
         String serverKey = form.buildKey();
         ServiceResponse<Boolean> response = fileService.tar(serverKey, form.getCurDir());
 
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
+        return response(response);
     }
 
     @RequestMapping(value = "/server/file/upload", method = RequestMethod.POST)
@@ -121,11 +99,7 @@ public class FileManagerController extends BaseController {
 
         ServiceResponse<Boolean> response = fileService.upload(id, dst, in);
 
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
+        return response(response);
 
     }
 }

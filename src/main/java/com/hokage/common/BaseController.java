@@ -28,4 +28,11 @@ public class BaseController {
         return new ResultVO<>(false, code, msg, null);
     }
 
+    protected <T> ResultVO<T> response(ServiceResponse<T> response) {
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
+    }
+
 }
