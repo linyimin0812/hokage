@@ -6,7 +6,7 @@ package com.hokage.util;
  * @description file util class
  **/
 public class FileUtil {
-    private static final double K = 2014;
+    private static final double K = 1024;
     private static final double M = K * K;
     private static final double G = M * K;
 
