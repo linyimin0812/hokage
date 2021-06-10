@@ -4,6 +4,8 @@ import com.hokage.ssh.context.ChannelShellContext;
 import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.*;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,9 +23,13 @@ import java.util.Properties;
 @Slf4j
 public class SshClient {
     private JSch jSch;
-    private final SshContext context;
+    @Setter
+    @Accessors(chain = true)
+    private SshContext context;
     private Session session;
     private ChannelShellContext shellContext;
+
+    public SshClient() {}
 
     public SshClient(SshContext context) throws Exception {
         this(context, false);

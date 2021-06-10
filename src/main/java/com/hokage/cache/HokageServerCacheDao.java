@@ -3,6 +3,7 @@ package com.hokage.cache;
 import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
+import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
@@ -43,6 +44,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
     private Cache<String, SshClient> serverKey2SshClient;
     private HokageServerDao serverDao;
     private ScheduledThreadPoolWorker scheduledWorker;
+    private ThreadPoolWorker poolWorker;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
@@ -52,6 +54,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
     @Autowired
     public void setScheduledWorker(ScheduledThreadPoolWorker scheduledWorker) {
         this.scheduledWorker = scheduledWorker;
+    }
+
+    @Autowired
+    public void setPoolWorker(ThreadPoolWorker poolWorker) {
+        this.poolWorker = poolWorker;
     }
 
     @PostConstruct
@@ -128,18 +135,20 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 .collect(Collectors.toList());
 
         for (String serverKey : newServerKeyList) {
-            SshContext context = new SshContext();
-            BeanUtils.copyProperties(serverKey2ServerMap.get(serverKey), context);
-            SshClient client = new SshClient(context, true);
-            try {
-                client = new SshClient(context);
-                context.setPasswd(null);
-                log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
-            } catch (Exception e) {
-                context.setPasswd(null);
-                log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
-            }
-            serverKey2SshClient.put(serverKey, client);
+            poolWorker.getExecutorPool().execute(() -> {
+                SshContext context = new SshContext();
+                BeanUtils.copyProperties(serverKey2ServerMap.get(serverKey), context);
+                SshClient client = new SshClient().setContext(context);
+                try {
+                    client = new SshClient(context);
+                    context.setPasswd(null);
+                    log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
+                } catch (Exception e) {
+                    context.setPasswd(null);
+                    log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
+                }
+                serverKey2SshClient.put(serverKey, client);
+            });
         }
     }
 
