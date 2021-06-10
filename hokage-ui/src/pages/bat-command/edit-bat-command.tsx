@@ -133,6 +133,13 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
             ]) : null
           }
 
+          <Form.Item label={'服务器类型'} name="serverType" initialValue={[]} required>
+            <Select placeholder={"请选择"} style={{width: '50%'}}>
+              <Select.Option value={'ip'}>ip</Select.Option>
+              <Select.Option value={'serverGroup'}>分组</Select.Option>
+            </Select>
+          </Form.Item>
+
           <Form.Item name="servers" initialValue={[]} label="执行机器">
             <Select
               mode="multiple"

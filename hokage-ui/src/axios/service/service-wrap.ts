@@ -26,7 +26,6 @@ export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
         axios.interceptors.request.use(request => {
           request.headers['hokageUid'] = getHokageUid()
           request.headers['hokageRole'] = getHokageRole()
-          console.log('interceptor')
           return request
         })
 
