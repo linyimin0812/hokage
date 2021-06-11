@@ -15,7 +15,7 @@ export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
   Object.keys(serviceInfo).forEach((name: string) => {
     service[name] = (data?: any, config?: AxiosRequestConfig): Promise<ServiceResult<any>> => {
       return new Promise<ServiceResult<any>>((resolve, reject) => {
-        const url = '/api' + serviceInfo[name].url
+        const url = process.env.REACT_APP_ENV === 'local' ? '/api' + serviceInfo[name].url : serviceInfo[name].url
         const requestConfig: AxiosRequestConfig = { ...serviceInfo[name], ...config, url }
         if (['GET', 'get'].includes(serviceInfo[name].method)) {
           requestConfig.params = data

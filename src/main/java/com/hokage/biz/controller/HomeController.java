@@ -17,7 +17,7 @@ public class HomeController {
      * @param model
      * @return
      */
-    @RequestMapping({"/app/**", "/"})
+    @RequestMapping({"/app/**", "/", "/login"})
     public String index(Model model) {
         return "index";
     }

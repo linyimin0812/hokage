@@ -1,6 +1,7 @@
 package com.hokage.biz.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.hokage.biz.Constant;
 import com.hokage.biz.converter.user.SearchConverter;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
@@ -56,7 +57,7 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.register(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
+            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
@@ -68,7 +69,7 @@ public class UserController extends BaseController {
         ServiceResponse<HokageUserDO> res = userService.login(userDO);
 
         if (res.getSucceeded()) {
-            session.setAttribute(userDO.getEmail(), JSON.toJSONString(userDO));
+            session.setAttribute(Constant.USER_SESSION_KEY, JSON.toJSONString(userDO));
             return success(UserConverter.DOToRegisterForm(res.getData()));
         }
         return fail(res.getCode(), res.getMsg());
@@ -81,7 +82,7 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/user/logout", method = RequestMethod.POST)
     public ResultVO<Boolean> logout(@RequestBody @Valid HokageUserLogoutForm form, HttpSession session) {
-        if (Objects.isNull(session.getAttribute(form.getEmail()))) {
+        if (Objects.isNull(session.getAttribute(Constant.USER_SESSION_KEY))) {
             return fail(ResultCodeEnum.USER_NO_LOGIN.getCode(), ResultCodeEnum.USER_NO_LOGIN.getMsg());
         }
         session.removeAttribute(form.getEmail());
