@@ -1,5 +1,6 @@
 package com.hokage.ssh.context;
 
+import com.alibaba.fastjson.JSON;
 import com.hokage.websocket.domain.TerminalSize;
 import lombok.Data;
 
@@ -34,4 +35,9 @@ public class SshContext {
     private String passwd;
 
     private TerminalSize size;
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 }

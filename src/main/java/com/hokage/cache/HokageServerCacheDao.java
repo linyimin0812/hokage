@@ -2,12 +2,16 @@ package com.hokage.cache;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
+import com.hokage.biz.Constant;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
+import com.hokage.ssh.command.CommandDispatcher;
 import com.hokage.ssh.context.SshContext;
+import com.hokage.ssh.enums.JSchChannelType;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -17,6 +21,10 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,18 +45,32 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     @Value("${ssh.client.cache.refresh.interval.second}")
     private Integer cacheRefreshIntervalSecond;
+
     /**
      * key: ip_port_account
      * value: SshClient
      */
-    private Cache<String, SshClient> serverKey2SshClient;
+    private Cache<String, SshClient> serverKey2SshExecClient;
+    /**
+     * key: ip_port_account
+     * value: SshClient
+     */
+    private Cache<String, SshClient> serverKey2SshSftpClient;
+
     private HokageServerDao serverDao;
+    private CommandDispatcher dispatcher;
+
     private ScheduledThreadPoolWorker scheduledWorker;
     private ThreadPoolWorker poolWorker;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
         this.serverDao = serverDao;
+    }
+
+    @Autowired
+    public void setDispatcher(CommandDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
     }
 
     @Autowired
@@ -63,7 +85,8 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     @PostConstruct
     public void init() throws Exception {
-        serverKey2SshClient = buildDefaultLocalCache();
+        serverKey2SshExecClient = buildDefaultLocalCache();
+        serverKey2SshSftpClient = buildDefaultLocalCache();
         scheduledWorker.getScheduledService().scheduleAtFixedRate(() -> {
             try {
                 this.activeCacheRefresh();
@@ -73,20 +96,23 @@ public class HokageServerCacheDao extends BaseCacheDao {
         }, 0, cacheRefreshIntervalSecond, TimeUnit.SECONDS);
     }
 
-    public Optional<SshClient> get(String key) {
-        SshClient client = serverKey2SshClient.getIfPresent(key);
+    public Optional<SshClient> getExecClient(String key) {
+        SshClient client = serverKey2SshExecClient.getIfPresent(key);
         if (Objects.nonNull(client)) {
             return Optional.of(client);
         }
         return Optional.empty();
     }
 
-    public void put(String key, SshClient sshClient) {
-        if (Objects.isNull(sshClient)) {
-            throw new RuntimeException("cache value can't be null");
+    public Optional<SshClient> getSftpClient(String key) {
+        SshClient client = serverKey2SshSftpClient.getIfPresent(key);
+        if (Objects.nonNull(client)) {
+            return Optional.of(client);
         }
-        serverKey2SshClient.put(key, sshClient);
+        return Optional.empty();
     }
+
+
 
     /**
      * build cache key
@@ -107,7 +133,10 @@ public class HokageServerCacheDao extends BaseCacheDao {
      */
     private void activeCacheRefresh() throws Exception {
         List<HokageServerDO> serverDOList = serverDao.selectAll();
-        Map<String, SshClient> serverKey2SshClientMap = serverKey2SshClient.asMap();
+
+        log.info("total server size: {}", serverDOList.size());
+
+        Map<String, SshClient> serverKey2SshClientMap = serverKey2SshExecClient.asMap();
         Map<String, HokageServerDO> serverKey2ServerMap = serverDOList.stream().collect(Collectors.toMap(this::buildKey, Function.identity(), (o1, o2) -> o1));
 
         activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap);
@@ -138,16 +167,22 @@ public class HokageServerCacheDao extends BaseCacheDao {
             poolWorker.getExecutorPool().execute(() -> {
                 SshContext context = new SshContext();
                 BeanUtils.copyProperties(serverKey2ServerMap.get(serverKey), context);
-                SshClient client = new SshClient().setContext(context);
+                SshClient execClient = new SshClient().setContext(context);
+                SshClient sftpClient = new SshClient().setContext(context);
                 try {
-                    client = new SshClient(context);
+                    execClient = new SshClient(context);
+                    sftpClient = new SshClient(context);
+
+                    uploadScript2Server(sftpClient);
+
                     context.setPasswd(null);
                     log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
                 } catch (Exception e) {
                     context.setPasswd(null);
                     log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
                 }
-                serverKey2SshClient.put(serverKey, client);
+                serverKey2SshExecClient.put(serverKey, execClient);
+                serverKey2SshSftpClient.put(serverKey, sftpClient);
             });
         }
     }
@@ -163,16 +198,48 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 .filter(serverKey -> !serverKey2ServerMap.containsKey(serverKey))
                 .forEach(serverKey -> {
                     try {
-                        SshClient client = serverKey2SshClient.getIfPresent(serverKey);
+                        SshClient client = serverKey2SshExecClient.getIfPresent(serverKey);
                         if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
                             client.getSessionOrCreate().disconnect();
                         }
                     } catch (Exception ignored) {
 
                     } finally {
-                        serverKey2SshClient.invalidate(serverKey);
+                        serverKey2SshExecClient.invalidate(serverKey);
+                        serverKey2SshSftpClient.invalidate(serverKey);
                         log.info("HokageServerCacheDao.activeCacheRefresh create ssh client. serverKey: {}", serverKey);
                     }
                 });
+    }
+
+    private void uploadScript2Server(SshClient client) throws Exception {
+        String script = dispatcher.dispatchScript(client);
+        ChannelSftp sftp = null;
+        InputStream in = null;
+        try {
+            sftp = (ChannelSftp) client.getSessionOrCreate().openChannel(JSchChannelType.SFTP.getValue());
+            sftp.connect();
+            // 判断工作目录不存在，若不存在，则创建
+            String home = Paths.get(sftp.getHome(), Constant.WORK_HOME).toAbsolutePath().toString();
+            try {
+                sftp.stat(home);
+            } catch (Exception e) {
+                sftp.mkdir(home);
+            }
+            in = new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
+            String dst = Paths.get(sftp.getHome(), Constant.WORK_HOME).resolve(Constant.API_FILE).toAbsolutePath().toString();
+            sftp.put(in, dst, ChannelSftp.OVERWRITE);
+
+            log.info("HokageServerCacheDao.uploadScript2Server success. server: {}", client.getSshContext());
+        } catch (Exception e) {
+            log.info("HokageServerCacheDao.uploadScript2Server error. server: {}, err: {}", client.getSshContext(), e.getMessage());
+        } finally {
+            if (Objects.nonNull(sftp) && sftp.isConnected()) {
+                sftp.disconnect();
+            }
+            if (Objects.nonNull(in)) {
+                in.close();
+            }
+        }
     }
 }

@@ -62,9 +62,7 @@ public class SshClient {
             ChannelExec testChannel = (ChannelExec) this.session.openChannel(JSchChannelType.EXEC.getValue());
             testChannel.setCommand("true");
             testChannel.connect(30 * 1000);
-            if (log.isDebugEnabled()) {
-                log.debug("Session successfully tested, use it again.");
-            }
+            log.info("Session successfully tested, use it again.");
             testChannel.disconnect();
         } catch (JSchException e) {
             log.info("Session terminated. Create a new one.");

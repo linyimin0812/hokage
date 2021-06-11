@@ -192,9 +192,6 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   downloadFile = (record: FileProperty) => {
-    store.loading = true
-    setTimeout(() => store.loading = false, 10000)
-
     const { id } = this.props.serverVO
 
     if (record.type === 'directory') {

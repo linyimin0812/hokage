@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import com.hokage.biz.Constant;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.enums.OsTypeEnum;
@@ -45,8 +46,8 @@ public class CommandDispatcher implements ApplicationContextAware {
     @PostConstruct
     public void init() throws IOException {
         osMapScript = new ConcurrentHashMap<>(2);
-        osMapScript.put(OsTypeEnum.linux, readShellCommand("/shell/linux-json-api.sh"));
-        osMapScript.put(OsTypeEnum.darwin, readShellCommand("/shell/darwin-json-api.sh"));
+        osMapScript.put(OsTypeEnum.linux, readShellCommand(Constant.LINUX_API_FILE));
+        osMapScript.put(OsTypeEnum.darwin, readShellCommand(Constant.DARWIN_API_FILE));
     }
 
     @Override

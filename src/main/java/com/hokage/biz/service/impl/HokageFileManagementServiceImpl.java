@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -90,7 +89,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     @Override
     public ServiceResponse<HokageFileVO> list(String serverKey, String dir, List<LsOptionEnum> options) {
         ServiceResponse<HokageFileVO> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
@@ -113,7 +112,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     @Override
     public ServiceResponse<FileContentVO> open(String serverKey, String curDir) {
         ServiceResponse<FileContentVO> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
@@ -137,7 +136,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     @Override
     public ServiceResponse<Boolean> rm(String serverKey, String curDir) {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
@@ -164,11 +163,14 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         if (Objects.isNull(serverDO)) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
-        SshContext context = new SshContext();
-        BeanUtils.copyProperties(serverDO, context);
+
         SshClient client = null;
         try {
-            client = new SshClient(context);
+            Optional<SshClient> optional = serverCacheDao.getSftpClient(String.format("%s_%s_%s", serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount()));
+            if (!optional.isPresent()) {
+                return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+            }
+            client = optional.get();
             sftpComponent.download(client, file, os);
             return response.success(Boolean.TRUE);
         } catch (Exception e) {
@@ -187,7 +189,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     @Override
     public ServiceResponse<Boolean> tar(String serverKey, String path) {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.get(serverKey);
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
@@ -212,11 +214,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         if (Objects.isNull(serverDO)) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
-        SshContext context = new SshContext();
-        BeanUtils.copyProperties(serverDO, context);
         SshClient client = null;
         try {
-            client = new SshClient(context);
+            Optional<SshClient> optional = serverCacheDao.getSftpClient(String.format("%s_%s_%s", serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount()));
+            if (!optional.isPresent()) {
+                return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+            }
+            client = optional.get();
             sftpComponent.upload(client, dst, src);
             return response.success(Boolean.TRUE);
         } catch (Exception e) {

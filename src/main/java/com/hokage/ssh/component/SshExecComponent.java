@@ -1,8 +1,10 @@
 package com.hokage.ssh.component;
 
 import com.google.common.base.Stopwatch;
+import com.hokage.biz.Constant;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.CommandResult;
+import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;
@@ -14,8 +16,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * @author yiminlin
@@ -90,5 +94,12 @@ public class SshExecComponent {
                 stopwatch.stop();
             }
         }
+    }
+
+    public <T> T executeScriptFunction(SshClient client, String method, Function<CommandResult, T> callback) throws Exception {
+        String scriptPath = Paths.get("~", Constant.WORK_HOME).resolve(Constant.API_FILE).toAbsolutePath().toString();
+        String command = String.format("bash %s %s", scriptPath, method);
+        CommandResult execResult = this.execute(client, command);
+        return callback.apply(execResult);
     }
 }

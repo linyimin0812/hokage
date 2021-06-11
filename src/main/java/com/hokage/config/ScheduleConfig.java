@@ -12,14 +12,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  * @description
  */
 
-// TODO: 需要找时间理解一下
 // 解决启动时出现BeanNotOfRequiredTypeException问题：https://www.cnblogs.com/threadj/articles/10631193.html
 @Configuration
 public class ScheduleConfig {
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(10);
+        scheduler.setPoolSize(Runtime.getRuntime().availableProcessors());
+        scheduler.setThreadNamePrefix("scheduled-task-%d");
         scheduler.initialize();
         return scheduler;
     }
