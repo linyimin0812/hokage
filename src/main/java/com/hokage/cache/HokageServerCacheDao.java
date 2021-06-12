@@ -172,13 +172,9 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 try {
                     execClient = new SshClient(context);
                     sftpClient = new SshClient(context);
-
                     uploadScript2Server(sftpClient);
-
-                    context.setPasswd(null);
                     log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
                 } catch (Exception e) {
-                    context.setPasswd(null);
                     log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
                 }
                 serverKey2SshExecClient.put(serverKey, execClient);

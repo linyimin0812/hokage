@@ -38,6 +38,13 @@ public class SshContext {
 
     @Override
     public String toString() {
-        return JSON.toJSONString(this);
+        return "{" +
+                "id=" + id +
+                ", ip=" + ip +
+                ", sshPort=" + sshPort +
+                ", account=" + account +
+                ", loginType=" + loginType +
+                ", size=" + size +
+                '}';
     }
 }

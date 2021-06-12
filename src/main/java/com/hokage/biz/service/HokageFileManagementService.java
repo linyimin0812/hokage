@@ -6,6 +6,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.enums.LsOptionEnum;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -47,8 +48,9 @@ public interface HokageFileManagementService {
      * @param file file path which is downloaded
      * @param os short for output stream
      * @return  download success - true, otherwise false
+     *  @throws IOException io exception
      */
-    ServiceResponse<Boolean> download(Long id, String file, OutputStream os);
+    ServiceResponse<Boolean> download(Long id, String file, OutputStream os) throws IOException;
 
     /**
      * package folder

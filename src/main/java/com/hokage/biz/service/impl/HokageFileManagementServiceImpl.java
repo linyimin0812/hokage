@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -156,7 +157,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     }
 
     @Override
-    public ServiceResponse<Boolean> download(Long id, String file, OutputStream os) {
+    public ServiceResponse<Boolean> download(Long id, String file, OutputStream os) throws IOException {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
 
         HokageServerDO serverDO = serverDao.selectById(id);
@@ -177,11 +178,8 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.download failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_DOWNLOAD_FAILED.getCode(), e.getMessage());
         } finally {
-            if (Objects.nonNull(client)) {
-                Session session = client.getSessionIfPresent();
-                if (Objects.nonNull(session)) {
-                    session.disconnect();
-                }
+            if (Objects.nonNull(os)) {
+                os.close();
             }
         }
     }
