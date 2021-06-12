@@ -7,7 +7,7 @@ import { observer } from 'mobx-react'
 import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
-import { getHokageUid } from '../../libs'
+import { getHokageUid, transferHumanReadableSize2Byte } from '../../libs'
 import {
   DeleteFilled,
   DownloadOutlined,
@@ -224,6 +224,14 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
   }
 
+  sortByFileSize = (a: FileProperty, b: FileProperty) => {
+    const aSize = transferHumanReadableSize2Byte(a.size)
+    const bSize = transferHumanReadableSize2Byte(b.size)
+    console.log(`a.name: ${a.name}, size: ${aSize}`)
+    console.log(`b.name: ${b.name}, size: ${bSize}`)
+    return aSize > bSize ? 1 : -1
+  }
+
   render() {
     const { id, serverVO } = this.props
     const { contentVO, fileReaderVisible } = this.state
@@ -250,11 +258,11 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
           }}
           scroll={{ y: 'calc(100vh - 350px)' }}
         >
-          <Table.Column title={'文件名'} render={this.renderName} />
-          <Table.Column title={'大小'} dataIndex={'size'} />
+          <Table.Column title={'文件名'} render={this.renderName} sorter={(a: FileProperty, b: FileProperty) => a.name > b.name ? 1 : -1} />
+          <Table.Column title={'大小'} dataIndex={'size'} sorter={this.sortByFileSize} />
           <Table.Column title={'权限'} dataIndex={'permission'} />
           <Table.Column title={'所有者'} dataIndex={'owner'} />
-          <Table.Column title={'修改时间'} dataIndex={'lastAccessTime'} />
+          <Table.Column title={'修改时间'} dataIndex={'lastAccessTime'} sorter={(a: FileProperty, b: FileProperty) => a.lastAccessTime > b.lastAccessTime ? 1 : -1} />
           <Table.Column title={'操作'} render={this.renderAction} />
         </Table>
       </div>

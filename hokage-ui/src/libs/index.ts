@@ -195,3 +195,18 @@ export function createRoute(path: string, component: React.ReactNode) {
 export function createModuleRoute(prefix: string, route: RouteParam[]) {
   return { prefix, route }
 }
+
+const sizeUnit: { [key: string]: number } = {
+  'B' : 1,
+  'KB': 1024,
+  'MB': 1024 * 1024,
+  'GB': 1024 * 1024 * 1024
+}
+
+export function transferHumanReadableSize2Byte(size: string) : number {
+  const result = size.toUpperCase().match(/([0-9]+\.[0-9]+) (B|KB|MB|GB)/)
+  if (result && result[1] && result[2]) {
+    return parseFloat(result[1]) * (sizeUnit[result[2]] ? sizeUnit[result[2]] : 1)
+  }
+  return 0
+}
