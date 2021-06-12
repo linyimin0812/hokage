@@ -105,7 +105,8 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
     if (!directoryNum) {
       return null
     }
-    const action = `/api/server/file/upload?curDir=${curDir}&id=${serverVO.id}`
+    const url = process.env.REACT_APP_ENV === 'local' ? '/api/server/file/upload' : '/server/file/upload'
+    const action = `${url}?curDir=${curDir}&id=${serverVO.id}`
     return (
       <>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}>

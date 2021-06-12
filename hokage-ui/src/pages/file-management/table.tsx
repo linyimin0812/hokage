@@ -198,10 +198,10 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
       this.downloadDirectory(record)
       return
     }
-
     const file = path.resolve(record.curDir, record.name)
     const link = document.createElement('a')
-    link.href = `/api/server/file/download?id=${id}&file=${file}`
+    const url = process.env.REACT_APP_ENV === 'local' ? '/api/server/file/download' : '/server/file/download'
+    link.href = `${url}?id=${id}&file=${file}`
     document.body.appendChild(link)
     const evt = document.createEvent("MouseEvents")
     evt.initEvent("click", false, false)
