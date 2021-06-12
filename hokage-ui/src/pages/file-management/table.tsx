@@ -1,5 +1,5 @@
 import React from 'react'
-import { message, Result, Table } from 'antd'
+import { Button, Input, message, Result, Space, Table } from 'antd'
 import './index.less'
 import MenuContext from './menu-context'
 import { FileOperation } from './file-operation'
@@ -8,18 +8,13 @@ import store from './store'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { FileContentVO, FileOperateForm, FileProperty } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid, transferHumanReadableSize2Byte } from '../../libs'
-import {
-  DeleteFilled,
-  DownloadOutlined,
-  EyeFilled,
-  FileTextOutlined,
-  FolderOpenFilled,
-  FolderOutlined,
-} from '@ant-design/icons'
+import { DeleteFilled, DownloadOutlined, EyeFilled, FileTextOutlined, FolderOpenFilled, FolderOutlined, SearchOutlined, } from '@ant-design/icons'
 import { FileReader } from './file-reader'
 import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
 import { Action } from '../../component/Action'
 import path from 'path'
+import { FilterConfirmProps, FilterDropdownProps } from 'antd/lib/table/interface'
+import Highlighter from 'react-highlight-words'
 
 type FileTablePropsType = {
   id: string,
@@ -28,7 +23,9 @@ type FileTablePropsType = {
 
 type FileTableStateType = {
   fileReaderVisible: boolean,
-  contentVO: FileContentVO
+  contentVO: FileContentVO,
+
+  searchText: React.Key,
 }
 
 @observer
@@ -36,7 +33,9 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   state = {
     fileReaderVisible: false,
-    contentVO: {} as FileContentVO
+    contentVO: {} as FileContentVO,
+
+    searchText: ''
   }
 
   componentWillMount = () => {
@@ -130,18 +129,28 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   renderName = (record: FileProperty) => {
+
+    const highLightComponent = (
+      <Highlighter
+        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={record.name}
+      />
+    )
+
     if (record.type === 'directory') {
       return (
         <div onClick={() => this.onDoubleClick(record)} style={{cursor: 'pointer'}}>
           <FolderOutlined translate style={{color: '#1890ff'}} />
-          <span style={{color: '#1890ff', paddingLeft: 5}}>{record.name}</span>
+          <span style={{color: '#1890ff', paddingLeft: 5}}>{highLightComponent}</span>
         </div>
       )
     }
     return (
       <React.Fragment>
         <FileTextOutlined translate />
-        <span style={{paddingLeft: 5}} >{record.name}</span>
+        <span style={{paddingLeft: 5}} >{highLightComponent}</span>
       </React.Fragment>
     )
   }
@@ -232,6 +241,64 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     return aSize > bSize ? 1 : -1
   }
 
+  filterByName = (value: string | number | boolean, record: FileProperty) => {
+    return record.name.includes(value.toString())
+  }
+
+  // search by file name start
+  private searchInput: Input | null = null
+  filterDropdown = (prop: FilterDropdownProps) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={(node) => this.searchInput = node}
+        placeholder={`Search name`}
+        value={prop.selectedKeys[0]}
+        onChange={(e) =>
+          prop.setSelectedKeys(e.target.value ? [e.target.value] : [])
+        }
+        onPressEnter={() =>
+          this.handleSearch(prop.selectedKeys, prop.confirm)
+        }
+        style={{ marginBottom: 8, display: "block" }}
+      />
+      <Space>
+        <Button type="primary" onClick={() => this.handleSearch(prop.selectedKeys, prop.confirm)} icon={<SearchOutlined translate />} size="small" style={{ width: 90 }}>
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(prop.clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </Space>
+    </div>
+  )
+
+  filterIcon = (filtered: boolean) => (
+    <SearchOutlined translate style={{ color: filtered ? '#1890ff' : '#000000' }} />
+  )
+
+  onFilter = (value: string | number | boolean, record: FileProperty) => record.name.includes(value.toString())
+
+  onFilterDropdownVisibleChange = (visible: boolean) => {
+    if (visible) {
+      setTimeout(() => this.searchInput!.select(), 100)
+    }
+  }
+
+  handleSearch = (selectedKeys: React.Key[], confirm: (param?: FilterConfirmProps | undefined) => void) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+    })
+  }
+
+  handleReset = (clearFilters: (() => void) | undefined) => {
+    if (clearFilters) {
+      clearFilters()
+    }
+    this.setState({ searchText: "" })
+  }
+  // search by file name end
+
   render() {
     const { id, serverVO } = this.props
     const { contentVO, fileReaderVisible } = this.state
@@ -258,7 +325,14 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
           }}
           scroll={{ y: 'calc(100vh - 350px)' }}
         >
-          <Table.Column title={'文件名'} render={this.renderName} sorter={(a: FileProperty, b: FileProperty) => a.name > b.name ? 1 : -1} />
+          <Table.Column
+            title={'文件名'} render={this.renderName}
+            filterDropdown={this.filterDropdown}
+            filterIcon={this.filterIcon}
+            onFilter={this.onFilter}
+            onFilterDropdownVisibleChange={this.onFilterDropdownVisibleChange}
+            sorter={(a: FileProperty, b: FileProperty) => a.name > b.name ? 1 : -1}
+          />
           <Table.Column title={'大小'} dataIndex={'size'} sorter={this.sortByFileSize} />
           <Table.Column title={'权限'} dataIndex={'permission'} />
           <Table.Column title={'所有者'} dataIndex={'owner'} />
