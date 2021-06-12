@@ -27,15 +27,15 @@ public class LinuxCommand extends AbstractCommand {
         dir = ObjectUtils.defaultIfNull(dir, HOME);
         String option = CollectionUtils.isEmpty(optionList) ? StringUtils.EMPTY : "-" + StringUtils.join(optionList, "");
         return ("ls -al --time-style=full ${option} ${dir}" + " | " +
-                "awk 'BEGIN {print \"[\"} NR>1 {print \"{" +
+                "awk 'BEGIN {print \"[\"} NR>1 {printf \"{" +
                 "\\\"typeAndPermission\\\": \\\"\"$1\"\\\"," +
                 "\\\"owner\\\": \\\"\"$3\"\\\"," +
                 "\\\"group\\\": \\\"\"$4\"\\\"," +
                 "\\\"size\\\": \\\"\"$5\"\\\"," +
                 "\\\"lastAccessTime\\\": \\\"\"$6\" \"$7\"\\\"," +
-                "\\\"name\\\": \\\"\"$9\"\\\"},\"}" +
+                "\\\"name\\\":\"; name=$9;for(i=10;i<=NF;i++) name=name\" \"$i; print \"\\\"\"name\"\\\"},\"}" +
                 "END {print \"]\"}'" + " | " +
-                "sed 'N;$s/},/}/;P;D'")
+                "sed 'N;$s/},/}/;P;D';")
                 .replace("${option}", option)
                 .replace("${dir}", dir);
     }
