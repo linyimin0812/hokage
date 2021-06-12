@@ -98,7 +98,7 @@ export default class Xterm extends React.Component<XtermPropsType, XtermStateTyp
     if (window.location.protocol === 'https') {
       protocol = 'wss://'
     }
-    const endpoint = protocol + '127.0.0.1:8080/ws/ssh'
+    const endpoint = protocol + window.location.host + '/api/ws/ssh'
     const client: W3cWebsocket = new W3cWebsocket(endpoint)
 
     client.onopen = () => {
