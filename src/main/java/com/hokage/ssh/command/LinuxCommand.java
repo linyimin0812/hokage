@@ -34,7 +34,7 @@ public class LinuxCommand extends AbstractCommand {
                 "\\\"group\\\": \\\"\"$4\"\\\"," +
                 "\\\"size\\\": \\\"\"$5\"\\\"," +
                 "\\\"lastAccessTime\\\": \\\"\"$6\" \"$7\"\\\"," +
-                "\\\"name\\\":\"; name=$9;for(i=10;i<=NF;i++) name=name\" \"$i; print \"\\\"\"name\"\\\"},\"}" +
+                "\\\"name\\\":\"; print \"\\\"\"substr($0, index($0,$7\" \"$8)+length($7\" \"$8)+1)\"\\\"},\"}" +
                 "END {print \"]\"}'" + " | " +
                 "sed 'N;$s/},/}/;P;D';")
                 .replace("${option}", option)
@@ -92,7 +92,6 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.memInfo());
         System.out.println(command.bandwidth());
         System.out.println(command.process());
-        System.out.println(command.preview("/root/.presto_history", 1L));
         System.out.println(command.wc("/root/.presto_history"));
     }
 }
