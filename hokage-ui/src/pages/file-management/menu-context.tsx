@@ -1,11 +1,11 @@
 import React from 'react'
 import { FileProperty } from '../../axios/action/file-management/file-management-type'
 import FileTable from './table'
-import { message, Modal } from 'antd';
-import store from './store';
+import { message, Modal } from 'antd'
+import store from './store'
 import { observer } from 'mobx-react'
 import path from 'path'
-import { DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled } from '@ant-design/icons'
 
 export interface ActionProps {
   visible: boolean,

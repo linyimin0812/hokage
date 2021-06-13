@@ -43,15 +43,9 @@ export const FormModal = (props: FormModalProps) => {
     <>
       <Button type="link" onClick={onClick}>{props.title}</Button>
       <Modal
-        visible={visible}
-        title={props.title}
-        okText={'confirm'}
-        cancelText={'cancel'}
-        onCancel={onCancel}
-        confirmLoading={confirmLoading}
-        onOk={onOk}
-        closable={false}
-        maskClosable={false}
+        visible={visible} title={props.title} okText={'confirm'} cancelText={'cancel'}
+        onCancel={onCancel} confirmLoading={confirmLoading}
+        onOk={onOk} closable={false} maskClosable={false}
       >
         {props.renderForm(form)}
       </Modal>

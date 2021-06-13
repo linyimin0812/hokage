@@ -28,13 +28,10 @@ export const serviceConfig = (serviceInfo: {[name: string]: ServiceParam}) => {
           request.headers['hokageRole'] = getHokageRole()
           return request
         })
-
         const promise: AxiosPromise<ServiceResult<any>> = axios(requestConfig)
         promise.then(result => {
           resolve(result.data)
-        }).catch(err => {
-          reject(err)
-        })
+        }).catch(err => reject(err))
       })
     }
   })

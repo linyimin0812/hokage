@@ -8,7 +8,7 @@ import { FileOperateForm, FileVO } from '../../axios/action/file-management/file
 import { getHokageUid } from '../../libs'
 import { ReloadOutlined } from '@ant-design/icons'
 import path from 'path'
-import { FileUpload } from '../common/file-upload';
+import { FileUpload } from '../common/file-upload'
 import { UploadChangeParam } from 'antd/lib/upload/interface'
 
 type FileOperationPropsType = {

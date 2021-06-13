@@ -1,7 +1,7 @@
 import React from 'react'
 import { Modal, Pagination, Spin } from 'antd'
 import Editor from 'react-monaco-editor'
-import { FileContentVO, FileOperateForm } from '../../axios/action/file-management/file-management-type';
+import { FileContentVO, FileOperateForm } from '../../axios/action/file-management/file-management-type'
 import { FullscreenExitOutlined, FullscreenOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import { ServerVO } from '../../axios/action/server/server-type'
@@ -114,7 +114,6 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
             onChange={this.onPageChange}
           />
         </div>
-
       </Modal>
     )
   }
