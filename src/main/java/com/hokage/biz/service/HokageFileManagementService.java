@@ -30,9 +30,10 @@ public interface HokageFileManagementService {
      * open a file
      * @param serverKey: ip_sshPort_account
      * @param curDir: opened file path
+     * @param page: open page, 1000 line per page
      * @return file content vo
      */
-    ServiceResponse<FileContentVO> open(String serverKey, String curDir);
+    ServiceResponse<FileContentVO> open(String serverKey, String curDir, Long page);
 
     /**
      * remove file or directory

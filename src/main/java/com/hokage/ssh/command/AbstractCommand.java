@@ -40,11 +40,16 @@ public abstract class AbstractCommand implements Command {
     /**
      * acquire file content
      * @param dir file path, may be relative path or absolute path
+     * @param page: view the page content
      * @return file content
      */
-    public String preview(String dir) {
-        String command = "head -n ${previewLine} ${dir};";
-        return command.replace("${dir}", dir).replace("${previewLine}", previewLine);
+    public String preview(String dir, Long page) {
+        long startLine = (page - 1) * Long.parseLong(previewLine) + 1;
+        long endLine = page * Long.parseLong(previewLine);
+        String command = "sed -n \"${startLine},${endLine}p\" ${dir};";
+        return command.replace("${dir}", dir)
+                .replace("${startLine}", String.valueOf(startLine))
+                .replace("${endLine}", String.valueOf(endLine));
     }
 
     /**

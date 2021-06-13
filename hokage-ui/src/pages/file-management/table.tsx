@@ -109,6 +109,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   openFile = (form: FileOperateForm): void => {
     store.loading = true
+    form.page = form.page ? form.page : 1
     FileManagementAction.open(form).then(contentVO => {
       this.setState({ fileReaderVisible: true, contentVO: contentVO })
     }).catch(e => {
@@ -310,7 +311,12 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     return (
       <div>
         <MenuContext {...store.actionProps} />
-        <FileReader visible={fileReaderVisible} contentVO={contentVO} close={() => {this.setState({ fileReaderVisible: false })}} />
+        <FileReader
+          visible={fileReaderVisible}
+          contentVO={contentVO} serverVO={serverVO}
+          close={() => {this.setState({ fileReaderVisible: false })}}
+          openFile={this.openFile}
+        />
         <FileOperation id={id} serverVO={serverVO} fileVO={fileVO} />
         <Table
           style={{ cursor: 'pointer' }}

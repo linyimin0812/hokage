@@ -17,14 +17,12 @@ import com.hokage.ssh.command.CommandDispatcher;
 import com.hokage.ssh.command.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.component.SshSftpComponent;
-import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.domain.FileProperty;
 import com.hokage.ssh.enums.LsOptionEnum;
 import com.hokage.util.FileUtil;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -111,7 +109,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
     }
 
     @Override
-    public ServiceResponse<FileContentVO> open(String serverKey, String curDir) {
+    public ServiceResponse<FileContentVO> open(String serverKey, String curDir, Long page) {
         ServiceResponse<FileContentVO> response = new ServiceResponse<>();
         Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
@@ -121,7 +119,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         try {
             AbstractCommand command = dispatcher.dispatch(client);
             CommandResult wcResult = execComponent.execute(client, command.wc(curDir));
-            CommandResult previewResult = execComponent.execute(client, command.preview(curDir));
+            CommandResult previewResult = execComponent.execute(client, command.preview(curDir, page));
 
             if (!previewResult.isSuccess() || !wcResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", previewResult.getExitStatus(), previewResult.getMsg());
@@ -260,15 +258,18 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
 
         int lastIndex = StringUtils.lastIndexOf(path, '/');
         String name = StringUtils.substring(path, lastIndex + 1);
+        String curDir = StringUtils.substring(path, 0, lastIndex);
 
         lastIndex = StringUtils.lastIndexOf(name, '.');
         String type = StringUtils.lowerCase(StringUtils.substring(name, lastIndex + 1));
 
         FileContentVO contentVO = new FileContentVO();
-        contentVO.setName(name).setType(type)
+        contentVO.setName(name)
+                .setCurDir(curDir)
+                .setType(type)
                 .setContent(previewResult.getContent())
                 .setTotalLine(Long.parseLong(wcResult.getContent()))
-                .setCurLine(Long.parseLong(previewLine));
+                .setPerPageLine(Long.parseLong(previewLine));
 
         return contentVO;
     }

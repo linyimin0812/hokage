@@ -24,12 +24,14 @@ export interface FileOperateForm {
   sshPort: string,
   account: string,
   curDir: string,
+  page?: number,
 }
 
 export interface FileContentVO {
   name: string,
+  curDir: string,
   type: string,
   content: string,
-  curLine: number,
+  perPageLine: number,
   totalLine: number,
 }

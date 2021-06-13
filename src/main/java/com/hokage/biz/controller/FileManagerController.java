@@ -49,7 +49,8 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/open", method = RequestMethod.POST)
     public ResultVO<FileContentVO> openFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getCurDir());
+        Long page = ObjectUtils.defaultIfNull(form.getPage(), 1L);
+        ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getCurDir(), page);
 
         return response(response);
     }
