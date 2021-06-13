@@ -29,6 +29,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'move': {
     url: '/server/file/move',
     method: 'POST'
+  },
+  'chmod': {
+    url: '/server/file/chmod',
+    method: 'POST'
   }
 }
 

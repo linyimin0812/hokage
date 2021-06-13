@@ -4,8 +4,6 @@ import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.enums.LsOptionEnum;
-
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -78,4 +76,13 @@ public interface HokageFileManagementService {
      * @return move success is true, otherwise false
      */
     ServiceResponse<Boolean> move(String serverKey, String src, String dst);
+
+    /**
+     * change file or directory permission
+     * @param serverKey ip_sshPort_account
+     * @param curDir file path whose permission is changed
+     * @param permission file or directory permission
+     * @return change success is true, otherwise false
+     */
+    ServiceResponse<Boolean> chmod(String serverKey, String curDir, String permission);
 }

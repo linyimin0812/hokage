@@ -110,4 +110,11 @@ public class FileManagerController extends BaseController {
 
         return response(response);
     }
+
+    @RequestMapping(value = "/server/file/chmod", method = RequestMethod.POST)
+    public ResultVO<Boolean> chmodFile(@RequestBody FileOperateForm form) throws Exception {
+        String serverKey = form.buildKey();
+        ServiceResponse<Boolean> response = fileService.chmod(serverKey, form.getCurDir(), form.getPermission());
+        return response(response);
+    }
 }

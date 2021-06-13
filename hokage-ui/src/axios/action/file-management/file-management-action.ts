@@ -70,4 +70,17 @@ export const FileManagementAction ={
       }
     })
   },
+  chmod: (form: FileOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await FileManagementService.chmod(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('修改文件权限失败')
+      }
+    })
+  },
 }

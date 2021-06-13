@@ -252,6 +252,37 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
   }
 
+  tarDirectory = (record: FileProperty) => {
+    let form = this.assembleFileOperateForm(record)
+    FileManagementAction.tar(form).then(result => {
+      if (result) {
+        message.info(`${form.curDir} 打包完成`)
+        const cloneRecord = Object.assign({}, record)
+        cloneRecord.name = ''
+        form = this.assembleFileOperateForm(cloneRecord)
+        store.listDir(this.props.id, form)
+      } else {
+        message.error(`打包文件夹${form.curDir}失败.`)
+      }
+    }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
+  }
+
+  changeFilePermission = (permission: string, record: FileProperty) => {
+    let form = this.assembleFileOperateForm(record)
+    form.permission = permission
+    FileManagementAction.chmod(form).then(result => {
+      if (result) {
+        message.info(`${form.curDir} 已完成权限修改`)
+        const cloneRecord = Object.assign({}, record)
+        cloneRecord.name = ''
+        form = this.assembleFileOperateForm(cloneRecord)
+        store.listDir(this.props.id, form)
+      } else {
+        message.error(`修改${form.curDir}权限失败.`)
+      }
+    }).catch(e => message.error(`修改${form.curDir}权限失败. err: ` + e))
+  }
+
   sortByFileSize = (a: FileProperty, b: FileProperty) => {
     const aSize = transferHumanReadableSize2Byte(a.size)
     const bSize = transferHumanReadableSize2Byte(b.size)

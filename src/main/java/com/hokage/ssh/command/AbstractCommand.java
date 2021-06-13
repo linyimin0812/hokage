@@ -93,4 +93,13 @@ public abstract class AbstractCommand implements Command {
     public static String move(String src, String dst) {
         return String.format("mv %s %s;", FileUtil.escapeNameWithSingleQuote(src), FileUtil.escapeNameWithSingleQuote(dst));
     }
+
+    /**
+     * change file or directory permission
+     * @param curDir file path whose permission is changed
+     * @param permission file or directory permission
+     */
+    public static String chmod(String curDir, String permission) {
+        return String.format("chmod -R %s %s;", permission, FileUtil.escapeNameWithSingleQuote(curDir));
+    }
 }

@@ -18,6 +18,7 @@ public class FileOperateForm {
     private String action;
     private Long page;
     private String dst;
+    private String permission;
 
     public String buildKey() {
         return String.format("%s_%s_%s", ip, sshPort, account);
