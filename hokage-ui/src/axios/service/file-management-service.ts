@@ -25,6 +25,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'tar': {
     url: '/server/file/tar',
     method: 'POST'
+  },
+  'move': {
+    url: '/server/file/move',
+    method: 'POST'
   }
 }
 

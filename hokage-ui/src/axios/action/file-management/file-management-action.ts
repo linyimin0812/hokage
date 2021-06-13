@@ -57,4 +57,17 @@ export const FileManagementAction ={
       }
     })
   },
+  move: (form: FileOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await FileManagementService.move(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('修改文件失败')
+      }
+    })
+  },
 }

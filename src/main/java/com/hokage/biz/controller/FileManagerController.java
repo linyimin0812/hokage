@@ -101,6 +101,13 @@ public class FileManagerController extends BaseController {
         ServiceResponse<Boolean> response = fileService.upload(id, dst, in);
 
         return response(response);
+    }
 
+    @RequestMapping(value = "/server/file/move", method = RequestMethod.POST)
+    public ResultVO<Boolean> moveFile(@RequestBody FileOperateForm form) throws Exception {
+        String serverKey = form.buildKey();
+        ServiceResponse<Boolean> response = fileService.move(serverKey, form.getCurDir(), form.getDst());
+
+        return response(response);
     }
 }

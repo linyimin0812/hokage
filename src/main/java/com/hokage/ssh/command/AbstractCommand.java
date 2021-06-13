@@ -84,4 +84,13 @@ public abstract class AbstractCommand implements Command {
 
         return String.format("cd %s; tar -zcvf %s %s;", dir, tarFileName, fileName);
     }
+
+    /**
+     * move folder or file
+     * @param src file or directory which is moved from
+     * @param dst file or directory which is moved to
+     */
+    public static String move(String src, String dst) {
+        return String.format("mv %s %s;", FileUtil.escapeNameWithSingleQuote(src), FileUtil.escapeNameWithSingleQuote(dst));
+    }
 }

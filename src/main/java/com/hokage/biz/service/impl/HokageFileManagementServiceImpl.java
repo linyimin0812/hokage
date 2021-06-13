@@ -232,6 +232,27 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         }
     }
 
+    @Override
+    public ServiceResponse<Boolean> move(String serverKey, String src, String dst) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
+        if (!optional.isPresent()) {
+            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
+        }
+        SshClient client = optional.get();
+        try {
+            CommandResult moveResult = execComponent.execute(client, AbstractCommand.move(src, dst));
+            if (!moveResult.isSuccess()) {
+                String errMsg= String.format("exiStatus: %s, msg: %s", moveResult.getExitStatus(), moveResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            return response.success(Boolean.TRUE);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.move failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.FILE_TAR_FAILED.getCode(), e.getMessage());
+        }
+    }
+
     private HokageFileVO assembleFileVO(CommandResult lsResult, CommandResult pwdResult) {
 
         List<FileProperty> fileList = JSONArray.parseArray(lsResult.getContent(), FileProperty.class);

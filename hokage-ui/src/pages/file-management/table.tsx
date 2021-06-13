@@ -62,9 +62,8 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }
     const className = JSON.stringify(event.target.className)
     if (!className.includes('contextMenu--option')) {
-      store.actionProps = { visible: false }
+      store.actionProps.visible = false
     }
-
   }
 
   getActionPosition = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
@@ -199,6 +198,25 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     }).catch(e => {
       message.error(`${type}: ${path.resolve(curDir, name)}删除失败, err: ${e}`)
     }).finally(() => store.loading = false)
+  }
+
+  moveFile = (record: FileProperty, dst: string) => {
+    let form = this.assembleFileOperateForm(record)
+    form.dst = dst
+    store.loading = true
+    FileManagementAction.move(form).then(result => {
+      const src = path.resolve(record.curDir, record.name)
+      if (result) {
+        message.info(`${src} --> ${dst} 已完成`)
+        const cloneRecord = Object.assign({}, record)
+        cloneRecord.name = ''
+        form = this.assembleFileOperateForm(cloneRecord)
+        store.listDir(this.props.id, form)
+      } else {
+        message.error(`${src} --> ${dst} 失败`)
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.loading = false)
   }
 
   downloadFile = (record: FileProperty) => {

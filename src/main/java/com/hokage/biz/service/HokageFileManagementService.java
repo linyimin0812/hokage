@@ -69,4 +69,13 @@ public interface HokageFileManagementService {
      * @return true - upload success otherwise false
      */
     ServiceResponse<Boolean> upload(Long id, String dst, InputStream src);
+
+    /**
+     * move folder or file
+     * @param serverKey ip_sshPort_account
+     * @param src file or directory which is moved from
+     * @param dst file or directory which is moved to
+     * @return move success is true, otherwise false
+     */
+    ServiceResponse<Boolean> move(String serverKey, String src, String dst);
 }

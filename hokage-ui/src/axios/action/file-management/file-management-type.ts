@@ -25,6 +25,7 @@ export interface FileOperateForm {
   account: string,
   curDir: string,
   page?: number,
+  dst?: string
 }
 
 export interface FileContentVO {
