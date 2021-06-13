@@ -3,6 +3,7 @@ package com.hokage.ssh.command;
 import com.hokage.ssh.enums.LsOptionEnum;
 import com.hokage.ssh.enums.OsTypeEnum;
 
+import com.hokage.util.FileUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class LinuxCommand extends AbstractCommand {
                 "END {print \"]\"}'" + " | " +
                 "sed 'N;$s/},/}/;P;D';")
                 .replace("${option}", option)
-                .replace("${dir}", dir);
+                .replace("${dir}", FileUtil.escapeNameWithSingleQuote(dir));
     }
 
     @Override
@@ -82,7 +83,7 @@ public class LinuxCommand extends AbstractCommand {
 
     @Override
     public String pwd(String dir) {
-        return String.format("cd %s; pwd;", dir);
+        return String.format("cd %s; pwd;", FileUtil.escapeNameWithSingleQuote(dir));
     }
 
     public static void main(String[] args) {

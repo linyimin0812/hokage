@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import com.hokage.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public abstract class AbstractCommand implements Command {
         long startLine = (page - 1) * Long.parseLong(previewLine) + 1;
         long endLine = page * Long.parseLong(previewLine);
         String command = "sed -n \"${startLine},${endLine}p\" ${dir};";
-        return command.replace("${dir}", dir)
+        return command.replace("${dir}", FileUtil.escapeNameWithSingleQuote(dir))
                 .replace("${startLine}", String.valueOf(startLine))
                 .replace("${endLine}", String.valueOf(endLine));
     }
@@ -59,7 +60,7 @@ public abstract class AbstractCommand implements Command {
      */
     public String wc(String path) {
         String command = "wc -l ${dir}" + " | awk '{print $1}';";
-        return command.replace("${dir}", path);
+        return command.replace("${dir}", FileUtil.escapeNameWithSingleQuote(path));
     }
 
     /**
@@ -68,7 +69,7 @@ public abstract class AbstractCommand implements Command {
      * @return
      */
     public String rm(String path) {
-        return String.format("rm -r %s;", path);
+        return String.format("rm -r %s;", FileUtil.escapeNameWithSingleQuote(path));
     }
 
     /**
@@ -76,8 +77,11 @@ public abstract class AbstractCommand implements Command {
      * @param path folder path
      */
     public static String tar(String path) {
-        String fileName = StringUtils.substring(path, StringUtils.lastIndexOf(path, '/') + 1);
-        String dir = StringUtils.substring(path, 0, StringUtils.lastIndexOf(path, '/'));
-        return String.format("cd %s; tar -zcvf %s.tar.gz %s;", dir, fileName, fileName);
+        int lastIndex = StringUtils.lastIndexOf(path, '/');
+        String dir = FileUtil.escapeNameWithSingleQuote(StringUtils.substring(path, 0, lastIndex));
+        String fileName = FileUtil.escapeNameWithSingleQuote(StringUtils.substring(path,  lastIndex+ 1));
+        String tarFileName = FileUtil.escapeNameWithSingleQuote(fileName + ".tar.gz");
+
+        return String.format("cd %s; tar -zcvf %s %s;", dir, tarFileName, fileName);
     }
 }
