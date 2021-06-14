@@ -64,6 +64,14 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
       curDir: fileVO.curDir
     }
     store.listDir(id, form)
+    this.triggerFileSearchButtonClick()
+  }
+
+  triggerFileSearchButtonClick = () => {
+    const fileSearchResetElement = document.getElementById('file-search-reset')
+    if (fileSearchResetElement) {
+      fileSearchResetElement.click()
+    }
   }
 
   goPath = (path: string) => {
@@ -79,12 +87,14 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
   }
 
   goHome = () => {
+    this.triggerFileSearchButtonClick()
     this.goPath('~')
   }
 
   goPrevious = () => {
     const { curDir } = this.props.fileVO
     this.goPath(path.resolve(curDir, '..'))
+    this.triggerFileSearchButtonClick()
   }
 
   onUploadChange = (info: UploadChangeParam) => {

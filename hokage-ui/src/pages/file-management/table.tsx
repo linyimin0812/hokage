@@ -315,7 +315,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
         <Button type="primary" onClick={() => this.handleSearch(prop.selectedKeys, prop.confirm)} icon={<SearchOutlined translate />} size="small" style={{ width: 90 }}>
           Search
         </Button>
-        <Button onClick={() => this.handleReset(prop.clearFilters)} size="small" style={{ width: 90 }}>
+        <Button id={'file-search-reset'} onClick={() => this.handleReset(prop.clearFilters)} size="small" style={{ width: 90 }}>
           Reset
         </Button>
       </Space>
@@ -387,6 +387,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
             onFilter={this.onFilter}
             onFilterDropdownVisibleChange={this.onFilterDropdownVisibleChange}
             sorter={(a: FileProperty, b: FileProperty) => a.name > b.name ? 1 : -1}
+            width={'30%'}
           />
           <Table.Column title={'大小'} dataIndex={'size'} sorter={this.sortByFileSize} />
           <Table.Column title={'权限'} dataIndex={'permission'} />
