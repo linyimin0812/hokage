@@ -308,7 +308,7 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         FileContentVO contentVO = new FileContentVO();
         contentVO.setName(name)
                 .setCurDir(curDir)
-                .setType(type)
+                .setExtension(type)
                 .setContent(previewResult.getContent())
                 .setTotalLine(Long.parseLong(wcResult.getContent()))
                 .setPerPageLine(Long.parseLong(previewLine));

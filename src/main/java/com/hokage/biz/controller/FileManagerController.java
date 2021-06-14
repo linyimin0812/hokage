@@ -117,4 +117,14 @@ public class FileManagerController extends BaseController {
         ServiceResponse<Boolean> response = fileService.chmod(serverKey, form.getCurDir(), form.getPermission());
         return response(response);
     }
+
+    @RequestMapping(value = "/server/file/view", method = RequestMethod.GET)
+    public void viewFile(HttpServletResponse response,
+                             @RequestParam("id") Long id,
+                             @RequestParam("file") String file) throws Exception {
+        response.reset();
+        response.setContentType("application/pdf");
+        OutputStream os  = response.getOutputStream();
+        fileService.download(id, file, os);
+    }
 }

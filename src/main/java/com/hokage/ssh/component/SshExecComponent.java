@@ -4,7 +4,6 @@ import com.google.common.base.Stopwatch;
 import com.hokage.biz.Constant;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.CommandResult;
-import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.Session;

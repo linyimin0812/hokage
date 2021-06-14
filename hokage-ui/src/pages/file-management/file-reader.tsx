@@ -88,22 +88,21 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
     this.setState({currentPage: 1})
   }
 
-  render() {
+  renderViewer = () => {
     const { visible, contentVO } = this.props
     const { fullScreen, currentPage } = this.state
-    if (!contentVO.name) {
-      return null
+
+    if (contentVO.extension === 'pdf') {
+      const { serverVO } = this.props
+      const url = `${process.env.REACT_APP_ENV === 'local' ? '/api' : ''}/server/file/view?id=${serverVO.id}&file=${path.resolve(contentVO.curDir, contentVO.name)}`
+      return <div style={{height: visible && fullScreen ? 'calc(100vh - 120px)' : '500px'}}>
+        <iframe title={contentVO.name} width={'100%'} height={'100%)'} src={url} />
+      </div>
     }
+
     return (
-      <Modal
-        width={fullScreen ? '100vw' : '1200px'}
-        wrapClassName={fullScreen ? 'file-reader-wrapper' : undefined}
-        title={this.renderModalTitle(contentVO)}
-        visible={visible} footer={null} onCancel={this.onModalCancel}
-      >
-        <Spin spinning={store.loading}>
-          <Editor height={visible && fullScreen ? 'calc(100vh - 120px)' : '500px'} options={{readOnly: true}} value={contentVO.content} />
-        </Spin>
+      <Spin spinning={store.loading}>
+        <Editor height={visible && fullScreen ? 'calc(100vh - 120px)' : '500px'} options={{readOnly: true}} value={contentVO.content} />
         <div style={{width: '100%', height: '2px', background: '#d9d9d9', margin: '0 0 0 0'}} />
         <div style={{textAlign: 'center'}}>
           <Pagination
@@ -114,6 +113,24 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
             onChange={this.onPageChange}
           />
         </div>
+      </Spin>
+    )
+  }
+
+  render() {
+    const { visible, contentVO } = this.props
+    const { fullScreen } = this.state
+    if (!contentVO.name) {
+      return null
+    }
+    return (
+      <Modal
+        width={fullScreen ? '100vw' : '1200px'}
+        wrapClassName={fullScreen ? 'file-reader-wrapper' : undefined}
+        title={this.renderModalTitle(contentVO)}
+        visible={visible} footer={null} onCancel={this.onModalCancel}
+      >
+        {this.renderViewer()}
       </Modal>
     )
   }

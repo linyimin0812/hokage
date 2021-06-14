@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 public class FileContentVO {
     private String name;
     private String curDir;
-    private String type;
+    private String extension;
     private String content;
     private Long perPageLine;
     private Long totalLine;

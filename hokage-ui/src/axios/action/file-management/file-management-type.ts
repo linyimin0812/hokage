@@ -32,7 +32,7 @@ export interface FileOperateForm {
 export interface FileContentVO {
   name: string,
   curDir: string,
-  type: string,
+  extension: string,
   content: string,
   perPageLine: number,
   totalLine: number,
