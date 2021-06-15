@@ -55,4 +55,10 @@ public interface Command {
      * @return absolute path
      */
     String pwd(String dir);
+
+    /**
+     * acquire cpu information
+     * @return cpu information
+     */
+    String cpuInfo();
 }

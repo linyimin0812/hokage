@@ -1,105 +1,94 @@
 import React from 'react'
 import ServerCardPanel from '../common/server-card-panel'
-import { ActionPanesType } from '../common/server-card'
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import { Tabs } from 'antd'
 import BasicInfo from './basic-info'
 import SystemStatus from './system-status'
 import Network from './network'
-import { ServerVO } from '../../axios/action/server/server-type';
+import { ServerVO } from '../../axios/action/server/server-type'
+import store, { MonitorPanesType } from './store'
+import { v4 as uuid } from 'uuid'
+import { observer } from 'mobx-react'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '资源监控' }
 ]
 
-type StateType = {
-  actionPanes: ActionPanesType[],
-  activeKey: string
-}
-
-export default class ServerResourceManagementHome extends React.Component<{}, StateType> {
+@observer
+export default class ServerResourceManagementHome extends React.Component {
 
   constructor(props: any) {
     super(props)
-    this.state = {
-      actionPanes: [{
+    if (!store.panes || store.panes.length === 0) {
+      store.panes = [{
         title: "我的服务器",
         content: <ServerCardPanel actionName={'资源管理'} action={this.addPane} />,
         key: '1',
-      }],
-      activeKey: '1'
+        closable: false
+      }]
+      store.activeKey = '1'
     }
   }
 
   renderMonitorPage = () => {
+    const pane = store.panes.find(pane => pane.key === store.activeKey)
+    if (!pane) {
+      return null
+    }
+    const { serverVO } = pane
     return (
       <Tabs defaultActiveKey="2" tabPosition="left" >
         <Tabs.TabPane tab={ <span>基本信息</span> } key="1">
-          <BasicInfo />
+          <BasicInfo serverVO={serverVO!} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={ <span>系统状态</span> } key="2">
-          <SystemStatus />
+          <SystemStatus serverVO={serverVO!} />
         </Tabs.TabPane>
         <Tabs.TabPane tab={ <span>网络信息</span> } key="3">
-          <Network />
+          <Network serverVO={serverVO!} />
         </Tabs.TabPane>
       </Tabs>
     )
   }
 
   addPane = (serverVO: ServerVO) => {
-    const id = `${serverVO.ip}(${serverVO.account})`
-    const { actionPanes } = this.state
-    if (!actionPanes.some(pane => pane.key === id)) {
-      const pane: ActionPanesType = {
+    const id = uuid()
+    if (!store.panes.some(pane => pane.key === id)) {
+      const pane: MonitorPanesType = {
         key: id,
         content: this.renderMonitorPage(),
-        title: id
+        title: `${serverVO.account}@${serverVO.ip}`,
+        serverVO: serverVO
       }
-      actionPanes.push(pane)
+      store.panes.push(pane)
     }
-
-    this.setState({
-      actionPanes: actionPanes,
-      activeKey: id
-    })
+    store.activeKey = id
   }
 
   onChange = (activeKey: string) => {
-    this.setState({
-      activeKey: activeKey
-    })
+    store.activeKey = activeKey
   }
 
-  onEdit = (targetKey: any, action: string): void => {
-    let { activeKey, actionPanes } = this.state
-    switch(action) {
-      case 'remove':
-        let lastKeyIndex: number = 0
-        actionPanes.forEach((pane, i) => {
-          if (pane.key === targetKey) {
-            lastKeyIndex = i - 1
-          }
-        })
-        const newPanes: ActionPanesType[] = actionPanes.filter(pane => pane.key !== targetKey)
-        if (targetKey === activeKey && newPanes.length) {
-          lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
-          activeKey = newPanes[lastKeyIndex].key
+  onEdit = (targetKey: any, action: 'add' | 'remove'): void => {
+    if (action === 'remove') {
+      let lastKeyIndex: number = 0
+      store.panes.forEach((pane, i) => {
+        if (pane.key === targetKey) {
+          lastKeyIndex = i - 1
         }
-        this.setState({
-          actionPanes: newPanes,
-          activeKey
-        })
-        break
-      default:
-        return
+      })
+      const newPanes: MonitorPanesType[] = store.panes.filter(pane => pane.key !== targetKey)
+      if (targetKey === store.activeKey && newPanes.length) {
+        lastKeyIndex = lastKeyIndex >=0 ? lastKeyIndex : 0
+        store.activeKey = newPanes[lastKeyIndex].key
+      }
+      store.panes = newPanes
     }
   }
 
   renderActionPanes = () => {
-    const { actionPanes } = this.state
-    return actionPanes.map(pane => {
+    return store.panes.map(pane => {
       return (
         <Tabs.TabPane tab={pane.title} key={pane.key} closable={pane.closable}>
           {pane.content}
@@ -109,11 +98,10 @@ export default class ServerResourceManagementHome extends React.Component<{}, St
   }
 
   render() {
-    const { activeKey } = this.state
     return (
       <>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
-        <Tabs onChange={this.onChange} activeKey={activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
+        <Tabs onChange={this.onChange} activeKey={store.activeKey} type="editable-card" hideAdd onEdit={this.onEdit}>
           { this.renderActionPanes() }
         </Tabs>
       </>

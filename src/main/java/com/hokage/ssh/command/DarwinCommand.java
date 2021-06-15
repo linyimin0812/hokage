@@ -47,4 +47,9 @@ public class DarwinCommand extends AbstractCommand {
     public String pwd(String dir) {
         return null;
     }
+
+    @Override
+    public String cpuInfo() {
+        return null;
+    }
 }

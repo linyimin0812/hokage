@@ -86,6 +86,12 @@ public class LinuxCommand extends AbstractCommand {
         return String.format("cd %s; pwd;", FileUtil.escapeNameWithSingleQuote(dir));
     }
 
+    @Override
+    public String cpuInfo() {
+        return "lscpu | awk -F: 'BEGIN {print \"{\"} {print \"\\\"\"$1\"\\\": \\\"\"$2\"\\\",\"} END {print \"}\"}' | " +
+                "sed 'N;$s/,\\n/\\n/;P;D';";
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
@@ -93,5 +99,6 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.bandwidth());
         System.out.println(command.process());
         System.out.println(command.wc("/root/.presto_history"));
+        System.out.println(command.cpuInfo());
     }
 }
