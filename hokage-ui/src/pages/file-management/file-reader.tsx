@@ -7,12 +7,13 @@ import { Link } from 'react-router-dom'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { getHokageUid } from '../../libs'
 import path from 'path'
-import store from './store';
+import store from './store'
 import { observer } from 'mobx-react'
 
 
 export interface FileReaderPropsType {
   visible: boolean,
+  isPlainText: boolean,
   contentVO: FileContentVO,
   close: () => void,
   openFile: (form: FileOperateForm) => void,
@@ -72,7 +73,7 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: path.resolve(curDir, name),
+      path: path.resolve(curDir, name),
       page: page ? page : 1
     }
   }
@@ -89,25 +90,31 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
   }
 
   renderViewer = () => {
-    const { visible, contentVO } = this.props
+    const { visible, contentVO, isPlainText } = this.props
     const { fullScreen, currentPage } = this.state
 
-    if (contentVO.extension === 'pdf') {
+    if (!visible) {
+      return null
+    }
+
+    if (!isPlainText) {
       const { serverVO } = this.props
       const url = `${process.env.REACT_APP_ENV === 'local' ? '/api' : ''}/server/file/view?id=${serverVO.id}&file=${path.resolve(contentVO.curDir, contentVO.name)}`
       return <div style={{height: visible && fullScreen ? 'calc(100vh - 120px)' : '500px'}}>
-        <iframe title={contentVO.name} width={'100%'} height={'100%)'} src={url} />
+        <iframe title={contentVO.name} width={'100%'} height={'100%)'} src={url} style={{border: '1px solid #e9e9e9'}} />
       </div>
     }
 
+    const editorHeight = visible && fullScreen ? 'calc(100vh - 120px)' : '500px'
+
     return (
       <Spin spinning={store.loading}>
-        <Editor height={visible && fullScreen ? 'calc(100vh - 120px)' : '500px'} options={{readOnly: true}} value={contentVO.content} />
+        <Editor height={editorHeight} options={{readOnly: true}} value={contentVO.content} />
         <div style={{width: '100%', height: '2px', background: '#d9d9d9', margin: '0 0 0 0'}} />
         <div style={{textAlign: 'center'}}>
           <Pagination
             style={{paddingTop: '5px'}}
-            current={currentPage} total={contentVO.totalLine / contentVO.perPageLine}
+            current={currentPage} total={contentVO.totalLine! / contentVO.perPageLine!}
             itemRender={this.itemRender}
             hideOnSinglePage showSizeChanger={false}
             onChange={this.onPageChange}

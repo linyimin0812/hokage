@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLConnection;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -42,7 +43,7 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/list", method = RequestMethod.POST)
     public ResultVO<HokageFileVO> listFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<HokageFileVO> response = fileService.list(serverKey, form.getCurDir(), new ArrayList<>());
+        ServiceResponse<HokageFileVO> response = fileService.list(serverKey, form.getPath(), new ArrayList<>());
         return response(response);
     }
 
@@ -50,7 +51,7 @@ public class FileManagerController extends BaseController {
     public ResultVO<FileContentVO> openFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
         Long page = ObjectUtils.defaultIfNull(form.getPage(), 1L);
-        ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getCurDir(), page);
+        ServiceResponse<FileContentVO> response = fileService.open(serverKey, form.getPath(), page);
 
         return response(response);
     }
@@ -58,7 +59,7 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/rm", method = RequestMethod.POST)
     public ResultVO<Boolean> rmFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<Boolean> response = fileService.rm(serverKey, form.getCurDir());
+        ServiceResponse<Boolean> response = fileService.rm(serverKey, form.getPath());
 
         return response(response);
     }
@@ -82,7 +83,7 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/tar", method = RequestMethod.POST)
     public ResultVO<Boolean> packageFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<Boolean> response = fileService.tar(serverKey, form.getCurDir());
+        ServiceResponse<Boolean> response = fileService.tar(serverKey, form.getPath());
 
         return response(response);
     }
@@ -106,7 +107,7 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/move", method = RequestMethod.POST)
     public ResultVO<Boolean> moveFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<Boolean> response = fileService.move(serverKey, form.getCurDir(), form.getDst());
+        ServiceResponse<Boolean> response = fileService.move(serverKey, form.getPath(), form.getDst());
 
         return response(response);
     }
@@ -114,7 +115,7 @@ public class FileManagerController extends BaseController {
     @RequestMapping(value = "/server/file/chmod", method = RequestMethod.POST)
     public ResultVO<Boolean> chmodFile(@RequestBody FileOperateForm form) throws Exception {
         String serverKey = form.buildKey();
-        ServiceResponse<Boolean> response = fileService.chmod(serverKey, form.getCurDir(), form.getPermission());
+        ServiceResponse<Boolean> response = fileService.chmod(serverKey, form.getPath(), form.getPermission());
         return response(response);
     }
 
@@ -123,7 +124,7 @@ public class FileManagerController extends BaseController {
                              @RequestParam("id") Long id,
                              @RequestParam("file") String file) throws Exception {
         response.reset();
-        response.setContentType("application/pdf");
+        response.setContentType(URLConnection.guessContentTypeFromName(file));
         OutputStream os  = response.getOutputStream();
         fileService.download(id, file, os);
     }

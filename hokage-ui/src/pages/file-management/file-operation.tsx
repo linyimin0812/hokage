@@ -49,7 +49,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: '/' + paths.join('/')
+      path: '/' + paths.join('/')
     }
     store.listDir(id, form)
   }
@@ -61,7 +61,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: fileVO.curDir
+      path: fileVO.curDir
     }
     store.listDir(id, form)
     this.triggerFileSearchButtonClick()
@@ -81,7 +81,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: path
+      path: path
     }
     store.listDir(id, form)
   }

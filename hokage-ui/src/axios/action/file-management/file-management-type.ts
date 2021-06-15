@@ -23,7 +23,7 @@ export interface FileOperateForm {
   ip: string,
   sshPort: string,
   account: string,
-  curDir: string,
+  path: string,
   page?: number,
   dst?: string,
   permission?: string
@@ -32,8 +32,8 @@ export interface FileOperateForm {
 export interface FileContentVO {
   name: string,
   curDir: string,
-  extension: string,
-  content: string,
-  perPageLine: number,
-  totalLine: number,
+  extension?: string,
+  content?: string,
+  perPageLine?: number,
+  totalLine?: number,
 }

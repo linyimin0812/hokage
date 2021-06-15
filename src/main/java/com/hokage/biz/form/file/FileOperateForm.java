@@ -14,7 +14,7 @@ public class FileOperateForm {
     private String ip;
     private String sshPort;
     private String account;
-    private String curDir;
+    private String path;
     private String action;
     private Long page;
     private String dst;

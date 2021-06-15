@@ -15,6 +15,7 @@ import { Action } from '../../component/Action'
 import path from 'path'
 import { FilterConfirmProps, FilterDropdownProps } from 'antd/lib/table/interface'
 import Highlighter from 'react-highlight-words'
+import mime from 'mime-types'
 
 type FileTablePropsType = {
   id: string,
@@ -24,6 +25,7 @@ type FileTablePropsType = {
 type FileTableStateType = {
   fileReaderVisible: boolean,
   contentVO: FileContentVO,
+  isPlainText: boolean,
 
   searchText: React.Key,
 }
@@ -34,6 +36,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   state = {
     fileReaderVisible: false,
     contentVO: {} as FileContentVO,
+    isPlainText: true,
 
     searchText: ''
   }
@@ -47,7 +50,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: '~'
+      path: '~'
     }
     store.listDir(this.props.id, form)
   }
@@ -107,13 +110,20 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   openFile = (form: FileOperateForm): void => {
-    store.loading = true
     form.page = form.page ? form.page : 1
-    FileManagementAction.open(form).then(contentVO => {
-      this.setState({ fileReaderVisible: true, contentVO: contentVO })
-    }).catch(e => {
-      message.error(e)
-    }).finally(() => store.loading = false)
+    if (this.isDirectOpen(form)) {
+      store.loading = true
+      FileManagementAction.open(form).then(contentVO => {
+        this.setState({ fileReaderVisible: true, isPlainText: true, contentVO: contentVO })
+      }).catch(e => {
+        message.error(e)
+      }).finally(() => store.loading = false)
+    } else {
+      const lastIndex = form.path.lastIndexOf('/')
+      const dir = form.path.substring(0, lastIndex + 1)
+      const fileName = form.path.substring(lastIndex + 1)
+      this.setState({fileReaderVisible: true, isPlainText: false, contentVO: {curDir: dir, name: fileName} })
+    }
   }
 
   assembleFileOperateForm = (record: FileProperty): FileOperateForm => {
@@ -124,8 +134,18 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
-      curDir: path.resolve(curDir, name)
+      path: path.resolve(curDir, name)
     }
+  }
+
+  isDirectOpen = (form: FileOperateForm): boolean => {
+    const mimeType = mime.lookup(form.path)
+    if (!mimeType) {
+      return true
+    }
+
+    // pdf, image, audio, video
+    return !/application\/pdf|image\/*|audio\/*|video\/*/.test(mimeType)
   }
 
   renderName = (record: FileProperty) => {
@@ -247,24 +267,24 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
         cloneRecord.type = 'file'
         this.downloadFile(cloneRecord)
       } else {
-        message.error(`打包文件夹${form.curDir}失败`)
+        message.error(`打包文件夹${form.path}失败`)
       }
-    }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
+    }).catch(e => message.error(`打包文件夹${form.path}失败. err: ` + e))
   }
 
   tarDirectory = (record: FileProperty) => {
     let form = this.assembleFileOperateForm(record)
     FileManagementAction.tar(form).then(result => {
       if (result) {
-        message.info(`${form.curDir} 打包完成`)
+        message.info(`${form.path} 打包完成`)
         const cloneRecord = Object.assign({}, record)
         cloneRecord.name = ''
         form = this.assembleFileOperateForm(cloneRecord)
         store.listDir(this.props.id, form)
       } else {
-        message.error(`打包文件夹${form.curDir}失败.`)
+        message.error(`打包文件夹${form.path}失败.`)
       }
-    }).catch(e => message.error(`打包文件夹${form.curDir}失败. err: ` + e))
+    }).catch(e => message.error(`打包文件夹${form.path}失败. err: ` + e))
   }
 
   changeFilePermission = (permission: string, record: FileProperty) => {
@@ -272,15 +292,15 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     form.permission = permission
     FileManagementAction.chmod(form).then(result => {
       if (result) {
-        message.info(`${form.curDir} 已完成权限修改`)
+        message.info(`${form.path} 已完成权限修改`)
         const cloneRecord = Object.assign({}, record)
         cloneRecord.name = ''
         form = this.assembleFileOperateForm(cloneRecord)
         store.listDir(this.props.id, form)
       } else {
-        message.error(`修改${form.curDir}权限失败.`)
+        message.error(`修改${form.path}权限失败.`)
       }
-    }).catch(e => message.error(`修改${form.curDir}权限失败. err: ` + e))
+    }).catch(e => message.error(`修改${form.path}权限失败. err: ` + e))
   }
 
   sortByFileSize = (a: FileProperty, b: FileProperty) => {
@@ -351,7 +371,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
 
   render() {
     const { id, serverVO } = this.props
-    const { contentVO, fileReaderVisible } = this.state
+    const { contentVO, fileReaderVisible, isPlainText } = this.state
     const pane = store.panes.find(pane => pane.key === id)
     if (!pane || pane.listDirFailed) {
       return <Result status={'500'} title={'500'} subTitle={`无法获取文件信息，请检查服务器${serverVO.account}@${serverVO.ip}是否可用`} />
@@ -361,7 +381,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
       <div>
         <MenuContext {...store.actionProps} />
         <FileReader
-          visible={fileReaderVisible}
+          visible={fileReaderVisible} isPlainText={isPlainText}
           contentVO={contentVO} serverVO={serverVO}
           close={() => {this.setState({ fileReaderVisible: false })}}
           openFile={this.openFile}
