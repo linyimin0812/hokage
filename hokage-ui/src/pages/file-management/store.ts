@@ -3,11 +3,13 @@ import { ActionProps } from './menu-context'
 import { FileOperateForm, FileVO } from '../../axios/action/file-management/file-management-type'
 import { FileManagementAction } from '../../axios/action/file-management/file-management-action'
 import { message } from 'antd'
+import { ServerVO } from '../../axios/action/server/server-type'
 
 export interface PanesType {
   content: JSX.Element,
   title: string,
   key: string,
+  serverVO?: ServerVO,
   closable?: boolean,
   fileVO?: FileVO,
   listDirFailed?: boolean

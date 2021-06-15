@@ -7,6 +7,8 @@ import store, { PanesType } from './store'
 import { observer } from 'mobx-react'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { v4 as uuid } from 'uuid'
+import { FileOperateForm } from '../../axios/action/file-management/file-management-type'
+import { getHokageUid } from '../../libs'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -34,6 +36,18 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
 
   onChange = (activeKey: string) => {
     store.activeKey = activeKey
+    const pane = store.panes.find(pane => pane.key === activeKey)
+    if (pane && pane.serverVO) {
+      const { ip, sshPort, account } = pane.serverVO
+      const form: FileOperateForm = {
+        operatorId: getHokageUid(),
+        ip: ip,
+        sshPort: sshPort,
+        account: account,
+        path: pane.fileVO?.curDir!,
+      }
+      store.listDir(activeKey, form)
+    }
   }
 
   addPane = (serverVO: ServerVO) => {
@@ -42,6 +56,7 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
       const pane: PanesType = {
         key: id,
         title: `${serverVO.account}@${serverVO.ip}`,
+        serverVO: serverVO,
         content: <FileTable serverVO={serverVO} id={id} />,
         fileVO: { curDir: '~', filePropertyList: [], directoryNum: 0, fileNum: 0, totalSize: '' }
       }
