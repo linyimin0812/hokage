@@ -13,4 +13,8 @@ public class MonitorOperateForm {
     private String ip;
     private String sshPort;
     private String account;
+
+    public String buildKey() {
+        return String.format("%s_%s_%s", ip, sshPort, account);
+    }
 }

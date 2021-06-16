@@ -5,6 +5,7 @@ import com.hokage.biz.response.resource.BasicInfoVO;
 import com.hokage.biz.service.HokageMonitorService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
+import com.hokage.common.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,11 @@ public class ResourceMonitorController extends BaseController {
         this.monitorService = monitorService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "/server/monitor/basic", method = RequestMethod.POST)
     public ResultVO<BasicInfoVO> acquireBasicInfo(@RequestBody MonitorOperateForm form) {
-        return success(new BasicInfoVO());
+        String serverKey = form.buildKey();
+        ServiceResponse<BasicInfoVO> result = monitorService.acquireBasic(serverKey);
+
+        return response(result);
     }
 }

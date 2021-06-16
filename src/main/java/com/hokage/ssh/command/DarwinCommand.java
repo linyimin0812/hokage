@@ -52,4 +52,9 @@ public class DarwinCommand extends AbstractCommand {
     public String cpuInfo() {
         return null;
     }
+
+    @Override
+    public String lastLog() {
+        return null;
+    }
 }

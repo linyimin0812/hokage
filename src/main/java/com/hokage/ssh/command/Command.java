@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @author yiminlin
- * @date 2021/05/28 1:59 上午
+ * @date 2021/05/28 1:59 am
  * @description common command definition
  **/
 public interface Command {
@@ -61,4 +61,10 @@ public interface Command {
      * @return cpu information
      */
     String cpuInfo();
+
+    /**
+     * acquire last login account
+     * @return lastlog command
+     */
+    String lastLog();
 }

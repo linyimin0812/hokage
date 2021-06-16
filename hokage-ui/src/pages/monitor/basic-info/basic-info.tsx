@@ -1,16 +1,22 @@
 import React from 'react'
 import { Card, Table } from 'antd'
-import { basicInfoData } from './mock-data'
 
-interface BasicInfoPropsType {
-  title: string
+export interface GeneralInfoVO {
+  name: string,
+  value: string
 }
 
-export default class BasicInfo extends React.Component<BasicInfoPropsType, any> {
+interface BasicInfoPropsType {
+  title: string,
+  dataSource: GeneralInfoVO[]
+}
+
+export default class BasicInfo extends React.Component<BasicInfoPropsType> {
   render() {
+    const { dataSource } = this.props
     return (
       <Card title={this.props.title}>
-        <Table dataSource={basicInfoData} pagination={false} showHeader={false} scroll={{y: 350}}>
+        <Table dataSource={dataSource} pagination={false} showHeader={false} scroll={{y: 350}}>
           <Table.Column dataIndex="name" />
           <Table.Column dataIndex="value" />
         </Table>

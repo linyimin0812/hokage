@@ -31,12 +31,7 @@ export default class ServerResourceManagementHome extends React.Component {
     }
   }
 
-  renderMonitorPage = () => {
-    const pane = store.panes.find(pane => pane.key === store.activeKey)
-    if (!pane) {
-      return null
-    }
-    const { serverVO } = pane
+  renderMonitorPage = (serverVO: ServerVO) => {
     return (
       <Tabs defaultActiveKey="2" tabPosition="left" >
         <Tabs.TabPane tab={ <span>基本信息</span> } key="1">
@@ -57,7 +52,7 @@ export default class ServerResourceManagementHome extends React.Component {
     if (!store.panes.some(pane => pane.key === id)) {
       const pane: MonitorPanesType = {
         key: id,
-        content: this.renderMonitorPage(),
+        content: this.renderMonitorPage(serverVO),
         title: `${serverVO.account}@${serverVO.ip}`,
         serverVO: serverVO
       }

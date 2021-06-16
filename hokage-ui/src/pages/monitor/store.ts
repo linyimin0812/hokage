@@ -13,6 +13,8 @@ class Store {
   @observable panes: MonitorPanesType[] = []
   @observable activeKey: string = '1'
 
+  @observable loading: boolean = false
+
 }
 
 export default new Store()

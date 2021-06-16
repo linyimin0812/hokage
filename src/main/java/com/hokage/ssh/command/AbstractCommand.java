@@ -102,4 +102,17 @@ public abstract class AbstractCommand implements Command {
     public static String chmod(String curDir, String permission) {
         return String.format("chmod -R %s %s;", permission, FileUtil.escapeNameWithSingleQuote(curDir));
     }
+
+    public static String accountInfo() {
+        return "awk -F: 'BEGIN {print \"[\"} " +
+                "{if($3>100){userType=\"user\";} " +
+                "else if($3>=1){userType=\"admin\";} " +
+                "else {userType=\"root\";} " +
+                "print \"{\\\"type\\\": \\\"\"userType\"\\\", " +
+                "\\\"account\\\": \\\"\"$1\"\\\", " +
+                "\\\"description\\\": \\\"\"$5\"\\\", " +
+                "\\\"home\\\": \\\"\"$6\"\\\"},\"} " +
+                "END {print \"]\"}' < /etc/passwd" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
 }

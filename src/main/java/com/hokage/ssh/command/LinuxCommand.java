@@ -92,6 +92,19 @@ public class LinuxCommand extends AbstractCommand {
                 "sed 'N;$s/,\\n/\\n/;P;D';";
     }
 
+    @Override
+    public String lastLog() {
+        return "lastlog -t 365 " + " | " +
+                "awk 'BEGIN {print \"[\"} " +
+                "NR>1 { print \"{" +
+                "\\\"account\\\": \\\"\"$1\"\\\", " +
+                "\\\"port\\\": \\\"\"$2\"\\\", " +
+                "\\\"from\\\": \\\"\"$3\"\\\", " +
+                "\\\"latest\\\": \\\"\"substr($0, index($0, $4))\"\\\"},\"} " +
+                "END {print \"]\"}'" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
@@ -100,5 +113,7 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.process());
         System.out.println(command.wc("/root/.presto_history"));
         System.out.println(command.cpuInfo());
+        System.out.println(AbstractCommand.accountInfo());
+        System.out.println(command.lastLog());
     }
 }
