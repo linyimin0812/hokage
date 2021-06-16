@@ -1,6 +1,7 @@
 package com.hokage.biz.controller;
 
 import com.hokage.common.BaseController;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author linyimin
@@ -8,6 +9,7 @@ import com.hokage.common.BaseController;
  * @email linyimin520812@gmail.com
  * @description
  */
+@RestController
 public class ResourceMonitorController extends BaseController {
 
 }
