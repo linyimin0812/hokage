@@ -5,6 +5,10 @@ const serviceInfo: {[name: string]: ServiceParam} = {
   'basic': {
     url: '/server/monitor/basic',
     method: 'POST'
+  },
+  'system': {
+    url: '/server/monitor/system',
+    method: 'POST'
   }
 }
 

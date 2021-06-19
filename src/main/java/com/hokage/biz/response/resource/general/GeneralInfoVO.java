@@ -1,4 +1,4 @@
-package com.hokage.biz.response.resource;
+package com.hokage.biz.response.resource.general;
 
 import lombok.Data;
 

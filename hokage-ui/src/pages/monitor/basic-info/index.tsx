@@ -29,7 +29,8 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
     cpuInfo: [],
     memInfo: [],
     accountInfo: [],
-    lastLogInfo: []
+    lastLogInfo: [],
+    generalInfo: []
   }
 
   acquireBasicInfo = () => {
@@ -52,7 +53,7 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
   }
 
   render() {
-    const { cpuInfo, memInfo, accountInfo, lastLogInfo } = this.state
+    const { cpuInfo, memInfo, accountInfo, lastLogInfo, generalInfo } = this.state
     return (
       <Spin spinning={store.loading}>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
@@ -62,7 +63,7 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
           </Col>
         </Row>
         <Row gutter={12}>
-          <Col span={8}><BasicInfo dataSource={[]} title={"基本信息"} /></Col>
+          <Col span={8}><BasicInfo dataSource={generalInfo} title={"基本信息"} /></Col>
           <Col span={8}><AccountInfo dataSource={accountInfo} /></Col>
           <Col span={8}><LoginAccountInfo dataSource={lastLogInfo} /></Col>
         </Row>

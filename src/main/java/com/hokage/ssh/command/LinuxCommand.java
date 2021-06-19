@@ -65,14 +65,22 @@ public class LinuxCommand extends AbstractCommand {
 
     @Override
     public String process() {
-        return "ps axo pid,user,pcpu,rss,vsz,lstart,stat,comm" + " | " +
-                "awk 'BEGIN {print \"[\"} NR>1 {printf \"{" +
-                "\\\"pid\\\": \"$1\", \\\"user\\\": \\\"\"$2\"\\\", " +
-                "\\\"cpu\\\": \"$3\", \\\"rss\\\": \"$4\", " +
-                "\\\"vsz\\\": \"$5\", \\\"started\\\": \\\"\"$6\" \"$7\" \"$8\" \"$9\" \"$10\"\\\", " +
-                "\\\"stat\\\": \\\"\"$11\"\\\"," +
-                "\\\"command\\\":\"; out=$12; for(i=13;i<=NF;i++) {out=out$i} print \"\\\"\"out\"\\\"},\";} " +
-                "END {print \"]\"}'"+ " | " +
+        return "ps axo pid,user,pcpu,%mem,rss,vsz,lstart,stat,comm,command" + " | " +
+                "grep -v \"ps axo\"" + " | " +
+                "grep -v \"awk BEGIN\"" + " | " +
+                "grep -v \"sed N;\"" + " | " +
+                "awk 'BEGIN {print \"[\"} NR>1 {print \"{" +
+                "\\\"pid\\\": \"$1\", " +
+                "\\\"account\\\": \\\"\"$2\"\\\", " +
+                "\\\"cpu\\\": \"$3\", " +
+                "\\\"mem\\\": \"$4\", " +
+                "\\\"rss\\\": \"$5\", " +
+                "\\\"vsz\\\": \"$6\", " +
+                "\\\"started\\\": \\\"\"$7\" \"$8\" \"$9\" \"$10\" \"$11\"\\\", " +
+                "\\\"status\\\": \\\"\"$12\"\\\"," +
+                "\\\"comm\\\": \\\"\"$13\"\\\"," +
+                "\\\"command\\\": \\\"\"substr($0,index($0,$14))\"\\\"},\";} " +
+                "END {print \"]\"}'" + " | " +
                 "sed 'N;$s/},/}/;P;D';";
     }
 

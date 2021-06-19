@@ -1,26 +1,64 @@
 import React from 'react'
-import { Button, Col, Divider, Row } from 'antd';
+import { Button, Col, Divider, message, Row, Spin } from 'antd';
 import AverageLoad from './average-load'
 import CpuUtilization from './cpu-utilization'
 import RamUsage from './ram-usage'
-import CpuProcess from './cpu-process'
-import RamProcess from './ram-process'
+import Process from './process'
 import DiskPartition from './disk-partition'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons'
+import { MonitorOperateForm, SystemInfoVO } from '../../../axios/action/monitor/monitor-type'
+import store from '../store'
+import { observer } from 'mobx-react'
+import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
+import { getHokageUid } from '../../../libs'
 
 type SystemStatusProp = {
   serverVO: ServerVO
 }
 
-export default class Index extends React.Component<SystemStatusProp> {
+type SystemStatusState = SystemInfoVO
+
+@observer
+export default class Index extends React.Component<SystemStatusProp, SystemStatusState> {
+
+  state = {
+    processInfo: [],
+  }
+
+  componentDidMount() {
+    this.acquireSystemInfo()
+  }
+
+  acquireSystemInfo = () => {
+    store.loading = true
+    MonitorAction.system(this.assembleOperateForm()).then(systemInfo => {
+      this.setState({...systemInfo})
+    }).catch(e => message.error(e))
+      .finally(() => store.loading = false)
+  }
+
+  assembleOperateForm = () => {
+    const { ip, sshPort, account } = this.props.serverVO
+    const form: MonitorOperateForm = {
+      operatorId: getHokageUid(),
+      ip: ip,
+      sshPort: sshPort,
+      account: account
+    }
+    return form
+  }
+
   render() {
+
+    const { processInfo } = this.state
+
     return (
-      <div>
+      <Spin spinning={store.loading}>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
           <Col span={16} style={{padding: '0px 0px'}} />
           <Col span={8} style={{padding: '0px 0px'}}>
-            <span style={{ float: 'right' }}><Button onClick={() => {}}><ReloadOutlined translate />刷新</Button></span>
+            <span style={{ float: 'right' }}><Button onClick={this.acquireSystemInfo}><ReloadOutlined translate />刷新</Button></span>
           </Col>
         </Row>
         <Row gutter={12} align="middle" justify={"center"} >
@@ -30,11 +68,10 @@ export default class Index extends React.Component<SystemStatusProp> {
         </Row>
         <Divider />
         <Row gutter={12} >
-          <Col span={8}><CpuProcess /></Col>
-          <Col span={8}><RamProcess /></Col>
+          <Col span={16}><Process dataSource={processInfo} /></Col>
           <Col span={8}><DiskPartition /></Col>
         </Row>
-      </div>
+      </Spin>
     )
   }
 }

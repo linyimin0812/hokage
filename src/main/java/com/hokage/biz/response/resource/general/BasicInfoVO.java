@@ -1,4 +1,4 @@
-package com.hokage.biz.response.resource;
+package com.hokage.biz.response.resource.general;
 
 import lombok.Data;
 
@@ -15,4 +15,5 @@ public class BasicInfoVO {
     private List<GeneralInfoVO> memInfo;
     private List<AccountInfoVO> accountInfo;
     private List<LastLogInfoVO> lastLogInfo;
+    private List<GeneralInfoVO> generalInfo;
 }

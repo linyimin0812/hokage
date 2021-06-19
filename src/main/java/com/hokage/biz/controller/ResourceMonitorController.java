@@ -1,7 +1,8 @@
 package com.hokage.biz.controller;
 
 import com.hokage.biz.form.monitor.MonitorOperateForm;
-import com.hokage.biz.response.resource.BasicInfoVO;
+import com.hokage.biz.response.resource.general.BasicInfoVO;
+import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.HokageMonitorService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
@@ -31,6 +32,14 @@ public class ResourceMonitorController extends BaseController {
     public ResultVO<BasicInfoVO> acquireBasicInfo(@RequestBody MonitorOperateForm form) {
         String serverKey = form.buildKey();
         ServiceResponse<BasicInfoVO> result = monitorService.acquireBasic(serverKey);
+
+        return response(result);
+    }
+
+    @RequestMapping(value = "/server/monitor/system", method = RequestMethod.POST)
+    public ResultVO<SystemInfoVO> acquireSystemInfo(@RequestBody MonitorOperateForm form) {
+        String serverKey = form.buildKey();
+        ServiceResponse<SystemInfoVO> result = monitorService.acquireSystem(serverKey);
 
         return response(result);
     }

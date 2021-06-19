@@ -1,12 +1,11 @@
 package com.hokage.biz.service;
 
-import com.hokage.biz.response.resource.AccountInfoVO;
-import com.hokage.biz.response.resource.BasicInfoVO;
-import com.hokage.biz.response.resource.GeneralInfoVO;
-import com.hokage.biz.response.resource.LastLogInfoVO;
+import com.hokage.biz.response.resource.general.BasicInfoVO;
+import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.common.ServiceResponse;
+import com.hokage.ssh.SshClient;
 
-import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author yiminlin
@@ -14,33 +13,15 @@ import java.util.List;
  * @description server monitor service
  **/
 public interface HokageMonitorService {
-    /**
-     * acquire server cpu information
-     * @param serverKey ip_sshPort_account
-     * @return cpu information
-     */
-    ServiceResponse<List<GeneralInfoVO>> lsCpu(String serverKey);
 
     /**
-     * acquire server memory information
+     * execute command and encapsulates result
      * @param serverKey ip_sshPort_account
-     * @return memory information
+     * @param commandHandler command handler
+     * @param <R> type of command result
+     * @return command result
      */
-    ServiceResponse<List<GeneralInfoVO>> memInfo(String serverKey);
-
-    /**
-     * acquire server account information
-     * @param serverKey ip_sshPort_account
-     * @return account information
-     */
-    ServiceResponse<List<AccountInfoVO>> accountInfo(String serverKey);
-
-    /**
-     * acquire server last login account information
-     * @param serverKey ip_sshPort_account
-     * @return last login account information
-     */
-    ServiceResponse<List<LastLogInfoVO>> lastLogInfo(String serverKey);
+    <R> ServiceResponse<R> execute(String serverKey, Function<SshClient, ServiceResponse<R>> commandHandler);
 
     /**
      * acquire server basic information, includes cpu, memory, account, last login account
@@ -49,4 +30,10 @@ public interface HokageMonitorService {
      */
     ServiceResponse<BasicInfoVO> acquireBasic(String serverKey);
 
+    /**
+     * acquire server system information, includes process and disk
+     * @param serverKey ip_sshPort_account
+     * @return server system information
+     */
+    ServiceResponse<SystemInfoVO> acquireSystem(String serverKey);
 }
