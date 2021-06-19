@@ -240,7 +240,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   downloadFile = (record: FileProperty) => {
-    const { id } = this.props.serverVO
+    const { ip, sshPort, account } = this.props.serverVO
 
     if (record.type === 'directory') {
       this.downloadDirectory(record)
@@ -249,7 +249,8 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const file = path.resolve(record.curDir, record.name)
     const link = document.createElement('a')
     const url = process.env.REACT_APP_ENV === 'local' ? '/api/server/file/download' : '/server/file/download'
-    link.href = `${url}?id=${id}&file=${file}`
+    const serverKey = `${ip}_${sshPort}_${account}`;
+    link.href = `${url}?serverKey=${serverKey}&file=${file}`
     document.body.appendChild(link)
     const evt = document.createEvent("MouseEvents")
     evt.initEvent("click", false, false)

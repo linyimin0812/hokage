@@ -3,6 +3,7 @@ package com.hokage.ssh.command.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.request.command.BaseCommandParam;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
@@ -23,6 +24,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
  **/
 @Slf4j
 @Component
-public class MonitorCommandHandler {
+public class MonitorCommandHandler<T extends BaseCommandParam> {
     private CommandDispatcher dispatcher;
     private SshExecComponent execComponent;
 
@@ -47,7 +49,7 @@ public class MonitorCommandHandler {
         this.execComponent = execComponent;
     }
 
-    public Function<SshClient, ServiceResponse<List<GeneralInfoVO>>> lsCpuHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<GeneralInfoVO>>> lsCpuHandler = ((client, param) -> {
         ServiceResponse<List<GeneralInfoVO>> response = new ServiceResponse<>();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
@@ -69,7 +71,7 @@ public class MonitorCommandHandler {
         }
     });
 
-    public Function<SshClient, ServiceResponse<List<GeneralInfoVO>>> memInfoHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<GeneralInfoVO>>> memInfoHandler = ((client, param) -> {
         ServiceResponse<List<GeneralInfoVO>> response = new ServiceResponse<>();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
@@ -89,7 +91,7 @@ public class MonitorCommandHandler {
         }
     });
 
-    public Function<SshClient, ServiceResponse<List<AccountInfoVO>>>  accountInfoHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<AccountInfoVO>>>  accountInfoHandler = ((client, param) -> {
         ServiceResponse<List<AccountInfoVO>> response = new ServiceResponse<>();
         try {
             CommandResult accountInfoResult = execComponent.execute(client, AbstractCommand.accountInfo());
@@ -120,7 +122,7 @@ public class MonitorCommandHandler {
         }
     });
 
-    public Function<SshClient,ServiceResponse<List<LastLogInfoVO>>> lastLogInfoHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<LastLogInfoVO>>> lastLogInfoHandler = ((client, param) -> {
         ServiceResponse<List<LastLogInfoVO>> response = new ServiceResponse<>();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
@@ -146,7 +148,7 @@ public class MonitorCommandHandler {
         }
     });
 
-    public Function<SshClient, ServiceResponse<List<GeneralInfoVO>>> generalInfoHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<GeneralInfoVO>>> generalInfoHandler = ((client, param) -> {
         ServiceResponse<List<GeneralInfoVO>> response = new ServiceResponse<>();
         try {
             CommandResult generalInfoResult = execComponent.execute(client, "bash ~/.hokage/json-api.sh general_info");
@@ -165,7 +167,7 @@ public class MonitorCommandHandler {
         }
     });
 
-    public Function<SshClient, ServiceResponse<List<ProcessInfoVO>>> processHandler = (client -> {
+    public BiFunction<SshClient, T, ServiceResponse<List<ProcessInfoVO>>> processHandler = ((client, param) -> {
        ServiceResponse<List<ProcessInfoVO>> response = new ServiceResponse<>();
        try {
            AbstractCommand command = dispatcher.dispatch(client);

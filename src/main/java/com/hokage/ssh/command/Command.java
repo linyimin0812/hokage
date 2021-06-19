@@ -23,7 +23,7 @@ public interface Command {
      * @param optionList command option
      * @return ls command execute result content
      */
-    String ls(String dir, List<LsOptionEnum> optionList);
+    String ls(String dir, List<String> optionList);
 
     /**
      * acquire memory information

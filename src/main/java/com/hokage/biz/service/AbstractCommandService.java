@@ -1,18 +1,14 @@
 package com.hokage.biz.service;
 
 import com.hokage.biz.enums.ResultCodeEnum;
-import com.hokage.biz.service.HokageCommandService;
+import com.hokage.biz.request.command.BaseCommandParam;
 import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
-import com.hokage.ssh.command.CommandDispatcher;
-import com.hokage.ssh.command.handler.MonitorCommandHandler;
-import com.hokage.ssh.component.SshExecComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * @author yiminlin
@@ -35,13 +31,12 @@ public abstract class AbstractCommandService {
      * @param <R> type of command result
      * @return command result
      */
-    public <R> ServiceResponse<R> execute(String serverKey, Function<SshClient, ServiceResponse<R>> commandHandler) {
+    public <R, T extends BaseCommandParam> ServiceResponse<R> execute(String serverKey, T param, BiFunction<SshClient, T, ServiceResponse<R>> commandHandler) {
         ServiceResponse<R> response = new ServiceResponse<>();
         Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
         if (!optional.isPresent()) {
             return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
         }
-
-        return commandHandler.apply(optional.get());
+        return commandHandler.apply(optional.get(), param);
     }
 }

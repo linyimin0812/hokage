@@ -1,16 +1,14 @@
-package com.hokage.biz.service.impl;
+package com.hokage.ssh.command.handler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hokage.biz.converter.file.SshProperty2WebProperty;
 import com.hokage.biz.enums.ResultCodeEnum;
+import com.hokage.biz.request.command.BaseCommandParam;
+import com.hokage.biz.request.command.FileParam;
 import com.hokage.biz.response.file.FileContentVO;
 import com.hokage.biz.response.file.HokageFileProperty;
 import com.hokage.biz.response.file.HokageFileVO;
-import com.hokage.biz.service.HokageFileManagementService;
-import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
-import com.hokage.persistence.dao.HokageServerDao;
-import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
@@ -18,46 +16,36 @@ import com.hokage.ssh.command.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.component.SshSftpComponent;
 import com.hokage.ssh.domain.FileProperty;
-import com.hokage.ssh.enums.LsOptionEnum;
 import com.hokage.util.FileUtil;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 
 /**
  * @author yiminlin
- * @date 2021/06/03 11:46 pm
- * @description file management service implementation
+ * @date 2021/06/19 7:21 pm
+ * @description file management handler
  **/
 @Slf4j
-@Service
-public class HokageFileManagementServiceImpl implements HokageFileManagementService {
+@Component
+public class FileCommandHandler<T extends BaseCommandParam> {
 
     @Value("${file.management.preview.line}")
     private String previewLine;
 
-    private HokageServerCacheDao serverCacheDao;
     private CommandDispatcher dispatcher;
     private SshExecComponent execComponent;
     private SshSftpComponent sftpComponent;
     private SshProperty2WebProperty fileConverter;
-    private HokageServerDao serverDao;
-
-    @Autowired
-    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
-        this.serverCacheDao = serverCacheDao;
-    }
 
     @Autowired
     public void setDispatcher(CommandDispatcher dispatcher) {
@@ -79,24 +67,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
         this.fileConverter = fileConverter;
     }
 
-    @Autowired
-    public void setServerDao(HokageServerDao serverDao) {
-        this.serverDao = serverDao;
-    }
-
-
-    @Override
-    public ServiceResponse<HokageFileVO> list(String serverKey, String dir, List<LsOptionEnum> options) {
+    public BiFunction<SshClient, T, ServiceResponse<HokageFileVO>> listHandler = ((client, param) -> {
         ServiceResponse<HokageFileVO> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+        FileParam fileParam = (FileParam) param;
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult lsResult = execComponent.execute(client, command.ls(dir, options));
-            CommandResult pwdResult = execComponent.execute(client, command.pwd(dir));
+            CommandResult lsResult = execComponent.execute(client, command.ls(fileParam.getPath(), param.getOptions()));
+            CommandResult pwdResult = execComponent.execute(client, command.pwd(fileParam.getPath()));
             if (!lsResult.isSuccess() || !pwdResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", lsResult.getExitStatus(), lsResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
@@ -106,43 +83,34 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.list failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<FileContentVO> open(String serverKey, String curDir, Long page) {
+    public BiFunction<SshClient, T, ServiceResponse<FileContentVO>> openHandler = (((client, t) -> {
         ServiceResponse<FileContentVO> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+
+        FileParam param = (FileParam) t;
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult wcResult = execComponent.execute(client, command.wc(curDir));
-            CommandResult previewResult = execComponent.execute(client, command.preview(curDir, page));
+            CommandResult wcResult = execComponent.execute(client, command.wc(param.getPath()));
+            CommandResult previewResult = execComponent.execute(client, command.preview(param.getPath(), param.getPage()));
 
             if (!previewResult.isSuccess() || !wcResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", previewResult.getExitStatus(), previewResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
             }
-            return response.success(assembleFileContentVO(wcResult, previewResult, curDir));
+            return response.success(assembleFileContentVO(wcResult, previewResult, param.getPath()));
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.cat failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
-    }
+    }));
 
-    @Override
-    public ServiceResponse<Boolean> rm(String serverKey, String curDir) {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> rmHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+        FileParam param = (FileParam) t;
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult rmResult = execComponent.execute(client, command.rm(curDir));
+            CommandResult rmResult = execComponent.execute(client, command.rm(param.getPath()));
             if (!rmResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", rmResult.getExitStatus(), rmResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
@@ -152,46 +120,31 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.rm failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<Boolean> download(Long id, String file, OutputStream os) throws IOException {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> downloadHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-
-        HokageServerDO serverDO = serverDao.selectById(id);
-        if (Objects.isNull(serverDO)) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-
-        SshClient client = null;
+        FileParam param = (FileParam) t;
         try {
-            Optional<SshClient> optional = serverCacheDao.getSftpClient(String.format("%s_%s_%s", serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount()));
-            if (!optional.isPresent()) {
-                return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-            }
-            client = optional.get();
-            sftpComponent.download(client, file, os);
+            sftpComponent.download(client, param.getPath(), param.getOs());
             return response.success(Boolean.TRUE);
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.download failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_DOWNLOAD_FAILED.getCode(), e.getMessage());
         } finally {
-            if (Objects.nonNull(os)) {
-                os.close();
+            if (Objects.nonNull(param.getOs())) {
+                try {
+                    param.getOs().close();
+                } catch (IOException ignored) { }
             }
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<Boolean> tar(String serverKey, String path) {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> tarHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+        FileParam param = (FileParam) t;
         try {
-            CommandResult rmResult = execComponent.execute(client, AbstractCommand.tar(path));
+            CommandResult rmResult = execComponent.execute(client, AbstractCommand.tar(param.getPath()));
             if (!rmResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", rmResult.getExitStatus(), rmResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
@@ -201,23 +154,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.tar failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_TAR_FAILED.getCode(), e.getMessage());
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<Boolean> upload(Long id, String dst, InputStream src) {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> uploadHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        HokageServerDO serverDO = serverDao.selectById(id);
-        if (Objects.isNull(serverDO)) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = null;
+        FileParam param = (FileParam) t;
         try {
-            Optional<SshClient> optional = serverCacheDao.getSftpClient(String.format("%s_%s_%s", serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount()));
-            if (!optional.isPresent()) {
-                return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-            }
-            client = optional.get();
-            sftpComponent.upload(client, dst, src);
+            sftpComponent.upload(client, param.getDstPath(), param.getSrc());
             return response.success(Boolean.TRUE);
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.upload failed. err: {}", e.getMessage());
@@ -230,18 +173,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
                 }
             }
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<Boolean> move(String serverKey, String src, String dst) {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> moveHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+        FileParam param = (FileParam) t;
         try {
-            CommandResult moveResult = execComponent.execute(client, AbstractCommand.move(src, dst));
+            CommandResult moveResult = execComponent.execute(client, AbstractCommand.move(param.getSrcPath(), param.getDstPath()));
             if (!moveResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", moveResult.getExitStatus(), moveResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
@@ -251,18 +189,13 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.move failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_TAR_FAILED.getCode(), e.getMessage());
         }
-    }
+    });
 
-    @Override
-    public ServiceResponse<Boolean> chmod(String serverKey, String curDir, String permission) {
+    public BiFunction<SshClient, T, ServiceResponse<Boolean>> chmodHandler = ((client, t) -> {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-        SshClient client = optional.get();
+        FileParam param = (FileParam) t;
         try {
-            CommandResult moveResult = execComponent.execute(client, AbstractCommand.chmod(curDir, permission));
+            CommandResult moveResult = execComponent.execute(client, AbstractCommand.chmod(param.getPath(), param.getPermission()));
             if (!moveResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", moveResult.getExitStatus(), moveResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
@@ -272,7 +205,8 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
             log.error("HokageFileManagementServiceImpl.chmod failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.FILE_TAR_FAILED.getCode(), e.getMessage());
         }
-    }
+    });
+
 
     private HokageFileVO assembleFileVO(CommandResult lsResult, CommandResult pwdResult) {
 
@@ -315,4 +249,5 @@ public class HokageFileManagementServiceImpl implements HokageFileManagementServ
 
         return contentVO;
     }
+
 }

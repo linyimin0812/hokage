@@ -1,5 +1,6 @@
 package com.hokage.biz.service.impl;
 
+import com.hokage.biz.request.command.BaseCommandParam;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
@@ -25,10 +26,10 @@ import java.util.List;
 @Service
 public class HokageMonitorServiceImpl extends AbstractCommandService implements HokageMonitorService {
 
-    private MonitorCommandHandler commandHandler;
+    private MonitorCommandHandler<BaseCommandParam> commandHandler;
 
     @Autowired
-    public void setCommandHandler(MonitorCommandHandler commandHandler) {
+    public void setCommandHandler(MonitorCommandHandler<BaseCommandParam> commandHandler) {
         this.commandHandler = commandHandler;
     }
 
@@ -37,27 +38,27 @@ public class HokageMonitorServiceImpl extends AbstractCommandService implements 
         ServiceResponse<BasicInfoVO> response = new ServiceResponse<>();
         BasicInfoVO basicInfoVO = new BasicInfoVO();
 
-        ServiceResponse<List<GeneralInfoVO>> cpuInfoResult = this.execute(serverKey, commandHandler.lsCpuHandler);
+        ServiceResponse<List<GeneralInfoVO>> cpuInfoResult = this.execute(serverKey, null, commandHandler.lsCpuHandler);
         if (cpuInfoResult.getSucceeded()) {
             basicInfoVO.setCpuInfo(cpuInfoResult.getData());
         }
 
-        ServiceResponse<List<GeneralInfoVO>> memInfoResult = this.execute(serverKey, commandHandler.memInfoHandler);
+        ServiceResponse<List<GeneralInfoVO>> memInfoResult = this.execute(serverKey, null, commandHandler.memInfoHandler);
         if (memInfoResult.getSucceeded()) {
             basicInfoVO.setMemInfo(memInfoResult.getData());
         }
 
-        ServiceResponse<List<AccountInfoVO>> accountInfoResult = this.execute(serverKey, commandHandler.accountInfoHandler);
+        ServiceResponse<List<AccountInfoVO>> accountInfoResult = this.execute(serverKey, null, commandHandler.accountInfoHandler);
         if (accountInfoResult.getSucceeded()) {
             basicInfoVO.setAccountInfo(accountInfoResult.getData());
         }
 
-        ServiceResponse<List<LastLogInfoVO>> lastLogResult = this.execute(serverKey, commandHandler.lastLogInfoHandler);
+        ServiceResponse<List<LastLogInfoVO>> lastLogResult = this.execute(serverKey, null, commandHandler.lastLogInfoHandler);
         if (lastLogResult.getSucceeded()) {
             basicInfoVO.setLastLogInfo(lastLogResult.getData());
         }
 
-        ServiceResponse<List<GeneralInfoVO>> generalInfoResult = this.execute(serverKey, commandHandler.generalInfoHandler);
+        ServiceResponse<List<GeneralInfoVO>> generalInfoResult = this.execute(serverKey, null, commandHandler.generalInfoHandler);
         if (generalInfoResult.getSucceeded()) {
             basicInfoVO.setGeneralInfo(generalInfoResult.getData());
         }
@@ -70,7 +71,7 @@ public class HokageMonitorServiceImpl extends AbstractCommandService implements 
         ServiceResponse<SystemInfoVO> response = new ServiceResponse<>();
         SystemInfoVO systemInfoVO = new SystemInfoVO();
 
-        ServiceResponse<List<ProcessInfoVO>> processResult = this.execute(serverKey, commandHandler.processHandler);
+        ServiceResponse<List<ProcessInfoVO>> processResult = this.execute(serverKey, null, commandHandler.processHandler);
 
         if (processResult.getSucceeded()) {
             systemInfoVO.setProcessInfo(processResult.getData());

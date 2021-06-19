@@ -24,7 +24,7 @@ public class LinuxCommand extends AbstractCommand {
     }
 
     @Override
-    public String ls(String dir, List<LsOptionEnum> optionList) {
+    public String ls(String dir, List<String> optionList) {
         dir = ObjectUtils.defaultIfNull(dir, HOME);
         String option = CollectionUtils.isEmpty(optionList) ? StringUtils.EMPTY : "-" + StringUtils.join(optionList, "");
         return ("ls -al --time-style=full ${option} ${dir}" + " | " +

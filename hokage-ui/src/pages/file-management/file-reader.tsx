@@ -98,8 +98,9 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
     }
 
     if (!isPlainText) {
-      const { serverVO } = this.props
-      const url = `${process.env.REACT_APP_ENV === 'local' ? '/api' : ''}/server/file/view?id=${serverVO.id}&file=${path.resolve(contentVO.curDir, contentVO.name)}`
+      const { ip, sshPort, account } = this.props.serverVO
+      const serverKey = `${ip}_${sshPort}_${account}`
+      const url = `${process.env.REACT_APP_ENV === 'local' ? '/api' : ''}/server/file/view?serverKey=${serverKey}&file=${path.resolve(contentVO.curDir, contentVO.name)}`
       return <div style={{height: visible && fullScreen ? 'calc(100vh - 120px)' : '500px'}}>
         <iframe title={contentVO.name} width={'100%'} height={'100%)'} src={url} style={{border: '1px solid #e9e9e9'}} />
       </div>

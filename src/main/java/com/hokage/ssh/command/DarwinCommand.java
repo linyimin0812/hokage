@@ -19,7 +19,7 @@ public class DarwinCommand extends AbstractCommand {
     }
 
     @Override
-    public String ls(String dir, List<LsOptionEnum> optionList) {
+    public String ls(String dir, List<String> optionList) {
         return null;
     }
 
