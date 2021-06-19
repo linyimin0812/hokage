@@ -15,15 +15,6 @@ import java.util.function.Function;
 public interface HokageMonitorService {
 
     /**
-     * execute command and encapsulates result
-     * @param serverKey ip_sshPort_account
-     * @param commandHandler command handler
-     * @param <R> type of command result
-     * @return command result
-     */
-    <R> ServiceResponse<R> execute(String serverKey, Function<SshClient, ServiceResponse<R>> commandHandler);
-
-    /**
      * acquire server basic information, includes cpu, memory, account, last login account
      * @param serverKey ip_sshPort_account
      * @return server basic information

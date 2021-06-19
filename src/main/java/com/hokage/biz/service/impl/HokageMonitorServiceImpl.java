@@ -1,24 +1,20 @@
 package com.hokage.biz.service.impl;
 
-import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
+import com.hokage.biz.service.AbstractCommandService;
 import com.hokage.biz.service.HokageMonitorService;
-import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
-import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.handler.MonitorCommandHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
+
 
 /**
  * @author yiminlin
@@ -27,30 +23,13 @@ import java.util.function.Function;
  **/
 @Slf4j
 @Service
-public class HokageMonitorServiceImpl implements HokageMonitorService {
+public class HokageMonitorServiceImpl extends AbstractCommandService implements HokageMonitorService {
 
-    private HokageServerCacheDao serverCacheDao;
     private MonitorCommandHandler commandHandler;
-
-    @Autowired
-    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
-        this.serverCacheDao = serverCacheDao;
-    }
 
     @Autowired
     public void setCommandHandler(MonitorCommandHandler commandHandler) {
         this.commandHandler = commandHandler;
-    }
-
-    @Override
-    public <R> ServiceResponse<R> execute(String serverKey, Function<SshClient, ServiceResponse<R>> commandHandler) {
-        ServiceResponse<R> response = new ServiceResponse<>();
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return response.fail(ResultCodeEnum.SERVER_NO_FOUND.getCode(), ResultCodeEnum.SERVER_NO_FOUND.getMsg());
-        }
-
-        return commandHandler.apply(optional.get());
     }
 
     @Override
