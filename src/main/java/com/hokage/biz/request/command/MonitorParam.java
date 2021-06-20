@@ -2,6 +2,7 @@ package com.hokage.biz.request.command;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author yiminlin
@@ -9,6 +10,8 @@ import lombok.EqualsAndHashCode;
  * @description monitor param
  **/
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class MonitorParam extends BaseCommandParam {
+    private Long pid;
 }

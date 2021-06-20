@@ -19,6 +19,7 @@ export interface MonitorOperateForm {
   operatorId: number,
   ip: string,
   sshPort: string,
-  account: string
+  account: string,
+  pid?: number
 }
 

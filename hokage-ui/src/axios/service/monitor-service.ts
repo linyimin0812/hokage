@@ -9,6 +9,10 @@ const serviceInfo: {[name: string]: ServiceParam} = {
   'system': {
     url: '/server/monitor/system',
     method: 'POST'
+  },
+  'killProcess': {
+    url: '/server/monitor/process/kill',
+    method: 'POST'
   }
 }
 

@@ -28,5 +28,18 @@ export const MonitorAction = {
         reject('获取服务器信息失败')
       }
     })
+  },
+  killProcess: (form: MonitorOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await MonitorService.killProcess(form)
+        if (!result.success) {
+          return reject(`${result.code} ${result.msg}`)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('获取服务器信息失败')
+      }
+    })
   }
 }

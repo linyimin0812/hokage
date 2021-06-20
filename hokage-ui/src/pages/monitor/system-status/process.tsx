@@ -1,7 +1,12 @@
 import React from 'react'
-import { Card, Table, Tooltip } from 'antd'
+import { Card, message, Table, Tooltip } from 'antd';
 import { Action } from '../../../component/Action'
 import { StopOutlined } from '@ant-design/icons'
+import store from '../store';
+import { MonitorAction } from '../../../axios/action/monitor/monitor-action';
+import { MonitorOperateForm } from '../../../axios/action/monitor/monitor-type';
+import { getHokageUid } from '../../../libs';
+import { ServerVO } from '../../../axios/action/server/server-type';
 
 export interface ProcessInfoVO {
   pid: number,
@@ -17,7 +22,8 @@ export interface ProcessInfoVO {
 }
 
 type ProcessProp = {
-  dataSource: ProcessInfoVO[]
+  dataSource: ProcessInfoVO[],
+  serverVO: ServerVO
 }
 
 export default class Process extends React.Component<ProcessProp> {
@@ -34,10 +40,34 @@ export default class Process extends React.Component<ProcessProp> {
     return <Action>
       <Action.Confirm
         title={<span><StopOutlined translate style={{color: 'red'}} /></span>}
-        action={() => {alert('hhhhhh')}}
+        action={() => {this.killProcess(record)}}
         content={`确定终止进程${record.pid}, 进程启动命令: ${record.command}`}
       />
     </Action>
+  }
+
+  killProcess = (record: ProcessInfoVO) => {
+    store.loading = true
+    MonitorAction.killProcess(this.assembleOperateForm(record)).then(result => {
+      if (result) {
+        message.info(`进程${record.pid}, 进程启动命令: ${record.command} 已关闭`)
+      } else {
+        message.info(`进程${record.pid}, 进程启动命令: ${record.command} 关闭失败`)
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.loading = false)
+  }
+
+  assembleOperateForm = (record: ProcessInfoVO) => {
+    const { ip, sshPort, account } = this.props.serverVO
+    const form: MonitorOperateForm = {
+      operatorId: getHokageUid(),
+      ip: ip,
+      sshPort: sshPort,
+      account: account,
+      pid: record.pid
+    }
+    return form
   }
 
   render() {

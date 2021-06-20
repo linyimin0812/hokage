@@ -8,7 +8,6 @@ import com.hokage.biz.response.resource.general.LastLogInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
-import com.hokage.biz.service.HokageMonitorService;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.command.handler.MonitorCommandHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ import java.util.List;
  **/
 @Slf4j
 @Service
-public class HokageMonitorServiceImpl extends AbstractCommandService implements HokageMonitorService {
+public class HokageMonitorService extends AbstractCommandService {
 
     private MonitorCommandHandler<BaseCommandParam> commandHandler;
 
@@ -33,7 +32,6 @@ public class HokageMonitorServiceImpl extends AbstractCommandService implements 
         this.commandHandler = commandHandler;
     }
 
-    @Override
     public ServiceResponse<BasicInfoVO> acquireBasic(String serverKey) {
         ServiceResponse<BasicInfoVO> response = new ServiceResponse<>();
         BasicInfoVO basicInfoVO = new BasicInfoVO();
@@ -66,7 +64,6 @@ public class HokageMonitorServiceImpl extends AbstractCommandService implements 
         return response.success(basicInfoVO);
     }
 
-    @Override
     public ServiceResponse<SystemInfoVO> acquireSystem(String serverKey) {
         ServiceResponse<SystemInfoVO> response = new ServiceResponse<>();
         SystemInfoVO systemInfoVO = new SystemInfoVO();

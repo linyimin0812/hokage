@@ -115,4 +115,8 @@ public abstract class AbstractCommand implements Command {
                 "END {print \"]\"}' < /etc/passwd" + " | " +
                 "sed 'N;$s/},/}/;P;D';";
     }
+
+    public static String kill(Long pid) {
+        return String.format("kill %s", pid);
+    }
 }

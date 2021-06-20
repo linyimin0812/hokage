@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.request.command.BaseCommandParam;
+import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
@@ -191,5 +192,21 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
            log.error("HokageFileManagementServiceImpl.processHandler failed. err: {}", e.getMessage());
            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
        }
+    });
+
+    public BiFunction<SshClient, MonitorParam, ServiceResponse<Boolean>> killProcessHandler = ((client, monitorParam) -> {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        try {
+            CommandResult killResult = execComponent.execute(client, AbstractCommand.kill(monitorParam.getPid()));
+            if (!killResult.isSuccess()) {
+                String errMsg = String.format("existStatus: %s, msg: %s", killResult.getExitStatus(), killResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+
+            return response.success(Boolean.TRUE);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.killProcessHandler failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
     });
 }

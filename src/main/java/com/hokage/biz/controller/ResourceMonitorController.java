@@ -1,12 +1,14 @@
 package com.hokage.biz.controller;
 
 import com.hokage.biz.form.monitor.MonitorOperateForm;
+import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
-import com.hokage.biz.service.HokageMonitorService;
+import com.hokage.biz.service.impl.HokageMonitorService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
+import com.hokage.ssh.command.handler.MonitorCommandHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ResourceMonitorController extends BaseController {
     private HokageMonitorService monitorService;
+    private MonitorCommandHandler<MonitorParam> commandHandler;
 
     @Autowired
     public void setMonitorService(HokageMonitorService monitorService) {
         this.monitorService = monitorService;
+    }
+
+    @Autowired
+    public void setCommandHandler(MonitorCommandHandler<MonitorParam> commandHandler) {
+        this.commandHandler = commandHandler;
     }
 
     @RequestMapping(value = "/server/monitor/basic", method = RequestMethod.POST)
@@ -42,5 +50,13 @@ public class ResourceMonitorController extends BaseController {
         ServiceResponse<SystemInfoVO> result = monitorService.acquireSystem(serverKey);
 
         return response(result);
+    }
+
+    @RequestMapping(value = "/server/monitor/process/kill", method = RequestMethod.POST)
+    public ResultVO<Boolean> killProcess(@RequestBody MonitorOperateForm form) {
+        String serverKey = form.buildKey();
+        MonitorParam param = new MonitorParam().setPid(form.getPid());
+        ServiceResponse<Boolean> killResult = monitorService.execute(serverKey, param, commandHandler.killProcessHandler);
+        return response(killResult);
     }
 }

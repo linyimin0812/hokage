@@ -14,6 +14,8 @@ public class MonitorOperateForm {
     private String sshPort;
     private String account;
 
+    private Long pid;
+
     public String buildKey() {
         return String.format("%s_%s_%s", ip, sshPort, account);
     }

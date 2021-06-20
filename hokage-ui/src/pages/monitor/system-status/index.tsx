@@ -68,7 +68,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
         </Row>
         <Divider />
         <Row gutter={12} >
-          <Col span={16}><Process dataSource={processInfo} /></Col>
+          <Col span={16}><Process dataSource={processInfo} serverVO={this.props.serverVO} /></Col>
           <Col span={8}><DiskPartition /></Col>
         </Row>
       </Spin>
