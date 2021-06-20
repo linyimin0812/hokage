@@ -103,13 +103,14 @@ public class LinuxCommand extends AbstractCommand {
     @Override
     public String lastLog() {
         return "lastlog -t 365 " + " | " +
-                "awk 'BEGIN {print \"[\"} " +
-                "NR>1 { print \"{" +
+                "awk 'BEGIN {print \"[\"} NR>1 { printf \"{" +
                 "\\\"account\\\": \\\"\"$1\"\\\", " +
                 "\\\"port\\\": \\\"\"$2\"\\\", " +
-                "\\\"from\\\": \\\"\"$3\"\\\", " +
-                "\\\"latest\\\": \\\"\"substr($0, index($0, $4))\"\\\"},\"} " +
-                "END {print \"]\"}'" + " | " +
+                "\\\"from\\\":\"; " +
+                "if($3 ~ /^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}/){ " +
+                "print \"\\\"\"$3\"\\\", \\\"latest\\\": \\\"\"substr($0, index($0, $4))\"\\\"},\"} " +
+                "else print \"\\\"\\\", \\\"latest\\\": \\\"\"substr($0, index($0, $3))\"\\\"},\";} " +
+                "END {print \"]\"}' " + " | " +
                 "sed 'N;$s/},/}/;P;D';";
     }
 
