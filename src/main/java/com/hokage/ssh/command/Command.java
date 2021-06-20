@@ -67,4 +67,10 @@ public interface Command {
      * @return lastlog command
      */
     String lastLog();
+
+    /**
+     * acquire disk partition information
+     * @return disk partition information
+     */
+    String df();
 }

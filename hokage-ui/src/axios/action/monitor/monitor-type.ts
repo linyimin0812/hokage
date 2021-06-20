@@ -2,6 +2,7 @@ import { GeneralInfoVO } from '../../../pages/monitor/basic-info/basic-info'
 import { AccountInfoVO } from '../../../pages/monitor/basic-info/account-info'
 import { LastLogInfoVO } from '../../../pages/monitor/basic-info/login-account-info'
 import { ProcessInfoVO } from '../../../pages/monitor/system-status/process'
+import { DiskInfoVO } from '../../../pages/monitor/system-status/disk-partition'
 
 export interface BasicInfoVO {
   cpuInfo: GeneralInfoVO[],
@@ -12,7 +13,8 @@ export interface BasicInfoVO {
 }
 
 export interface SystemInfoVO {
-  processInfo: ProcessInfoVO[]
+  processInfo: ProcessInfoVO[],
+  diskInfo: DiskInfoVO[],
 }
 
 export interface MonitorOperateForm {

@@ -41,5 +41,5 @@ export const MonitorAction = {
         reject('获取服务器信息失败')
       }
     })
-  }
+  },
 }

@@ -8,6 +8,7 @@ import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
+import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
@@ -15,6 +16,8 @@ import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
 import com.hokage.ssh.command.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
+import com.hokage.ssh.domain.DiskPartitionProperty;
+import com.hokage.util.FileUtil;
 import com.hokage.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -206,6 +209,32 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
             return response.success(Boolean.TRUE);
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.killProcessHandler failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    });
+
+    public BiFunction<SshClient, MonitorParam, ServiceResponse<List<DiskInfoVO>>> diskPartitionHandler = ((client, monitorParam) -> {
+        ServiceResponse<List<DiskInfoVO>> response = new ServiceResponse<>();
+        try {
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult diskPartitionResult = execComponent.execute(client, command.df());
+            if (!diskPartitionResult.isSuccess()) {
+                String errMsg = String.format("existStatus: %s, msg: %s", diskPartitionResult.getExitStatus(), diskPartitionResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            List<DiskPartitionProperty> properties = JSON.parseArray(diskPartitionResult.getContent(), DiskPartitionProperty.class);
+            List<DiskInfoVO> diskInfoVOList = properties.stream().map(property -> {
+                DiskInfoVO infoVO = new DiskInfoVO();
+                String size = FileUtil.humanReadable(property.getSize() * 1024);
+                String used = FileUtil.humanReadable(property.getUsed() * 1024);
+                int lastIndex = StringUtils.lastIndexOf(property.getCapacity(), "%");
+                int capacity = Integer.parseInt(StringUtils.substring(property.getCapacity(), 0, lastIndex));
+                infoVO.setName(property.getFileSystem()).setSize(size).setUsed(used).setCapacity(capacity).setMounted(property.getMounted());
+                return infoVO;
+            }).collect(Collectors.toList());
+            return response.success(diskInfoVOList);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.diskPartitionHandler failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
     });

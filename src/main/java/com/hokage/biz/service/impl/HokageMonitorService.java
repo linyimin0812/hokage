@@ -5,6 +5,7 @@ import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
+import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
@@ -72,6 +73,12 @@ public class HokageMonitorService extends AbstractCommandService {
 
         if (processResult.getSucceeded()) {
             systemInfoVO.setProcessInfo(processResult.getData());
+        }
+
+        ServiceResponse<List<DiskInfoVO>> diskResult = this.execute(serverKey, null, commandHandler.diskPartitionHandler);
+
+        if (diskResult.getSucceeded()) {
+            systemInfoVO.setDiskInfo(diskResult.getData());
         }
 
         return response.success(systemInfoVO);

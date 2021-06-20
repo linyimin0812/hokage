@@ -114,6 +114,20 @@ public class LinuxCommand extends AbstractCommand {
                 "sed 'N;$s/},/}/;P;D';";
     }
 
+    @Override
+    public String df() {
+        return "df -k" + " | " +
+                "awk 'BEGIN {print \"[\"} NR>1 && $2 ~ /[0-9]+/ {print \"{" +
+                "\\\"fileSystem\\\": \\\"\"$1\"\\\"," +
+                "\\\"size\\\": \"$2\", " +
+                "\\\"used\\\": \"$3\", " +
+                "\\\"available\\\": \"$4\", " +
+                "\\\"capacity\\\": \\\"\"$5\"\\\", " +
+                "\\\"mounted\\\": \\\"\"$6\"\\\"}, \"} " +
+                "END {print \"]\"}'" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
@@ -124,5 +138,6 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.cpuInfo());
         System.out.println(AbstractCommand.accountInfo());
         System.out.println(command.lastLog());
+        System.out.println(command.df());
     }
 }

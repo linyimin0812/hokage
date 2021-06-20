@@ -24,6 +24,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
 
   state = {
     processInfo: [],
+    diskInfo: []
   }
 
   componentDidMount() {
@@ -33,7 +34,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
   acquireSystemInfo = () => {
     store.loading = true
     MonitorAction.system(this.assembleOperateForm()).then(systemInfo => {
-      this.setState({...systemInfo})
+      this.setState({ ...systemInfo })
     }).catch(e => message.error(e))
       .finally(() => store.loading = false)
   }
@@ -51,7 +52,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
 
   render() {
 
-    const { processInfo } = this.state
+    const { processInfo, diskInfo } = this.state
 
     return (
       <Spin spinning={store.loading}>
@@ -69,7 +70,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
         <Divider />
         <Row gutter={12} >
           <Col span={16}><Process dataSource={processInfo} serverVO={this.props.serverVO} /></Col>
-          <Col span={8}><DiskPartition /></Col>
+          <Col span={8}><DiskPartition dataSource={diskInfo} /></Col>
         </Row>
       </Spin>
     )

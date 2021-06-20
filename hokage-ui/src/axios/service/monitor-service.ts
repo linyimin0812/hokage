@@ -13,6 +13,10 @@ const serviceInfo: {[name: string]: ServiceParam} = {
   'killProcess': {
     url: '/server/monitor/process/kill',
     method: 'POST'
+  },
+  'diskPartition': {
+    'url': '/server/monitor/disk/partition',
+    method: 'POST'
   }
 }
 

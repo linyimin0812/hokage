@@ -3,6 +3,7 @@ package com.hokage.biz.controller;
 import com.hokage.biz.form.monitor.MonitorOperateForm;
 import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
+import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.impl.HokageMonitorService;
 import com.hokage.common.BaseController;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author linyimin

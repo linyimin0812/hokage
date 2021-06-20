@@ -57,4 +57,9 @@ public class DarwinCommand extends AbstractCommand {
     public String lastLog() {
         return null;
     }
+
+    @Override
+    public String df() {
+        return null;
+    }
 }

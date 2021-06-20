@@ -12,4 +12,5 @@ import java.util.List;
 @Data
 public class SystemInfoVO {
     private List<ProcessInfoVO> processInfo;
+    private List<DiskInfoVO> diskInfo;
 }
