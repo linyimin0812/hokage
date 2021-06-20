@@ -1,12 +1,14 @@
 import React from 'react'
-import { Card, message, Table, Tooltip } from 'antd';
+import { Card, message, Table, Tooltip } from 'antd'
 import { Action } from '../../../component/Action'
 import { StopOutlined } from '@ant-design/icons'
-import store from '../store';
-import { MonitorAction } from '../../../axios/action/monitor/monitor-action';
-import { MonitorOperateForm } from '../../../axios/action/monitor/monitor-type';
-import { getHokageUid } from '../../../libs';
-import { ServerVO } from '../../../axios/action/server/server-type';
+import store from '../store'
+import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
+import { MonitorOperateForm } from '../../../axios/action/monitor/monitor-type'
+import { getHokageUid } from '../../../libs'
+import { ServerVO } from '../../../axios/action/server/server-type'
+import tableSearch from '../../common/TableSearch'
+import Highlighter from 'react-highlight-words'
 
 export interface ProcessInfoVO {
   pid: number,
@@ -29,9 +31,18 @@ type ProcessProp = {
 export default class Process extends React.Component<ProcessProp> {
 
   renderCommand = (_: any, record: ProcessInfoVO, __: number) => {
+    const highLightComponent = (
+      <Highlighter
+        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+        searchWords={[tableSearch.searchText as string]}
+        autoEscape
+        textToHighlight={record.comm}
+      />
+    )
+
     return (
       <Tooltip placement={'topLeft'} title={record.command}>
-        {record.comm}
+        <span>{highLightComponent}</span>
       </Tooltip>
     )
   }
@@ -70,6 +81,8 @@ export default class Process extends React.Component<ProcessProp> {
     return form
   }
 
+  onFilter = (value: string | number | boolean, record: ProcessInfoVO) => record.command.includes(value.toString())
+
   render() {
     const { dataSource } = this.props
     return (
@@ -80,9 +93,15 @@ export default class Process extends React.Component<ProcessProp> {
           <Table.Column title="cpu%" dataIndex="cpu" sorter={(a: ProcessInfoVO, b: ProcessInfoVO) => a.cpu > b.cpu ? 1 : -1} />
           <Table.Column title="mem%" dataIndex="mem" sorter={(a: ProcessInfoVO, b: ProcessInfoVO) => a.mem > b.mem ? 1 : -1} />
           <Table.Column title="RSS" dataIndex="rss" />
-          <Table.Column title="VSZ" dataIndex="vsz" />
+          {/*<Table.Column title="VSZ" dataIndex="vsz" />*/}
           <Table.Column title="started" dataIndex="started" sorter={(a: ProcessInfoVO, b: ProcessInfoVO) => a.started > b.started ? 1 : -1} />
-          <Table.Column title="command" dataIndex="comm" render={this.renderCommand} />
+          <Table.Column
+            title={'command'} dataIndex={'comm'} render={this.renderCommand}
+            filterDropdown={tableSearch.filterDropdown}
+            filterIcon={tableSearch.filterIcon}
+            onFilter={this.onFilter}
+            onFilterDropdownVisibleChange={tableSearch.onFilterDropdownVisibleChange}
+          />
           <Table.Column title="操作" render={this.renderAction} align={'center'} />
         </Table>
       </Card>

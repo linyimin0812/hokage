@@ -1,14 +1,11 @@
 package com.hokage.ssh.command;
 
-import com.hokage.ssh.enums.LsOptionEnum;
 import com.hokage.ssh.enums.OsTypeEnum;
-
 import com.hokage.util.FileUtil;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
 import java.util.List;
 
 /**
