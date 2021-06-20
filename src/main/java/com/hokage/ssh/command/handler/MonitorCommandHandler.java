@@ -8,7 +8,10 @@ import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
+import com.hokage.biz.response.resource.network.ArpInfoVo;
+import com.hokage.biz.response.resource.network.ConnectionInfoVO;
 import com.hokage.biz.response.resource.system.DiskInfoVO;
+import com.hokage.biz.response.resource.network.InterfaceIpVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
@@ -29,7 +32,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -235,6 +237,56 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
             return response.success(diskInfoVOList);
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.diskPartitionHandler failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    });
+
+    public BiFunction<SshClient, MonitorParam, ServiceResponse<List<InterfaceIpVO>>> interfaceIpHandler = ((client, monitorParam) -> {
+        ServiceResponse<List<InterfaceIpVO>> response = new ServiceResponse<>();
+        try {
+            CommandResult interfaceIpResult = execComponent.execute(client, AbstractCommand.interfaceIp());
+            if (!interfaceIpResult.isSuccess()) {
+                String errMsg = String.format("existStatus: %s, msg: %s", interfaceIpResult.getExitStatus(), interfaceIpResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            List<InterfaceIpVO> properties = JSON.parseArray(interfaceIpResult.getContent(), InterfaceIpVO.class);
+            return response.success(properties);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.interfaceIpHandler failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    });
+
+    public BiFunction<SshClient, MonitorParam, ServiceResponse<List<ArpInfoVo>>> arpHandler = ((client, monitorParam) -> {
+        ServiceResponse<List<ArpInfoVo>> response = new ServiceResponse<>();
+        try {
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult arpResult = execComponent.execute(client, command.arp());
+            if (!arpResult.isSuccess()) {
+                String errMsg = String.format("existStatus: %s, msg: %s", arpResult.getExitStatus(), arpResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            List<ArpInfoVo> properties = JSON.parseArray(arpResult.getContent(), ArpInfoVo.class);
+            return response.success(properties);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.arpHandler failed. err: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+        }
+    });
+
+    public BiFunction<SshClient, MonitorParam, ServiceResponse<List<ConnectionInfoVO>>> netstatHandler = ((client, monitorParam) -> {
+        ServiceResponse<List<ConnectionInfoVO>> response = new ServiceResponse<>();
+        try {
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult netstatResult = execComponent.execute(client, command.netstat());
+            if (!netstatResult.isSuccess()) {
+                String errMsg = String.format("existStatus: %s, msg: %s", netstatResult.getExitStatus(), netstatResult.getMsg());
+                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+            }
+            List<ConnectionInfoVO> properties = JSON.parseArray(netstatResult.getContent(), ConnectionInfoVO.class);
+            return response.success(properties);
+        } catch (Exception e) {
+            log.error("HokageFileManagementServiceImpl.netstatHandler failed. err: {}", e.getMessage());
             return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
     });

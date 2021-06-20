@@ -1,4 +1,4 @@
-import { BasicInfoVO, MonitorOperateForm, SystemInfoVO } from './monitor-type'
+import { BasicInfoVO, MonitorOperateForm, NetworkInfoVO, SystemInfoVO } from './monitor-type'
 import { ServiceResult } from '../../common'
 import { MonitorService } from '../../service/monitor-service'
 
@@ -39,6 +39,19 @@ export const MonitorAction = {
         resolve(result.data)
       } catch (e) {
         reject('获取服务器信息失败')
+      }
+    })
+  },
+  networkBasic: (form: MonitorOperateForm): Promise<NetworkInfoVO> => {
+    return new Promise<NetworkInfoVO>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<NetworkInfoVO> = await MonitorService.networkBasic(form)
+        if (!result.success) {
+          return reject(`${result.code} ${result.msg}`)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('获取网络信息失败')
       }
     })
   },

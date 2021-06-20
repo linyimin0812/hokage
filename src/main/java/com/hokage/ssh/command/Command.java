@@ -73,4 +73,16 @@ public interface Command {
      * @return disk partition information
      */
     String df();
+
+    /**
+     * acquire arp cache information
+     * @return arp cache information
+     */
+    String arp();
+
+    /**
+     * acquire connection information
+     * @return connection information
+     */
+    String netstat();
 }

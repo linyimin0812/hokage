@@ -17,6 +17,10 @@ const serviceInfo: {[name: string]: ServiceParam} = {
   'diskPartition': {
     'url': '/server/monitor/disk/partition',
     method: 'POST'
+  },
+  'networkBasic': {
+    url: '/server/monitor/network/basic',
+    method: 'POST'
   }
 }
 

@@ -3,7 +3,7 @@ package com.hokage.biz.controller;
 import com.hokage.biz.form.monitor.MonitorOperateForm;
 import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
-import com.hokage.biz.response.resource.system.DiskInfoVO;
+import com.hokage.biz.response.resource.network.NetworkInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.impl.HokageMonitorService;
 import com.hokage.common.BaseController;
@@ -61,5 +61,12 @@ public class ResourceMonitorController extends BaseController {
         MonitorParam param = new MonitorParam().setPid(form.getPid());
         ServiceResponse<Boolean> killResult = monitorService.execute(serverKey, param, commandHandler.killProcessHandler);
         return response(killResult);
+    }
+
+    @RequestMapping(value = "/server/monitor/network/basic", method = RequestMethod.POST)
+    public ResultVO<NetworkInfoVO> acquireNetworkBasicInfo(@RequestBody MonitorOperateForm form) {
+        String serverKey = form.buildKey();
+        ServiceResponse<NetworkInfoVO> networkInfoResult = monitorService.acquireNetwork(serverKey);
+        return response(networkInfoResult);
     }
 }

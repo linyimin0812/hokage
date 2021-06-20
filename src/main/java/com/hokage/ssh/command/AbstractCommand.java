@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import com.hokage.biz.Constant;
 import com.hokage.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -118,5 +119,13 @@ public abstract class AbstractCommand implements Command {
 
     public static String kill(Long pid) {
         return String.format("kill %s", pid);
+    }
+
+    public static String general() {
+        return String.format("bash %s/%s/%s general_info", HOME, Constant.WORK_HOME, Constant.API_FILE);
+    }
+
+    public static String interfaceIp() {
+        return String.format("bash %s/%s/%s interface_ip", HOME, Constant.WORK_HOME, Constant.API_FILE);
     }
 }

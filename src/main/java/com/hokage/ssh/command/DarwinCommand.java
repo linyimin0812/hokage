@@ -62,4 +62,14 @@ public class DarwinCommand extends AbstractCommand {
     public String df() {
         return null;
     }
+
+    @Override
+    public String arp() {
+        return null;
+    }
+
+    @Override
+    public String netstat() {
+        return null;
+    }
 }

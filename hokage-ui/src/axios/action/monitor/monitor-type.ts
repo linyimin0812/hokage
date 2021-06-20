@@ -3,6 +3,9 @@ import { AccountInfoVO } from '../../../pages/monitor/basic-info/account-info'
 import { LastLogInfoVO } from '../../../pages/monitor/basic-info/login-account-info'
 import { ProcessInfoVO } from '../../../pages/monitor/system-status/process'
 import { DiskInfoVO } from '../../../pages/monitor/system-status/disk-partition'
+import { InterfaceIpInfoVO } from '../../../pages/monitor/network/interface-info'
+import { ArpInfoVo } from '../../../pages/monitor/network/arpc-cache-table';
+import { ConnectionInfoVO } from '../../../pages/monitor/network/connection-table';
 
 export interface BasicInfoVO {
   cpuInfo: GeneralInfoVO[],
@@ -15,6 +18,12 @@ export interface BasicInfoVO {
 export interface SystemInfoVO {
   processInfo: ProcessInfoVO[],
   diskInfo: DiskInfoVO[],
+}
+
+export interface NetworkInfoVO {
+  interfaceIpInfo: InterfaceIpInfoVO[],
+  arpInfo: ArpInfoVo[],
+  connectionInfo: ConnectionInfoVO[],
 }
 
 export interface MonitorOperateForm {

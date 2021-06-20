@@ -5,6 +5,10 @@ import com.hokage.biz.response.resource.general.AccountInfoVO;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
 import com.hokage.biz.response.resource.general.GeneralInfoVO;
 import com.hokage.biz.response.resource.general.LastLogInfoVO;
+import com.hokage.biz.response.resource.network.ArpInfoVo;
+import com.hokage.biz.response.resource.network.ConnectionInfoVO;
+import com.hokage.biz.response.resource.network.InterfaceIpVO;
+import com.hokage.biz.response.resource.network.NetworkInfoVO;
 import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
@@ -82,5 +86,27 @@ public class HokageMonitorService extends AbstractCommandService {
         }
 
         return response.success(systemInfoVO);
+    }
+
+    public ServiceResponse<NetworkInfoVO> acquireNetwork(String serverKey) {
+        ServiceResponse<NetworkInfoVO> response = new ServiceResponse<>();
+        NetworkInfoVO networkInfoVO = new NetworkInfoVO();
+
+        ServiceResponse<List<InterfaceIpVO>> interfaceIpResult = this.execute(serverKey, null, commandHandler.interfaceIpHandler);
+        if (interfaceIpResult.getSucceeded()) {
+            networkInfoVO.setInterfaceIpInfo(interfaceIpResult.getData());
+        }
+
+        ServiceResponse<List<ArpInfoVo>> arpResult = this.execute(serverKey, null, commandHandler.arpHandler);
+        if (arpResult.getSucceeded()) {
+            networkInfoVO.setArpInfo(arpResult.getData());
+        }
+
+        ServiceResponse<List<ConnectionInfoVO>> netstatResult = this.execute(serverKey, null, commandHandler.netstatHandler);
+        if (netstatResult.getSucceeded()) {
+            networkInfoVO.setConnectionInfo(netstatResult.getData());
+        }
+
+        return response.success(networkInfoVO);
     }
 }

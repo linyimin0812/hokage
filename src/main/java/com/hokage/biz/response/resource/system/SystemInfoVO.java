@@ -1,7 +1,6 @@
 package com.hokage.biz.response.resource.system;
 
 import lombok.Data;
-
 import java.util.List;
 
 /**

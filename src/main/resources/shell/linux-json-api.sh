@@ -28,6 +28,20 @@ general_info() {
   echo "{ $kernel, \"hostname\": \"$hostname\", \"uptime\": \" $(formatTime "${uptime_seconds%.*}") \", \"Server Time\": \"$server_time\" }"
 }
 
+interface_ip() {
+
+  local text
+  text="["
+
+  for item in $(ifconfig | grep -oP "^[a-zA-Z0-9:]*(?=:)")
+  do
+      text=$text"{\"interfaceName\" : \"$item\", \"ip\" : \"$( ifconfig "$item" | grep "inet " | awk '{print $2}')\"},"
+  done
+  text=$(echo "$text" | awk '{print substr($0, 0, length($0)-1)}')
+  text=$text"]"
+  echo "$text"
+}
+
 fnCalled="$1"
 
 # Check if the function call is indeed a function.

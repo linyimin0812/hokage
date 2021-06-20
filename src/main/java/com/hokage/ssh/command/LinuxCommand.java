@@ -128,6 +128,29 @@ public class LinuxCommand extends AbstractCommand {
                 "sed 'N;$s/},/}/;P;D';";
     }
 
+    @Override
+    public String arp() {
+        return "arp | awk 'BEGIN {print \"[\"} NR>1 {print \"{" +
+                "\\\"ip\\\": \\\"\"$1\"\\\", " +
+                "\\\"hwType\\\": \\\"\"$2\"\\\", " +
+                "\\\"mac\\\": \\\"\"$3\"\\\", " +
+                "\\\"interfaceName\\\": \\\"\"$5\"\\\"},\"} " +
+                "END {print \"]\"}'" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
+    @Override
+    public String netstat() {
+        return "netstat -natp" + " | " +
+                "awk 'BEGIN {print \"[\"} NR>2 {print \"{" +
+                "\\\"protocol\\\": \\\"\"$1\"\\\", " +
+                "\\\"localIp\\\": \\\"\"$4\"\\\", " +
+                "\\\"foreignIp\\\": \\\"\"$5\"\\\", " +
+                "\\\"status\\\": \\\"\"$6\"\\\", " +
+                "\\\"process\\\": \\\"\"$7\"\\\"},\"} END {print \"]\"}'" + " | " +
+                "sed 'N;$s/},/}/;P;D';";
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
