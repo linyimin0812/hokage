@@ -2,6 +2,7 @@ package com.hokage.ssh.command;
 
 import com.hokage.biz.Constant;
 import com.hokage.ssh.SshClient;
+import com.hokage.ssh.command.result.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.enums.OsTypeEnum;
 import lombok.Getter;

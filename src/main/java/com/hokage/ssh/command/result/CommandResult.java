@@ -1,4 +1,4 @@
-package com.hokage.ssh.command;
+package com.hokage.ssh.command.result;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

@@ -42,9 +42,51 @@ interface_ip() {
   echo "$text"
 }
 
+system_status() {
+
+  local load_avg
+  load_avg=$(cat /proc/loadavg | awk '{print "{\"oneMinAverage\": "$1", \"fiveMinAverage\": "$2", \"fifteenMinAverage\": "$3"}"}')
+  local mem_status
+  mem_status=$(free -b | grep "Mem:" | awk '{print "{\"total\": "$2", \"used\": "$3", \"free\": "$4"}"}')
+  local pre_cpu_status
+  pre_cpu_status=$(cat /proc/stat | grep "cpu" | awk 'BEGIN {print "["} {print "{\"name\": \""$1"\", \"user\": "$2", \"nice\": "$3", \"system\": "$4", \"idle\": "$5", \"ioWait\": "$6", \"irq\": "$7", \"softIrq\": "$8", \"steal\": "$9", \"guest\": "$10", \"guestNice\": "$11" },"} END {print "]"}' | sed 'N;$s/},/}/;P;D';)
+
+	local files=(/sys/class/net/*)
+	local pos=$(( ${#files[*]} - 1 ))
+	local last=${files[$pos]}
+
+	local upload_json_output="{"
+	local download_json_output="{"
+
+	for interface in "${files[@]}"
+	do
+		basename=$(basename "$interface")
+		out1=$(cat /sys/class/net/"$basename"/statistics/tx_bytes)
+		in1=$(cat /sys/class/net/"$basename"/statistics/rx_bytes)
+		sleep 1
+		out2=$(cat /sys/class/net/"$basename"/statistics/tx_bytes)
+		in2=$(cat /sys/class/net/"$basename"/statistics/rx_bytes)
+		out_bytes=$((out2 - out1))
+		in_bytes=$((in2 - in1))
+		upload_json_output="$upload_json_output \"$basename\": $out_bytes"
+		download_json_output="$download_json_output \"$basename\": $in_bytes"
+		if [[ ! $interface == "$last" ]]
+		then
+			upload_json_output="$upload_json_output,";
+			download_json_output="$download_json_output,";
+		fi
+	done
+	upload_json_output="$upload_json_output}"
+	download_json_output="$download_json_output}"
+
+	local cur_cpu_status
+	cur_cpu_status=$(cat /proc/stat | grep "cpu" | awk 'BEGIN {print "["} {print "{\"name\": \""$1"\", \"user\": "$2", \"nice\": "$3", \"system\": "$4", \"idle\": "$5", \"ioWait\": "$6", \"irq\": "$7", \"softIrq\": "$8", \"steal\": "$9", \"guest\": "$10", \"guestNice\": "$11" },"} END {print "]"}' | sed 'N;$s/},/}/;P;D';)
+
+	echo "{\"uploadRate\": $upload_json_output, \"downloadRate\": $download_json_output, \"loadAvg\": $load_avg, \"memStatus\": $mem_status, \"preCpuStatus\": $pre_cpu_status, \"curCpuStatus\": $cur_cpu_status}"
+}
+
 fnCalled="$1"
 
-# Check if the function call is indeed a function.
 if [ -n "$(type -t $fnCalled)" ] && [ "$(type -t $fnCalled)" = function ]; then
     ${fnCalled}
 fi

@@ -17,7 +17,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
-import com.hokage.ssh.command.CommandResult;
+import com.hokage.ssh.command.result.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.domain.DiskPartitionProperty;
 import com.hokage.util.FileUtil;
