@@ -157,7 +157,9 @@ CREATE TABLE IF NOT EXISTS `hokage_server_metric` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `gmt_create` DATETIME NOT NULL,
     `gmt_modified` DATETIME NOT NULL,
-    `name` varchar(128) NOT NULL UNIQUE COMMENT '对应曲线名称',
+    `server` varchar(128) NOT NULL comment '服务器',
+    `type` TINYINT NOT NULL comment '曲线类型',
+    `name` varchar(128) NOT NULL COMMENT '对应曲线名称',
     `value` decimal NOT NULL comment '曲线上的值，对应纵轴',
     `timestamp` BIGINT NOT NULL comment '时间戳，对应横轴',
     PRIMARY KEY (`id`)

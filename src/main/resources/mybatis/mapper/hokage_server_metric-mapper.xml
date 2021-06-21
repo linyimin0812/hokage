@@ -6,6 +6,7 @@
         <result property="gmtModified" column="gmt_modified"/>
         <result property="gmtCreate" column="gmt_create"/>
         <result property="id" column="id"/>
+        <result property="server" column="server"/>
         <result property="type" column="type"/>
         <result property="name" column="name"/>
         <result property="value" column="value"/>
@@ -16,6 +17,7 @@
         id,
         gmt_create,
         gmt_modified,
+        server,
         type,
         name,
         value,
@@ -36,13 +38,14 @@
         #{id},
         now(),
         now(),
+        #{server},
         #{type},
         #{name},
         #{value},
         #{timestamp}
         );
     </insert>
-    <insert id="batInsert">
+    <insert id="batInsert" parameterType="HokageSystemMetricDO" >
         INSERT INTO
         <include refid="tableName"/>
         (
@@ -51,7 +54,7 @@
         VALUES
         <foreach collection="serverMetricDOList" item="metric" separator=",">
             (
-                #{id}, now(), now(), #{metric.type}, #{metric.name}, #{metric.value}, #{metric.timestamp}
+                #{metric.id}, now(), now(), #{metric.server}, #{metric.type}, #{metric.name}, #{metric.value}, #{metric.timestamp}
             )
         </foreach>
     </insert>
@@ -62,7 +65,7 @@
         FROM
             <include refid="tableName" />
         <where>
-            timestamp BETWEEN #{start} AND #{end}
+            server=#{server} AND timestamp BETWEEN #{start} AND #{end}
         </where>
     </select>
     <select id="queryByTimeIntervalAndType" resultMap="HokageServerMetricMapper">
@@ -71,6 +74,8 @@
         FROM
         <include refid="tableName" />
         <where>
+            server=#{server}
+            AND
             type = #{type}
             AND
             timestamp BETWEEN #{start} AND #{end}

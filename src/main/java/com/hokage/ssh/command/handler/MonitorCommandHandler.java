@@ -17,7 +17,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
-import com.hokage.ssh.command.result.CommandResult;
+import com.hokage.ssh.command.result.*;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.domain.DiskPartitionProperty;
 import com.hokage.util.FileUtil;
@@ -26,11 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.text.ParseException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
 

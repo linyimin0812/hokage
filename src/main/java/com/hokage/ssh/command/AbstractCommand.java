@@ -128,4 +128,8 @@ public abstract class AbstractCommand implements Command {
     public static String interfaceIp() {
         return String.format("bash %s/%s/%s interface_ip", HOME, Constant.WORK_HOME, Constant.API_FILE);
     }
+
+    public static String systemStat() {
+        return String.format("bash %s/%s/%s system_status", HOME, Constant.WORK_HOME, Constant.API_FILE);
+    }
 }

@@ -2,6 +2,7 @@ package com.hokage.persistence.dataobject;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author yiminlin
@@ -9,9 +10,11 @@ import lombok.EqualsAndHashCode;
  * @description hokage system metric DO
  **/
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class HokageServerMetricDO extends HokageBaseDO {
     private Long id;
+    private String server;
     private Integer type;
     private String name;
     private Double value;

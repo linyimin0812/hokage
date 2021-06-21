@@ -27,7 +27,7 @@ public interface HokageServerMetricMapper {
      * @param serverMetricDOList server metric list
      * @return effected rows
      */
-    Long batInsert(List<HokageServerMetricDO> serverMetricDOList);
+    Long batInsert(@Param("serverMetricDOList") List<HokageServerMetricDO> serverMetricDOList);
 
     /**
      * query server metric between start and end
@@ -35,7 +35,7 @@ public interface HokageServerMetricMapper {
      * @param end end time
      * @return server metric list between start and end
      */
-    List<HokageServerMetricDO> queryByTimeInterval(@Param("start") Long start, @Param("end") Long end);
+    List<HokageServerMetricDO> queryByTimeInterval(@Param("server") String server, @Param("start") Long start, @Param("end") Long end);
 
     /**
      * query server metric between start and end and type
@@ -44,5 +44,5 @@ public interface HokageServerMetricMapper {
      * @param type metric type
      * @return server metric list between start and end and type
      */
-    List<HokageServerMetricDO> queryByTimeIntervalAndType(@Param("start")Long start, @Param("end") Long end, @Param("type") Integer type);
+    List<HokageServerMetricDO> queryByTimeIntervalAndType(@Param("server") String server, @Param("start")Long start, @Param("end") Long end, @Param("type") Integer type);
 }

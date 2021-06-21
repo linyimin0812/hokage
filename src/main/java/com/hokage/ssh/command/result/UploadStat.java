@@ -1,4 +1,4 @@
-package com.hokage.ssh.command.result.stat;
+package com.hokage.ssh.command.result;
 
 import lombok.Data;
 

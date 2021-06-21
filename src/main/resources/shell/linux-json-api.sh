@@ -82,7 +82,7 @@ system_status() {
 	local cur_cpu_status
 	cur_cpu_status=$(cat /proc/stat | grep "cpu" | awk 'BEGIN {print "["} {print "{\"name\": \""$1"\", \"user\": "$2", \"nice\": "$3", \"system\": "$4", \"idle\": "$5", \"ioWait\": "$6", \"irq\": "$7", \"softIrq\": "$8", \"steal\": "$9", \"guest\": "$10", \"guestNice\": "$11" },"} END {print "]"}' | sed 'N;$s/},/}/;P;D';)
 
-	echo "{\"uploadRate\": $upload_json_output, \"downloadRate\": $download_json_output, \"loadAvg\": $load_avg, \"memStatus\": $mem_status, \"preCpuStatus\": $pre_cpu_status, \"curCpuStatus\": $cur_cpu_status}"
+	echo "{\"uploadRate\": $upload_json_output, \"downloadRate\": $download_json_output, \"loadAvg\": $load_avg, \"memStat\": $mem_status, \"preCpuStat\": $pre_cpu_status, \"curCpuStat\": $cur_cpu_status}"
 }
 
 fnCalled="$1"
