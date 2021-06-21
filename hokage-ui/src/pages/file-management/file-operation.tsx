@@ -116,7 +116,8 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
       return null
     }
     const url = process.env.REACT_APP_ENV === 'local' ? '/api/server/file/upload' : '/server/file/upload'
-    const action = `${url}?curDir=${curDir}&id=${serverVO.id}`
+    const serverKey = `${serverVO.ip}_${serverVO.sshPort}_${serverVO.account}`
+    const action = `${url}?curDir=${curDir}&serverKey=${serverKey}`
     return (
       <>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px'}}>
