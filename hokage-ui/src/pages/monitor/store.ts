@@ -2,7 +2,7 @@ import { ServerVO } from '../../axios/action/server/server-type'
 import { observable } from 'mobx'
 import { MetricMetaVO, MonitorOperateForm } from '../../axios/action/monitor/monitor-type'
 import { MonitorAction } from '../../axios/action/monitor/monitor-action'
-import { message } from 'antd';
+import { message } from 'antd'
 
 export interface MonitorPanesType {
   content: JSX.Element | null,

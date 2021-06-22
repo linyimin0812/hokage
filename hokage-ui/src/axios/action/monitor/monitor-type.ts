@@ -5,8 +5,7 @@ import { ProcessInfoVO } from '../../../pages/monitor/system-status/process'
 import { DiskInfoVO } from '../../../pages/monitor/system-status/disk-partition'
 import { InterfaceIpInfoVO } from '../../../pages/monitor/network/interface-info'
 import { ArpInfoVo } from '../../../pages/monitor/network/arpc-cache-table';
-import { ConnectionInfoVO } from '../../../pages/monitor/network/connection-table';
-import { observable } from 'mobx';
+import { ConnectionInfoVO } from '../../../pages/monitor/network/connection-table'
 
 export interface BasicInfoVO {
   cpuInfo: GeneralInfoVO[],

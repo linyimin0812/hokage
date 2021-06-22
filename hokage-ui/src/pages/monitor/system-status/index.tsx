@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Col, Divider, message, Row, Spin } from 'antd';
+import { Button, Col, Divider, message, Row, Spin } from 'antd'
 import AverageLoad from './average-load'
 import CpuUtilization from './cpu-utilization'
 import RamUsage from './ram-usage'

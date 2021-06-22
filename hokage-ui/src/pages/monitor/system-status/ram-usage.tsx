@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactEcharts from 'echarts-for-react'
-import store from '../store';
+import store from '../store'
 
 export default class RamUsage extends React.Component {
   renderOption = () => {

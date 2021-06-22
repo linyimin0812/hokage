@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, Progress, Table, Tooltip } from 'antd';
+import { Card, Progress, Table, Tooltip } from 'antd'
 
 export interface DiskInfoVO {
   name: string,

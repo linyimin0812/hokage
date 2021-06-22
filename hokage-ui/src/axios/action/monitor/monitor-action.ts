@@ -1,4 +1,4 @@
-import { BasicInfoVO, MetricVO, MonitorOperateForm, NetworkInfoVO, SystemInfoVO } from './monitor-type';
+import { BasicInfoVO, MetricVO, MonitorOperateForm, NetworkInfoVO, SystemInfoVO } from './monitor-type'
 import { ServiceResult } from '../../common'
 import { MonitorService } from '../../service/monitor-service'
 

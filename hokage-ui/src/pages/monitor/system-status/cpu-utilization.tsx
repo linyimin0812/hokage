@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactEcharts from 'echarts-for-react'
 import { observer } from 'mobx-react'
-import store from '../store';
+import store from '../store'
 
 @observer
 export default class CpuUtilization extends React.Component {
