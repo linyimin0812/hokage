@@ -91,7 +91,7 @@ public class FileManagerController extends BaseController {
         OutputStream os  = response.getOutputStream();
         FileParam param = new FileParam();
         param.setPath(file).setOs(os);
-        fileService.execute(serverKey, param, commandHandler.downloadHandler);
+        fileService.ExecuteSftpCommand(serverKey, param, commandHandler.downloadHandler);
     }
 
     @RequestMapping(value = "/server/file/tar", method = RequestMethod.POST)
@@ -120,7 +120,7 @@ public class FileManagerController extends BaseController {
 
         FileParam param = new FileParam();
         param.setDstPath(dst).setSrc(in);
-        ServiceResponse<Boolean> response = fileService.execute(serverKey, param, commandHandler.uploadHandler);
+        ServiceResponse<Boolean> response = fileService.ExecuteSftpCommand(serverKey, param, commandHandler.uploadHandler);
 
         return response(response);
     }
@@ -153,6 +153,6 @@ public class FileManagerController extends BaseController {
         OutputStream os  = response.getOutputStream();
         FileParam param = new FileParam();
         param.setPath(file).setOs(os);
-        fileService.execute(serverKey, param, commandHandler.downloadHandler);
+        fileService.ExecuteSftpCommand(serverKey, param, commandHandler.downloadHandler);
     }
 }

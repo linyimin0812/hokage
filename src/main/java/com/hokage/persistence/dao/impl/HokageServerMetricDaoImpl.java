@@ -36,8 +36,8 @@ public class HokageServerMetricDaoImpl implements HokageServerMetricDao {
     }
 
     @Override
-    public List<HokageServerMetricDO> queryByTimeInterval(Long start, Long end) {
-        List<HokageServerMetricDO> serverMetricDOList = serverMetricMapper.queryByTimeInterval(start, end);
+    public List<HokageServerMetricDO> queryByTimeInterval(String server, Long start, Long end) {
+        List<HokageServerMetricDO> serverMetricDOList = serverMetricMapper.queryByTimeInterval(server, start, end);
         if (CollectionUtils.isEmpty(serverMetricDOList)) {
             return Collections.emptyList();
         }
@@ -45,8 +45,8 @@ public class HokageServerMetricDaoImpl implements HokageServerMetricDao {
     }
 
     @Override
-    public List<HokageServerMetricDO> queryByTimeIntervalAndType(Long start, Long end, Integer type) {
-        List<HokageServerMetricDO> serverMetricDOList = serverMetricMapper.queryByTimeIntervalAndType(start, end, type);
+    public List<HokageServerMetricDO> queryByTimeIntervalAndType(String server, Long start, Long end, Integer type) {
+        List<HokageServerMetricDO> serverMetricDOList = serverMetricMapper.queryByTimeIntervalAndType(server, start, end, type);
         if (CollectionUtils.isEmpty(serverMetricDOList)) {
             return Collections.emptyList();
         }

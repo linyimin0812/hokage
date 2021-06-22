@@ -13,7 +13,9 @@ import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -57,6 +59,13 @@ public class HokageServerCacheDao extends BaseCacheDao {
      */
     private Cache<String, SshClient> serverKey2SshSftpClient;
 
+    /**
+     * key: server
+     * value: SshClient
+     */
+    @Getter
+    private Cache<String, SshClient> server2MetricClient;
+
     private HokageServerDao serverDao;
     private CommandDispatcher dispatcher;
 
@@ -87,6 +96,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
     public void init() throws Exception {
         serverKey2SshExecClient = buildDefaultLocalCache();
         serverKey2SshSftpClient = buildDefaultLocalCache();
+        server2MetricClient = buildDefaultLocalCache();
         scheduledWorker.getScheduledService().scheduleAtFixedRate(() -> {
             try {
                 this.activeCacheRefresh();
@@ -138,18 +148,24 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
         Map<String, SshClient> serverKey2SshClientMap = serverKey2SshExecClient.asMap();
         Map<String, HokageServerDO> serverKey2ServerMap = serverDOList.stream().collect(Collectors.toMap(this::buildKey, Function.identity(), (o1, o2) -> o1));
+        activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap, "serverKey");
+        invalidateDelServerCache(serverKey2ServerMap, serverKey2SshClientMap, "serverKey");
 
-        activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap);
-        invalidateDelServerCache(serverKey2ServerMap, serverKey2SshClientMap);
+        Map<String, SshClient> server2MetricClientMap = server2MetricClient.asMap();
+        Map<String, HokageServerDO> server2ServerMap = serverDOList.stream().collect(Collectors.toMap(HokageServerDO::getIp, Function.identity(), (o1, o2) -> o1));
+        activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap, "server");
+        invalidateDelServerCache(serverKey2ServerMap, serverKey2SshClientMap, "server");
+
     }
 
     /**
      * active new add server ssh client
      * @param serverKey2ServerMap server object map
      * @param serverKey2SshClientMap server ssh clients have cached map
+     * @param type: server --> metric client, serverKey --> execClient and sftClient
      * @throws Exception
      */
-    private void activeNewServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap) throws Exception {
+    private void activeNewServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap, String type) throws Exception {
         // new add server list
         List<String> newServerKeyList = serverKey2ServerMap.keySet().stream()
                 .filter(serverKey -> {
@@ -167,18 +183,30 @@ public class HokageServerCacheDao extends BaseCacheDao {
             poolWorker.getExecutorPool().execute(() -> {
                 SshContext context = new SshContext();
                 BeanUtils.copyProperties(serverKey2ServerMap.get(serverKey), context);
-                SshClient execClient = new SshClient().setContext(context);
-                SshClient sftpClient = new SshClient().setContext(context);
-                try {
-                    execClient = new SshClient(context);
-                    sftpClient = new SshClient(context);
-                    uploadScript2Server(sftpClient);
-                    log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
-                } catch (Exception e) {
-                    log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
+                if (StringUtils.equals(type, "serverKey")) {
+                    SshClient execClient = new SshClient().setContext(context);
+                    SshClient sftpClient = new SshClient().setContext(context);
+                    try {
+                        execClient = new SshClient(context);
+                        sftpClient = new SshClient(context);
+                        uploadScript2Server(sftpClient);
+                        log.info("HokageServerCacheDao.activeCacheRefresh create exec and sftp ssh client: {}", context);
+                    } catch (Exception e) {
+                        log.error("HokageServerCacheDao.activeCacheRefresh create exec and sftp ssh client: {} error. err: {}", context, e.getMessage());
+                    }
+                    serverKey2SshExecClient.put(serverKey, execClient);
+                    serverKey2SshSftpClient.put(serverKey, sftpClient);
                 }
-                serverKey2SshExecClient.put(serverKey, execClient);
-                serverKey2SshSftpClient.put(serverKey, sftpClient);
+                if (StringUtils.equals(type, "server")) {
+                    SshClient metricClient = new SshClient().setContext(context);
+                    try {
+                        metricClient = new SshClient(context);
+                        log.info("HokageServerCacheDao.activeCacheRefresh create metric ssh client: {}", context);
+                    } catch (Exception e) {
+                        log.error("HokageServerCacheDao.activeCacheRefresh create metric ssh client: {} error. err: {}", context, e.getMessage());
+                    }
+                    server2MetricClient.put(serverKey, metricClient);
+                }
             });
         }
     }
@@ -187,23 +215,39 @@ public class HokageServerCacheDao extends BaseCacheDao {
      * invalidate deleted server cache
      * @param serverKey2ServerMap server object map
      * @param serverKey2SshClientMap server ssh clients have cached map
+     * @param type: server --> metric client, serverKey --> execClient and sftClient
      */
-    private void invalidateDelServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap) {
+    private void invalidateDelServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap, String type) {
         // delete server list
         serverKey2SshClientMap.keySet().stream()
                 .filter(serverKey -> !serverKey2ServerMap.containsKey(serverKey))
                 .forEach(serverKey -> {
                     try {
-                        SshClient client = serverKey2SshExecClient.getIfPresent(serverKey);
-                        if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
-                            client.getSessionOrCreate().disconnect();
+                        if (StringUtils.equals(type, "serverKey")) {
+                            SshClient client = serverKey2SshExecClient.getIfPresent(serverKey);
+                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
+                                client.getSessionOrCreate().disconnect();
+                            }
+                            client = serverKey2SshSftpClient.getIfPresent(serverKey);
+                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
+                                client.getSessionOrCreate().disconnect();
+                            }
                         }
+
+                        if (StringUtils.equals(type, "server")) {
+                            SshClient client = server2MetricClient.getIfPresent(serverKey);
+                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
+                                client.getSessionOrCreate().disconnect();
+                            }
+                        }
+
                     } catch (Exception ignored) {
 
                     } finally {
                         serverKey2SshExecClient.invalidate(serverKey);
                         serverKey2SshSftpClient.invalidate(serverKey);
-                        log.info("HokageServerCacheDao.activeCacheRefresh create ssh client. serverKey: {}", serverKey);
+                        server2MetricClient.invalidate(serverKey);
+                        log.info("HokageServerCacheDao.activeCacheRefresh invalidate ssh client. serverKey: {}", serverKey);
                     }
                 });
     }

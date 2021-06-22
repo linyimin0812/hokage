@@ -5,6 +5,7 @@ import com.hokage.biz.request.command.BaseCommandParam;
 import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.ssh.SshClient;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
@@ -17,6 +18,8 @@ import java.util.function.BiFunction;
  **/
 @Service
 public abstract class AbstractCommandService {
+
+    @Getter
     private HokageServerCacheDao serverCacheDao;
 
     @Autowired

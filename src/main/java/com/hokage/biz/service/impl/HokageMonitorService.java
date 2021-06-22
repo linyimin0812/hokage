@@ -15,7 +15,10 @@ import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
+import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
+import com.hokage.infra.worker.MetricScheduledThreadPoolWorker;
+import com.hokage.infra.worker.MetricThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerMetricDao;
 import com.hokage.persistence.dataobject.HokageServerMetricDO;
 import com.hokage.ssh.SshClient;
@@ -26,9 +29,12 @@ import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.enums.MetricTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -42,9 +48,15 @@ import java.util.stream.IntStream;
 @Service
 public class HokageMonitorService extends AbstractCommandService {
 
+    @Value("${system.metric.need.pull}")
+    private boolean needPull;
+
     private MonitorCommandHandler<BaseCommandParam> commandHandler;
     private SshExecComponent execComponent;
     private HokageServerMetricDao metricDao;
+
+    private MetricScheduledThreadPoolWorker scheduledPoolWorker;
+    private MetricThreadPoolWorker metricPoolWorker;
 
     @Autowired
     public void setExecComponent(SshExecComponent execComponent) {
@@ -59,6 +71,30 @@ public class HokageMonitorService extends AbstractCommandService {
     @Autowired
     public void setCommandHandler(MonitorCommandHandler<BaseCommandParam> commandHandler) {
         this.commandHandler = commandHandler;
+    }
+
+    @Autowired
+    public void setScheduledPoolWorker(MetricScheduledThreadPoolWorker scheduledPoolWorker) {
+        this.scheduledPoolWorker = scheduledPoolWorker;
+    }
+
+    @Autowired
+    public void setMetricPoolWorker(MetricThreadPoolWorker metricPoolWorker) {
+        this.metricPoolWorker = metricPoolWorker;
+    }
+
+    @PostConstruct
+    public void init() {
+        if (!needPull) {
+            return;
+        }
+        scheduledPoolWorker.getScheduledService().scheduleAtFixedRate(() -> {
+            Map<String, SshClient> cache = getServerCacheDao().getServer2MetricClient().asMap();
+            cache.forEach((key, value) -> {
+                metricPoolWorker.getExecutorPool().execute(() -> this.acquireSystemStat(value));
+                log.info("acquire system stat: {}", value.getSshContext());
+            });
+        }, 0, 60, TimeUnit.SECONDS);
     }
 
     public ServiceResponse<BasicInfoVO> acquireBasic(String serverKey) {

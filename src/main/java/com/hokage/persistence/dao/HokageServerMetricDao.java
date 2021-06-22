@@ -25,18 +25,20 @@ public interface HokageServerMetricDao {
 
     /**
      * query server metric between start and end
+     * @param server server identify
      * @param start start time
      * @param end end time
      * @return server metric list between start and end
      */
-    List<HokageServerMetricDO> queryByTimeInterval(Long start, Long end);
+    List<HokageServerMetricDO> queryByTimeInterval(String server, Long start, Long end);
 
     /**
      * query server metric between start and end and type
+     * @param server server identify
      * @param start start time
      * @param end end time
      * @param type metric type
      * @return server metric list between start and end and type
      */
-    List<HokageServerMetricDO> queryByTimeIntervalAndType(Long start, Long end, Integer type);
+    List<HokageServerMetricDO> queryByTimeIntervalAndType(String server, Long start, Long end, Integer type);
 }
