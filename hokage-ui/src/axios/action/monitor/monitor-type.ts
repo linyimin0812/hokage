@@ -6,6 +6,7 @@ import { DiskInfoVO } from '../../../pages/monitor/system-status/disk-partition'
 import { InterfaceIpInfoVO } from '../../../pages/monitor/network/interface-info'
 import { ArpInfoVo } from '../../../pages/monitor/network/arpc-cache-table';
 import { ConnectionInfoVO } from '../../../pages/monitor/network/connection-table';
+import { observable } from 'mobx';
 
 export interface BasicInfoVO {
   cpuInfo: GeneralInfoVO[],
@@ -26,11 +27,33 @@ export interface NetworkInfoVO {
   connectionInfo: ConnectionInfoVO[],
 }
 
+export interface MetricMetaVO {
+  legendList: string[],
+  timeList: string[],
+  series: {
+    name: string,
+    type: string
+    stack: string,
+    data: number[]
+  }[]
+}
+
+export interface MetricVO {
+  loadAvgMetric: MetricMetaVO,
+  cpuStatMetric: MetricMetaVO,
+  memStatMetric: MetricMetaVO,
+
+  uploadStatMetric: MetricMetaVO,
+  downloadStatMetric: MetricMetaVO
+}
+
 export interface MonitorOperateForm {
   operatorId: number,
   ip: string,
   sshPort: string,
   account: string,
   pid?: number
+  start?: number,
+  end?: number
 }
 

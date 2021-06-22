@@ -28,7 +28,12 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
   }
 
   componentDidMount() {
+    this.refreshData()
+  }
+
+  refreshData = () => {
     this.acquireSystemInfo()
+    this.acquireMetric()
   }
 
   acquireSystemInfo = () => {
@@ -37,6 +42,13 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
       this.setState({ ...systemInfo })
     }).catch(e => message.error(e))
       .finally(() => store.loading = false)
+  }
+
+  acquireMetric = () => {
+    const form = this.assembleOperateForm()
+    form.start = new Date().getTime() - 60 * 60 * 1000
+    form.end = new Date().getTime()
+    store.acquireSystemStat(form)
   }
 
   assembleOperateForm = () => {
@@ -59,7 +71,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
           <Col span={16} style={{padding: '0px 0px'}} />
           <Col span={8} style={{padding: '0px 0px'}}>
-            <span style={{ float: 'right' }}><Button onClick={this.acquireSystemInfo}><ReloadOutlined translate />刷新</Button></span>
+            <span style={{ float: 'right' }}><Button onClick={this.refreshData}><ReloadOutlined translate />刷新</Button></span>
           </Col>
         </Row>
         <Row gutter={12} align="middle" justify={"center"} >

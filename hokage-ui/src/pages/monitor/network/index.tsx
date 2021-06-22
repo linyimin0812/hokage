@@ -29,7 +29,12 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   }
 
   componentDidMount() {
+    this.refreshData()
+  }
+
+  refreshData = () => {
     this.acquireNetWorkInfo()
+    this.acquireMetric()
   }
 
   acquireNetWorkInfo = () => {
@@ -38,6 +43,13 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
       this.setState({...networkInfo})
     }).catch(e => message.error(e))
       .finally(() => store.loading = false)
+  }
+
+  acquireMetric = () => {
+    const form = this.assembleOperateForm()
+    form.start = new Date().getTime() - 60 * 60 * 1000
+    form.end = new Date().getTime()
+    store.acquireSystemStat(form)
   }
 
   assembleOperateForm = () => {
@@ -58,20 +70,20 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
           <Col span={16} style={{padding: '0px 0px'}} />
           <Col span={8} style={{padding: '0px 0px'}}>
-            <span style={{ float: 'right' }}><Button onClick={this.acquireNetWorkInfo}><ReloadOutlined translate />刷新</Button></span>
+            <span style={{ float: 'right' }}><Button onClick={this.refreshData}><ReloadOutlined translate />刷新</Button></span>
           </Col>
         </Row>
-        <Row gutter={12}>
-          <Col span={6}><InterfaceInfo dataSource={interfaceIpInfo} /></Col>
-          <Col span={8}><ArpCacheTable dataSource={arpInfo} /></Col>
-          <Col span={10}><ConnectionTable dataSource={connectionInfo} /></Col>
-        </Row>
-        <Divider />
         <Row>
           <Col span={10}><DownloadSpeed /></Col>
           <Col span={2} />
           <Col span={10}><UploadSpeed /></Col>
           <Col span={2} />
+        </Row>
+        <Divider />
+        <Row gutter={12}>
+          <Col span={6}><InterfaceInfo dataSource={interfaceIpInfo} /></Col>
+          <Col span={8}><ArpCacheTable dataSource={arpInfo} /></Col>
+          <Col span={10}><ConnectionTable dataSource={connectionInfo} /></Col>
         </Row>
       </Spin>
     )

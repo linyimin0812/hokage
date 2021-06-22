@@ -21,6 +21,10 @@ const serviceInfo: {[name: string]: ServiceParam} = {
   'networkBasic': {
     url: '/server/monitor/network/basic',
     method: 'POST'
+  },
+  'metric': {
+    url: '/server/monitor/metric',
+    method: 'POST'
   }
 }
 
