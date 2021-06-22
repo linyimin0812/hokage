@@ -17,9 +17,13 @@ public class TimeUtil {
     public static String format(String dateStr, String srcFormat, String dstFormat) throws ParseException {
         SimpleDateFormat srcFormatter = new SimpleDateFormat(srcFormat, Locale.ENGLISH);
         long timestamp = srcFormatter.parse(dateStr).getTime();
+        return format(timestamp, dstFormat);
+    }
+
+    public static String format(Long timestamp, String format) {
         Instant instant = Instant.ofEpochMilli(timestamp);
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
-        DateTimeFormatter dstFormatter = DateTimeFormatter.ofPattern(dstFormat);
+        DateTimeFormatter dstFormatter = DateTimeFormatter.ofPattern(format);
         return zonedDateTime.format(dstFormatter);
     }
 }

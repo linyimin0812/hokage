@@ -3,8 +3,10 @@ package com.hokage.biz.controller;
 import com.hokage.biz.form.monitor.MonitorOperateForm;
 import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.response.resource.general.BasicInfoVO;
+import com.hokage.biz.response.resource.metric.MetricVO;
 import com.hokage.biz.response.resource.network.NetworkInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
+import com.hokage.biz.service.HokageServerMetricService;
 import com.hokage.biz.service.impl.HokageMonitorService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
@@ -16,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @author linyimin
  * @date 2020/8/23 01:52
@@ -28,6 +28,7 @@ import java.util.List;
 public class ResourceMonitorController extends BaseController {
     private HokageMonitorService monitorService;
     private MonitorCommandHandler<MonitorParam> commandHandler;
+    private HokageServerMetricService metricService;
 
     @Autowired
     public void setMonitorService(HokageMonitorService monitorService) {
@@ -37,6 +38,11 @@ public class ResourceMonitorController extends BaseController {
     @Autowired
     public void setCommandHandler(MonitorCommandHandler<MonitorParam> commandHandler) {
         this.commandHandler = commandHandler;
+    }
+
+    @Autowired
+    public void setMetricService(HokageServerMetricService metricService) {
+        this.metricService = metricService;
     }
 
     @RequestMapping(value = "/server/monitor/basic", method = RequestMethod.POST)
@@ -68,5 +74,11 @@ public class ResourceMonitorController extends BaseController {
         String serverKey = form.buildKey();
         ServiceResponse<NetworkInfoVO> networkInfoResult = monitorService.acquireNetwork(serverKey);
         return response(networkInfoResult);
+    }
+
+    @RequestMapping(value = "/server/monitor/metric", method = RequestMethod.POST)
+    public ResultVO<MetricVO> acquireMetric(@RequestBody MonitorOperateForm form) {
+        ServiceResponse<MetricVO> response = metricService.acquireMetric(form.getIp(), form.getStart(), form.getEnd());
+        return response(response);
     }
 }
