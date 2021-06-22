@@ -15,7 +15,6 @@ import com.hokage.biz.response.resource.system.DiskInfoVO;
 import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
-import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.infra.worker.MetricScheduledThreadPoolWorker;
 import com.hokage.infra.worker.MetricThreadPoolWorker;
@@ -170,13 +169,14 @@ public class HokageMonitorService extends AbstractCommandService {
         return response.success(networkInfoVO);
     }
 
-    public ServiceResponse<Boolean> acquireSystemStat(SshClient client) {
+    public void acquireSystemStat(SshClient client) {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
         try {
             CommandResult systemStatResult = execComponent.execute(client, AbstractCommand.systemStat());
             if (!systemStatResult.isSuccess()) {
                 String errMsg = String.format("existStatus: %s, msg: %s", systemStatResult.getExitStatus(), systemStatResult.getMsg());
-                return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+                response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);
+                return;
             }
             SystemStat systemStat = JSON.parseObject(systemStatResult.getContent(), SystemStat.class);
 
@@ -187,12 +187,13 @@ public class HokageMonitorService extends AbstractCommandService {
 
             Long result = metricDao.batInsert(metricDOList);
             if (result > 0) {
-                return response.success(Boolean.TRUE);
+                response.success(Boolean.TRUE);
+                return;
             }
-            return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "insert metrics error");
+            response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "insert metrics error");
         } catch (Exception e) {
             log.error("HokageFileManagementServiceImpl.systemStatHandler failed. err: {}", e.getMessage());
-            return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
+            response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), e.getMessage());
         }
     }
 
@@ -241,7 +242,7 @@ public class HokageMonitorService extends AbstractCommandService {
 
     private List<HokageServerMetricDO> assembleMemoryMetrics(MemoryStat memoryStat) {
         HokageServerMetricDO metricDO = new HokageServerMetricDO();
-        metricDO.setType(MetricTypeEnum.memory.getValue()).setName("memory").setValue(memoryStat.getUsed() / (1.0 * memoryStat.getTotal()));
+        metricDO.setType(MetricTypeEnum.memory.getValue()).setName("memory").setValue(memoryStat.getUsed() / (1.0 * memoryStat.getTotal()) * 100);
         return Collections.singletonList(metricDO);
     }
 
@@ -252,7 +253,9 @@ public class HokageMonitorService extends AbstractCommandService {
             CpuStat curStat = curCpuStat.get(index);
             Long preCpuTotal = preStat.getUser() + preStat.getSystem() + preStat.getNice() + preStat.getIdle() + preStat.getIoWait() + preStat.getIrq() + preStat.getSoftIrq();
             Long curCpuTotal = curStat.getUser() + curStat.getSystem() + curStat.getNice() + curStat.getIdle() + curStat.getIoWait() + curStat.getIrq() + curStat.getSoftIrq();
-            double usage = (curStat.getIdle() - preStat.getIdle()) / (1.0 * (curCpuTotal - preCpuTotal));
+            Long total = curCpuTotal - preCpuTotal;
+            Long idle = curStat.getIdle() - preStat.getIdle();
+            double usage = (total - idle) / (1.0 * (curCpuTotal - preCpuTotal)) * 100;
 
             metricDO.setType(MetricTypeEnum.cpu.getValue()).setName(curStat.getName()).setValue(usage);
             return metricDO;
