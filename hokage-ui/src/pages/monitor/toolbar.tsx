@@ -61,10 +61,6 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
   }
 
   renderRangePicker = () => {
-    const { autoRefresh } = this.state
-    if (autoRefresh) {
-      return null
-    }
     return (
       <>
         <span>自定义时间: </span>
@@ -89,15 +85,7 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
 
   refreshData = () => {
     const { refreshData } = this.props
-    const { autoRefresh } = this.state
-    let { start, end } = this.state
-
-    if (autoRefresh) {
-      start = moment().subtract(1, "hour").valueOf()
-      end = moment().valueOf()
-      refreshData(start, end)
-      return
-    }
+    const { start, end } = this.state
     refreshData(start, end)
   }
 
