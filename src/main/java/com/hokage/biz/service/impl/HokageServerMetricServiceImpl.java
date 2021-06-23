@@ -11,6 +11,7 @@ import com.hokage.ssh.enums.MetricTypeEnum;
 import com.hokage.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,6 +40,11 @@ public class HokageServerMetricServiceImpl implements HokageServerMetricService 
         ServiceResponse<MetricVO> response = new ServiceResponse<>();
 
         List<HokageServerMetricDO> metricDOList = metricDao.queryByTimeInterval(server, start, end);
+
+        if (CollectionUtils.isEmpty(metricDOList)) {
+            return response.success();
+        }
+
         Map<Integer, List<HokageServerMetricDO>> metricMap = metricDOList.stream().collect(Collectors.groupingBy(HokageServerMetricDO::getType));
 
         Map<String, MetricMetaVO> map = new HashMap<>(8);

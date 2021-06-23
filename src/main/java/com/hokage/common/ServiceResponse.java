@@ -38,7 +38,7 @@ public class ServiceResponse<T> {
         return this;
     }
 
-    public ServiceResponse success() {
+    public ServiceResponse<T> success() {
         this.succeeded = Boolean.TRUE;
         this.msg = null;
         this.code = SuccessCodeEnum.success.getCode();
