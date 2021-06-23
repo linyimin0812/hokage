@@ -1,17 +1,17 @@
 import React from 'react'
-import { Button, Col, Divider, message, Row, Spin } from 'antd'
+import { Col, Divider, message, Row, Spin } from 'antd'
 import AverageLoad from './average-load'
 import CpuUtilization from './cpu-utilization'
 import RamUsage from './ram-usage'
 import Process from './process'
 import DiskPartition from './disk-partition'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { ReloadOutlined } from '@ant-design/icons'
 import { MonitorOperateForm, SystemInfoVO } from '../../../axios/action/monitor/monitor-type'
 import store from '../store'
 import { observer } from 'mobx-react'
 import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
 import { getHokageUid } from '../../../libs'
+import { Toolbar } from '../toolbar'
 
 type SystemStatusProp = {
   serverVO: ServerVO
@@ -31,9 +31,9 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
     this.refreshData()
   }
 
-  refreshData = () => {
+  refreshData = (start?: number, end?: number) => {
     this.acquireSystemInfo()
-    this.acquireMetric()
+    this.acquireMetric(start, end)
   }
 
   acquireSystemInfo = () => {
@@ -44,10 +44,10 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
       .finally(() => store.loading = false)
   }
 
-  acquireMetric = () => {
+  acquireMetric = (start?: number, end?: number) => {
     const form = this.assembleOperateForm()
-    form.start = new Date().getTime() - 60 * 60 * 1000
-    form.end = new Date().getTime()
+    form.start = start ? start : new Date().getTime() - 60 * 60 * 1000
+    form.end = end ? end : new Date().getTime()
     store.acquireSystemStat(form)
   }
 
@@ -68,12 +68,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
 
     return (
       <Spin spinning={store.loading}>
-        <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
-          <Col span={16} style={{padding: '0px 0px'}} />
-          <Col span={8} style={{padding: '0px 0px'}}>
-            <span style={{ float: 'right' }}><Button onClick={this.refreshData}><ReloadOutlined translate />刷新</Button></span>
-          </Col>
-        </Row>
+        <Toolbar refreshData={this.refreshData} />
         <Row gutter={12} align="middle" justify={"center"} >
           <Col span={8}><AverageLoad /></Col>
           <Col span={8}><CpuUtilization /></Col>

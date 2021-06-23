@@ -12,22 +12,37 @@ export interface MonitorPanesType {
   closable?: boolean,
 }
 
+const defaultMetric: MetricMetaVO = {
+  legendList: [],
+  timeList: [],
+  series: []
+}
+
 class Store {
   @observable panes: MonitorPanesType[] = []
   @observable activeKey: string = '1'
 
   @observable loading: boolean = false
 
-  @observable loadAvgMetric: MetricMetaVO = {} as MetricMetaVO
-  @observable cpuStatMetric: MetricMetaVO = {} as MetricMetaVO
-  @observable memStatMetric: MetricMetaVO = {} as MetricMetaVO
+  @observable loadAvgMetric: MetricMetaVO = defaultMetric
+  @observable cpuStatMetric: MetricMetaVO = defaultMetric
+  @observable memStatMetric: MetricMetaVO = defaultMetric
 
-  @observable uploadStatMetric: MetricMetaVO = {} as MetricMetaVO
-  @observable downloadStatMetric: MetricMetaVO = {} as MetricMetaVO
+  @observable uploadStatMetric: MetricMetaVO = defaultMetric
+  @observable downloadStatMetric: MetricMetaVO = defaultMetric
 
   acquireSystemStat = (form: MonitorOperateForm) => {
     this.loading = true
     MonitorAction.metric(form).then(metric => {
+      if (!metric) {
+        this.cpuStatMetric = defaultMetric
+        this.memStatMetric = defaultMetric
+        this.loadAvgMetric = defaultMetric
+
+        this.uploadStatMetric = defaultMetric
+        this.downloadStatMetric = defaultMetric
+        return
+      }
       this.cpuStatMetric = metric.cpuStatMetric
       this.memStatMetric = metric.memStatMetric
       this.loadAvgMetric = metric.loadAvgMetric

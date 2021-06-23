@@ -1,17 +1,17 @@
 import React from 'react'
-import { Button, Col, Divider, message, Row, Spin } from 'antd'
+import { Col, Divider, message, Row, Spin } from 'antd'
 import InterfaceInfo from './interface-info'
 import DownloadSpeed from './download-speed'
 import UploadSpeed from './upload-speed'
 import ArpCacheTable from './arpc-cache-table'
 import ConnectionTable from './connection-table'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { ReloadOutlined } from '@ant-design/icons'
 import { MonitorOperateForm, NetworkInfoVO } from '../../../axios/action/monitor/monitor-type'
 import store from '../store'
 import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
 import { observer } from 'mobx-react'
 import { getHokageUid } from '../../../libs'
+import { Toolbar } from '../toolbar'
 
 type NetworkProp = {
   serverVO: ServerVO
@@ -67,12 +67,7 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
     const { interfaceIpInfo, arpInfo, connectionInfo } = this.state
     return (
       <Spin spinning={store.loading}>
-        <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
-          <Col span={16} style={{padding: '0px 0px'}} />
-          <Col span={8} style={{padding: '0px 0px'}}>
-            <span style={{ float: 'right' }}><Button onClick={this.refreshData}><ReloadOutlined translate />刷新</Button></span>
-          </Col>
-        </Row>
+        <Toolbar refreshData={this.refreshData} />
         <Row>
           <Col span={10}><DownloadSpeed /></Col>
           <Col span={2} />
