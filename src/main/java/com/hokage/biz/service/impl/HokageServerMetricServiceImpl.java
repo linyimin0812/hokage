@@ -52,7 +52,6 @@ public class HokageServerMetricServiceImpl implements HokageServerMetricService 
         Arrays.stream(MetricTypeEnum.values()).forEach(type -> {
             MetricMetaVO metricMetaVO = new MetricMetaVO();
             Map<String, List<HokageServerMetricDO>> metricTypeMap = metricMap.get(type.getValue()).stream().collect(Collectors.groupingBy(HokageServerMetricDO::getName));
-            List<String> legendList = new ArrayList<>();
             List<String> xAxis = new ArrayList<>(metricTypeMap.values()).get(0).stream()
                     .sorted((o1, o2) -> o1.getTimestamp() - o2.getTimestamp() > 0 ? 1 : -1)
                     .map(metricDO -> TimeUtil.format(metricDO.getTimestamp(), "HH:mm")).collect(Collectors.toList());
@@ -60,18 +59,14 @@ public class HokageServerMetricServiceImpl implements HokageServerMetricService 
 
             metricTypeMap.forEach((name, metrics) -> {
                 MetricMetaVO.SeriesVO seriesVO = new MetricMetaVO.SeriesVO();
-                seriesVO.setName(name).setType(TYPE).setStack(STACK);
+                seriesVO.setName(name);
                 List<Double> dataList = metrics.stream().sorted((o1, o2) -> o1.getTimestamp() - o2.getTimestamp() > 0 ? 1 : -1)
                         .map(HokageServerMetricDO::getValue).collect(Collectors.toList());
                 seriesVO.setData(dataList);
                 series.add(seriesVO);
-                legendList.add(name);
             });
-
-            metricMetaVO.setLegendList(legendList).setSeries(series).setTimeList(xAxis);
-
+            metricMetaVO.setSeries(series).setTimeList(xAxis);
             map.put(type.getField(), metricMetaVO);
-
         });
         return response.success(JSON.parseObject(JSON.toJSONString(map), MetricVO.class));
     }

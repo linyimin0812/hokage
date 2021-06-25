@@ -13,7 +13,6 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class MetricMetaVO {
-    private List<String> legendList;
     private List<String> timeList;
     private List<SeriesVO> series;
 
@@ -21,8 +20,6 @@ public class MetricMetaVO {
     @Accessors(chain = true)
     public static class SeriesVO {
         private String name;
-        private String type;
-        private String stack;
         private List<Double> data;
     }
 }

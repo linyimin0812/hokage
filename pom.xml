@@ -225,7 +225,7 @@
 						</goals>
 						<configuration>
 							<workingDirectory>hokage-ui</workingDirectory>
-							<arguments>run build:dev</arguments>
+							<arguments>run build:prod</arguments>
 						</configuration>
 					</execution>
 					<!-- compile hokage ui ends -->
