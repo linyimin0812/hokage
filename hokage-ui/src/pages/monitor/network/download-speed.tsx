@@ -7,12 +7,12 @@ export default class DownloadSpeed extends React.Component {
     return {
       title: { text: '下行速率' },
       tooltip: { trigger: 'axis' },
-      legend: { data: store.downloadStatMetric.legendList, orient: "horizontal", x: "center", y: "bottom" },
+      legend: { orient: "horizontal", x: "center", y: "bottom" },
       grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
       toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.downloadStatMetric.timeList },
+      xAxis: { type: 'category', boundaryGap: false, data: store.metric.downloadStatMetric.timeList },
       yAxis: { type: 'value' },
-      series: store.downloadStatMetric.series
+      series: store.metric.downloadStatMetric.series
     }
   }
   render() {

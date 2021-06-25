@@ -7,12 +7,12 @@ export default class UploadSpeed extends React.Component {
     return {
       title: { text: '上行速率' },
       tooltip: { trigger: 'axis' },
-      legend: { data: store.uploadStatMetric.legendList, orient: "horizontal", x: "center", y: "bottom" },
+      legend: { orient: "horizontal", x: "center", y: "bottom" },
       grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
       toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.uploadStatMetric.timeList },
+      xAxis: { type: 'category', boundaryGap: false, data: store.metric.uploadStatMetric.timeList },
       yAxis: { type: 'value' },
-      series: store.uploadStatMetric.series
+      series: store.metric.uploadStatMetric.series
     }
   }
   render() {

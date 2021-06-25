@@ -8,12 +8,12 @@ export default class AverageLoad extends React.Component {
     return {
       title: { text: 'CPU平均负载' },
       tooltip: { trigger: 'axis' },
-      legend: { data: store.loadAvgMetric.legendList, orient: "horizontal", x: "center", y: "bottom" },
+      legend: { orient: "horizontal", x: "center", y: "bottom" },
       grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
       toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.loadAvgMetric.timeList },
+      xAxis: { type: 'category', boundaryGap: false, data: store.metric.loadAvgMetric.timeList },
       yAxis: { type: 'value' },
-      series: store.loadAvgMetric.series
+      series: store.metric.loadAvgMetric.series
     }
   }
 

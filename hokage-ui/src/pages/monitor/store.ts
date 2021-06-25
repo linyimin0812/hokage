@@ -1,6 +1,6 @@
 import { ServerVO } from '../../axios/action/server/server-type'
 import { observable } from 'mobx'
-import { MetricMetaVO, MonitorOperateForm } from '../../axios/action/monitor/monitor-type'
+import { MetricMetaVO, MetricVO, MonitorOperateForm } from '../../axios/action/monitor/monitor-type';
 import { MonitorAction } from '../../axios/action/monitor/monitor-action'
 import { message } from 'antd'
 
@@ -12,10 +12,17 @@ export interface MonitorPanesType {
   closable?: boolean,
 }
 
-const defaultMetric: MetricMetaVO = {
-  legendList: [],
+const defaultMetaMetric: MetricMetaVO = {
   timeList: [],
   series: []
+}
+
+const defaultMetric: MetricVO = {
+  loadAvgMetric: defaultMetaMetric,
+  cpuStatMetric: defaultMetaMetric,
+  memStatMetric: defaultMetaMetric,
+  uploadStatMetric: defaultMetaMetric,
+  downloadStatMetric: defaultMetaMetric,
 }
 
 class Store {
@@ -24,31 +31,25 @@ class Store {
 
   @observable loading: boolean = false
 
-  @observable loadAvgMetric: MetricMetaVO = defaultMetric
-  @observable cpuStatMetric: MetricMetaVO = defaultMetric
-  @observable memStatMetric: MetricMetaVO = defaultMetric
-
-  @observable uploadStatMetric: MetricMetaVO = defaultMetric
-  @observable downloadStatMetric: MetricMetaVO = defaultMetric
+  @observable metric: MetricVO = defaultMetric
 
   acquireSystemStat = (form: MonitorOperateForm) => {
     this.loading = true
     MonitorAction.metric(form).then(metric => {
       if (!metric) {
-        this.cpuStatMetric = defaultMetric
-        this.memStatMetric = defaultMetric
-        this.loadAvgMetric = defaultMetric
-
-        this.uploadStatMetric = defaultMetric
-        this.downloadStatMetric = defaultMetric
+        this.metric = defaultMetric
         return
       }
-      this.cpuStatMetric = metric.cpuStatMetric
-      this.memStatMetric = metric.memStatMetric
-      this.loadAvgMetric = metric.loadAvgMetric
 
-      this.uploadStatMetric = metric.uploadStatMetric
-      this.downloadStatMetric = metric.downloadStatMetric
+      ['cpuStatMetric', 'memStatMetric', 'loadAvgMetric', 'downloadStatMetric', 'uploadStatMetric'].forEach(field => {
+        // @ts-ignore
+        metric[field].series.forEach(metric => {
+          metric.type = 'line'
+          metric.smooth = true
+        })
+      })
+      this.metric = metric
+
     }).catch(e => message.error(e))
       .finally(() => this.loading = false)
   }

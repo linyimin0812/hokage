@@ -10,16 +10,15 @@ export default class CpuUtilization extends React.Component {
     return {
       title: { text: 'CPU利用率' },
       tooltip: { trigger: 'axis' },
-      legend: { data: store.cpuStatMetric.legendList, orient: "horizontal", x: "center", y: "bottom" },
+      legend: { orient: "horizontal", x: "center", y: "bottom" },
       grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
       toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.cpuStatMetric.timeList },
+      xAxis: { type: 'category', boundaryGap: false, data: store.metric.cpuStatMetric.timeList },
       yAxis: { type: 'value' },
-      series: store.cpuStatMetric.series
+      series: store.metric.cpuStatMetric.series
     }
   }
   render() {
-    console.log('test::' + JSON.stringify(store.cpuStatMetric))
     return (
       <ReactEcharts option={this.renderOption() as any} />
     )

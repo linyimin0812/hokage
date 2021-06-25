@@ -7,12 +7,12 @@ export default class RamUsage extends React.Component {
     return {
       title: { text: '内存使用量' },
       tooltip: { trigger: 'axis' },
-      legend: { data: store.memStatMetric.legendList, orient: "horizontal", x: "center", y: "bottom" },
+      legend: { orient: "horizontal", x: "center", y: "bottom" },
       grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
       toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.memStatMetric.timeList },
+      xAxis: { type: 'category', boundaryGap: false, data: store.metric.memStatMetric.timeList },
       yAxis: { type: 'value' },
-      series: store.memStatMetric.series
+      series: store.metric.memStatMetric.series
     }
   }
   render() {

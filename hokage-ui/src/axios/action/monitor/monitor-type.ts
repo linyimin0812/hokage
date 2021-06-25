@@ -4,7 +4,7 @@ import { LastLogInfoVO } from '../../../pages/monitor/basic-info/login-account-i
 import { ProcessInfoVO } from '../../../pages/monitor/system-status/process'
 import { DiskInfoVO } from '../../../pages/monitor/system-status/disk-partition'
 import { InterfaceIpInfoVO } from '../../../pages/monitor/network/interface-info'
-import { ArpInfoVo } from '../../../pages/monitor/network/arpc-cache-table';
+import { ArpInfoVo } from '../../../pages/monitor/network/arpc-cache-table'
 import { ConnectionInfoVO } from '../../../pages/monitor/network/connection-table'
 
 export interface BasicInfoVO {
@@ -27,12 +27,11 @@ export interface NetworkInfoVO {
 }
 
 export interface MetricMetaVO {
-  legendList: string[],
   timeList: string[],
   series: {
     name: string,
-    type: string
-    stack: string,
+    type: string,
+    smooth: boolean,
     data: number[]
   }[]
 }
