@@ -1,8 +1,9 @@
 import React from 'react'
-import { Button, Col, DatePicker, Row, Switch } from 'antd'
+import { Button, Col, DatePicker, Divider, Radio, Row, Switch } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons'
 import moment, { Moment } from 'moment'
 import { RangeValue } from 'rc-picker/lib/interface'
+import { RadioChangeEvent } from 'antd/lib/radio/interface'
 
 type ToolbarProp = {
   refreshData: (start?: number, end?: number) => void
@@ -16,6 +17,8 @@ type ToolbarState = {
   interval: NodeJS.Timeout | null,
   timestamp: number,
   restSeconds: number,
+
+  timeType: string
 }
 
 // 自动更新时间间隔
@@ -30,6 +33,7 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
     interval: null,
     timestamp: 0,
     restSeconds: Math.floor(interval/1000),
+    timeType: '10min'
   }
 
   componentDidMount() {
@@ -60,11 +64,53 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
     }
   }
 
+  onTimeTYpeChange = (e: RadioChangeEvent) => {
+
+    const timeType = e.target.value
+    if (timeType === 'customer') {
+      this.setState({timeType: timeType})
+      return
+    }
+
+    const end = moment().valueOf()
+    let start = end - 10 * 60 * 1000
+    if (timeType === '30min') {
+      start = end - 30 * 60 * 1000
+    } else if (timeType === '60min') {
+      start = end - 60 * 60 * 1000
+    } else if (timeType === '1day') {
+      start = end - 24 * 60 * 60 * 1000
+    }
+
+    this.props.refreshData(start, end)
+
+    this.setState({timeType: timeType, start: start, end: end})
+
+  }
+
   renderRangePicker = () => {
+    const { timeType } = this.state
     return (
       <>
-        <span>自定义时间: </span>
-        <DatePicker.RangePicker ranges={{ 'Today': [moment(), moment()], }} showTime format="YYYY-MM-DD HH:mm" onChange={this.rangePickerChange} />
+        <Radio.Group value={timeType} onChange={this.onTimeTYpeChange}>
+          <Radio.Button value={'10min'}>10分钟</Radio.Button>
+          <Divider type={'vertical'} />
+          <Radio.Button value={'30min'}>30分钟</Radio.Button>
+          <Divider type={'vertical'} />
+          <Radio.Button value={'60min'}>3小时</Radio.Button>
+          <Divider type={'vertical'} />
+          <Radio.Button value={'1day'}>1天</Radio.Button>
+          <Divider type={'vertical'} />
+          <Radio.Button value={'customer'}>自定义</Radio.Button>
+        </Radio.Group>
+        {
+          timeType === 'customer' ? (
+            <>
+              <Divider type={'vertical'} />
+              <DatePicker.RangePicker ranges={{ 'Today': [moment(), moment()], }} showTime format="YYYY-MM-DD HH:mm" onChange={this.rangePickerChange} />
+            </>
+          ) : null
+        }
       </>
     )
   }

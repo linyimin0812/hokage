@@ -46,7 +46,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
 
   acquireMetric = (start?: number, end?: number) => {
     const form = this.assembleOperateForm()
-    form.start = start ? start : new Date().getTime() - 60 * 60 * 1000
+    form.start = start ? start : new Date().getTime() - 10 * 60 * 1000
     form.end = end ? end : new Date().getTime()
     store.acquireSystemStat(form)
   }
