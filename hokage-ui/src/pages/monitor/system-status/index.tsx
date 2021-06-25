@@ -67,19 +67,23 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
     const { processInfo, diskInfo } = this.state
 
     return (
-      <Spin spinning={store.basicLoading}>
-        <Toolbar refreshData={this.refreshData} />
-        <Row gutter={12} align="middle" justify={"center"} >
-          <Col span={8}><AverageLoad /></Col>
-          <Col span={8}><CpuUtilization /></Col>
-          <Col span={8}><RamUsage /></Col>
-        </Row>
+      <>
+        <Spin spinning={store.metricLoading}>
+          <Toolbar refreshData={this.refreshData} />
+          <Row gutter={12} align="middle" justify={"center"} >
+            <Col span={8}><AverageLoad /></Col>
+            <Col span={8}><CpuUtilization /></Col>
+            <Col span={8}><RamUsage /></Col>
+          </Row>
+        </Spin>
         <Divider />
+        <Spin spinning={store.basicLoading}>
         <Row gutter={12} >
           <Col span={16}><Process dataSource={processInfo} serverVO={this.props.serverVO} /></Col>
           <Col span={8}><DiskPartition dataSource={diskInfo} /></Col>
         </Row>
-      </Spin>
+        </Spin>
+      </>
     )
   }
 }

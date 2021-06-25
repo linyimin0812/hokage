@@ -66,21 +66,25 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   render() {
     const { interfaceIpInfo, arpInfo, connectionInfo } = this.state
     return (
-      <Spin spinning={store.basicLoading}>
-        <Toolbar refreshData={this.refreshData} />
-        <Row>
-          <Col span={10}><DownloadSpeed /></Col>
-          <Col span={2} />
-          <Col span={10}><UploadSpeed /></Col>
-          <Col span={2} />
-        </Row>
+      <>
+        <Spin spinning={store.metricLoading}>
+          <Toolbar refreshData={this.refreshData} />
+          <Row>
+            <Col span={10}><DownloadSpeed /></Col>
+            <Col span={2} />
+            <Col span={10}><UploadSpeed /></Col>
+            <Col span={2} />
+          </Row>
+        </Spin>
         <Divider />
-        <Row gutter={12}>
-          <Col span={6}><InterfaceInfo dataSource={interfaceIpInfo} /></Col>
-          <Col span={8}><ArpCacheTable dataSource={arpInfo} /></Col>
-          <Col span={10}><ConnectionTable dataSource={connectionInfo} /></Col>
-        </Row>
-      </Spin>
+        <Spin spinning={store.basicLoading}>
+          <Row gutter={12}>
+            <Col span={6}><InterfaceInfo dataSource={interfaceIpInfo} /></Col>
+            <Col span={8}><ArpCacheTable dataSource={arpInfo} /></Col>
+            <Col span={10}><ConnectionTable dataSource={connectionInfo} /></Col>
+          </Row>
+        </Spin>
+      </>
     )
   }
 }

@@ -64,14 +64,13 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
         </Row>
         <Row gutter={12}>
           <Col span={8}><BasicInfo dataSource={generalInfo} title={"基本信息"} /></Col>
-          <Col span={8}><AccountInfo dataSource={accountInfo} /></Col>
-          <Col span={8}><LoginAccountInfo dataSource={lastLogInfo} /></Col>
+          <Col span={8}><BasicInfo dataSource={cpuInfo} title={"CPU信息"} /></Col>
+          <Col span={8}><BasicInfo dataSource={memInfo} title={"内存信息"} /></Col>
         </Row>
         <Divider />
         <Row gutter={12}>
-          <Col span={8}><BasicInfo dataSource={cpuInfo} title={"CPU信息"} /></Col>
-          <Col span={8}><BasicInfo dataSource={memInfo} title={"内存信息"} /></Col>
-          <Col span={8}><BasicInfo dataSource={[]} title={"磁盘信息"} /></Col>
+          <Col span={12}><AccountInfo dataSource={accountInfo} /></Col>
+          <Col span={12}><LoginAccountInfo dataSource={lastLogInfo} /></Col>
         </Row>
       </Spin>
     )

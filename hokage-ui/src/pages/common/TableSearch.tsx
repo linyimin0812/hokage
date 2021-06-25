@@ -1,7 +1,8 @@
 import { FilterConfirmProps, FilterDropdownProps } from 'antd/lib/table/interface'
-import { Button, Input, Space } from 'antd'
+import { Button, Input, Space, Tooltip } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import React from 'react'
+import Highlighter from 'react-highlight-words'
 
 class TableSearch {
 
@@ -52,6 +53,23 @@ class TableSearch {
       clearFilters()
     }
     this.searchText = ''
+  }
+
+  renderHighLight = (textHighLight: string, text: string) => {
+    const highLightComponent = (
+      <Highlighter
+        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+        searchWords={[this.searchText as string]}
+        autoEscape
+        textToHighlight={textHighLight}
+      />
+    )
+    return (
+      <Tooltip placement={'topLeft'} title={text}>
+        <span>{highLightComponent}</span>
+      </Tooltip>
+    )
+
   }
 }
 

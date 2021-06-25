@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, message, Table, Tooltip } from 'antd'
+import { Card, message, Table } from 'antd'
 import { Action } from '../../../component/Action'
 import { StopOutlined } from '@ant-design/icons'
 import store from '../store'
@@ -8,7 +8,6 @@ import { MonitorOperateForm } from '../../../axios/action/monitor/monitor-type'
 import { getHokageUid } from '../../../libs'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import tableSearch from '../../common/TableSearch'
-import Highlighter from 'react-highlight-words'
 
 export interface ProcessInfoVO {
   pid: number,
@@ -31,20 +30,11 @@ type ProcessProp = {
 export default class Process extends React.Component<ProcessProp> {
 
   renderCommand = (_: any, record: ProcessInfoVO, __: number) => {
-    const highLightComponent = (
-      <Highlighter
-        highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-        searchWords={[tableSearch.searchText as string]}
-        autoEscape
-        textToHighlight={record.comm}
-      />
-    )
+    return tableSearch.renderHighLight(record.comm, record.command)
+  }
 
-    return (
-      <Tooltip placement={'topLeft'} title={record.command}>
-        <span>{highLightComponent}</span>
-      </Tooltip>
-    )
+  renderAccount = (_: any, record: ProcessInfoVO, __: number) => {
+    return tableSearch.renderHighLight(record.account, record.account)
   }
 
   renderAction = (record: ProcessInfoVO) => {
@@ -81,7 +71,9 @@ export default class Process extends React.Component<ProcessProp> {
     return form
   }
 
-  onFilter = (value: string | number | boolean, record: ProcessInfoVO) => record.command.includes(value.toString())
+  onCommandFilter = (value: string | number | boolean, record: ProcessInfoVO) => record.command.includes(value.toString())
+
+  onAccountFilter = (value: string | number | boolean, record: ProcessInfoVO) => record.account.includes(value.toString())
 
   render() {
     const { dataSource } = this.props
@@ -89,7 +81,14 @@ export default class Process extends React.Component<ProcessProp> {
       <Card title="进程信息">
         <Table dataSource={dataSource} pagination={false} scroll={{y: 350}} >
           <Table.Column title="pid" dataIndex="pid" />
-          <Table.Column title="account" dataIndex="account" />
+          <Table.Column
+            title="account" dataIndex="account"
+            render={this.renderAccount}
+            filterDropdown={tableSearch.filterDropdown}
+            filterIcon={tableSearch.filterIcon}
+            onFilter={this.onAccountFilter}
+            onFilterDropdownVisibleChange={tableSearch.onFilterDropdownVisibleChange}
+          />
           <Table.Column title="cpu%" dataIndex="cpu" sorter={(a: ProcessInfoVO, b: ProcessInfoVO) => a.cpu > b.cpu ? 1 : -1} />
           <Table.Column title="mem%" dataIndex="mem" sorter={(a: ProcessInfoVO, b: ProcessInfoVO) => a.mem > b.mem ? 1 : -1} />
           <Table.Column title="RSS" dataIndex="rss" />
@@ -99,7 +98,7 @@ export default class Process extends React.Component<ProcessProp> {
             title={'command'} dataIndex={'comm'} render={this.renderCommand}
             filterDropdown={tableSearch.filterDropdown}
             filterIcon={tableSearch.filterIcon}
-            onFilter={this.onFilter}
+            onFilter={this.onCommandFilter}
             onFilterDropdownVisibleChange={tableSearch.onFilterDropdownVisibleChange}
           />
           <Table.Column title="操作" render={this.renderAction} align={'center'} />
