@@ -58,7 +58,7 @@ export default class Process extends React.Component<ProcessProp> {
   }
 
   killProcess = (record: ProcessInfoVO) => {
-    store.loading = true
+    store.basicLoading = true
     MonitorAction.killProcess(this.assembleOperateForm(record)).then(result => {
       if (result) {
         message.info(`进程${record.pid}, 进程启动命令: ${record.command} 已关闭`)
@@ -66,7 +66,7 @@ export default class Process extends React.Component<ProcessProp> {
         message.info(`进程${record.pid}, 进程启动命令: ${record.command} 关闭失败`)
       }
     }).catch(e => message.error(e))
-      .finally(() => store.loading = false)
+      .finally(() => store.basicLoading = false)
   }
 
   assembleOperateForm = (record: ProcessInfoVO) => {

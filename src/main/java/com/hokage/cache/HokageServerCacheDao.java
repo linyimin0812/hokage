@@ -13,6 +13,7 @@ import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpATTRS;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -270,9 +271,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
             String dst = Paths.get(sftp.getHome(), Constant.WORK_HOME).resolve(Constant.API_FILE).toAbsolutePath().toString();
             sftp.put(in, dst, ChannelSftp.OVERWRITE);
 
+            sftp.chmod(511, dst);
+
             log.info("HokageServerCacheDao.uploadScript2Server success. server: {}", client.getSshContext());
         } catch (Exception e) {
-            log.info("HokageServerCacheDao.uploadScript2Server error. server: {}, err: {}", client.getSshContext(), e.getMessage());
+            log.error("HokageServerCacheDao.uploadScript2Server error. server: {}, err: {}", client.getSshContext(), e.getMessage());
         } finally {
             if (Objects.nonNull(sftp) && sftp.isConnected()) {
                 sftp.disconnect();

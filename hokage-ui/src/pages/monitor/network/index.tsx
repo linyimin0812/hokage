@@ -38,11 +38,11 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   }
 
   acquireNetWorkInfo = () => {
-    store.loading = true
+    store.basicLoading = true
     MonitorAction.networkBasic(this.assembleOperateForm()).then(networkInfo => {
       this.setState({...networkInfo})
     }).catch(e => message.error(e))
-      .finally(() => store.loading = false)
+      .finally(() => store.basicLoading = false)
   }
 
   acquireMetric = () => {
@@ -66,7 +66,7 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   render() {
     const { interfaceIpInfo, arpInfo, connectionInfo } = this.state
     return (
-      <Spin spinning={store.loading}>
+      <Spin spinning={store.basicLoading}>
         <Toolbar refreshData={this.refreshData} />
         <Row>
           <Col span={10}><DownloadSpeed /></Col>

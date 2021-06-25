@@ -37,11 +37,11 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
   }
 
   acquireSystemInfo = () => {
-    store.loading = true
+    store.basicLoading = true
     MonitorAction.system(this.assembleOperateForm()).then(systemInfo => {
       this.setState({ ...systemInfo })
     }).catch(e => message.error(e))
-      .finally(() => store.loading = false)
+      .finally(() => store.basicLoading = false)
   }
 
   acquireMetric = (start?: number, end?: number) => {
@@ -67,7 +67,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
     const { processInfo, diskInfo } = this.state
 
     return (
-      <Spin spinning={store.loading}>
+      <Spin spinning={store.basicLoading}>
         <Toolbar refreshData={this.refreshData} />
         <Row gutter={12} align="middle" justify={"center"} >
           <Col span={8}><AverageLoad /></Col>

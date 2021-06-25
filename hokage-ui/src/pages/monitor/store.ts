@@ -29,12 +29,14 @@ class Store {
   @observable panes: MonitorPanesType[] = []
   @observable activeKey: string = '1'
 
-  @observable loading: boolean = false
+  @observable basicLoading: boolean = false
+
+  @observable metricLoading: boolean = false
 
   @observable metric: MetricVO = defaultMetric
 
   acquireSystemStat = (form: MonitorOperateForm) => {
-    this.loading = true
+    this.metricLoading = true
     MonitorAction.metric(form).then(metric => {
       if (!metric) {
         this.metric = defaultMetric
@@ -51,7 +53,7 @@ class Store {
       this.metric = metric
 
     }).catch(e => message.error(e))
-      .finally(() => this.loading = false)
+      .finally(() => this.metricLoading = false)
   }
 
 }

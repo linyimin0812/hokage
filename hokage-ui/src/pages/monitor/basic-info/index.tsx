@@ -34,11 +34,11 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
   }
 
   acquireBasicInfo = () => {
-    store.loading = true
+    store.basicLoading = true
     MonitorAction.basic(this.assembleOperateForm()).then(basicInfo => {
       this.setState({...basicInfo})
     }).catch(e => message.error(e))
-      .finally(() => store.loading = false)
+      .finally(() => store.basicLoading = false)
   }
 
   assembleOperateForm = () => {
@@ -55,7 +55,7 @@ export default class Index extends React.Component<BasicInfoProp, BasicInfoState
   render() {
     const { cpuInfo, memInfo, accountInfo, lastLogInfo, generalInfo } = this.state
     return (
-      <Spin spinning={store.loading}>
+      <Spin spinning={store.basicLoading}>
         <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', padding: '2px 2px' }}>
           <Col span={16} style={{padding: '0px 0px'}} />
           <Col span={8} style={{padding: '0px 0px'}}>
