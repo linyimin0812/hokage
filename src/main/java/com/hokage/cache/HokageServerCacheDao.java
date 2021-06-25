@@ -190,6 +190,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
                     try {
                         execClient = new SshClient(context);
                         sftpClient = new SshClient(context);
+                        // TODO: 账号linyimin的权限问题
                         uploadScript2Server(sftpClient);
                         log.info("HokageServerCacheDao.activeCacheRefresh create exec and sftp ssh client: {}", context);
                     } catch (Exception e) {
