@@ -148,6 +148,12 @@ public class LinuxCommand extends AbstractCommand {
                 "sed 'N;$s/},/}/;P;D';";
     }
 
+    @Override
+    public String addUser(String account, String passwd) {
+        String command = "useradd ${account}; echo \"${account}:${passwd}\" | chpasswd;";
+        return command.replace("${account}", account).replace("${passwd}", passwd);
+    }
+
     public static void main(String[] args) {
         LinuxCommand command = new LinuxCommand();
         System.out.println(command.ls());
@@ -159,5 +165,6 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(AbstractCommand.accountInfo());
         System.out.println(command.lastLog());
         System.out.println(command.df());
+        System.out.println(command.addUser("linyimin", "lym130060"));
     }
 }

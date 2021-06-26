@@ -85,4 +85,12 @@ public interface Command {
      * @return connection information
      */
     String netstat();
+
+    /**
+     * create account
+     * @param account account
+     * @param passwd password
+     * @return create account command
+     */
+    String addUser(String account, String passwd);
 }

@@ -119,7 +119,7 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
     if (checked) {
       const intervalTimeout: NodeJS.Timeout = setInterval(this.refreshData, interval)
       const timestamp = moment().valueOf()
-      this.setState({start: 0, end: 0, autoRefresh: true, interval: intervalTimeout, timestamp: timestamp})
+      this.setState({ autoRefresh: true, interval: intervalTimeout, timestamp: timestamp})
     } else {
       const { interval } = this.state
       if (interval) {

@@ -24,9 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class HokageServerMetricServiceImpl implements HokageServerMetricService {
 
-    private static final String TYPE = "line";
-    private static final String STACK = "总量";
-
     private HokageServerMetricDao metricDao;
 
     @Autowired
@@ -54,7 +51,7 @@ public class HokageServerMetricServiceImpl implements HokageServerMetricService 
             Map<String, List<HokageServerMetricDO>> metricTypeMap = metricMap.get(type.getValue()).stream().collect(Collectors.groupingBy(HokageServerMetricDO::getName));
             List<String> xAxis = new ArrayList<>(metricTypeMap.values()).get(0).stream()
                     .sorted((o1, o2) -> o1.getTimestamp() - o2.getTimestamp() > 0 ? 1 : -1)
-                    .map(metricDO -> TimeUtil.format(metricDO.getTimestamp(), "HH:mm")).collect(Collectors.toList());
+                    .map(metricDO -> TimeUtil.format(metricDO.getTimestamp(), "MM-dd HH:mm")).collect(Collectors.toList());
             List<MetricMetaVO.SeriesVO> series = new ArrayList<>();
 
             metricTypeMap.forEach((name, metrics) -> {
