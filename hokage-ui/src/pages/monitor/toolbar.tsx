@@ -1,57 +1,34 @@
-import React from 'react'
+import React from 'react';
 import { Button, Col, DatePicker, Divider, Radio, Row, Switch } from 'antd';
-import { ReloadOutlined } from '@ant-design/icons'
-import moment, { Moment } from 'moment'
-import { RangeValue } from 'rc-picker/lib/interface'
-import { RadioChangeEvent } from 'antd/lib/radio/interface'
+import { ReloadOutlined } from '@ant-design/icons';
+import moment, { Moment } from 'moment';
+import { RangeValue } from 'rc-picker/lib/interface';
+import { RadioChangeEvent } from 'antd/lib/radio/interface';
+import store from './store';
+import { observer } from 'mobx-react';
 
 type ToolbarProp = {
   refreshData: (start?: number, end?: number) => void
 }
 
-type ToolbarState = {
-  autoRefresh: boolean,
-  start: number,
-  end: number,
-
-  interval: NodeJS.Timeout | null,
-  timestamp: number,
-  restSeconds: number,
-
-  timeType: string
-}
-
 // 自动更新时间间隔
 const interval: number = 60 * 1000
-
-export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
-
-  state = {
-    autoRefresh: false,
-    start: 0,
-    end: 0,
-    interval: null,
-    timestamp: 0,
-    restSeconds: Math.floor(interval/1000),
-    timeType: '10min'
-  }
+@observer
+export class Toolbar extends React.Component<ToolbarProp> {
 
   componentDidMount() {
     this.checkRestSecondsInterval = setInterval(() => {
-      const { autoRefresh, timestamp } = this.state
-      if (!autoRefresh) {
+      if (!store.autoRefresh) {
         return
       }
-      const restTimestamp = interval - ((moment().valueOf() - timestamp) % interval)
-      const restSeconds = Math.floor(restTimestamp / 1000)
-      this.setState({restSeconds: restSeconds })
+      const restTimestamp = interval - ((moment().valueOf() - store.timestamp) % interval)
+      store.restSeconds = Math.floor(restTimestamp / 1000)
     }, 1000)
   }
 
   componentWillUnmount() {
-    const { interval } = this.state
-    if (interval) {
-      clearInterval(interval!)
+    if (store.interval) {
+      clearInterval(store.interval!)
     }
     clearInterval(this.checkRestSecondsInterval!)
   }
@@ -60,7 +37,8 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
 
   rangePickerChange = (values: RangeValue<Moment>, _: [string, string]) => {
     if (values && values[0] && values[1]) {
-      this.setState({start: values[0]?.valueOf(), end: values[1]?.valueOf()})
+      store.start = values[0]?.valueOf()
+      store.end = values[1]?.valueOf()
     }
   }
 
@@ -68,7 +46,7 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
 
     const timeType = e.target.value
     if (timeType === 'customer') {
-      this.setState({timeType: timeType})
+      store.timeType = timeType
       return
     }
 
@@ -84,15 +62,16 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
 
     this.props.refreshData(start, end)
 
-    this.setState({timeType: timeType, start: start, end: end})
+    store.timeType = timeType
+    store.start = start
+    store.end = end
 
   }
 
   renderRangePicker = () => {
-    const { timeType } = this.state
     return (
       <>
-        <Radio.Group value={timeType} onChange={this.onTimeTYpeChange}>
+        <Radio.Group value={store.timeType} onChange={this.onTimeTYpeChange}>
           <Radio.Button value={'10min'}>10分钟</Radio.Button>
           <Divider type={'vertical'} />
           <Radio.Button value={'30min'}>30分钟</Radio.Button>
@@ -104,7 +83,7 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
           <Radio.Button value={'customer'}>自定义</Radio.Button>
         </Radio.Group>
         {
-          timeType === 'customer' ? (
+          store.timeType === 'customer' ? (
             <>
               <Divider type={'vertical'} />
               <DatePicker.RangePicker ranges={{ 'Today': [moment(), moment()], }} showTime format="YYYY-MM-DD HH:mm" onChange={this.rangePickerChange} />
@@ -119,24 +98,24 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
     if (checked) {
       const intervalTimeout: NodeJS.Timeout = setInterval(this.refreshData, interval)
       const timestamp = moment().valueOf()
-      this.setState({ autoRefresh: true, interval: intervalTimeout, timestamp: timestamp})
+      store.autoRefresh = true
+      store.interval = intervalTimeout
+      store.timestamp = timestamp
+      store.restSeconds = Math.floor(interval / 1000)
     } else {
-      const { interval } = this.state
-      if (interval) {
-        clearInterval(interval!)
+      if (store.interval) {
+        clearInterval(store.interval!)
       }
-      this.setState({autoRefresh: false})
+      store.autoRefresh = false
     }
   }
 
   refreshData = () => {
     const { refreshData } = this.props
-    const { start, end } = this.state
-    refreshData(start, end)
+    refreshData(store.start, store.end)
   }
 
   render() {
-    const { autoRefresh, restSeconds } = this.state
     return (
       <Row gutter={24} align="middle" style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0px 0px', marginBottom: '10px', padding: '2px 2px' }}>
         <Col span={16} style={{padding: '0px 0px'}}>
@@ -145,8 +124,8 @@ export class Toolbar extends React.Component<ToolbarProp, ToolbarState> {
         <Col span={8} style={{padding: '0px 0px'}}>
             <span style={{ float: 'right' }}>
               <span style={{paddingRight: '50px'}}>
-                {autoRefresh && restSeconds > 0 ? `${restSeconds}秒后自动更新: ` : '自动更新: '}
-                <Switch defaultChecked={autoRefresh} onChange={this.onSwitchChange} /></span>
+                {store.autoRefresh && store.restSeconds > 0 ? `${store.restSeconds}秒后自动更新: ` : '自动更新: '}
+                <Switch defaultChecked={store.autoRefresh} onChange={this.onSwitchChange} /></span>
               <Button onClick={this.refreshData}><ReloadOutlined translate />刷新</Button>
             </span>
         </Col>

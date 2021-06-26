@@ -35,6 +35,15 @@ class Store {
 
   @observable metric: MetricVO = defaultMetric
 
+  // toolbar
+  @observable autoRefresh: boolean = false
+  @observable start: number = 0
+  @observable end: number = 0
+  @observable interval: NodeJS.Timeout | null = null
+  @observable timestamp: number = 0
+  @observable restSeconds: number = 0
+  @observable timeType: string = '10min'
+
   acquireSystemStat = (form: MonitorOperateForm) => {
     this.metricLoading = true
     MonitorAction.metric(form).then(metric => {

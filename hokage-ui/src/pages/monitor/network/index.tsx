@@ -29,7 +29,7 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   }
 
   componentDidMount() {
-    this.refreshData()
+    this.refreshData(store.start, store.end)
   }
 
   refreshData = (start?: number, end?: number) => {
