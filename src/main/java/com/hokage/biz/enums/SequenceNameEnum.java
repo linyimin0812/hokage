@@ -19,7 +19,7 @@ public enum SequenceNameEnum {
     hokage_supervisor_server,
     hokage_task_result,
     hokage_security_group,
-    hokage_task,
+    hokage_fixed_date_task,
     hokage_server_application,
     hokage_server_ssh_key_content
 }

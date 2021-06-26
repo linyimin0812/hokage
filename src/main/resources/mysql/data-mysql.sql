@@ -7,7 +7,7 @@ INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VAL
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_supervisor_server', '1000');
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_task_result', '1000');
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_security_group', '1000');
-INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_task', '1000');
+INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_fixed_date_task', '1000');
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_server_ssh_key_content', '1000');
 
 # 添加管理员

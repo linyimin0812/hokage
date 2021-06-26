@@ -106,21 +106,19 @@ CREATE TABLE IF NOT EXISTS `hokage_server_application` (
 )
     COMMENT = '管理员与用户关系映射表';
 
-CREATE TABLE IF NOT EXISTS `hokage_task` (
+CREATE TABLE IF NOT EXISTS `hokage_fixed_date_task` (
   `id` bigint NOT NULL,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `user_id` bigint NOT NULL COMMENT '创建用户',
   `task_name` varchar(128) NOT NULL COMMENT '任务名称',
-  `task_type` tinyint ZEROFILL NOT NULL COMMENT '任务类型: 0: 默认为shell',
-  `exec_type` tinyint NOT NULL COMMENT '执行类型: 0: 定时, 1: cron周期',
+  `task_type` tinyint NOT NULL COMMENT '任务类型: 0: 默认为shell',
   `exec_time` bigint NOT NULL COMMENT '执行时间',
   `exec_servers` varchar(1024) NOT NULL COMMENT '执行服务器(服务器IP或者服务器分组)',
   `exec_command` text NOT NULL COMMENT '执行命令',
-  `description` varchar(1024) NULL COMMENT '任务描述',
   PRIMARY KEY (`id`)
 )
-  COMMENT 'hokage批量任务表';
+  COMMENT 'hokage批量固定时间执行任务表';
 
 CREATE TABLE IF NOT EXISTS `hokage_task_result` (
   `id` bigint NOT NULL,

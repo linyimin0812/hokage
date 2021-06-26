@@ -10,7 +10,7 @@ import java.util.Locale;
 
 /**
  * @author yiminlin
- * @date 2021/06/17 3:19 上午
+ * @date 2021/06/17 3:19 am
  * @description date and time util
  **/
 public class TimeUtil {
@@ -25,5 +25,10 @@ public class TimeUtil {
         ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(instant, ZoneId.of("Asia/Shanghai"));
         DateTimeFormatter dstFormatter = DateTimeFormatter.ofPattern(format);
         return zonedDateTime.format(dstFormatter);
+    }
+
+    public static Long timestamp(String dateStr, String format) throws ParseException {
+        SimpleDateFormat srcFormatter = new SimpleDateFormat(format, Locale.ENGLISH);
+        return srcFormatter.parse(dateStr).getTime();
     }
 }

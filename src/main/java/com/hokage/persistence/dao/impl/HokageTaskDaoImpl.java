@@ -1,85 +1,61 @@
 package com.hokage.persistence.dao.impl;
 
-import com.hokage.persistence.dao.HokageTaskDao;
-import com.hokage.persistence.dataobject.HokageTaskDO;
-import com.hokage.persistence.mapper.HokageTaskMapper;
+import com.hokage.persistence.dao.HokageFixedDateTaskDao;
+import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
+import com.hokage.persistence.mapper.HokageFixedDateTaskMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author linyimin
- * @date 2020/7/27 11:46 下午
+ * @date 2020/7/27 11:46 pm
  * @email linyimin520812@gmail.com
- * @description 任务表操作
+ * @description fixed data task dao interface implementation
  */
 @Repository
-public class HokageTaskDaoImpl implements HokageTaskDao {
+public class HokageTaskDaoImpl implements HokageFixedDateTaskDao {
 
-    private HokageTaskMapper taskMapper;
+    private HokageFixedDateTaskMapper taskMapper;
 
     @Autowired
-    public void setTaskMapper(HokageTaskMapper taskMapper) {
+    public void setTaskMapper(HokageFixedDateTaskMapper taskMapper) {
         this.taskMapper = taskMapper;
     }
-    /**
-     * 插入一条新的记录
-     * @param hokageTaskDO
-     * @return
-     */
-    public Long insert(HokageTaskDO hokageTaskDO) {
+
+    @Override
+    public Long insert(HokageFixedDateTaskDO hokageTaskDO) {
         return taskMapper.insert(hokageTaskDO);
     }
 
-    /**
-     * 更新一条记录
-     * @param hokageTaskDO
-     * @return
-     */
+
     @Override
-    public Long update(HokageTaskDO hokageTaskDO) {
+    public Long update(HokageFixedDateTaskDO hokageTaskDO) {
         return taskMapper.update(hokageTaskDO);
     }
 
-    /**
-     * 根据id查找任务信息
-     * @param id
-     * @return
-     */
     @Override
-    public HokageTaskDO findById(Long id) {
+    public HokageFixedDateTaskDO findById(Long id) {
         return taskMapper.findById(id);
     }
 
-    /**
-     * 根据任务名名查找任务信息
-     * @param name
-     * @return
-     */
+
     @Override
-    public HokageTaskDO findByName(String name) {
-        return taskMapper.findByName(name);
+    public List<HokageFixedDateTaskDO> findByName(String name) {
+        return Optional.ofNullable(taskMapper.findByName(name)).orElse(Collections.emptyList());
     }
 
-    /**
-     * 根据任务类型查找任务信息
-     * @param type
-     * @return
-     */
     @Override
-    public List<HokageTaskDO> findByType(Integer type) {
-        return taskMapper.findByType(type);
+    public List<HokageFixedDateTaskDO> findByType(Integer type) {
+        return Optional.ofNullable(taskMapper.findByType(type)).orElse(Collections.emptyList());
     }
 
-    /**
-     * 根据其他条件查找任务信息
-     * @param hokageTaskDO
-     * @return
-     */
     @Override
-    public List<HokageTaskDO> findAll(HokageTaskDO hokageTaskDO) {
-        return taskMapper.findAll(hokageTaskDO);
+    public List<HokageFixedDateTaskDO> findAll(HokageFixedDateTaskDO hokageTaskDO) {
+        return Optional.ofNullable(taskMapper.findAll(hokageTaskDO)).orElse(Collections.emptyList());
     }
 
 }
