@@ -45,4 +45,9 @@ public class HokageFixedDateTaskDO extends HokageBaseDO {
      */
     private String execCommand;
 
+    /**
+     * status: 0-offline, 1-online
+     */
+    private Integer status;
+
 }

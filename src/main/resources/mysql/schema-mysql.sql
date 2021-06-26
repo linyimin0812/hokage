@@ -116,6 +116,7 @@ CREATE TABLE IF NOT EXISTS `hokage_fixed_date_task` (
   `exec_time` bigint NOT NULL COMMENT '执行时间',
   `exec_servers` varchar(1024) NOT NULL COMMENT '执行服务器(服务器IP或者服务器分组)',
   `exec_command` text NOT NULL COMMENT '执行命令',
+  `status` tinyint NOT NULL COMMENT '状态: 0: online, 1: offline',
   PRIMARY KEY (`id`)
 )
   COMMENT 'hokage批量固定时间执行任务表';

@@ -13,6 +13,7 @@
         <result property="execTime" column="exec_time" />
         <result property="execServers" column="exec_servers" />
         <result property="execCommand" column="exec_command" />
+        <result property="status" column="status" />
     </resultMap>
 
     <sql id="allColumns">
@@ -24,7 +25,8 @@
         task_type,
         exec_time,
         exec_servers,
-        exec_command
+        exec_command,
+        status
     </sql>
 
     <sql id="baseSql">
@@ -47,6 +49,9 @@
             <if test="execCommand != null and execCommand !='' ">
                 and exec_command=#{execCommand}
             </if>
+            <if test="status != null and status !='' || status == 0 ">
+                and status=#{status}
+            </if>
         </where>
     </sql>
 
@@ -66,7 +71,8 @@
             #{taskType},
             #{execTime},
             #{execServers},
-            #{execCommand}
+            #{execCommand},
+            #{status}
         );
     </insert>
 
@@ -92,6 +98,9 @@
             </if>
             <if test="execCommand != null and execCommand !='' ">
                 ,exec_command=#{execCommand}
+            </if>
+            <if test="status != null and status !='' || status == 0 ">
+                and status=#{status}
             </if>
         </set>
         <where>
