@@ -149,7 +149,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
 
   renderExecType = (execType: number) => {
     if (execType === 0) {
-      return <span><ClockCircleOutlined translate />fixed date</span>
+      return <span><ClockCircleOutlined translate />{` fixed date`}</span>
     } else {
       return <span>cron</span>
     }
@@ -158,8 +158,10 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
   renderStatus = (status: number) => {
     if (status === 0) {
       return <span style={{color: 'red'}}>下线</span>
-    } else {
+    } else if (status === 1) {
       return <span style={{color: 'green'}}>上线</span>
+    } else {
+      return <span style={{color: 'red'}}>过期</span>
     }
   }
 
