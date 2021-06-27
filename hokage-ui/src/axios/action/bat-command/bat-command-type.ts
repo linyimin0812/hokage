@@ -1,5 +1,5 @@
 
-export interface FixedDateTaskVO {
+export interface BatCommandVO {
   id?: number,
   operatorId: number,
   taskType: number,
@@ -7,7 +7,13 @@ export interface FixedDateTaskVO {
   execType: number,
   execTime: string,
   execServers: number[],
-  execCommand: string
+  execServerList?: string []
+  execCommand: string,
+  status?: number
 }
 
-export type FixedDateTaskForm = FixedDateTaskVO
+export type FixedDateTaskForm = BatCommandVO
+
+export interface BatCommandOperateForm {
+  operatorId: number
+}

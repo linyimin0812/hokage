@@ -53,4 +53,10 @@ public interface HokageFixedDateTaskDao {
      */
     List<HokageFixedDateTaskDO> findAll(HokageFixedDateTaskDO fixedDateTaskDO);
 
+    /**
+     * find task list by task name
+     * @param userId user id
+     * @return task list which meet the criteria
+     */
+    List<HokageFixedDateTaskDO> listByUserId(Long userId);
 }

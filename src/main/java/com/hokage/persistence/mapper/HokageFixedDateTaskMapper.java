@@ -58,4 +58,11 @@ public interface HokageFixedDateTaskMapper {
      */
     List<HokageFixedDateTaskDO> findAll(HokageFixedDateTaskDO fixedDateTaskDO);
 
+    /**
+     * find task list by task name
+     * @param userId user id
+     * @return task list which meet the criteria
+     */
+    List<HokageFixedDateTaskDO> listByUserId(@Param("userId") Long userId);
+
 }

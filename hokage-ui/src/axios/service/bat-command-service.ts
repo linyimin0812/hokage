@@ -6,6 +6,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/server/bat/save',
     method: 'POST'
   },
+  'search': {
+    url: '/server/bat/search',
+    method: 'POST'
+  }
 }
 
 export const BatCommandService = serviceConfig(serviceInfo)

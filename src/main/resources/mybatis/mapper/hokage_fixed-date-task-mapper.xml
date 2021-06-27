@@ -146,4 +146,14 @@
         </where>
     </select>
 
+    <select id="listByUserId" resultMap="HokageFixedDateTaskMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            user_id=#{userId}
+        </where>
+    </select>
+
 </mapper>

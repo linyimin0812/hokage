@@ -1,7 +1,9 @@
 package com.hokage.biz.controller;
 
 import com.hokage.biz.converter.bat.FixedDateTaskConverter;
+import com.hokage.biz.form.bat.FixedDateTaskOperateForm;
 import com.hokage.biz.form.bat.HokageFixedDateTaskForm;
+import com.hokage.biz.response.bat.HokageFixedDateTaskVO;
 import com.hokage.biz.service.HokageFixedDateTaskService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author linyimin
@@ -40,6 +44,13 @@ public class BatCommandController extends BaseController {
     public ResultVO<Long> save(@RequestBody HokageFixedDateTaskForm form) {
         HokageFixedDateTaskDO taskDO = fixedDateTaskConverter.doForward(form);
         ServiceResponse<Long> response = fixedDateTaskService.upsert(taskDO);
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageFixedDateTaskVO>> search(@RequestBody FixedDateTaskOperateForm form) {
+
+        ServiceResponse<List<HokageFixedDateTaskVO>> response = fixedDateTaskService.listByUserId(form.getOperatorId());
         return response(response);
     }
 }

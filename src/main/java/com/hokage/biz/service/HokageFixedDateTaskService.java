@@ -1,5 +1,6 @@
 package com.hokage.biz.service;
 
+import com.hokage.biz.response.bat.HokageFixedDateTaskVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 
@@ -46,5 +47,12 @@ public interface HokageFixedDateTaskService {
      * @return task list which meet the criteria
      */
     ServiceResponse<List<HokageFixedDateTaskDO>> findAll(HokageFixedDateTaskDO fixedDateTaskDO);
+
+    /**
+     * list task list by task type
+     * @param userId user id
+     * @return task list which meet the criteria
+     */
+    ServiceResponse<List<HokageFixedDateTaskVO>> listByUserId(Long userId);
 
 }
