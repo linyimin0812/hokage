@@ -71,4 +71,22 @@ public class BatCommandController extends BaseController {
         ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
         return response(response);
     }
+
+    @RequestMapping(value = "/server/bat/execute", method = RequestMethod.POST)
+    public ResultVO<Boolean> execute(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/result/list", method = RequestMethod.POST)
+    public ResultVO<Boolean> listResult(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/result/search", method = RequestMethod.POST)
+    public ResultVO<Boolean> searchResult(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
+        return response(response);
+    }
 }

@@ -6,36 +6,43 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/7/27 11:33 下午
+ * @date 2020/7/27 11:33 pm
  * @email linyimin520812@gmail.com
  * @description
  */
 public interface HokageTaskResultDao {
     /**
-     * 插入一条任务执行结果
-     * @param hokageTaskResultDO
-     * @return
+     * insert a new task result
+     * @param taskResultDO task result DO
+     * @return rows affected
      */
-    Long insert(HokageTaskResultDO hokageTaskResultDO);
+    Long insert(HokageTaskResultDO taskResultDO);
 
     /**
-     * 更新一条任务执行结果
-     * @param hokageTaskResultDO
-     * @return
+     * update a task result
+     * @param taskResultDO task result DO
+     * @return rows affected
      */
-    Long update(HokageTaskResultDO hokageTaskResultDO);
+    Long update(HokageTaskResultDO taskResultDO);
 
     /**
-     * 根据id主键查找任务执行结果
-     * @param id
-     * @return
+     * query task result based on task result primary id
+     * @param id task result primary id
+     * @return task result which id is equal to parameter id
      */
     HokageTaskResultDO findById(Long id);
 
     /**
-     * 根据任务id查找任务执行结果
-     * @param taskId
-     * @return
+     * query task result by task id
+     * @param taskId task primary id
+     * @return task result list which meet the criteria
      */
     List<HokageTaskResultDO> findByTaskId(Long taskId);
+
+    /**
+     * query all task result
+     * @return all task result list
+     */
+    List<HokageTaskResultDO> listAll();
+
 }

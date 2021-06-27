@@ -1,6 +1,7 @@
 package com.hokage.persistence.dataobject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -10,13 +11,40 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class HokageTaskResultDO extends HokageBaseDO {
-    private Long id;            // 任务执行结果id
-    private Long taskId;        // 任务id
-    private Integer taskStatus; // 任务执行状态: 0: 执行完成, 1: 正在执行, 2: 未知
-    private Long startTime;     // 任务开始执行的时间戳
-    private Long endTime;       // 任务执行结束时间戳
-    private Integer exitCode;   // 任务返回状态码
-    private String execServer;  // 任务执行机器ip
-    private String execResult;      // 执行返回内容
+    /**
+     * task result primary id
+     */
+    private Long id;
+    /**
+     * task primary id
+     */
+    private Long taskId;
+    /**
+     * task status: 0-running, 1-finished, 2-failed
+     */
+    private Integer taskStatus;
+    /**
+     * task execute start timestamp
+     */
+    private Long startTime;
+    /**
+     * task execute end timestamp
+     */
+    private Long endTime;
+    /**
+     * task exit code
+     */
+    private Integer exitCode;
+    /**
+     * execute server id
+     */
+    private Long execServer;
+    /**
+     * execute result
+     */
+    private String execResult;
+
+    private Integer status;
 }

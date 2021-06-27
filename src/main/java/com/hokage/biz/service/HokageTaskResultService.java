@@ -1,41 +1,44 @@
 package com.hokage.biz.service;
 
+import com.hokage.biz.response.bat.TaskResultDetailVO;
+import com.hokage.common.ServiceResponse;
+import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import com.hokage.persistence.dataobject.HokageTaskResultDO;
 
 import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/7/27 11:33 下午
+ * @date 2020/7/27 11:33 pm
  * @email linyimin520812@gmail.com
  * @description
  */
 public interface HokageTaskResultService {
     /**
-     * 插入一条任务执行结果
-     * @param hokageTaskResultDO
-     * @return
+     * insert or a new task result
+     * @param taskResultDO task result DO
+     * @return rows affected
      */
-    Long insert(HokageTaskResultDO hokageTaskResultDO);
+    ServiceResponse<Long> upsert(HokageTaskResultDO taskResultDO);
 
     /**
-     * 更新一条任务执行结果
-     * @param hokageTaskResultDO
-     * @return
+     * query task result based on task result primary id
+     * @param id task result primary id
+     * @return task result which id is equal to parameter id
      */
-    Long update(HokageTaskResultDO hokageTaskResultDO);
+    ServiceResponse<HokageFixedDateTaskDO> findById(Long id);
 
     /**
-     * 根据id主键查找任务执行结果
-     * @param id
-     * @return
+     * query task result by task id
+     * @param taskId task primary id
+     * @return task result list which meet the criteria
      */
-    HokageTaskResultDO findById(Long id);
+    ServiceResponse<List<TaskResultDetailVO>> findByTaskId(Long taskId);
 
     /**
-     * 根据任务id查找任务执行结果
-     * @param taskId
-     * @return
+     * delete task result based on primary id
+     * @param id task result primary id
+     * @return rows affected
      */
-    List<HokageTaskResultDO> findByTaskId(Long taskId);
+    ServiceResponse<Boolean> delete(Long id);
 }

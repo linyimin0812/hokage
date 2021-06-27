@@ -130,8 +130,9 @@ CREATE TABLE IF NOT EXISTS `hokage_task_result` (
   `start_time` bigint NOT NULL COMMENT '任务开始执行时间',
   `end_time` bigint NULL COMMENT '执行结束时间',
   `exit_code` tinyint NULL COMMENT '任务返回状态码',
-  `exec_server` varchar(128) NULL COMMENT '执行机器',
+  `exec_server` BIGINT NULL COMMENT '执行机器',
   `exec_result` text NULL COMMENT '执行返回内容',
+  `status` tinyint NOT NULL COMMENT '状态: -1：已删除',
   PRIMARY KEY (`id`)
 )
   COMMENT = '批量任务结果表';

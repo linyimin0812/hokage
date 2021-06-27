@@ -48,6 +48,7 @@ public enum ResultCodeEnum {
     FILE_UPLOAD_FAILED("F-0005", "upload file execute failed."),
 
     FIXED_DATE_NOT_FOUND("E-0001", "task not found"),
+    TASK_RESULT_NOT_FOUND("E-0002", "task result not found"),
     ;
 
     private String code;

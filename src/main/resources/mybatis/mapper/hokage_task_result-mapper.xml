@@ -13,6 +13,7 @@
         <result property="startTime" column="start_time"/>
         <result property="taskId" column="task_id"/>
         <result property="taskStatus" column="task_status"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -25,7 +26,8 @@
         start_time,
         end_time,
         task_id,
-        task_status
+        task_status,
+        status
     </sql>
 
     <sql id="tableName">
@@ -55,6 +57,9 @@
             <if test="taskStatus != null and taskStatus != '' ">
                 and task_status = #{taskStatus}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                and status = #{status}
+            </if>
         </where>
     </sql>
     <insert id="insert" parameterType="HokageTaskResultDO">
@@ -73,7 +78,8 @@
             #{startTime},
             #{endTime},
             #{taskId},
-            #{taskStatus}
+            #{taskStatus},
+            ${status}
         );
     </insert>
     <update id="update" parameterType="HokageTaskResultDO">
@@ -102,6 +108,9 @@
             <if test="taskStatus != null and taskStatus != '' ">
                 ,task_status = #{taskStatus}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
+            </if>
         </set>
     </update>
     <select id="findById" parameterType="java.lang.Long" resultMap="HokageTaskResultMapper">
@@ -123,4 +132,13 @@
         </where>
     </select>
 
+    <select id="listAll" resultMap="HokageTaskResultMapper">
+        SELECT
+            <include refid="allColumns" />
+        FROM
+            <include refid="tableName" />
+        <where>
+            status &gt;= 0
+        </where>
+    </select>
 </mapper>
