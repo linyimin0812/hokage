@@ -7,10 +7,12 @@ import { getHokageUid, range } from '../../libs'
 import { FixedDateTaskForm } from '../../axios/action/bat-command/bat-command-type'
 import { BatCommandAction } from '../../axios/action/bat-command/bat-command-action'
 import { observer } from 'mobx-react'
-import store from './store';
+import store from './store'
+import serverStore from '../server/my-server/store'
 
 // 表单数据类型
-interface FormDataType {
+export interface FormDataType {
+  id?: number,
   taskName: string,
   taskType: number,
   execType: number,
@@ -23,6 +25,7 @@ interface EditBatCommandPropsType {
   isVisible: boolean, // 显示弹窗
   onChange: Function, // 关闭弹窗
   isEdit: boolean, // 是否编辑
+  initValue: FormDataType
 }
 
 // 表单样式
@@ -34,6 +37,10 @@ const formItemLayout = {
 @observer
 export default class EditBatCommand extends React.Component<EditBatCommandPropsType> {
 
+  componentDidMount() {
+    serverStore.fetchRecords()
+  }
+
   formRef = React.createRef<FormInstance>()
 
   onCancel = () => {
@@ -42,7 +49,9 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
   }
 
   onFinish = (value: FormDataType) => {
+    const { id } = this.props.initValue
     const form: FixedDateTaskForm = {
+      id: id ? id : 0,
       operatorId: getHokageUid(),
       taskName: value.taskName,
       taskType: value.taskType,
@@ -65,6 +74,12 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
     }
   }
 
+  renderServerOptions = () => {
+    return serverStore.records.map(serverVO => {
+      return <Select.Option key={serverVO.id} value={serverVO.id}>{`${serverVO.account}@${serverVO.ip}`}</Select.Option>
+    })
+  }
+
   render() {
     const { isVisible, isEdit } = this.props
     return (
@@ -74,6 +89,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
             {...formItemLayout}
             onFinish={this.onFinish}
             ref={this.formRef}
+            initialValues={this.props.initValue}
           >
             <Form.Item
               name="taskName"
@@ -100,21 +116,20 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                 showTime={{hideDisabledOptions: true}}
               />
             </Form.Item>
-            <Form.Item label={'服务器类型'} name="serverType" initialValue={[]} required>
-              <Select placeholder={"请选择"} style={{width: '50%'}}>
-                <Select.Option value={0}>ip</Select.Option>
-                <Select.Option value={1} disabled>分组</Select.Option>
-              </Select>
-            </Form.Item>
+            {/*<Form.Item label={'服务器类型'} name="serverType" initialValue={[]} required>*/}
+            {/*  <Select placeholder={"请选择"} style={{width: '50%'}}>*/}
+            {/*    <Select.Option value={0}>ip</Select.Option>*/}
+            {/*    <Select.Option value={1} disabled>分组</Select.Option>*/}
+            {/*  </Select>*/}
+            {/*</Form.Item>*/}
 
-            <Form.Item name="execServers" initialValue={[]} label="执行机器">
+            <Form.Item name="execServers" label="执行机器">
               <Select
                 mode="multiple"
-                style={{ width: '50%' }}
                 placeholder={"请选择服务器(支持多选)"}
                 disabled={!isEdit}
               >
-                {[1,2,3,4,5,6].map(value => {return <Select.Option key={value} value={value}>{`10.108.210.2${value}`}</Select.Option>})}
+                { this.renderServerOptions() }
               </Select>
             </Form.Item>
 

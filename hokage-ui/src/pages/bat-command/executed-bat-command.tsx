@@ -1,6 +1,6 @@
 import React from 'react'
 import { Table, Tag } from 'antd'
-import EditBatCommand from './edit-bat-command'
+import EditBatCommand, { FormDataType } from './edit-bat-command';
 import ExecutedBatCommandInfo from './executed-bat-commandInfo'
 
 interface ExecutedBatCommandStateType {
@@ -104,7 +104,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
           <Table.Column title="ExitCode" dataIndex="exitCode" />
           <Table.Column title="操作" dataIndex="id" render={this.renderAction} />
         </Table>
-        <EditBatCommand isEdit={false} isVisible={isModalVisible} onChange={(value: boolean) => {this.setState({isModalVisible: value})}} />
+        <EditBatCommand initValue={{} as FormDataType} isEdit={false} isVisible={isModalVisible} onChange={(value: boolean) => {this.setState({isModalVisible: value})}} />
         <ExecutedBatCommandInfo isVisible={isDrawerVisible} onCloseDrawer={(value: boolean) => {this.setState({isDrawerVisible: value})}} />
       </div>
     );

@@ -100,7 +100,7 @@
                 ,exec_command=#{execCommand}
             </if>
             <if test="status != null and status !='' || status == 0 ">
-                and status=#{status}
+                ,status=#{status}
             </if>
         </set>
         <where>
