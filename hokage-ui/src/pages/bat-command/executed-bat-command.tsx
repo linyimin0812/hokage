@@ -99,6 +99,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
           <Table.Column title="任务ID" dataIndex="id" />
           <Table.Column title="任务名称" dataIndex="name" />
           <Table.Column title="执行状态" dataIndex="status" render={this.statusRender} />
+          <Table.Column title="触发方式" dataIndex="triggerType" />
           <Table.Column title="开始时间" dataIndex="startTime" />
           <Table.Column title="执行时长" dataIndex="execedTime" />
           <Table.Column title="ExitCode" dataIndex="exitCode" />

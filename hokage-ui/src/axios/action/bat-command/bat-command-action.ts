@@ -29,4 +29,43 @@ export const BatCommandAction ={
       }
     })
   },
+  delete: (form: BatCommandOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await BatCommandService.delete(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('删除任务失败')
+      }
+    })
+  },
+  offline: (form: BatCommandOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await BatCommandService.offline(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('下线任务失败')
+      }
+    })
+  },
+  online: (form: BatCommandOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await BatCommandService.online(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('上线任务失败')
+      }
+    })
+  },
 }

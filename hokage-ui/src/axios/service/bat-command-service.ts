@@ -9,6 +9,18 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'search': {
     url: '/server/bat/search',
     method: 'POST'
+  },
+  'delete': {
+    url: '/server/bat/delete',
+    method: 'POST'
+  },
+  'offline': {
+    url: '/server/bat/offline',
+    method: 'POST'
+  },
+  'online': {
+    url: '/server/bat/online',
+    method: 'POST'
   }
 }
 

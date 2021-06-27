@@ -15,5 +15,6 @@ export interface BatCommandVO {
 export type FixedDateTaskForm = BatCommandVO
 
 export interface BatCommandOperateForm {
-  operatorId: number
+  operatorId: number,
+  taskId?: number
 }
