@@ -10,6 +10,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageFixedDateTaskDao;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import com.hokage.persistence.dataobject.HokageServerDO;
+import com.hokage.ssh.enums.TaskStatusEnum;
 import com.hokage.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -118,5 +119,41 @@ public class HokageFixedDateTaskServiceImpl implements HokageFixedDateTaskServic
         }).collect(Collectors.toList());
 
         return response.success(taskVOList);
+    }
+
+    @Override
+    public ServiceResponse<Boolean> deleteById(Long id) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(id);
+        if (Objects.isNull(taskDO)) {
+            return response.fail(ResultCodeEnum.FIXED_DATE_NOT_FOUND.getCode(), String.format("task not found, id: %s", id));
+        }
+        taskDO.setStatus(TaskStatusEnum.delete.getStatus());
+        Long result = fixedDateTaskDao.update(taskDO);
+        return result > 0 ? response.success(Boolean.TRUE) : response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "delete task error.");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> offline(Long id) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(id);
+        if (Objects.isNull(taskDO)) {
+            return response.fail(ResultCodeEnum.FIXED_DATE_NOT_FOUND.getCode(), String.format("task not found, id: %s", id));
+        }
+        taskDO.setStatus(TaskStatusEnum.offline.getStatus());
+        Long result = fixedDateTaskDao.update(taskDO);
+        return result > 0 ? response.success(Boolean.TRUE) : response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "offline task error.");
+    }
+
+    @Override
+    public ServiceResponse<Boolean> online(Long id) {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(id);
+        if (Objects.isNull(taskDO)) {
+            return response.fail(ResultCodeEnum.FIXED_DATE_NOT_FOUND.getCode(), String.format("task not found, id: %s", id));
+        }
+        taskDO.setStatus(TaskStatusEnum.online.getStatus());
+        Long result = fixedDateTaskDao.update(taskDO);
+        return result > 0 ? response.success(Boolean.TRUE) : response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "online task error.");
     }
 }

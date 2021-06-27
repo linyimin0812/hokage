@@ -53,4 +53,22 @@ public class BatCommandController extends BaseController {
         ServiceResponse<List<HokageFixedDateTaskVO>> response = fixedDateTaskService.listByUserId(form.getOperatorId());
         return response(response);
     }
+
+    @RequestMapping(value = "/server/bat/delete", method = RequestMethod.POST)
+    public ResultVO<Boolean> delete(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.deleteById(form.getTaskId());
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/offline", method = RequestMethod.POST)
+    public ResultVO<Boolean> offline(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.offline(form.getTaskId());
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/online", method = RequestMethod.POST)
+    public ResultVO<Boolean> online(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
+        return response(response);
+    }
 }

@@ -10,4 +10,5 @@ import lombok.Data;
 @Data
 public class FixedDateTaskOperateForm {
     private Long operatorId;
+    private Long taskId;
 }

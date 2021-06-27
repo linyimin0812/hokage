@@ -46,6 +46,8 @@ public enum ResultCodeEnum {
     FILE_DOWNLOAD_FAILED("F-0003", "download file execute failed."),
     FILE_TAR_FAILED("F-0004", "package folder failed."),
     FILE_UPLOAD_FAILED("F-0005", "upload file execute failed."),
+
+    FIXED_DATE_NOT_FOUND("E-0001", "task not found"),
     ;
 
     private String code;

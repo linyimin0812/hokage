@@ -55,4 +55,24 @@ public interface HokageFixedDateTaskService {
      */
     ServiceResponse<List<HokageFixedDateTaskVO>> listByUserId(Long userId);
 
+    /**
+     * delete task by primary id
+     * @param id fixed date task primary id
+     * @return true: delete success, false: delete false
+     */
+    ServiceResponse<Boolean> deleteById(Long id);
+
+    /**
+     * offline task by primary id
+     * @param id fixed date task primary id
+     * @return true: offline success, false: offline false
+     */
+    ServiceResponse<Boolean> offline(Long id);
+
+    /**
+     * online task by primary id
+     * @param id fixed date task primary id
+     * @return true: online success, false: online false
+     */
+    ServiceResponse<Boolean> online(Long id);
 }

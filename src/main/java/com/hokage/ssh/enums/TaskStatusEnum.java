@@ -11,7 +11,8 @@ public enum TaskStatusEnum {
      * task status
      */
     offline(0),
-    online(1);
+    online(1),
+    delete(-1);
 
     private Integer status;
 
