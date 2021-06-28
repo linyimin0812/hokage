@@ -13,7 +13,9 @@
         <result property="startTime" column="start_time"/>
         <result property="taskId" column="task_id"/>
         <result property="taskStatus" column="task_status"/>
+        <result property="triggerStatus" column="trigger_status"/>
         <result property="status" column="status"/>
+        <result property="userId" column="user_id"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -27,7 +29,9 @@
         end_time,
         task_id,
         task_status,
-        status
+        trigger_status,
+        status,
+        user_id
     </sql>
 
     <sql id="tableName">
@@ -57,8 +61,14 @@
             <if test="taskStatus != null and taskStatus != '' ">
                 and task_status = #{taskStatus}
             </if>
+            <if test="triggerStatus != null and triggerStatus != '' ">
+                and trigger_status = #{triggerStatus}
+            </if>
             <if test="status != null and status != '' or status == 0 ">
                 and status = #{status}
+            </if>
+            <if test="userId != null and userId != ''">
+                and user_id = #{userId}
             </if>
         </where>
     </sql>
@@ -79,7 +89,9 @@
             #{endTime},
             #{taskId},
             #{taskStatus},
-            ${status}
+            #{triggerStatus},
+            #{status},
+            #{userId}
         );
     </insert>
     <update id="update" parameterType="HokageTaskResultDO">
@@ -108,8 +120,14 @@
             <if test="taskStatus != null and taskStatus != '' ">
                 ,task_status = #{taskStatus}
             </if>
+            <if test="triggerStatus != null and triggerStatus != '' ">
+                ,trigger_status = #{triggerStatus}
+            </if>
             <if test="status != null and status != '' or status == 0 ">
                 ,status = #{status}
+            </if>
+            <if test="userId != null and userId != ''">
+                ,user_id = #{userId}
             </if>
         </set>
     </update>
@@ -132,13 +150,13 @@
         </where>
     </select>
 
-    <select id="listAll" resultMap="HokageTaskResultMapper">
+    <select id="listByUserId" resultMap="HokageTaskResultMapper">
         SELECT
             <include refid="allColumns" />
         FROM
             <include refid="tableName" />
         <where>
-            status &gt;= 0
+            user_id=#{userId} AND status &gt;= 0
         </where>
     </select>
 </mapper>

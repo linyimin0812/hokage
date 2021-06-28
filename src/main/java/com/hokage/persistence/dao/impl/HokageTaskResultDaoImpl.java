@@ -47,8 +47,8 @@ public class HokageTaskResultDaoImpl implements HokageTaskResultDao {
     }
 
     @Override
-    public List<HokageTaskResultDO> listAll() {
-        return Optional.ofNullable(taskResultMapper.listAll()).orElse(Collections.emptyList());
+    public List<HokageTaskResultDO> listByUserId(Long userId) {
+        return Optional.ofNullable(taskResultMapper.listByUserId(userId)).orElse(Collections.emptyList());
     }
 
 }

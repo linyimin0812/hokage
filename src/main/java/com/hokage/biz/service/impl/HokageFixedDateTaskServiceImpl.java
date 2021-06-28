@@ -113,7 +113,7 @@ public class HokageFixedDateTaskServiceImpl implements HokageFixedDateTaskServic
 
             taskVO.setExecType(0);
 
-            taskVO.setExecTime(TimeUtil.format(taskDO.getExecTime(), "yyyy-MM-dd HH:mm"));
+            taskVO.setExecTime(TimeUtil.format(taskDO.getExecTime(), TimeUtil.DISPLAY_FORMAT));
 
             return taskVO;
         }).collect(Collectors.toList());

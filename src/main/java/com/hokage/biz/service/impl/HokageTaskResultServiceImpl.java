@@ -1,20 +1,23 @@
 package com.hokage.biz.service.impl;
 
+import com.hokage.biz.converter.bat.TaskResultDetailConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.response.bat.TaskResultDetailVO;
+import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageTaskResultService;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageTaskResultDao;
-import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import com.hokage.persistence.dataobject.HokageTaskResultDO;
 import com.hokage.ssh.enums.TaskStatusEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author yiminlin
@@ -25,6 +28,7 @@ import java.util.Objects;
 public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     private HokageTaskResultDao taskResultDao;
     private HokageSequenceService sequenceService;
+    private TaskResultDetailConverter detailConverter;
 
     @Autowired
     public void setTaskResultDao(HokageTaskResultDao taskResultDao) {
@@ -34,6 +38,11 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     @Autowired
     public void setSequenceService(HokageSequenceService sequenceService) {
         this.sequenceService = sequenceService;
+    }
+
+    @Autowired
+    public void setDetailConverter(TaskResultDetailConverter detailConverter) {
+        this.detailConverter = detailConverter;
     }
 
     @Override
@@ -50,8 +59,8 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     }
 
     @Override
-    public ServiceResponse<HokageFixedDateTaskDO> findById(Long id) {
-        ServiceResponse<HokageFixedDateTaskDO> response = new ServiceResponse<>();
+    public ServiceResponse<TaskResultVO> findById(Long id) {
+        ServiceResponse<TaskResultVO> response = new ServiceResponse<>();
         HokageTaskResultDO taskDO = taskResultDao.findById(id);
         if (Objects.isNull(taskDO)) {
             return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "task result is not exit. id: " + id);
@@ -63,9 +72,8 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     @Override
     public ServiceResponse<List<TaskResultDetailVO>> findByTaskId(Long taskId) {
         ServiceResponse<List<TaskResultDetailVO>> response = new ServiceResponse<>();
-        List<HokageTaskResultDO> list = taskResultDao.findByTaskId(taskId);
-        // TODO: 转换
-        return response.success(null);
+        List<TaskResultDetailVO> list = taskResultDao.findByTaskId(taskId).stream().map(detailConverter::doForward).collect(Collectors.toList());
+        return response.success(list);
     }
 
     @Override
@@ -78,5 +86,20 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
         taskResultDO.setStatus(TaskStatusEnum.delete.getStatus());
         Long result = taskResultDao.update(taskResultDO);
         return result > 0 ? response.success(Boolean.TRUE) : response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "delete task result failed");
+    }
+
+    @Override
+    public ServiceResponse<List<TaskResultVO>> listByUserId(Long userId) {
+        ServiceResponse<List<TaskResultVO>> response = new ServiceResponse<>();
+        List<HokageTaskResultDO> resultDOList = taskResultDao.listByUserId(userId);
+        Map<Long, List<HokageTaskResultDO>> taskResultMap = resultDOList.stream().collect(Collectors.groupingBy(HokageTaskResultDO::getTaskId));
+        List<TaskResultVO> resultVOList = taskResultMap.values().stream().map(this::taskResultList2VO).collect(Collectors.toList());
+        return response.success(resultVOList);
+    }
+
+    private TaskResultVO taskResultList2VO(List<HokageTaskResultDO> taskResultDOList) {
+        TaskResultVO resultVO = new TaskResultVO();
+        // TODO:
+        return resultVO;
     }
 }

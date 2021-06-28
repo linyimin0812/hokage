@@ -127,12 +127,14 @@ CREATE TABLE IF NOT EXISTS `hokage_task_result` (
   `gmt_modified` DATETIME NOT NULL,
   `task_id` bigint NOT NULL COMMENT '任务id',
   `task_status` tinyint NOT NULL COMMENT '任务执行状态: 0: 执行完成, 1: 正在执行, 2: 未知',
+  `trigger_status` tinyint NOT NULL COMMENT '触发方式: 0: 手动触发, 1: 定时调度',
   `start_time` bigint NOT NULL COMMENT '任务开始执行时间',
   `end_time` bigint NULL COMMENT '执行结束时间',
   `exit_code` tinyint NULL COMMENT '任务返回状态码',
   `exec_server` BIGINT NULL COMMENT '执行机器',
   `exec_result` text NULL COMMENT '执行返回内容',
   `status` tinyint NOT NULL COMMENT '状态: -1：已删除',
+  `user_id` bigint NOT NULL COMMENT '用户id',
   PRIMARY KEY (`id`)
 )
   COMMENT = '批量任务结果表';

@@ -14,6 +14,12 @@ import java.util.Locale;
  * @description date and time util
  **/
 public class TimeUtil {
+
+    public static final String PROCESS_TIME_FORMAT = "EEE MMM d HH:mm:ss yyyy";
+    public static final String MONITOR_TIME_FORMAT = "EEE MMM dd HH:mm:ss zzz yyyy";
+    public static final String DISPLAY_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String METRIC_FORMAT = "yyyy-MM-dd HH:mm";
+
     public static String format(String dateStr, String srcFormat, String dstFormat) throws ParseException {
         SimpleDateFormat srcFormatter = new SimpleDateFormat(srcFormat, Locale.ENGLISH);
         long timestamp = srcFormatter.parse(dateStr).getTime();

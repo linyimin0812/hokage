@@ -46,8 +46,9 @@ public interface HokageTaskResultMapper {
 
 
     /**
-     * query all task result
-     * @return all task result list
+     * query task result by user id
+     * @param userId user id
+     * @return task result list which meet the criteria
      */
-    List<HokageTaskResultDO> listAll();
+    List<HokageTaskResultDO> listByUserId(@Param("userId") Long userId);
 }

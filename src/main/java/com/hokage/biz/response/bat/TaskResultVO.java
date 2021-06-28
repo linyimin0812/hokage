@@ -11,8 +11,8 @@ import lombok.Data;
 public class TaskResultVO {
     private Long taskId;
     private String taskName;
-    private Integer status;
-    private Integer triggerType;
+    private Integer taskStatus;
+    private Integer triggerStatus;
     private String startTime;
     private String endTime;
     private Long cost;

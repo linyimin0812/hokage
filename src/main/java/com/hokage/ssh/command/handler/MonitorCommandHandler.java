@@ -138,7 +138,7 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
             lastLogInfoVOList = lastLogInfoVOList.stream().peek(lastLogInfoVO -> {
                 String dateStr = "";
                 try {
-                    dateStr = TimeUtil.format(lastLogInfoVO.getLatest(), "EEE MMM dd HH:mm:ss zzz yyyy", "yyyy-MM-dd HH:mm:ss");
+                    dateStr = TimeUtil.format(lastLogInfoVO.getLatest(), TimeUtil.MONITOR_TIME_FORMAT, TimeUtil.DISPLAY_FORMAT);
                     lastLogInfoVO.setLatest(dateStr);
                 } catch (ParseException e) {
                     log.error("format date error: {}", e.getMessage());
@@ -183,7 +183,7 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
                    .stream()
                    .peek(process -> {
                        try {
-                           String dateStr = TimeUtil.format(process.getStarted(), "EEE MMM d HH:mm:ss yyyy", "yyyy-MM-dd HH:mm:ss");
+                           String dateStr = TimeUtil.format(process.getStarted(), TimeUtil.PROCESS_TIME_FORMAT, TimeUtil.DISPLAY_FORMAT);
                            process.setStarted(dateStr);
                        } catch (ParseException e) {
                            log.error("format date error: {}", e.getMessage());

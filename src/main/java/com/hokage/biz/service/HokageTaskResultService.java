@@ -1,6 +1,7 @@
 package com.hokage.biz.service;
 
 import com.hokage.biz.response.bat.TaskResultDetailVO;
+import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import com.hokage.persistence.dataobject.HokageTaskResultDO;
@@ -26,7 +27,7 @@ public interface HokageTaskResultService {
      * @param id task result primary id
      * @return task result which id is equal to parameter id
      */
-    ServiceResponse<HokageFixedDateTaskDO> findById(Long id);
+    ServiceResponse<TaskResultVO> findById(Long id);
 
     /**
      * query task result by task id
@@ -41,4 +42,12 @@ public interface HokageTaskResultService {
      * @return rows affected
      */
     ServiceResponse<Boolean> delete(Long id);
+
+    /**
+     * query task result by user id
+     * @param userId user id
+     * @return task result list which meet the criteria
+     */
+    ServiceResponse<List<TaskResultVO>> listByUserId(Long userId);
+
 }
