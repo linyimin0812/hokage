@@ -1,6 +1,7 @@
 package com.hokage.persistence.dao;
 
 import com.hokage.persistence.dataobject.HokageTaskResultDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -45,5 +46,12 @@ public interface HokageTaskResultDao {
      * @return task result list which meet the criteria
      */
     List<HokageTaskResultDO> listByUserId(Long userId);
+
+    /**
+     * query task result by batch id
+     * @param batchId task result batch id
+     * @return task result list which meet the criteria
+     */
+    List<HokageTaskResultDO> listByBatchId(@Param("batchId") String batchId);
 
 }

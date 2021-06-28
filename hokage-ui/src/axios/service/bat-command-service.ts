@@ -21,6 +21,14 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'online': {
     url: '/server/bat/online',
     method: 'POST'
+  },
+  'listTaskResult': {
+    url: '/server/bat/result/list',
+    method: 'POST'
+  },
+  'executeTask': {
+    url: '/server/bat/execute',
+    method: 'POST'
   }
 }
 

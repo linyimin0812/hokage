@@ -14,4 +14,5 @@ public class TaskResultDetailVO {
     private String endTime;
     private Long cost;
     private Integer status;
+    private Integer taskStatus;
 }

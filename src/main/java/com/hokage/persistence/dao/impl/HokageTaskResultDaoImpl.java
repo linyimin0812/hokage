@@ -51,4 +51,9 @@ public class HokageTaskResultDaoImpl implements HokageTaskResultDao {
         return Optional.ofNullable(taskResultMapper.listByUserId(userId)).orElse(Collections.emptyList());
     }
 
+    @Override
+    public List<HokageTaskResultDO> listByBatchId(String batchId) {
+        return Optional.ofNullable(taskResultMapper.listByBatchId(batchId)).orElse(Collections.emptyList());
+    }
+
 }

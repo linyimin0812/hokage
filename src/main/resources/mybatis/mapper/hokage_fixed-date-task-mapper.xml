@@ -156,4 +156,13 @@
         </where>
     </select>
 
+    <select id="listRunnableTask" resultMap="HokageFixedDateTaskMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableName"/>
+        <where>
+            exec_time BETWEEN #{start} AND #{end} and status &gt;= 0
+        </where>
+    </select>
 </mapper>

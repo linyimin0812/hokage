@@ -3,7 +3,7 @@ package com.hokage.biz.converter.bat;
 import com.hokage.biz.converter.Converter;
 import com.hokage.biz.form.bat.HokageFixedDateTaskForm;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
-import com.hokage.ssh.enums.TaskStatusEnum;
+import com.hokage.biz.enums.bat.TaskStatusEnum;
 import com.hokage.util.TimeUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;

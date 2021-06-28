@@ -63,4 +63,9 @@ public class HokageTaskDaoImpl implements HokageFixedDateTaskDao {
         return Optional.ofNullable(taskMapper.listByUserId(userId)).orElse(Collections.emptyList());
     }
 
+    @Override
+    public List<HokageFixedDateTaskDO> listRunnableTask(Long start, Long end) {
+        return Optional.ofNullable(taskMapper.listRunnableTask(start, end)).orElse(Collections.emptyList());
+    }
+
 }

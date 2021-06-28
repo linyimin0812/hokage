@@ -59,4 +59,12 @@ public interface HokageFixedDateTaskDao {
      * @return task list which meet the criteria
      */
     List<HokageFixedDateTaskDO> listByUserId(Long userId);
+
+    /**
+     * list task which execTime between start and end
+     * @param start current time mills
+     * @param end current time mills + 5 * 60 * 1000
+     * @return runnable task list
+     */
+    List<HokageFixedDateTaskDO> listRunnableTask(Long start, Long end);
 }

@@ -42,14 +42,16 @@ public class TaskResultDetailConverter implements Converter<HokageTaskResultDO, 
         detailVO.setServerIp(serverDOList.get(0).getIp());
 
         long start = Optional.ofNullable(taskResultDO.getStartTime()).orElse(0L);
+        detailVO.setStartTime(TimeUtil.format(start, TimeUtil.DISPLAY_FORMAT));
+
         long end = Optional.ofNullable(taskResultDO.getEndTime()).orElse(0L);
         if (end > 0) {
             detailVO.setCost(end - start);
             detailVO.setEndTime(TimeUtil.format(end, TimeUtil.DISPLAY_FORMAT));
         }
-        detailVO.setStartTime(TimeUtil.format(start, TimeUtil.DISPLAY_FORMAT));
 
         detailVO.setStatus(taskResultDO.getStatus());
+        detailVO.setTaskStatus(taskResultDO.getTaskStatus());
 
         return detailVO;
     }

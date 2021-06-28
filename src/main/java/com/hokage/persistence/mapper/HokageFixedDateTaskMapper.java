@@ -65,4 +65,12 @@ public interface HokageFixedDateTaskMapper {
      */
     List<HokageFixedDateTaskDO> listByUserId(@Param("userId") Long userId);
 
+    /**
+     * list task which execTime between start and end
+     * @param start current time mills
+     * @param end current time mills + 5 * 60 * 1000
+     * @return runnable task list
+     */
+    List<HokageFixedDateTaskDO> listRunnableTask(@Param("start") Long start, @Param("end") Long end);
+
 }

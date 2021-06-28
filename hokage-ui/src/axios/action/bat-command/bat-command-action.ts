@@ -1,5 +1,5 @@
 import { ServiceResult } from '../../common'
-import { BatCommandOperateForm, FixedDateTaskForm, BatCommandVO } from './bat-command-type'
+import { BatCommandOperateForm, FixedDateTaskForm, BatCommandVO, TaskResultVO } from './bat-command-type';
 import { BatCommandService } from '../../service/bat-command-service'
 
 export const BatCommandAction ={
@@ -65,6 +65,32 @@ export const BatCommandAction ={
         resolve(result.data!)
       } catch (err) {
         reject('上线任务失败')
+      }
+    })
+  },
+  listTaskResult: (form: BatCommandOperateForm): Promise<TaskResultVO[]> => {
+    return new Promise<TaskResultVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<TaskResultVO[]> = await BatCommandService.listTaskResult(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('获取任务结果失败')
+      }
+    })
+  },
+  executeTask: (form: BatCommandOperateForm): Promise<void> => {
+    return new Promise<void>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<void> = await BatCommandService.executeTask(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('执行任务失败')
       }
     })
   },

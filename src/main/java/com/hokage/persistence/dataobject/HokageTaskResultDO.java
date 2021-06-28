@@ -2,6 +2,7 @@ package com.hokage.persistence.dataobject;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 /**
  * @author linyimin
@@ -11,6 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 public class HokageTaskResultDO extends HokageBaseDO {
     /**
@@ -29,7 +31,7 @@ public class HokageTaskResultDO extends HokageBaseDO {
     /**
      * trigger status: 0-manual， 1-auto scheduled
      */
-    private Integer triggerStatus;
+    private Integer triggerType;
     /**
      * task execute start timestamp
      */
@@ -51,7 +53,18 @@ public class HokageTaskResultDO extends HokageBaseDO {
      */
     private String execResult;
 
+    /**
+     * result status: -1: deleted, 0: normal
+     */
     private Integer status;
 
+    /**
+     * owner of the task
+     */
     private Long userId;
+
+    /**
+     * task execution batch id
+     */
+    private String batchId;
 }

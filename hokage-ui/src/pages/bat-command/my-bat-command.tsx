@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Divider, message, Table } from 'antd'
-import EditBatCommand, { FormDataType } from './edit-bat-command';
+import EditBatCommand, { FormDataType } from './edit-bat-command'
 import { BatCommandOperateForm, BatCommandVO } from '../../axios/action/bat-command/bat-command-type'
 import { getHokageUid } from '../../libs'
 import { BatCommandAction } from '../../axios/action/bat-command/bat-command-action'
@@ -8,7 +8,7 @@ import store from './store'
 import { observer } from 'mobx-react'
 import { Action } from '../../component/Action'
 import moment from 'moment'
-import { ClockCircleOutlined } from '@ant-design/icons';
+import { ClockCircleOutlined } from '@ant-design/icons'
 
 interface MyBatCommandStateType {
     editCommandVisible: boolean,// 创建新的批量任务
@@ -26,27 +26,16 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
   }
 
   componentDidMount() {
-    this.searchCommand()
-  }
-
-  searchCommand = () => {
-    store.loading = true
-    const form: BatCommandOperateForm = {
-      operatorId: getHokageUid()
-    }
-    BatCommandAction.search(form).then(commandVOList => {
-      store.records = commandVOList ? commandVOList : []
-    }).catch(e => message.error(e))
-      .finally(() => store.loading = false)
+    store.searchTaskList()
   }
 
   createBatCommand = () => {
-    this.setState({ editCommandVisible: true })
+    this.setState({ editCommandVisible: true, isEdit: true })
   }
 
   onBatCommandEditChange = (value: boolean) => {
-    this.setState({editCommandVisible: value})
-    this.searchCommand()
+    this.setState({editCommandVisible: value, isEdit: value})
+    store.searchTaskList()
   }
 
   renderExecServer = (recrod: BatCommandVO) => {
@@ -62,7 +51,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
     BatCommandAction.delete(form).then(result => {
       if (result) {
         message.info('删除成功')
-        this.searchCommand()
+        store.searchTaskList()
       } else {
         message.error('删除失败')
       }
@@ -75,7 +64,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
     BatCommandAction.offline(form).then(result => {
       if (result) {
         message.info('下线成功')
-        this.searchCommand()
+        store.searchTaskList()
       } else {
         message.error('下线失败')
       }
@@ -88,12 +77,23 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
     BatCommandAction.online(form).then(result => {
       if (result) {
         message.info('上线成功')
-        this.searchCommand()
+        store.searchTaskList()
       } else {
         message.error('上线失败')
       }
     }).catch(e => message.error(e))
       .finally(() => store.loading = false)
+  }
+
+  executeTask = (taskId: number) => {
+    store.loading = true
+    const form: BatCommandOperateForm = {
+      operatorId: getHokageUid(),
+      taskId: taskId
+    }
+    BatCommandAction.executeTask(form)
+      .catch(e => message.error(e)).finally(() => store.loading = false)
+
   }
 
   renderAction = (record: BatCommandVO) => {
@@ -118,7 +118,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
         />
         <Action.Confirm
           title={<span>运行</span>}
-          action={() => {alert('运行')}}
+          action={() => {this.executeTask(record.id!)}}
           content={`确定运行任务${record.id}?`}
         />
         <Action.Confirm
@@ -183,7 +183,7 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
           {/*未开始, 正在执行, 结束*/}
           <Table.Column title="状态" dataIndex="status" render={this.renderStatus} />
           {/*运行一次, 结束, 删除, 修改*/}
-          <Table.Column title="操作" render={this.renderAction} />
+          <Table.Column title="操作" render={this.renderAction} width={'20%'} />
         </Table>
       </div>
     )

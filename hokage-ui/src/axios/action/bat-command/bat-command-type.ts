@@ -18,3 +18,24 @@ export interface BatCommandOperateForm {
   operatorId: number,
   taskId?: number
 }
+
+export interface TaskResultVO {
+  batchId: string,
+  taskId: number,
+  taskName: string,
+  taskStatus: number,
+  triggerType: number,
+  startTime: string,
+  endTime: string,
+  cost: number,
+  resultDetailVOList: TaskResultDetailVO[]
+}
+
+export interface TaskResultDetailVO {
+  taskId: number,
+  serverIp: string,
+  startTime: string,
+  endTime: string,
+  taskStatus: number,
+  cost: number,
+}

@@ -1,10 +1,13 @@
 package com.hokage.biz.controller;
 
 import com.hokage.biz.converter.bat.FixedDateTaskConverter;
+import com.hokage.biz.enums.bat.TriggerTypeEnum;
 import com.hokage.biz.form.bat.FixedDateTaskOperateForm;
 import com.hokage.biz.form.bat.HokageFixedDateTaskForm;
 import com.hokage.biz.response.bat.HokageFixedDateTaskVO;
+import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.biz.service.HokageFixedDateTaskService;
+import com.hokage.biz.service.HokageTaskResultService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
@@ -29,6 +32,7 @@ import java.util.List;
 public class BatCommandController extends BaseController {
     private HokageFixedDateTaskService fixedDateTaskService;
     private FixedDateTaskConverter fixedDateTaskConverter;
+    private HokageTaskResultService taskResultService;
 
     @Autowired
     public void setFixedDateTaskService(HokageFixedDateTaskService fixedDateTaskService) {
@@ -38,6 +42,11 @@ public class BatCommandController extends BaseController {
     @Autowired
     public void setFixedDateTaskConverter(FixedDateTaskConverter fixedDateTaskConverter) {
         this.fixedDateTaskConverter = fixedDateTaskConverter;
+    }
+
+    @Autowired
+    public void setTaskResultService(HokageTaskResultService taskResultService) {
+        this.taskResultService = taskResultService;
     }
 
     @RequestMapping(value = "/server/bat/save", method = RequestMethod.POST)
@@ -73,20 +82,14 @@ public class BatCommandController extends BaseController {
     }
 
     @RequestMapping(value = "/server/bat/execute", method = RequestMethod.POST)
-    public ResultVO<Boolean> execute(@RequestBody FixedDateTaskOperateForm form) {
-        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
-        return response(response);
+    public ResultVO<Boolean> executeTask(@RequestBody FixedDateTaskOperateForm form) {
+        taskResultService.execute(form.getTaskId(), TriggerTypeEnum.manual);
+        return success(Boolean.TRUE);
     }
 
     @RequestMapping(value = "/server/bat/result/list", method = RequestMethod.POST)
-    public ResultVO<Boolean> listResult(@RequestBody FixedDateTaskOperateForm form) {
-        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
-        return response(response);
-    }
-
-    @RequestMapping(value = "/server/bat/result/search", method = RequestMethod.POST)
-    public ResultVO<Boolean> searchResult(@RequestBody FixedDateTaskOperateForm form) {
-        ServiceResponse<Boolean> response = fixedDateTaskService.online(form.getTaskId());
+    public ResultVO<List<TaskResultVO>> listResult(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<List<TaskResultVO>> response = taskResultService.listByUserId(form.getOperatorId());
         return response(response);
     }
 }

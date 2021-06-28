@@ -51,4 +51,11 @@ public interface HokageTaskResultMapper {
      * @return task result list which meet the criteria
      */
     List<HokageTaskResultDO> listByUserId(@Param("userId") Long userId);
+
+    /**
+     * query task result by batch id
+     * @param batchId task result batch id
+     * @return task result list which meet the criteria
+     */
+    List<HokageTaskResultDO> listByBatchId(@Param("batchId") String batchId);
 }

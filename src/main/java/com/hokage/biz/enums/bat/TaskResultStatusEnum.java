@@ -1,22 +1,21 @@
-package com.hokage.ssh.enums;
+package com.hokage.biz.enums.bat;
 
 /**
  * @author yiminlin
- * @date 2021/06/27 7:06 am
- * @description task status
+ * @date 2021/06/28 9:25 pm
+ * @description task result status enum
  **/
-public enum TaskStatusEnum {
-
+public enum TaskResultStatusEnum {
     /**
      * task status
      */
-    offline(0),
-    online(1),
-    delete(-1);
+    running(0),
+    finished(1),
+    failed(-1);
 
     private Integer status;
 
-    TaskStatusEnum(Integer status) {
+    TaskResultStatusEnum(Integer status) {
         this.status = status;
     }
 

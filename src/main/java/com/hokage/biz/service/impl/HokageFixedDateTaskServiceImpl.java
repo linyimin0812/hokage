@@ -10,7 +10,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageFixedDateTaskDao;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import com.hokage.persistence.dataobject.HokageServerDO;
-import com.hokage.ssh.enums.TaskStatusEnum;
+import com.hokage.biz.enums.bat.TaskStatusEnum;
 import com.hokage.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
