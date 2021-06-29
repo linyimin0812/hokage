@@ -138,7 +138,7 @@ public class LinuxCommand extends AbstractCommand {
 
     @Override
     public String netstat() {
-        return "netstat -natp" + " | " +
+        return "netstat -natp 2> /dev/null " + " | " +
                 "awk 'BEGIN {print \"[\"} NR>2 {print \"{" +
                 "\\\"protocol\\\": \\\"\"$1\"\\\", " +
                 "\\\"localIp\\\": \\\"\"$4\"\\\", " +

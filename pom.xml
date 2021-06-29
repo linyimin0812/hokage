@@ -162,6 +162,13 @@
 			<version>2.3.5.RELEASE</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aspects -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>5.2.15.RELEASE</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
