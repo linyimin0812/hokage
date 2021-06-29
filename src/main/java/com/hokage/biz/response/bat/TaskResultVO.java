@@ -18,7 +18,6 @@ public class TaskResultVO {
     private String startTime;
     private String endTime;
     private Long cost;
-    private Integer exitCode;
     private String batchId;
     private List<TaskResultDetailVO> resultDetailVOList;
 }

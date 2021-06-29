@@ -5,6 +5,7 @@ import com.hokage.biz.enums.bat.TriggerTypeEnum;
 import com.hokage.biz.form.bat.FixedDateTaskOperateForm;
 import com.hokage.biz.form.bat.HokageFixedDateTaskForm;
 import com.hokage.biz.response.bat.HokageFixedDateTaskVO;
+import com.hokage.biz.response.bat.TaskInfoVO;
 import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.biz.service.HokageFixedDateTaskService;
 import com.hokage.biz.service.HokageTaskResultService;
@@ -90,6 +91,12 @@ public class BatCommandController extends BaseController {
     @RequestMapping(value = "/server/bat/result/list", method = RequestMethod.POST)
     public ResultVO<List<TaskResultVO>> listResult(@RequestBody FixedDateTaskOperateForm form) {
         ServiceResponse<List<TaskResultVO>> response = taskResultService.listByUserId(form.getOperatorId());
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/single/task/detail", method = RequestMethod.POST)
+    public ResultVO<TaskInfoVO> viewSingleTaskDetail(@RequestBody FixedDateTaskOperateForm form) {
+        ServiceResponse<TaskInfoVO> response = taskResultService.querySingleTaskDetail(form.getTaskResultId());
         return response(response);
     }
 }

@@ -1,5 +1,5 @@
 import { ServiceResult } from '../../common'
-import { BatCommandOperateForm, FixedDateTaskForm, BatCommandVO, TaskResultVO } from './bat-command-type';
+import { BatCommandOperateForm, FixedDateTaskForm, BatCommandVO, TaskResultVO, TaskInfoVO } from './bat-command-type'
 import { BatCommandService } from '../../service/bat-command-service'
 
 export const BatCommandAction ={
@@ -91,6 +91,19 @@ export const BatCommandAction ={
         resolve(result.data!)
       } catch (err) {
         reject('执行任务失败')
+      }
+    })
+  },
+  viewSingleTaskDetail: (form: BatCommandOperateForm): Promise<TaskInfoVO> => {
+    return new Promise<TaskInfoVO>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<TaskInfoVO> = await BatCommandService.viewSingleTaskDetail(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('获取任务详情失败')
       }
     })
   },

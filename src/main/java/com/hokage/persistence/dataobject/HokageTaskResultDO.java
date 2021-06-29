@@ -45,9 +45,9 @@ public class HokageTaskResultDO extends HokageBaseDO {
      */
     private Integer exitCode;
     /**
-     * execute server id
+     * execute server, account@ip
      */
-    private Long execServer;
+    private String execServer;
     /**
      * execute result
      */

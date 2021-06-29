@@ -29,6 +29,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'executeTask': {
     url: '/server/bat/execute',
     method: 'POST'
+  },
+  'viewSingleTaskDetail': {
+    url: '/server/bat/single/task/detail',
+    method: 'POST'
   }
 }
 

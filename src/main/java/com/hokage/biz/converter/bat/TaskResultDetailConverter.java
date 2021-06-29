@@ -3,15 +3,11 @@ package com.hokage.biz.converter.bat;
 import com.hokage.biz.converter.Converter;
 import com.hokage.biz.response.bat.TaskResultDetailVO;
 import com.hokage.persistence.dao.HokageServerDao;
-import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageTaskResultDO;
 import com.hokage.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,12 +30,9 @@ public class TaskResultDetailConverter implements Converter<HokageTaskResultDO, 
 
         TaskResultDetailVO detailVO = new TaskResultDetailVO();
 
-        List<Long> serverIds = Collections.singletonList(taskResultDO.getExecServer());
-        List<HokageServerDO> serverDOList = serverDao.selectByIds(serverIds);
-        if (CollectionUtils.isEmpty(serverDOList)) {
-            throw new RuntimeException("server is not exit, server id: " + taskResultDO.getExecServer());
-        }
-        detailVO.setServerIp(serverDOList.get(0).getIp());
+        detailVO.setId(taskResultDO.getId());
+
+        detailVO.setExecServer(taskResultDO.getExecServer());
 
         long start = Optional.ofNullable(taskResultDO.getStartTime()).orElse(0L);
         detailVO.setStartTime(TimeUtil.format(start, TimeUtil.DISPLAY_FORMAT));
@@ -52,6 +45,8 @@ public class TaskResultDetailConverter implements Converter<HokageTaskResultDO, 
 
         detailVO.setStatus(taskResultDO.getStatus());
         detailVO.setTaskStatus(taskResultDO.getTaskStatus());
+        detailVO.setExitCode(taskResultDO.getExitCode());
+        detailVO.setExecResult(taskResultDO.getExecResult());
 
         return detailVO;
     }

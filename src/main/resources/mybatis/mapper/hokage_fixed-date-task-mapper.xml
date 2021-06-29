@@ -154,6 +154,7 @@
         <where>
             user_id=#{userId} and status &gt;= 0
         </where>
+        ORDER BY gmt_modified DESC
     </select>
 
     <select id="listRunnableTask" resultMap="HokageFixedDateTaskMapper">

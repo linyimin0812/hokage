@@ -9,10 +9,13 @@ import lombok.Data;
  **/
 @Data
 public class TaskResultDetailVO {
-    private String serverIp;
+    private Long id;
+    private String execServer;
     private String startTime;
     private String endTime;
     private Long cost;
     private Integer status;
     private Integer taskStatus;
+    private Integer exitCode;
+    private String execResult;
 }

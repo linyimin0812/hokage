@@ -29,7 +29,7 @@ public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
         taskResultDO.setId(hokageSequenceService.nextValue("hokage_task_result").getData());
         taskResultDO.setEndTime(System.currentTimeMillis());
         taskResultDO.setStartTime(System.currentTimeMillis());
-        taskResultDO.setExecServer(102L);
+        taskResultDO.setExecServer("linyimin@localhost");
         taskResultDO.setExitCode(0);
         taskResultDO.setExecResult("true");
         taskResultDO.setTaskId(111L);

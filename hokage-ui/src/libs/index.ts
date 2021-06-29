@@ -218,3 +218,16 @@ export function range(start: number, end: number): number[] {
   }
   return array
 }
+
+export function status2Color(status: number): string {
+  if (status === 0) {
+    return 'blue'
+  }
+  if (status === 1) {
+    return 'green'
+  }
+  if (status === -1) {
+    return 'red'
+  }
+  return 'red'
+}

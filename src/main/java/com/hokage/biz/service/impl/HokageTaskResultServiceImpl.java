@@ -5,6 +5,8 @@ import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.bat.TaskResultStatusEnum;
 import com.hokage.biz.enums.bat.TriggerTypeEnum;
+import com.hokage.biz.response.bat.HokageFixedDateTaskVO;
+import com.hokage.biz.response.bat.TaskInfoVO;
 import com.hokage.biz.response.bat.TaskResultDetailVO;
 import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.biz.service.HokageSequenceService;
@@ -186,9 +188,37 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
 
         String uuid = UUID.randomUUID().toString();
         serverResponse.getData().forEach(server -> {
-            HokageTaskResultDO taskResultDO = this.preExecuteCommand(taskDO, triggerType, server.getId(), uuid);
+            HokageTaskResultDO taskResultDO = this.preExecuteCommand(taskDO, triggerType, server, uuid);
             threadPoolWorker.getExecutorPool().execute(() -> this.executeCommand(server, taskResultDO, taskDO.getExecCommand()));
         });
+    }
+
+    @Override
+    public ServiceResponse<TaskInfoVO> querySingleTaskDetail(Long taskResultId) {
+
+        ServiceResponse<TaskInfoVO> response = new ServiceResponse<>();
+
+        HokageTaskResultDO taskResultDO = taskResultDao.findById(taskResultId);
+        if (Objects.isNull(taskResultDO)) {
+            throw new RuntimeException("task result is not exit, task result id: " + taskResultId);
+        }
+        HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(taskResultDO.getTaskId());
+
+        if (Objects.isNull(taskDO)) {
+            throw new RuntimeException("task is not exit, task id: " + taskResultDO.getTaskId());
+        }
+
+        HokageFixedDateTaskVO taskVO = new HokageFixedDateTaskVO();
+        BeanUtils.copyProperties(taskDO, taskVO);
+        taskVO.setExecTime(TimeUtil.format(taskDO.getExecTime(), TimeUtil.DISPLAY_FORMAT));
+
+        TaskResultDetailVO detailVO = detailConverter.doForward(taskResultDO);
+
+        TaskInfoVO infoVO = new TaskInfoVO();
+        infoVO.setCommandVO(taskVO);
+        infoVO.setTaskResultDetailVO(detailVO);
+
+        return response.success(infoVO);
     }
 
     private TaskResultVO taskResultList2VO(List<HokageTaskResultDO> taskResultDOList) {
@@ -201,7 +231,6 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
         resultVO.setTaskId(resultDO.getTaskId());
         resultVO.setTriggerType(resultDO.getTriggerType());
         resultVO.setBatchId(resultDO.getBatchId());
-        resultVO.setExitCode(resultDO.getExitCode());
 
         HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(resultDO.getTaskId());
         if (Objects.isNull(taskDO)) {
@@ -216,14 +245,14 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
         if (endTime < Long.MAX_VALUE) {
             resultVO.setEndTime(TimeUtil.format(endTime, TimeUtil.DISPLAY_FORMAT));
             resultVO.setCost(endTime - startTime);
-            resultVO.setTaskStatus(TaskResultStatusEnum.finished.getStatus());
+            boolean isAllSucceed = taskResultDOList.stream().allMatch(taskResultDO -> TaskResultStatusEnum.finished.getStatus().equals(taskResultDO.getTaskStatus()));
+            if (isAllSucceed) {
+                resultVO.setTaskStatus(TaskResultStatusEnum.finished.getStatus());
+            } else {
+                resultVO.setTaskStatus(TaskResultStatusEnum.failed.getStatus());
+            }
         } else {
             resultVO.setTaskStatus(TaskResultStatusEnum.running.getStatus());
-        }
-
-        boolean isAllSucceed = taskResultDOList.stream().allMatch(taskResultDO -> TaskResultStatusEnum.finished.getStatus().equals(taskResultDO.getTaskStatus()));
-        if (!isAllSucceed) {
-            resultVO.setTaskStatus(TaskResultStatusEnum.failed.getStatus());
         }
 
         List<TaskResultDetailVO> list = taskResultDao.listByBatchId(resultDO.getBatchId())
@@ -236,13 +265,13 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
         return resultVO;
     }
 
-    private HokageTaskResultDO preExecuteCommand(HokageFixedDateTaskDO taskDO, TriggerTypeEnum triggerType, Long serverId, String batchId) {
+    private HokageTaskResultDO preExecuteCommand(HokageFixedDateTaskDO taskDO, TriggerTypeEnum triggerType, HokageServerDO serverDO, String batchId) {
         HokageTaskResultDO resultDO = new HokageTaskResultDO();
         long start = System.currentTimeMillis();
         resultDO.setStartTime(start).setTaskId(taskDO.getId())
                 .setTaskStatus(TaskResultStatusEnum.running.getStatus())
                 .setTriggerType(triggerType.getStatus())
-                .setExecServer(serverId)
+                .setExecServer(serverDO.getAccount() + "@" + serverDO.getIp())
                 .setUserId(taskDO.getUserId())
                 .setStatus(taskDO.getStatus())
                 .setBatchId(batchId);

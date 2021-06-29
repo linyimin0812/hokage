@@ -1,6 +1,7 @@
 package com.hokage.biz.service;
 
 import com.hokage.biz.enums.bat.TriggerTypeEnum;
+import com.hokage.biz.response.bat.TaskInfoVO;
 import com.hokage.biz.response.bat.TaskResultDetailVO;
 import com.hokage.biz.response.bat.TaskResultVO;
 import com.hokage.common.ServiceResponse;
@@ -64,4 +65,11 @@ public interface HokageTaskResultService {
      * @param triggerType trigger type, see TriggerTypeEnum
      */
     void execute(HokageFixedDateTaskDO taskDO, TriggerTypeEnum triggerType);
+
+    /**
+     * query single task detail info
+     * @param taskResultId task result primary id
+     * @return task info vo
+     */
+    ServiceResponse<TaskInfoVO> querySingleTaskDetail(Long taskResultId);
 }
