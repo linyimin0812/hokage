@@ -21,13 +21,6 @@ export interface FormDataType {
   execCommand: string
 }
 
-interface EditBatCommandPropsType {
-  isVisible: boolean, // 显示弹窗
-  onChange: Function, // 关闭弹窗
-  isEdit: boolean, // 是否编辑
-  initValue: FormDataType
-}
-
 // 表单样式
 const formItemLayout = {
   labelCol: { xs: { span: 24 }, sm: { span: 4 } },
@@ -35,7 +28,7 @@ const formItemLayout = {
 }
 
 @observer
-export default class EditBatCommand extends React.Component<EditBatCommandPropsType> {
+export default class EditBatCommand extends React.Component {
 
   componentDidMount() {
     serverStore.fetchRecords()
@@ -45,11 +38,12 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
 
   onCancel = () => {
     this.formRef.current!.resetFields()
-    this.props.onChange(false)
+    store.isModalVisible = false
+    store.initCommandFomValue = {} as FormDataType
   }
 
   onFinish = (value: FormDataType) => {
-    const { id } = this.props.initValue
+    const { id } = store.initCommandFomValue
     const form: FixedDateTaskForm = {
       id: id ? id : 0,
       operatorId: getHokageUid(),
@@ -63,7 +57,8 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
     store.loading = true
     BatCommandAction.save(form).then(id => {
       message.info("保存成功")
-      this.props.onChange(false)
+      store.isModalVisible = false
+      store.searchTaskList()
     }).catch(e => message.error(e))
       .finally(() => store.loading = false)
   }
@@ -81,30 +76,29 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
   }
 
   render() {
-    const { isVisible, isEdit } = this.props
     return (
-      <Modal title="任务编辑" visible={isVisible} onCancel={this.onCancel} footer={null} width={800}>
+      <Modal title="任务编辑" visible={store.isModalVisible} onCancel={this.onCancel} footer={null} width={800}>
         <Spin spinning={store.loading}>
           <Form
             {...formItemLayout}
             onFinish={this.onFinish}
             ref={this.formRef}
-            initialValues={this.props.initValue}
+            initialValues={store.initCommandFomValue}
           >
             <Form.Item
               name="taskName"
               label="任务名称"
               rules={[{ required: true, message: "任务名称不能为空" }]}
             >
-              <Input style={{width: "50%"}} disabled={!isEdit} />
+              <Input style={{width: "50%"}} disabled={!store.isEdit} />
             </Form.Item>
             <Form.Item name="taskType" label="任务类型">
-              <Select style={{width: "50%"}} disabled={!isEdit} >
+              <Select style={{width: "50%"}} disabled={!store.isEdit} >
                 <Select.Option value={0}>shell</Select.Option>
               </Select>
             </Form.Item>
             <Form.Item name="execType" label="执行类型">
-              <Select style={{width: "50%"}} disabled={!isEdit} >
+              <Select style={{width: "50%"}} disabled={!store.isEdit} >
                 <Select.Option value={0}>定时</Select.Option>
                 <Select.Option value={1} disabled>周期</Select.Option>
               </Select>
@@ -114,6 +108,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
                 format="YYYY-MM-DD HH:mm"
                 disabledTime={this.disabledDateTime}
                 showTime={{hideDisabledOptions: true}}
+                disabled={!store.isEdit}
               />
             </Form.Item>
             {/*<Form.Item label={'服务器类型'} name="serverType" initialValue={[]} required>*/}
@@ -127,7 +122,7 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
               <Select
                 mode="multiple"
                 placeholder={"请选择服务器(支持多选)"}
-                disabled={!isEdit}
+                disabled={!store.isEdit}
               >
                 { this.renderServerOptions() }
               </Select>
@@ -137,11 +132,11 @@ export default class EditBatCommand extends React.Component<EditBatCommandPropsT
               <Editor
                 language="shell"
                 height="200px"
-                options={{readOnly: !isEdit}}
+                options={{readOnly: !store.isEdit}}
               />
             </Form.Item>
             {
-              isEdit ? (
+              store.isEdit ? (
                 <Form.Item style={{textAlign: "center"}} >
                   <Button type="primary" htmlType="submit">保存</Button>
                   <Divider type="vertical" />

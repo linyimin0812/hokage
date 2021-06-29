@@ -1,41 +1,24 @@
 import React from 'react'
 import { Button, Divider, message, Table } from 'antd'
-import EditBatCommand, { FormDataType } from './edit-bat-command'
+import EditBatCommand from './edit-bat-command'
 import { BatCommandOperateForm, BatCommandVO } from '../../axios/action/bat-command/bat-command-type'
 import { getHokageUid } from '../../libs'
 import { BatCommandAction } from '../../axios/action/bat-command/bat-command-action'
 import store from './store'
 import { observer } from 'mobx-react'
 import { Action } from '../../component/Action'
-import moment from 'moment'
 import { ClockCircleOutlined } from '@ant-design/icons'
 
-interface MyBatCommandStateType {
-    editCommandVisible: boolean,// 创建新的批量任务
-    initFormValue: FormDataType,
-    isEdit: boolean
-}
-
 @observer
-export default class MyBatCommand extends React.Component<any, MyBatCommandStateType> {
-
-  state = {
-    editCommandVisible: false,
-    initFormValue: {} as FormDataType,
-    isEdit: false,
-  }
+export default class MyBatCommand extends React.Component {
 
   componentDidMount() {
     store.searchTaskList()
   }
 
-  createBatCommand = () => {
-    this.setState({ editCommandVisible: true, isEdit: true })
-  }
-
   onBatCommandEditChange = (value: boolean) => {
-    this.setState({editCommandVisible: value, isEdit: value})
-    store.searchTaskList()
+    this.setState({ isEdit: value})
+    store.isModalVisible = value
   }
 
   renderExecServer = (recrod: BatCommandVO) => {
@@ -97,15 +80,6 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
   }
 
   renderAction = (record: BatCommandVO) => {
-    const initFormValue: FormDataType = {
-      id: record.id,
-      taskName: record.taskName,
-      taskType: record.taskType,
-      execType: record.execType,
-      execTime: moment(record.execTime),
-      execServers: record.execServers,
-      execCommand: record.execCommand,
-    }
     const form: BatCommandOperateForm = {
       operatorId: getHokageUid(),
       taskId: record.id
@@ -114,7 +88,9 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
       <Action>
         <Action.Button
           title={<span>查看</span>}
-          action={() => {this.setState({editCommandVisible: true, isEdit: false, initFormValue: initFormValue})}}
+          action={() => {
+            store.editTask(record.id!, false)
+          }}
         />
         <Action.Confirm
           title={<span>运行</span>}
@@ -128,7 +104,9 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
         />
         <Action.Button
           title={<span>修改</span>}
-          action={() => {this.setState({editCommandVisible: true, isEdit: true, initFormValue: initFormValue})}}
+          action={() => {
+            store.editTask(record.id!, true)
+          }}
         />
         <Action.Confirm
           title={<span>删除</span>}
@@ -166,12 +144,11 @@ export default class MyBatCommand extends React.Component<any, MyBatCommandState
   }
 
   render() {
-    const { editCommandVisible, isEdit, initFormValue } = this.state
     return (
       <div>
-        <Button type="primary" onClick={this.createBatCommand}>创建批量任务</Button>
+        <Button type="primary" onClick={() => store.createTask()}>创建批量任务</Button>
         <Divider style={{margin: "8px 0px"}} />
-        <EditBatCommand isVisible={editCommandVisible} isEdit={isEdit} onChange={this.onBatCommandEditChange} initValue={initFormValue} />
+        <EditBatCommand />
         <Table dataSource={store.records} loading={store.loading}>
           <Table.Column title="id" dataIndex="id" />
           <Table.Column title="任务名称" dataIndex="taskName" />

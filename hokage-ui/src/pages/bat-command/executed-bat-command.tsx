@@ -54,7 +54,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
   }
 
   viewTask = (id: number) => {
-    store.searchTask(id)
+    store.editTask(id, false)
     this.setState({ isModalVisible: true })
   }
 
@@ -83,7 +83,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
   // TODO: 根据任务id获取任务的执行信息
 
   render() {
-    const { isModalVisible, isDrawerVisible } = this.state
+    const { isDrawerVisible } = this.state
     return (
       <div>
         {/*可扩展表,子表显示机器, 可参考阿里云远程命令的格式*/}
@@ -98,7 +98,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
           <Table.Column title="ExitCode" dataIndex="exitCode" />
           <Table.Column title="操作" dataIndex="id" render={this.renderAction} />
         </Table>
-        <EditBatCommand initValue={store.initCommandFomValue} isEdit={false} isVisible={isModalVisible} onChange={(value: boolean) => {this.setState({isModalVisible: value})}} />
+        <EditBatCommand />
         <ExecutedBatCommandInfo isVisible={isDrawerVisible} onCloseDrawer={(value: boolean) => {this.setState({isDrawerVisible: value})}} />
       </div>
     );

@@ -17,6 +17,9 @@ class Store {
 
   @observable initCommandFomValue: FormDataType = {} as FormDataType
 
+  @observable isModalVisible: boolean = false
+  @observable isEdit: boolean = false
+
   searchTaskList = () => {
     this.loading = true
     const form: BatCommandOperateForm = {
@@ -37,7 +40,7 @@ class Store {
     }).catch(e => message.error(e)).finally(() => this.loading = false)
   }
 
-  searchTask = (taskId: number) => {
+  editTask = (taskId: number, isEdit: boolean) => {
     this.loading = true
     const form: BatCommandOperateForm = {
       operatorId: getHokageUid(),
@@ -47,19 +50,29 @@ class Store {
       if (!list || list.length === 0) {
         return
       }
-      const commandVO = list[0]
-      this.initCommandFomValue = {
-        id: commandVO.id,
-        taskName: commandVO.taskName,
-        taskType: commandVO.taskType,
-        execType: commandVO.execType,
-        execTime: moment(commandVO.execTime),
-        execServers: commandVO.execServers,
-        execCommand: commandVO.execCommand
-      }
+      this.assembleInitValue(list[0])
+      this.isEdit = isEdit
+      this.isModalVisible = true
     }).catch(e => message.error(e)).finally(() => this.loading = false)
   }
 
+  assembleInitValue = (commandVO: BatCommandVO) => {
+    this.initCommandFomValue = {
+      id: commandVO.id,
+      taskName: commandVO.taskName,
+      taskType: commandVO.taskType,
+      execType: commandVO.execType,
+      execTime: moment(commandVO.execTime),
+      execServers: commandVO.execServers,
+      execCommand: commandVO.execCommand
+    }
+  }
+
+  createTask = () => {
+    this.initCommandFomValue = {} as FormDataType
+    this.isEdit = true
+    this.isModalVisible = true
+  }
 }
 
 export default new Store()
