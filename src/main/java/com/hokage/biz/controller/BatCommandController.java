@@ -15,10 +15,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,6 +51,12 @@ public class BatCommandController extends BaseController {
     public ResultVO<Long> save(@RequestBody HokageFixedDateTaskForm form) {
         HokageFixedDateTaskDO taskDO = fixedDateTaskConverter.doForward(form);
         ServiceResponse<Long> response = fixedDateTaskService.upsert(taskDO);
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/bat/view", method = RequestMethod.GET)
+    public ResultVO<HokageFixedDateTaskVO> viewTask(@RequestParam Long id) {
+        ServiceResponse<HokageFixedDateTaskVO> response = fixedDateTaskService.findById(id);
         return response(response);
     }
 

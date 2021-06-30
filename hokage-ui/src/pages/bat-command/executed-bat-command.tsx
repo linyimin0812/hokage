@@ -1,20 +1,20 @@
 import React from 'react'
-import { message, Table, Tag } from 'antd';
+import { message, Table, Tag } from 'antd'
 import EditBatCommand from './edit-bat-command'
 import ExecutedBatCommandInfo from './executed-bat-command-info'
 import store from './store'
 import { observer } from 'mobx-react'
 import {
-  BatCommandOperateForm,
+  BatCommandOperateForm, BatCommandVO,
   TaskInfoVO,
   TaskResultDetailVO,
   TaskResultVO,
 } from '../../axios/action/bat-command/bat-command-type'
 import { getHokageUid, status2Color } from '../../libs'
 import { BatCommandAction } from '../../axios/action/bat-command/bat-command-action'
+import moment from 'moment'
 
 interface ExecutedBatCommandStateType {
-  isModalVisible: boolean, // 弹窗显示任务信息
   isDrawerVisible: boolean, // 单机任务详细信息
   data: TaskInfoVO
 }
@@ -23,7 +23,6 @@ interface ExecutedBatCommandStateType {
 export default class ExecutedBatCommand extends React.Component<any, ExecutedBatCommandStateType> {
 
   state = {
-    isModalVisible: false,
     isDrawerVisible: false,
     data: {} as TaskInfoVO
   }
@@ -47,17 +46,25 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
   }
 
   renderAction = (_: string, record: TaskResultVO) => {
-    return <span onClick={() => { this.viewTask(record.taskId) }} style={{color:"#5072D1", cursor: "pointer"}}>查看任务详情</span>
+    return <span onClick={() => { store.editTask(record.taskId, false) }} style={{color:"#5072D1", cursor: "pointer"}}>查看任务详情</span>
   }
 
   renderNestedTableAction = (record: TaskResultDetailVO) => {
     return <span onClick={() => { this.viewDetailTask(record.id) }} style={{color:"#5072D1", cursor: "pointer"}}>查看任务详情</span>
   }
 
-  viewTask = (id: number) => {
-    store.editTask(id, false)
-    this.setState({ isModalVisible: true })
+  assembleFormValue = (record: BatCommandVO) => {
+    return {
+      id: record.id,
+      taskName: record.taskName,
+      taskType: record.taskType,
+      execType: record.execType,
+      execTime: moment(record.execTime),
+      execServers: record.execServers,
+      execCommand: record.execCommand
+    }
   }
+
 
   viewDetailTask = (id: number) => {
     store.loading = true

@@ -7,6 +7,12 @@ import { BatCommandAction } from '../../axios/action/bat-command/bat-command-act
 import { message } from 'antd'
 import moment from 'moment'
 
+interface FormType {
+  initCommandFomValue: FormDataType
+  isModalVisible: boolean
+  isEdit: boolean
+}
+
 class Store {
   @observable loading: boolean = false
   @observable records: BatCommandVO[] = []
@@ -15,10 +21,11 @@ class Store {
 
   @observable taskResultRecords: TaskResultVO[] = []
 
-  @observable initCommandFomValue: FormDataType = {} as FormDataType
-
-  @observable isModalVisible: boolean = false
-  @observable isEdit: boolean = false
+  @observable form: FormType = {
+    initCommandFomValue: {} as FormDataType,
+    isModalVisible: false,
+    isEdit: false
+  }
 
   searchTaskList = () => {
     this.loading = true
@@ -42,22 +49,22 @@ class Store {
 
   editTask = (taskId: number, isEdit: boolean) => {
     this.loading = true
-    const form: BatCommandOperateForm = {
-      operatorId: getHokageUid(),
-      taskId: taskId
-    }
-    BatCommandAction.search(form).then(list => {
-      if (!list || list.length === 0) {
-        return
+    BatCommandAction.viewTask({id: taskId}).then(commandVO => {
+      if (commandVO) {
+        this.form = {
+          initCommandFomValue: this.assembleInitValue(commandVO),
+          isModalVisible: true,
+          isEdit: isEdit
+        }
+      } else {
+        message.error('获取任务信息失败')
       }
-      this.assembleInitValue(list[0])
-      this.isEdit = isEdit
-      this.isModalVisible = true
-    }).catch(e => message.error(e)).finally(() => this.loading = false)
+    }).catch(e => message.error(e))
+      .finally(() => this.loading = false)
   }
 
   assembleInitValue = (commandVO: BatCommandVO) => {
-    this.initCommandFomValue = {
+    return {
       id: commandVO.id,
       taskName: commandVO.taskName,
       taskType: commandVO.taskType,
@@ -69,9 +76,11 @@ class Store {
   }
 
   createTask = () => {
-    this.initCommandFomValue = {} as FormDataType
-    this.isEdit = true
-    this.isModalVisible = true
+    this.form = {
+      initCommandFomValue: {} as FormDataType,
+      isModalVisible: true,
+      isEdit: true
+    }
   }
 }
 

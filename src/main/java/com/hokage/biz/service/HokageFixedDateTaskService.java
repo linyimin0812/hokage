@@ -25,7 +25,7 @@ public interface HokageFixedDateTaskService {
      * @param id task primary id
      * @return task which id meet the criteria
      */
-    ServiceResponse<HokageFixedDateTaskDO> findById(Long id);
+    ServiceResponse<HokageFixedDateTaskVO> findById(Long id);
 
     /**
      * find task list by task name

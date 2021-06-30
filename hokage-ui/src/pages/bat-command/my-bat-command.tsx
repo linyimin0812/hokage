@@ -8,6 +8,7 @@ import store from './store'
 import { observer } from 'mobx-react'
 import { Action } from '../../component/Action'
 import { ClockCircleOutlined } from '@ant-design/icons'
+import moment from 'moment';
 
 @observer
 export default class MyBatCommand extends React.Component {
@@ -17,8 +18,7 @@ export default class MyBatCommand extends React.Component {
   }
 
   onBatCommandEditChange = (value: boolean) => {
-    this.setState({ isEdit: value})
-    store.isModalVisible = value
+    store.form.isModalVisible = value
   }
 
   renderExecServer = (recrod: BatCommandVO) => {
@@ -88,9 +88,7 @@ export default class MyBatCommand extends React.Component {
       <Action>
         <Action.Button
           title={<span>查看</span>}
-          action={() => {
-            store.editTask(record.id!, false)
-          }}
+          action={() => store.editTask(record.id!, false)}
         />
         <Action.Confirm
           title={<span>运行</span>}
@@ -104,9 +102,7 @@ export default class MyBatCommand extends React.Component {
         />
         <Action.Button
           title={<span>修改</span>}
-          action={() => {
-            store.editTask(record.id!, true)
-          }}
+          action={() => store.editTask(record.id!, true)}
         />
         <Action.Confirm
           title={<span>删除</span>}
@@ -115,6 +111,18 @@ export default class MyBatCommand extends React.Component {
         />
       </Action>
     )
+  }
+
+  assembleFormValue = (record: BatCommandVO) => {
+    return {
+      id: record.id,
+      taskName: record.taskName,
+      taskType: record.taskType,
+      execType: record.execType,
+      execTime: moment(record.execTime),
+      execServers: record.execServers,
+      execCommand: record.execCommand
+    }
   }
 
   renderTaskType = (taskType: number) => {

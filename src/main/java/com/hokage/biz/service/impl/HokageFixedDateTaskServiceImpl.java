@@ -64,9 +64,10 @@ public class HokageFixedDateTaskServiceImpl implements HokageFixedDateTaskServic
     }
 
     @Override
-    public ServiceResponse<HokageFixedDateTaskDO> findById(Long id) {
-        ServiceResponse<HokageFixedDateTaskDO> response = new ServiceResponse<>();
-        return response.success(fixedDateTaskDao.findById(id));
+    public ServiceResponse<HokageFixedDateTaskVO> findById(Long id) {
+        ServiceResponse<HokageFixedDateTaskVO> response = new ServiceResponse<>();
+        HokageFixedDateTaskDO taskDO = fixedDateTaskDao.findById(id);
+        return response.success(taskDO2VO(taskDO));
     }
 
     @Override
@@ -95,30 +96,32 @@ public class HokageFixedDateTaskServiceImpl implements HokageFixedDateTaskServic
         ServiceResponse<List<HokageFixedDateTaskVO>> response = new ServiceResponse<>();
         List<HokageFixedDateTaskDO> taskDOList = fixedDateTaskDao.listByUserId(userId);
 
-        List<HokageFixedDateTaskVO> taskVOList = taskDOList.stream().map(taskDO -> {
-            HokageFixedDateTaskVO taskVO = new HokageFixedDateTaskVO();
-            BeanUtils.copyProperties(taskDO, taskVO);
-
-            List<Long> serverIds = Arrays.stream(StringUtils.split(taskDO.getExecServers(), ",")).map(Long::parseLong).collect(Collectors.toList());
-            ServiceResponse<List<HokageServerDO>> listServiceResponse = serverService.selectByIds(serverIds);
-
-            List<Long> serverIdList = new ArrayList<>();
-            List<String> serverIpList = new ArrayList<>();
-            listServiceResponse.getData().forEach(serverDO -> {
-                serverIdList.add(serverDO.getId());
-                serverIpList.add(serverDO.getIp());
-            });
-            taskVO.setExecServers(serverIdList);
-            taskVO.setExecServerList(serverIpList);
-
-            taskVO.setExecType(0);
-
-            taskVO.setExecTime(TimeUtil.format(taskDO.getExecTime(), TimeUtil.DISPLAY_FORMAT));
-
-            return taskVO;
-        }).collect(Collectors.toList());
+        List<HokageFixedDateTaskVO> taskVOList = taskDOList.stream().map(this::taskDO2VO).collect(Collectors.toList());
 
         return response.success(taskVOList);
+    }
+
+    private HokageFixedDateTaskVO taskDO2VO(HokageFixedDateTaskDO taskDO) {
+        HokageFixedDateTaskVO taskVO = new HokageFixedDateTaskVO();
+        BeanUtils.copyProperties(taskDO, taskVO);
+
+        List<Long> serverIds = Arrays.stream(StringUtils.split(taskDO.getExecServers(), ",")).map(Long::parseLong).collect(Collectors.toList());
+        ServiceResponse<List<HokageServerDO>> listServiceResponse = serverService.selectByIds(serverIds);
+
+        List<Long> serverIdList = new ArrayList<>();
+        List<String> serverIpList = new ArrayList<>();
+        listServiceResponse.getData().forEach(serverDO -> {
+            serverIdList.add(serverDO.getId());
+            serverIpList.add(serverDO.getIp());
+        });
+        taskVO.setExecServers(serverIdList);
+        taskVO.setExecServerList(serverIpList);
+
+        taskVO.setExecType(0);
+
+        taskVO.setExecTime(TimeUtil.format(taskDO.getExecTime(), TimeUtil.DISPLAY_FORMAT));
+
+        return taskVO;
     }
 
     @Override

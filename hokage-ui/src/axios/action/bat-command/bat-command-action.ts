@@ -107,4 +107,17 @@ export const BatCommandAction ={
       }
     })
   },
+  viewTask: (param: {id: number}): Promise<BatCommandVO> => {
+    return new Promise<BatCommandVO>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<BatCommandVO> = await BatCommandService.viewTask(param)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data!)
+      } catch (err) {
+        reject('获取批量任务列表失败')
+      }
+    })
+  },
 }
