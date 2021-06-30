@@ -1,10 +1,10 @@
 import React, { ReactText } from 'react'
-import { Table } from 'antd'
-import ApplyAndSearchServer from '../common/apply-and-search-server'
+import { Button, Col, Row, Table } from 'antd';
 import { ServerVO } from '../../axios/action/server/server-type'
 import { Action } from '../../component/Action'
 import { observer } from 'mobx-react'
 import store from './store'
+import { InfoCircleOutlined, MinusOutlined } from '@ant-design/icons'
 
 type SshInfoProps = {
   addSshTerm: (record: ServerVO) => void
@@ -42,6 +42,26 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
     </Action>
   }
 
+  renderSelection = () => {
+    if (!store.selectedRowKeys || store.selectedRowKeys.length === 0) {
+      return null
+    }
+    return (
+      <Row gutter={24} style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', padding: '4px 0px' }}>
+        <Col span={8} style={{ display: 'flex', alignItems: 'center' }}>
+          <span>
+            <InfoCircleOutlined translate="true" style={{ color: '#1890ff' }} />已选择{<span style={{ color: 'blue' }}>{store.selectedRowKeys.length}</span>}项
+          </span>
+        </Col>
+        <Col span={16}>
+          <span style={{ float: 'right' }}>
+            <Button icon={<MinusOutlined translate="true" />} onClick={() => alert('批量登录')}>批量登录</Button>
+          </span>
+        </Col>
+      </Row>
+    )
+  }
+
   render() {
     const rowSelection = {
       selectedRowKeys: store.selectedRowKeys,
@@ -50,11 +70,12 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
     return (
       <>
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <ApplyAndSearchServer selectionKeys={store.selectedRowKeys} />
+          {this.renderSelection()}
           <Table
             dataSource={store.records}
             rowSelection={rowSelection}
             loading={store.isFetching}
+            pagination={false}
           >
             <Table.Column title={'ip'} dataIndex={'ip'} />
             <Table.Column title={'账号'} dataIndex={'account'} />

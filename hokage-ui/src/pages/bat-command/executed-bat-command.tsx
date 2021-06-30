@@ -106,7 +106,7 @@ export default class ExecutedBatCommand extends React.Component<any, ExecutedBat
     return (
       <div>
         {/*可扩展表,子表显示机器, 可参考阿里云远程命令的格式*/}
-        <Table dataSource={store.taskResultRecords} expandedRowRender={this.expandedRowRender} rowKey={'batchId'} loading={store.loading}>
+        <Table dataSource={store.taskResultRecords} expandedRowRender={this.expandedRowRender} rowKey={'batchId'} loading={store.loading} pagination={false}>
           <Table.Column title="任务ID" dataIndex="taskId" />
           <Table.Column title="任务名称" dataIndex="taskName" />
           <Table.Column title="执行状态" dataIndex="taskStatus" render={this.renderTaskStatus} />

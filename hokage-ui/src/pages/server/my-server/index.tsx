@@ -2,7 +2,6 @@ import React from 'react'
 import BreadCrumb, { BreadcrumbProps } from '../../../layout/bread-crumb'
 import { MyServerSearch } from './search'
 import { ServerSearchForm } from '../../../axios/action/server/server-type'
-import Toolbar from './toolbar';
 import MyServerTable from './table'
 import { observer } from 'mobx-react'
 import store from './store'
@@ -26,7 +25,6 @@ export default class MyServer extends React.Component {
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <MyServerSearch onFinish={this.onFinish} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <Toolbar />
           <MyServerTable />
         </div>
       </>

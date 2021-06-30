@@ -76,6 +76,7 @@ export default class OperatorTable extends React.Component {
         loading={store.isFetching}
         dataSource={store.records}
         expandedRowRender={this.expandedRowRender}
+        pagination={false}
       >
         <Table.Column title={'id'} dataIndex={'id'} />
         <Table.Column title={'姓名'} dataIndex={'username'} />

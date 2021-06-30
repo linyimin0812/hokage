@@ -2,7 +2,6 @@ import React from 'react'
 import { message, Row, Col, Spin } from 'antd'
 import ServerCard from './server-card'
 import ApplyServerPrompt from './apply-server-prompt'
-import ApplyAndSearchServer from './apply-and-search-server'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { searchServer } from '../server/util'
 
@@ -88,7 +87,6 @@ export default class ServerCardPanel extends React.Component<FileServerProps, Fi
     }
     return (
       <div style={{ backgroundColor: '#FFFFFF' }}>
-        <ApplyAndSearchServer />
         <Row gutter={24} style={{ margin: '5px 0px' }}>
           {this.renderServerCards(dataSource)}
         </Row>

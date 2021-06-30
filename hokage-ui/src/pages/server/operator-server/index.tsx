@@ -4,7 +4,6 @@ import { MyOperatorServerSearch } from './search'
 import { ServerSearchForm } from '../../../axios/action/server/server-type'
 import OperatorServerTable from './table'
 import store from './store'
-import Toolbar from './toolbar'
 import { observer } from 'mobx-react'
 
 const breadcrumbProps: BreadcrumbProps[] = [
@@ -26,7 +25,6 @@ export default class OperatorServer extends React.Component {
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <MyOperatorServerSearch onFinish={this.onFinish} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <Toolbar />
           <OperatorServerTable />
         </div>
       </div>

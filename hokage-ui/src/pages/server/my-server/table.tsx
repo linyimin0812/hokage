@@ -37,6 +37,7 @@ export default class MyServerTable extends React.Component {
         rowKey={'id'}
         loading={store.isFetching}
         dataSource={store.records}
+        pagination={false}
       >
         <Table.Column title={'主机名'} dataIndex={'hostname'} />
         <Table.Column title={'域名'} dataIndex={'domain'} />

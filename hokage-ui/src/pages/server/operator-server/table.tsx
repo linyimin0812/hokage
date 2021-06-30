@@ -60,6 +60,7 @@ export default class OperatorServerTable extends React.Component {
         loading={store.isFetching}
         dataSource={store.records}
         expandedRowRender={this.expandedRowRender}
+        pagination={false}
       >
         <Table.Column title={'主机名'} dataIndex={'hostname'} />
         <Table.Column title={'域名'} dataIndex={'domain'} />

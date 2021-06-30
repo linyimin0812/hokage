@@ -157,7 +157,7 @@ export default class MyBatCommand extends React.Component {
         <Button type="primary" onClick={() => store.createTask()}>创建批量任务</Button>
         <Divider style={{margin: "8px 0px"}} />
         <EditBatCommand />
-        <Table dataSource={store.records} loading={store.loading}>
+        <Table dataSource={store.records} loading={store.loading} pagination={false}>
           <Table.Column title="id" dataIndex="id" />
           <Table.Column title="任务名称" dataIndex="taskName" />
           <Table.Column title="任务类型" dataIndex="taskType" render={this.renderTaskType} />

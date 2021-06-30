@@ -76,6 +76,7 @@ export default class OrdinaryTable extends React.Component {
         dataSource={store.records}
         expandedRowRender={this.expandedRowRender}
         rowSelection={this.configRowSelection()}
+        pagination={false}
       >
         <Table.Column title={'id'} dataIndex={'id'} />
         <Table.Column title={'姓名'} dataIndex={'username'} />
