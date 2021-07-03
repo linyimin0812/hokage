@@ -33,13 +33,21 @@ general_info() {
 interface_ip() {
 
   local text
+  local files=(/sys/class/net/*)
+  local pos=$(( ${#files[*]} - 1 ))
+	local last=${files[$pos]}
+
   text="["
 
-  for item in $(ifconfig | grep -oP "^[a-zA-Z0-9:]*(?=:)")
+  for item in "${files[@]}"
   do
-      text=$text"{\"interfaceName\" : \"$item\", \"ip\" : \"$( ifconfig "$item" | grep "inet " | awk '{print $2}')\"},"
+      interface=$(basename "$item")
+      text=$text"{\"interfaceName\" : \"$interface\", \"ip\" : \"$( ifconfig "$interface" | grep "inet " | awk '{print $2}')\"}"
+      if [[ ! $item == "$last" ]]
+      then
+        text="$text,"
+      fi
   done
-  text=$(echo "$text" | awk '{print substr($0, 0, length($0)-1)}')
   text=$text"]"
   echo "$text"
 }

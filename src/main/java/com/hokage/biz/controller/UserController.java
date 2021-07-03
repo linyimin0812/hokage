@@ -258,6 +258,4 @@ public class UserController extends BaseController {
         }
         return fail(response.getCode(), response.getMsg());
     }
-
-
 }
