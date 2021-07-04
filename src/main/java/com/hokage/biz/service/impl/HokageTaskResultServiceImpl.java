@@ -13,8 +13,8 @@ import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageTaskResultService;
 import com.hokage.common.ServiceResponse;
-import com.hokage.infra.worker.BatCommandScheduledPoolWorker;
 import com.hokage.infra.worker.BatCommandThreadPoolWorker;
+import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.persistence.dao.HokageFixedDateTaskDao;
 import com.hokage.persistence.dao.HokageTaskResultDao;
 import com.hokage.persistence.dataobject.HokageFixedDateTaskDO;
@@ -52,7 +52,7 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     private TaskResultDetailConverter detailConverter;
     private HokageFixedDateTaskDao fixedDateTaskDao;
     private BatCommandThreadPoolWorker threadPoolWorker;
-    private BatCommandScheduledPoolWorker scheduledPoolWorker;
+    private ScheduledThreadPoolWorker scheduledPoolWorker;
     private HokageServerService serverService;
     private SshExecComponent execComponent;
 
@@ -82,7 +82,7 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
     }
 
     @Autowired
-    public void setScheduledPoolWorker(BatCommandScheduledPoolWorker scheduledPoolWorker) {
+    public void setScheduledPoolWorker(ScheduledThreadPoolWorker scheduledPoolWorker) {
         this.scheduledPoolWorker = scheduledPoolWorker;
     }
 

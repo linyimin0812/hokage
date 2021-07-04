@@ -16,8 +16,8 @@ import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
 import com.hokage.common.ServiceResponse;
-import com.hokage.infra.worker.MetricScheduledThreadPoolWorker;
 import com.hokage.infra.worker.MetricThreadPoolWorker;
+import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerMetricDao;
 import com.hokage.persistence.dataobject.HokageServerMetricDO;
 import com.hokage.ssh.SshClient;
@@ -54,7 +54,7 @@ public class HokageMonitorService extends AbstractCommandService {
     private SshExecComponent execComponent;
     private HokageServerMetricDao metricDao;
 
-    private MetricScheduledThreadPoolWorker scheduledPoolWorker;
+    private ScheduledThreadPoolWorker scheduledPoolWorker;
     private MetricThreadPoolWorker metricPoolWorker;
 
     @Autowired
@@ -73,7 +73,7 @@ public class HokageMonitorService extends AbstractCommandService {
     }
 
     @Autowired
-    public void setScheduledPoolWorker(MetricScheduledThreadPoolWorker scheduledPoolWorker) {
+    public void setScheduledPoolWorker(ScheduledThreadPoolWorker scheduledPoolWorker) {
         this.scheduledPoolWorker = scheduledPoolWorker;
     }
 
