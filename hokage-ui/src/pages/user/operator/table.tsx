@@ -3,12 +3,13 @@ import { observer } from 'mobx-react'
 import { message, Table, Tag } from 'antd';
 import store from './store'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { randomColor } from '../../../libs'
+import { getHokageRole, randomColor } from '../../../libs';
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../../server/common/select-server'
-import { ServerVO } from '../../../axios/action/server/server-type'
+import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
 import { UserAction } from '../../../axios/action';
+import { ServerAction } from '../../../axios/action/server/server-action';
 
 @observer
 export default class OperatorTable extends React.Component {
@@ -17,9 +18,8 @@ export default class OperatorTable extends React.Component {
     store.fetchRecords()
   }
 
-  expandedRowRender = (record: UserVO) => {
-    const nestedRecords = record.serverVOList || []
-    return <Table rowKey={'id'} dataSource={nestedRecords} pagination={false}>
+  expandedRowRender = () => {
+    return <Table rowKey={'id'} dataSource={store.nestedRecords} pagination={false}>
       <Table.Column title={'id'} dataIndex={'id'} />
       <Table.Column title={'主机名'} dataIndex={'hostname'} />
       <Table.Column title={'域名'} dataIndex={'domain'} />
@@ -41,6 +41,9 @@ export default class OperatorTable extends React.Component {
   }
 
   serverStatusRender = (status: string) => {
+    if (!status) {
+      return <span>-</span>
+    }
     return <Tag color = {randomColor(status)}> { status } </Tag>
   }
 
@@ -89,6 +92,20 @@ export default class OperatorTable extends React.Component {
       .finally(() => store.isFetching = false)
   }
 
+  onExpend = (expanded: boolean, record: UserVO) => {
+    if (expanded) {
+      store.isFetching = true
+      const form: ServerSearchForm = {
+        operatorId: record.id,
+        role: getHokageRole()
+      }
+      ServerAction.searchServer(form).then(value => {
+        store.nestedRecords = value || []
+      }).catch(e => message.error(e))
+        .finally(() => store.isFetching = false)
+    }
+  }
+
   render() {
     return (
       <Table
@@ -96,6 +113,7 @@ export default class OperatorTable extends React.Component {
         loading={store.isFetching}
         dataSource={store.records}
         expandedRowRender={this.expandedRowRender}
+        onExpand={this.onExpend}
         pagination={false}
       >
         <Table.Column title={'id'} dataIndex={'id'} />

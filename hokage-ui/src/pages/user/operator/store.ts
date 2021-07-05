@@ -1,5 +1,5 @@
 import { observable } from 'mobx'
-import { Option } from '../../../axios/action/server/server-type'
+import { Option, ServerVO } from '../../../axios/action/server/server-type';
 import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { UserSearchFormType } from '../common/search'
@@ -12,6 +12,8 @@ export class Store {
   @observable isFetching: boolean = false
 
   @observable records: UserVO[] = []
+
+  @observable nestedRecords: ServerVO[] = []
 
   /**
    * 获取普通用户列表
