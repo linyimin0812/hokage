@@ -1,19 +1,22 @@
 import { observable } from 'mobx'
-import { Option, ServerVO } from '../../../axios/action/server/server-type';
+import { Option, ServerVO } from '../../../axios/action/server/server-type'
 import { UserAction } from '../../../axios/action'
 import { UserVO } from '../../../axios/action/user/user-type'
 import { UserSearchFormType } from '../common/search'
+import { getHokageUid } from '../../../libs'
 
 export class Store {
-  @observable isModalVisible: boolean = false
 
-  // add operator
-  @observable userOptions: Option[] = []
   @observable isFetching: boolean = false
 
   @observable records: UserVO[] = []
 
   @observable nestedRecords: ServerVO[] = []
+
+  @observable isModalVisible: boolean = false
+
+  // add operator
+  @observable userOptions: Option[] = []
 
   /**
    * 获取普通用户列表
@@ -24,6 +27,7 @@ export class Store {
       this.userOptions = userVOList.map(userVO => {
         return { label: `${userVO.username}(${userVO.email})`, value: userVO.id }
       })
+      this.isModalVisible = true
     }).finally(() => this.isFetching = false)
   }
 
@@ -33,7 +37,10 @@ export class Store {
    */
   fetchRecords = (value?: UserSearchFormType) => {
     this.isFetching = true
-    UserAction.supervisorSearch(value ? value : {}).then(supervisorList => {
+    if (!value) {
+      value = { operatorId: getHokageUid() }
+    }
+    UserAction.supervisorSearch(value).then(supervisorList => {
       supervisorList = (supervisorList || []).map(userVO => {
         userVO.key = userVO.id + ''
         return userVO

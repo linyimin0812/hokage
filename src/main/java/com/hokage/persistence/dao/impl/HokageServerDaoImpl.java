@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author linyimin
@@ -76,7 +77,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectBySupervisorId(Long supervisorId) {
-        return serverMapper.selectBySupervisorId(supervisorId);
+        return Optional.ofNullable(serverMapper.selectBySupervisorId(supervisorId)).orElse(Collections.emptyList());
     }
 
     @Override

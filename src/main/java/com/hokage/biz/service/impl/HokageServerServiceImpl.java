@@ -482,4 +482,29 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         return response.success(result);
     }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> listSupervisorGrantServer(Long supervisorId) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageServerDO> serverDOList = hokageServerDao.selectBySupervisorId(supervisorId);
+        List<HokageServerVO> serverVOList = serverDOList.stream()
+                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .collect(Collectors.toList());
+
+        return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> listNotGrantServer(Long supervisorId) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageServerDO> allServer = hokageServerDao.selectAll();
+        List<Long> grantServerIdList = hokageServerDao.selectBySupervisorId(supervisorId).stream().map(HokageServerDO::getId).collect(Collectors.toList());
+
+        List<HokageServerDO> notGrantServerList = allServer.stream().filter(serverDO -> !grantServerIdList.contains(serverDO.getId())).collect(Collectors.toList());
+        List<HokageServerVO> serverVOList = notGrantServerList.stream()
+                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .collect(Collectors.toList());
+
+        return response.success(serverVOList);
+    }
 }

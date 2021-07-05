@@ -68,5 +68,7 @@ public class ServerSearchForm extends PageQuery {
      */
     private Integer role;
 
+    private Long userId;
+
 }
 

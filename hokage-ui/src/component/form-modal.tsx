@@ -6,7 +6,9 @@ import { UserServerOperateForm } from '../axios/action/user/user-type'
 export interface FormModalProps {
   title: string,
   renderForm: (form: FormInstance) => React.ReactNode,
-  action: (formValue: UserServerOperateForm) => void
+  confirmAction: (formValue: UserServerOperateForm) => void,
+  cancelAction?: () => void,
+  onClickAction?: () => void
 }
 
 export const FormModal = (props: FormModalProps) => {
@@ -17,11 +19,18 @@ export const FormModal = (props: FormModalProps) => {
   const onClick = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     event.stopPropagation()
     setVisible(true)
+    if (props.onClickAction) {
+      props.onClickAction()
+    }
   }
 
   const onCancel = () => {
+    const { cancelAction } = props
     form.resetFields()
     setVisible(false)
+    if (cancelAction) {
+      cancelAction()
+    }
   }
   const onOk = (_: React.MouseEvent<HTMLElement>) => {
     setConfirmLoading(true)
@@ -29,7 +38,8 @@ export const FormModal = (props: FormModalProps) => {
       let formValue: UserServerOperateForm = {}
       try {
         formValue = await form.validateFields()
-        await props.action(formValue)
+        await props.confirmAction(formValue)
+        form.resetFields()
         setVisible(false)
       } finally {
         setConfirmLoading(false)

@@ -15,7 +15,7 @@ export class Toolbar extends React.Component {
   }
 
   add = () => {
-    store.isModalVisible = true
+    store.fetchUserOptions()
   }
 
   onModalOk = (value: any) => {

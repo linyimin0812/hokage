@@ -3,19 +3,24 @@ import { observer } from 'mobx-react'
 import { message, Table, Tag } from 'antd';
 import store from './store'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { getHokageRole, randomColor } from '../../../libs';
+import { getHokageUid, randomColor } from '../../../libs';
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
-import { SelectServer } from '../../server/common/select-server'
+import { SelectServer } from '../common/select-server'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
 import { UserAction } from '../../../axios/action';
 import { ServerAction } from '../../../axios/action/server/server-action';
+import { UserSearchFormType } from '../common/search';
+import serverSelectStore from '../store'
 
 @observer
 export default class OperatorTable extends React.Component {
 
   componentDidMount() {
-    store.fetchRecords()
+    const form: UserSearchFormType = {
+      operatorId: getHokageUid()
+    }
+    store.fetchRecords(form)
   }
 
   expandedRowRender = () => {
@@ -60,16 +65,20 @@ export default class OperatorTable extends React.Component {
     return <Action>
       <Action.Form
         title={'添加服务器'}
-        renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        action={(form: UserServerOperateForm) => {
+        renderForm={(form: FormInstance) => {
+          return <SelectServer form={form} />
+        }}
+        confirmAction={(form: UserServerOperateForm) => {
           form.userIds = [record.id]
           this.addServerToSupervisor(form)
         }}
+        onClickAction={() => { serverSelectStore.fetchNotGrantedServerList(record.id) }}
       />
       <Action.Form
         title={'回收服务器'}
         renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        action={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+        confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+        onClickAction={() => { serverSelectStore.fetchHasGrantedServerList(record.id) }}
       />
       <Action.Confirm
         title={'删除'}
@@ -97,7 +106,7 @@ export default class OperatorTable extends React.Component {
       store.isFetching = true
       const form: ServerSearchForm = {
         operatorId: record.id,
-        role: getHokageRole()
+        role: record.role
       }
       ServerAction.searchServer(form).then(value => {
         store.nestedRecords = value || []

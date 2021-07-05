@@ -2,6 +2,7 @@ package com.hokage.biz.form.user;
 
 import com.hokage.common.PageQuery;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @description supervisor information search form
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class UserServerSearchForm extends PageQuery {
     /**
      * operator id

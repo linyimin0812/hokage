@@ -186,4 +186,16 @@ public class ServerController extends BaseController {
         return fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ResultCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
 
     }
+
+    @RequestMapping(value = "/supervisor/grant/server/list", method = RequestMethod.GET)
+    public ResultVO<List<HokageServerVO>> listSupervisorGrantServer(@RequestParam("id") Long supervisorId) {
+        ServiceResponse<List<HokageServerVO>> response = serverService.listSupervisorGrantServer(supervisorId);
+        return response(response);
+    }
+
+    @RequestMapping(value = "/supervisor/not/grant/server/list", method = RequestMethod.GET)
+    public ResultVO<List<HokageServerVO>> listNotGrantServer(@RequestParam("id") Long supervisorId) {
+        ServiceResponse<List<HokageServerVO>> response = serverService.listNotGrantServer(supervisorId);
+        return response(response);
+    }
 }

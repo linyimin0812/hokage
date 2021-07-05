@@ -16,10 +16,6 @@ const breadcrumbProps: BreadcrumbProps[] = [
 @observer
 export default class Operator extends React.Component {
 
-  componentDidMount() {
-    store.fetchRecords()
-  }
-
   onFinish = (value: UserSearchFormType) => {
     store.fetchRecords(value)
   }

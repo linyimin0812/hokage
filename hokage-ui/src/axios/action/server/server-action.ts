@@ -77,6 +77,33 @@ export const ServerAction = {
         reject('搜索服务器信息失败: ' + JSON.stringify(e))
       }
     })
-  }
+  },
+  listSupervisorGrantServer: (supervisorId: number): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerVO[]> = await ServerService.listSupervisorGrantServer({id: supervisorId})
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('获取服务器信息失败: ' + JSON.stringify(e))
+      }
+    })
+  },
+
+  listNotGrantedServer: (supervisorId: number): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerVO[]> = await ServerService.listNotGrantedServer({id: supervisorId})
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('获取服务器信息失败: ' + JSON.stringify(e))
+      }
+    })
+  },
 
 }

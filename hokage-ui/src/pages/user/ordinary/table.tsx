@@ -6,7 +6,7 @@ import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-t
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
-import { SelectServer } from '../../server/common/select-server'
+import { SelectServer } from '../common/select-server'
 import { observer } from 'mobx-react'
 @observer
 export default class OrdinaryTable extends React.Component {
@@ -48,7 +48,7 @@ export default class OrdinaryTable extends React.Component {
       <Action.Form
         title={'添加服务器'}
         renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        action={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+        confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
       />
       <Action.Confirm
         title={'删除'}

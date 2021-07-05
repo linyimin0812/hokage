@@ -37,4 +37,6 @@ public class ServerQuery extends PageQuery {
      * server group
      */
     private String serverGroup;
+
+    private Long userId;
 }

@@ -205,7 +205,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         checkNotNull(id, "supervisor id can't be null");
         checkNotNull(id, "serverIds can't be null");
 
-        List<Long> exitedServerList = supervisorServerDao.listByServerIds(serverIds).stream()
+        List<Long> exitedServerList = supervisorServerDao.listBySupervisorIds(Collections.singletonList(id)).stream()
                 .map(HokageSupervisorServerDO::getServerId)
                 .collect(Collectors.toList());
 

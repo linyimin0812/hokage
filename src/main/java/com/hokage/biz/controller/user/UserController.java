@@ -1,4 +1,4 @@
-package com.hokage.biz.controller;
+package com.hokage.biz.controller.user;
 
 import com.alibaba.fastjson.JSON;
 import com.hokage.biz.Constant;
@@ -88,79 +88,6 @@ public class UserController extends BaseController {
         session.removeAttribute(form.getEmail());
 
         return success(true);
-    }
-
-    @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserServerSearchForm form) {
-
-        UserQuery query = searchConverter.doForward(form);
-        query.setRole(UserRoleEnum.supervisor.getValue());
-
-        ServiceResponse<List<HokageUserVO>> response = userService.search(query);
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-
-        return fail(response.getCode(), response.getMsg());
-    }
-
-    @RequestMapping(value = "/user/supervisor/add", method = RequestMethod.POST)
-    public ResultVO<Boolean> addSupervisors(@RequestBody UserServerOperateForm form) {
-
-        ServiceResponse<Boolean> response = userService.addSupervisor(form.getUserIds());
-
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-        return fail(response.getCode(), response.getMsg());
-    }
-
-
-    @RequestMapping(value = "/user/supervisor/delete", method = RequestMethod.POST)
-    public ResultVO<Boolean> delSupervisors(@RequestBody UserServerOperateForm form) {
-        ServiceResponse<Boolean> response = userService.deleteSupervisor(form.getUserIds());
-
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-        return fail(response.getCode(), response.getMsg());
-    }
-
-
-    // TODO: 查看管理员信息
-    @RequestMapping(value = "/user/supervisor/view", method = RequestMethod.POST)
-    public ResultVO<HokageUserVO> viewSupervisors(@RequestParam Long id) {
-        return success(new HokageUserVO());
-    }
-
-    @RequestMapping(value = "/user/supervisor/server/grant", method = RequestMethod.POST)
-    public ResultVO<Boolean> grantSupervisorServer(@RequestBody UserServerOperateForm form) {
-        List<Long> supervisorIds = form.getUserIds();
-        Preconditions.checkNotNull(supervisorIds);
-
-        ServiceResponse<Boolean> response = userService.grantSupervisor(supervisorIds.get(0), form.getServerIds());
-
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-        return fail(response.getCode(), response.getMsg());
-    }
-
-    @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
-    public ResultVO<Boolean> recycleSupervisorServer(@RequestBody UserServerOperateForm form) {
-        ServiceResponse<Boolean> response;
-        List<Long> supervisorIds = form.getServerIds();
-        Preconditions.checkNotNull(supervisorIds);
-        if (Objects.nonNull(form.getServerIds())) {
-            response = userService.recycleSupervisor(supervisorIds.get(0), form.getServerIds());
-        } else {
-            response = userService.recycleSupervisor(form.getUserIds().get(0));
-        }
-
-        if (response.getSucceeded()) {
-            return success(response.getData());
-        }
-        return fail(response.getCode(), response.getMsg());
     }
 
     @RequestMapping(value = "/user/subordinate/all", method = RequestMethod.GET)

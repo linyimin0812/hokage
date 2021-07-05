@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Select, Button } from 'antd'
+import React from 'react';
+import { Modal, Form, Select, Button } from 'antd';
 import { Option } from '../../../../axios/action/server/server-type'
 import { observer } from 'mobx-react'
 import store from '../store'
@@ -12,18 +12,11 @@ type AddOperatorPropTypes = {
 export default observer((props: AddOperatorPropTypes) => {
 
   const [form] = Form.useForm()
-  const { isModalVisible } = store
-
-  useEffect(() => {
-    if (store.isModalVisible) {
-      store.fetchUserOptions()
-    }
-  }, [isModalVisible])
 
   const onModalOk = (idList: number[]) => {
     props.onModalOk(idList)
     form.resetFields()
-    // TODO: 重新加载列表
+    store.fetchRecords()
   }
 
   const reset = () => {

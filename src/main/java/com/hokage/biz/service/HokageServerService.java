@@ -100,4 +100,18 @@ public interface HokageServerService {
      * @return
      */
     ServiceResponse<Boolean> applyServer(ServerOperateForm form);
+
+    /**
+     * list server which have grant to the supervisor
+     * @param supervisorId supervisor id
+     * @return server list which meet the criteria
+     */
+    ServiceResponse<List<HokageServerVO>> listSupervisorGrantServer(Long supervisorId);
+
+    /**
+     * list server which not grant to the supervisor
+     * @param supervisorId supervisor id
+     * @return server list which meet the criteria
+     */
+    ServiceResponse<List<HokageServerVO>> listNotGrantServer(Long supervisorId);
 }

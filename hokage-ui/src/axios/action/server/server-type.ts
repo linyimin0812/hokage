@@ -72,7 +72,8 @@ export interface ServerSearchForm extends ServerSearchBaseForm{
   status?: string,
   account?: string,
   accountStatus?: string,
-  username?: string
+  username?: string,
+  userId?: number
 }
 
 interface ServerSearchBaseForm {
