@@ -61,6 +61,7 @@ export default class AllServerTable extends React.Component {
         <Table.Column title={'主机名'} dataIndex={'hostname'} />
         <Table.Column title={'域名'} dataIndex={'domain'} />
         <Table.Column title={'IP地址'} dataIndex={'ip'} />
+        <Table.Column title={'port'} dataIndex={'sshPort'} />
         <Table.Column title={'分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
         <Table.Column title={'管理员'} dataIndex={'supervisorList'} render={this.serverOperatorRender} />
         <Table.Column title={'使用人数'} dataIndex={'userNum'} />
