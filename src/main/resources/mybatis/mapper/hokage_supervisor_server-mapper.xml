@@ -100,10 +100,15 @@
     <insert id="addBySupervisorId" >
         insert into
         <include refid="tableName"/>
+        (
+            gmt_create,
+            gmt_modified,
+            server_id,
+            supervisor_id
+        )
         VALUES
         <foreach collection="serverIds" item="serverId" index="index" separator=",">
             (
-                #{id},
                 now(),
                 now(),
                 #{serverId},

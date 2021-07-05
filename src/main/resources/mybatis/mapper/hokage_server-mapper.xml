@@ -221,7 +221,7 @@
         FROM <include refid="tableNme" />
         <where>
             id IN (
-                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{operateId}
+                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{operatorId}
             )
             <include refid="queryBaseSql" />
             <if test="account != null and account != ''">
@@ -246,7 +246,7 @@
         FROM <include refid="tableNme" />
         <where>
             id IN (
-                SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id = #{operateId}
+                SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id = #{operatorId}
             )
             <include refid="queryBaseSql" />
             <if test="account != null and account != ''">

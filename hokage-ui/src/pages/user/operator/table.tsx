@@ -1,6 +1,6 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { Table, Tag } from 'antd'
+import { message, Table, Tag } from 'antd';
 import store from './store'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
 import { randomColor } from '../../../libs'
@@ -8,6 +8,7 @@ import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../../server/common/select-server'
 import { ServerVO } from '../../../axios/action/server/server-type'
+import { UserAction } from '../../../axios/action';
 
 @observer
 export default class OperatorTable extends React.Component {
@@ -44,6 +45,9 @@ export default class OperatorTable extends React.Component {
   }
 
   serverGroupRender = (groupList: string[]) => {
+    if (!groupList || groupList.length === 0) {
+      return <span>-</span>
+    }
     return groupList.map(
       (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
     )
@@ -54,7 +58,10 @@ export default class OperatorTable extends React.Component {
       <Action.Form
         title={'添加服务器'}
         renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        action={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+        action={(form: UserServerOperateForm) => {
+          form.userIds = [record.id]
+          this.addServerToSupervisor(form)
+        }}
       />
       <Action.Form
         title={'回收服务器'}
@@ -67,6 +74,19 @@ export default class OperatorTable extends React.Component {
         content={`确定删除管理员${record.username}(${record.id})`}
       />
     </Action>
+  }
+
+  addServerToSupervisor = (form: UserServerOperateForm) => {
+    store.isFetching = true
+    UserAction.grantSupervisorServer(form).then(result => {
+      if (result) {
+        message.info('添加成功')
+        store.fetchRecords()
+      } else {
+        message.error('添加失败')
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
   }
 
   render() {

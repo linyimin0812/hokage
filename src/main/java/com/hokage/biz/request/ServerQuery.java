@@ -14,7 +14,7 @@ public class ServerQuery extends PageQuery {
     /**
      * operator id
      */
-    private Long operateId;
+    private Long operatorId;
     /**
      * host name
      */

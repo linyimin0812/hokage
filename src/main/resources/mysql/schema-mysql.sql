@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
   COMMENT = '普通用户和服务器映射表';
 
 CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
-  `id` bigint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `supervisor_id` bigint NOT NULL COMMENT '管理员id',

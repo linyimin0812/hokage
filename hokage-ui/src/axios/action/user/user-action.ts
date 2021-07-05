@@ -144,5 +144,17 @@ export const UserAction = {
         return reject("搜索普通用户失败. err: " + JSON.stringify(err))
       })
     })
-  }
+  },
+  grantSupervisorServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.grantSupervisorServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("添加服务器失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
 }
