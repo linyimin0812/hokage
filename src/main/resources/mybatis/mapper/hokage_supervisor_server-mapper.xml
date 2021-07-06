@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="serverId" column="server_id"/>
         <result property="supervisorId" column="supervisor_id"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -15,7 +16,8 @@
         gmt_create,
         gmt_modified,
         server_id,
-        supervisor_id
+        supervisor_id,
+        status
     </sql>
 
     <sql id="tableName">
@@ -33,7 +35,8 @@
             now(),
             now(),
             #{serverId},
-            #{supervisorId}
+            #{supervisorId},
+            #{status}
         );
     </insert>
     <update id="update" parameterType="HokageSupervisorServerDO">
@@ -47,6 +50,9 @@
             <if test="supervisorId != null and supervisorId != '' ">
                 ,supervisor_id = #{supervisorId}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
+            </if>
         </set>
     </update>
     <select id="listByServerIds" parameterType="java.util.List" resultMap="HokageSupervisorServerMapper">
@@ -59,6 +65,7 @@
             <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listBySupervisorIds" parameterType="java.util.List" resultMap="HokageSupervisorServerMapper">
@@ -71,6 +78,7 @@
             <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -78,7 +86,7 @@
         SELECT <include refid="allColumns" />
         FROM <include refid="tableName" />
         <where>
-            server_id=#{serverId} and supervisor_id=#{supervisorId}
+            server_id=#{serverId} AND supervisor_id=#{supervisorId} AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -89,11 +97,12 @@
         <where>
             supervisor_id = #{id}
             <if test="serverIds != null and serverIds.size > 0">
-                and server_id IN
+                AND server_id IN
                 <foreach collection="serverIds" item="id" index="index" open="(" close=")" separator=",">
                     #{id}
                 </foreach>
             </if>
+            AND status &lt;&gt; -1
         </where>
     </delete>
 
@@ -104,7 +113,8 @@
             gmt_create,
             gmt_modified,
             server_id,
-            supervisor_id
+            supervisor_id,
+            status
         )
         VALUES
         <foreach collection="serverIds" item="serverId" index="index" separator=",">
@@ -112,7 +122,8 @@
                 now(),
                 now(),
                 #{serverId},
-                #{supervisorId}
+                #{supervisorId},
+                0
             )
         </foreach>
     </insert>

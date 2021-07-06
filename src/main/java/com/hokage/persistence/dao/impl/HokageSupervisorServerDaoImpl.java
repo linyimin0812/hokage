@@ -1,7 +1,9 @@
 package com.hokage.persistence.dao.impl;
 
+import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
+import com.hokage.persistence.dataobject.HokageSupervisorSubordinateDO;
 import com.hokage.persistence.mapper.HokageSupervisorServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -67,13 +69,22 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
     }
 
     @Override
-    public Integer removeBySupervisorId(Long id) {
-        return supervisorServerMapper.removeBySupervisorId(id);
+    public Long removeBySupervisorId(Long id) {
+        HokageSupervisorServerDO supervisorServerDO = new HokageSupervisorServerDO();
+        supervisorServerDO.setSupervisorId(id);
+        supervisorServerDO.setStatus(RecordStatusEnum.deleted.getStatus());
+        return this.update(supervisorServerDO);
     }
 
     @Override
-    public Integer removeBySupervisorId(Long id, List<Long> serverIds) {
-        return supervisorServerMapper.removeBySupervisorId(id, serverIds);
+    public Long removeBySupervisorId(Long id, List<Long> serverIds) {
+        return serverIds.stream().map(serverId -> {
+            HokageSupervisorServerDO supervisorServerDO = new HokageSupervisorServerDO();
+            supervisorServerDO.setServerId(serverId);
+            supervisorServerDO.setSupervisorId(id);
+            supervisorServerDO.setStatus(RecordStatusEnum.deleted.getStatus());
+            return this.update(supervisorServerDO);
+        }).reduce(0L, Long::sum);
     }
 
     @Override

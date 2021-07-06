@@ -19,4 +19,9 @@ public class HokageSubordinateServerDO extends HokageBaseDO {
      * server id
      */
     private Long serverId;
+
+    /**
+     * status, {@link com.hokage.biz.enums.RecordStatusEnum}
+     */
+    private Integer status;
 }

@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="supervisorId" column="supervisor_id"/>
         <result property="subordinateId" column="subordinate_id"/>
+        <result property="status" column="status" />
     </resultMap>
 
     <sql id="allColumns">
@@ -15,7 +16,8 @@
         gmt_create,
         gmt_modified,
         subordinate_id,
-        supervisor_id
+        supervisor_id,
+        status
     </sql>
     <sql id="tableName">
         hokage_supervisor_subordinate
@@ -24,14 +26,15 @@
         INSERT INTO
         <include refid="tableName"/>
         (
-        <include refid="allColumns"/>
+            <include refid="allColumns"/>
         )
         VALUES (
-        #{id},
-        now(),
-        now(),
-        #{subordinateId},
-        #{supervisorId}
+            #{id},
+            now(),
+            now(),
+            #{subordinateId},
+            #{supervisorId},
+            #{status}
         );
     </insert>
 
@@ -48,7 +51,8 @@
             now(),
             now(),
             #{supervisorSubordinateDO.subordinateId},
-            #{supervisorSubordinateDO.supervisorId}
+            #{supervisorSubordinateDO.supervisorId},
+            #{supervisorSubordinateDO.status}
         </foreach>
     </insert>
 
@@ -63,6 +67,9 @@
             <if test="supervisorId != null and supervisorId != '' ">
                 ,supervisor_id = #{supervisorId}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
+            </if>
         </set>
     </update>
     <select id="listBySubordinateId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
@@ -72,6 +79,7 @@
         <include refid="tableName"/>
         <where>
             subordinate_id = #{subordinateId}
+            AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listBySupervisorId" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
@@ -81,6 +89,7 @@
         <include refid="tableName"/>
         <where>
             supervisor_id = #{supervisorId}
+            AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listById" parameterType="java.lang.Long" resultMap="HokageSupervisorSubordinateMapper">
@@ -90,6 +99,7 @@
         <include refid="tableName"/>
         <where>
             id = #{id}
+            AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listAll" resultMap="HokageSupervisorSubordinateMapper">
@@ -97,6 +107,9 @@
         <include refid="allColumns"/>
         FROM
         <include refid="tableName"/>
+        <where>
+            status &lt;&gt; -1
+        </where>
     </select>
 
     <select id="listSubordinate" resultMap="HokageSupervisorSubordinateMapper">
@@ -111,6 +124,7 @@
             <foreach collection="subordinateIds" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 

@@ -169,6 +169,12 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
                 return Boolean.FALSE;
             }
 
+            // 1. 删除管理的用户
+
+            // 2. 删除管理用户关联的服务器
+
+            // 3. 删除管理的服务器
+
             return supervisorServerDao.removeBySupervisorId(id) > 0;
         });
         if (isSucceed) {

@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="serverId" column="server_id"/>
         <result property="subordinateId" column="subordinate_id"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="allColumn">
@@ -15,7 +16,8 @@
         gmt_create,
         gmt_modified,
         server_id,
-        subordinate_id
+        subordinate_id,
+        status
     </sql>
 
     <sql id="tableName">
@@ -33,7 +35,8 @@
             now(),
             now(),
             #{serverId},
-            #{subordinateId}
+            #{subordinateId},
+            #{status}
         );
     </insert>
 
@@ -47,6 +50,9 @@
             </if>
             <if test="subordinateId != null and subordinateId != '' ">
                 ,subordinate_id = #{subordinateId}
+            </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
             </if>
         </set>
         <where>
@@ -64,6 +70,7 @@
             <foreach collection="list" item="serverId" index="index" open="(" close=")" separator=",">
                 #{serverId}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -77,6 +84,7 @@
             <foreach collection="list" item="subordinateId" index="index" open="(" close=")" separator=",">
                 #{subordinateId}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -87,6 +95,7 @@
         <include refid="tableName"/>
         <where>
             id = #{id}
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -96,11 +105,12 @@
         VALUES
         <foreach collection="serverIds" item="serverId" index="index" separator=",">
             (
-            #{id},
-            now(),
-            now(),
-            #{serverId},
-            #{supervisorId}
+                #{id},
+                now(),
+                now(),
+                #{serverId},
+                #{supervisorId},
+                0
             )
         </foreach>
     </insert>
@@ -124,7 +134,7 @@
         SELECT <include refid="allColumn" />
         FROM <include refid="tableName" />
         <where>
-            server_id=#{serverId} and subordinate_id=#{subordinateId}
+            server_id=#{serverId} AND subordinate_id=#{subordinateId} AND status &lt;&gt; -1
         </where>
     </select>
 

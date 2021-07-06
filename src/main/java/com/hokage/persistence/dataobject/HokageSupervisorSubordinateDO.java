@@ -12,6 +12,16 @@ import lombok.Data;
 @Data
 public class HokageSupervisorSubordinateDO extends HokageBaseDO {
     private Long id;
-    private Long supervisorId;  // 管理员id
-    private Long subordinateId; // 普通用户id
+    /**
+     * supervisor id
+     */
+    private Long supervisorId;
+    /**
+     * subordinate id
+     */
+    private Long subordinateId;
+    /**
+     * status, {@link com.hokage.biz.enums.RecordStatusEnum}
+     */
+    private Integer status;
 }

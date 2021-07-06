@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `hokage_supervisor_subordinate` (
   `gmt_modified` DATETIME NOT NULL,
   `supervisor_id` bigint NOT NULL COMMENT '管理员id',
   `subordinate_id` bigint NOT NULL COMMENT '普通用户id',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT = '管理员与用户关系映射表';
@@ -80,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
   `gmt_modified` DATETIME NOT NULL,
   `subordinate_id` bigint NOT NULL COMMENT '普通用户id',
   `server_id` bigint NOT NULL COMMENT '服务器id',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT = '普通用户和服务器映射表';
@@ -90,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `hokage_supervisor_server` (
   `gmt_modified` DATETIME NOT NULL,
   `supervisor_id` bigint NOT NULL COMMENT '管理员id',
   `server_id` bigint NOT NULL COMMENT '服务器id',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT = '管理员和服务器映射表';

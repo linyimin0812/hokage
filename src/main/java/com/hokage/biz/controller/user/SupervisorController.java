@@ -67,6 +67,7 @@ public class SupervisorController extends BaseController {
 
     @RequestMapping(value = "/user/supervisor/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delSupervisors(@RequestBody UserServerOperateForm form) {
+        // TODO: 切面判断是否有权限
         ServiceResponse<Boolean> response = userService.deleteSupervisor(form.getUserIds());
 
         if (response.getSucceeded()) {
