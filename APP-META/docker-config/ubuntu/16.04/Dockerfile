@@ -1,10 +1,6 @@
 FROM ubuntu:16.04
 
-ADD aliyun-source.list /root/aliyun-sources.list
-
 RUN \
-    cp /root/aliyun-sources.list  /etc/apt/sources.list.d/source.list && \
-    apt-get update && \
     apt-get install openssh-server -y && \
     apt-get install net-tools -y && \
     mkdir -p /var/run/sshd && \

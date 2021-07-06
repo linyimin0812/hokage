@@ -1,7 +1,6 @@
-FROM centos:7.2.1511
+FROM centos:7.5.1804
 
-RUN yum swap -y fakesystemd && \
-    yum install passwd openssl openssh-server net-tools -y
+RUN yum install openssl openssh-server net-tools -y
 
 RUN \
     echo root:123456 | chapasswd && \

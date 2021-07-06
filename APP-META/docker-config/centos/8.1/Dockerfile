@@ -1,4 +1,4 @@
-FROM centos:7.6.1810
+FROM centos:8.1.1911
 
 RUN yum install openssl openssh-server net-tools -y
 
