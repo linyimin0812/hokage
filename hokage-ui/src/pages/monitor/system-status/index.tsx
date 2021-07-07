@@ -6,7 +6,7 @@ import RamUsage from './ram-usage'
 import Process from './process'
 import DiskPartition from './disk-partition'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { MonitorOperateForm, SystemInfoVO } from '../../../axios/action/monitor/monitor-type'
+import { MetricVO, MonitorOperateForm, SystemInfoVO } from '../../../axios/action/monitor/monitor-type';
 import store from '../store'
 import { observer } from 'mobx-react'
 import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
@@ -17,14 +17,27 @@ type SystemStatusProp = {
   serverVO: ServerVO
 }
 
-type SystemStatusState = SystemInfoVO
+type SystemStatusState = {
+  systemInfo: SystemInfoVO,
+  systemMetric: MetricVO
+}
 
 @observer
 export default class Index extends React.Component<SystemStatusProp, SystemStatusState> {
 
   state = {
-    processInfo: [],
-    diskInfo: []
+    systemInfo: {
+      processInfo: [],
+      diskInfo: []
+    },
+    systemMetric: {
+      loadAvgMetric: [],
+      cpuStatMetric: [],
+      memStatMetric: [],
+
+      uploadStatMetric: [],
+      downloadStatMetric: []
+    }
   }
 
   componentDidMount() {
@@ -39,7 +52,7 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
   acquireSystemInfo = () => {
     store.basicLoading = true
     MonitorAction.system(this.assembleOperateForm()).then(systemInfo => {
-      this.setState({ ...systemInfo })
+      this.setState({ systemInfo: systemInfo })
     }).catch(e => message.error(e))
       .finally(() => store.basicLoading = false)
   }
@@ -48,7 +61,15 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
     const form = this.assembleOperateForm()
     form.start = start ? start : new Date().getTime() - 10 * 60 * 1000
     form.end = end ? end : new Date().getTime()
-    store.acquireSystemStat(form)
+    store.metricLoading = true
+    MonitorAction.metric(form).then(metric => {
+      if (!metric) {
+        return
+      }
+      this.setState({systemMetric: metric})
+
+    }).catch(e => message.error(e))
+      .finally(() => store.metricLoading = false)
   }
 
   assembleOperateForm = () => {
@@ -64,16 +85,18 @@ export default class Index extends React.Component<SystemStatusProp, SystemStatu
 
   render() {
 
-    const { processInfo, diskInfo } = this.state
+    const { processInfo, diskInfo } = this.state.systemInfo
+    const { cpuStatMetric, loadAvgMetric, memStatMetric } = this.state.systemMetric
+    const { serverVO } = this.props
 
     return (
       <>
         <Spin spinning={store.metricLoading}>
           <Toolbar refreshData={this.refreshData} />
           <Row gutter={12} align="middle" justify={"center"} >
-            <Col span={8}><AverageLoad /></Col>
-            <Col span={8}><CpuUtilization /></Col>
-            <Col span={8}><RamUsage /></Col>
+            <Col span={8}><AverageLoad data={loadAvgMetric} id={serverVO.id} /></Col>
+            <Col span={8}><CpuUtilization data={cpuStatMetric} id={serverVO.id} /></Col>
+            <Col span={8}><RamUsage data={memStatMetric} id={serverVO.id} /></Col>
           </Row>
         </Spin>
         <Divider />

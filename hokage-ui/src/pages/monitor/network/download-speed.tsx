@@ -1,23 +1,34 @@
 import React from 'react'
-import ReactEcharts from 'echarts-for-react'
-import store from '../store'
+import { Line } from '@antv/g2plot'
+import { MetricMetaVO } from '../../../axios/action/monitor/monitor-type'
 
-export default class DownloadSpeed extends React.Component {
-  renderOption = () => {
-    return {
-      title: { text: '下行速率' },
-      tooltip: { trigger: 'axis' },
-      legend: { orient: "horizontal", x: "center", y: "bottom" },
-      grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
-      toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.metric.downloadStatMetric.timeList },
-      yAxis: { type: 'value' },
-      series: store.metric.downloadStatMetric.series
-    }
+type DownloadSpeedProps = {
+  id: string | number,
+  data: MetricMetaVO[]
+}
+
+export default class DownloadSpeed extends React.Component<DownloadSpeedProps> {
+  componentDidMount() {
+    const {id, data} = this.props
+    this.line = new Line(`download-load-${id}`, {
+      data: data,
+      xField: 'time',
+      yField: 'value',
+      seriesField: 'category',
+      height: 300,
+    })
+    this.line.render()
   }
+
+  line: Line | null = null
+
   render() {
+    const {id, data} = this.props
+    if (this.line) {
+      this.line.changeData(data)
+    }
     return (
-      <ReactEcharts option={this.renderOption() as any} />
+      <div id={`download-load-${id}`} />
     )
   }
 }

@@ -6,7 +6,7 @@ import UploadSpeed from './upload-speed'
 import ArpCacheTable from './arpc-cache-table'
 import ConnectionTable from './connection-table'
 import { ServerVO } from '../../../axios/action/server/server-type'
-import { MonitorOperateForm, NetworkInfoVO } from '../../../axios/action/monitor/monitor-type'
+import { MetricVO, MonitorOperateForm, NetworkInfoVO } from '../../../axios/action/monitor/monitor-type'
 import store from '../store'
 import { MonitorAction } from '../../../axios/action/monitor/monitor-action'
 import { observer } from 'mobx-react'
@@ -17,15 +17,28 @@ type NetworkProp = {
   serverVO: ServerVO
 }
 
-type NetworkState = NetworkInfoVO
+type NetworkState = {
+  networkInfo: NetworkInfoVO,
+  systemMetric: MetricVO
+}
 
 @observer
 export default class Index extends React.Component<NetworkProp, NetworkState>{
 
   state = {
-    interfaceIpInfo: [],
-    arpInfo: [],
-    connectionInfo: []
+    networkInfo: {
+      interfaceIpInfo: [],
+      arpInfo: [],
+      connectionInfo: []
+    },
+    systemMetric: {
+      loadAvgMetric: [],
+      cpuStatMetric: [],
+      memStatMetric: [],
+
+      uploadStatMetric: [],
+      downloadStatMetric: []
+    }
   }
 
   componentDidMount() {
@@ -40,7 +53,7 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   acquireNetWorkInfo = () => {
     store.basicLoading = true
     MonitorAction.networkBasic(this.assembleOperateForm()).then(networkInfo => {
-      this.setState({...networkInfo})
+      this.setState({networkInfo: networkInfo})
     }).catch(e => message.error(e))
       .finally(() => store.basicLoading = false)
   }
@@ -49,7 +62,15 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
     const form = this.assembleOperateForm()
     form.start = start ? start : new Date().getTime() - 10 * 60 * 1000
     form.end = end ? end : new Date().getTime()
-    store.acquireSystemStat(form)
+    store.metricLoading = true
+    MonitorAction.metric(form).then(metric => {
+      if (!metric) {
+        return
+      }
+      this.setState({systemMetric: metric})
+
+    }).catch(e => message.error(e))
+      .finally(() => store.metricLoading = false)
   }
 
   assembleOperateForm = () => {
@@ -64,15 +85,17 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   }
 
   render() {
-    const { interfaceIpInfo, arpInfo, connectionInfo } = this.state
+    const { interfaceIpInfo, arpInfo, connectionInfo } = this.state.networkInfo
+    const {downloadStatMetric, uploadStatMetric} = this.state.systemMetric
+    const { serverVO } = this.props
     return (
       <>
         <Spin spinning={store.metricLoading}>
           <Toolbar refreshData={this.refreshData} />
           <Row>
-            <Col span={10}><DownloadSpeed /></Col>
+            <Col span={10}><DownloadSpeed id={serverVO.id} data={downloadStatMetric} /></Col>
             <Col span={2} />
-            <Col span={10}><UploadSpeed /></Col>
+            <Col span={10}><UploadSpeed id={serverVO.id} data={uploadStatMetric} /></Col>
             <Col span={2} />
           </Row>
         </Spin>

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-bash ./centos/start-centos.sh
+cd ./centos/ && bash ./start-centos.sh
 
-bash ./ubuntu/start-ubuntu.sh
+cd ./ubuntu/ && bash ./start-ubuntu.sh

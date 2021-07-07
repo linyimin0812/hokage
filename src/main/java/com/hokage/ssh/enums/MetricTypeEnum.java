@@ -18,8 +18,8 @@ public enum MetricTypeEnum {
     cpu(5, "cpuStatMetric")
     ;
 
-    private Integer value;
-    private String field;
+    private final Integer value;
+    private final String field;
 
     MetricTypeEnum(Integer value, String field) {
         this.value = value;

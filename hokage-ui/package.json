@@ -5,6 +5,7 @@
   "homepage": "/",
   "dependencies": {
     "@ant-design/icons": "^4.0.6",
+    "@antv/g2plot": "^2.3.25",
     "antd": "^4.3.3",
     "axios": "^0.21.1",
     "echarts": "^4.8.0",

@@ -1,26 +1,35 @@
 import React from 'react'
-import ReactEcharts from 'echarts-for-react'
-import { observer } from 'mobx-react'
-import store from '../store'
+import { Line } from '@antv/g2plot'
+import { MetricMetaVO } from '../../../axios/action/monitor/monitor-type'
 
-@observer
-export default class CpuUtilization extends React.Component {
+type CpuUtilizationProps = {
+  id: string | number,
+  data: MetricMetaVO[]
+}
 
-  renderOption = () => {
-    return {
-      title: { text: 'CPU利用率' },
-      tooltip: { trigger: 'axis' },
-      legend: { orient: "horizontal", x: "center", y: "bottom" },
-      grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
-      toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.metric.cpuStatMetric.timeList },
-      yAxis: { type: 'value' },
-      series: store.metric.cpuStatMetric.series
-    }
+export default class CpuUtilization extends React.Component<CpuUtilizationProps> {
+
+  componentDidMount() {
+    const {id, data} = this.props
+    this.line = new Line(`cup-utilization-${id}`, {
+      data: data,
+      xField: 'time',
+      yField: 'value',
+      seriesField: 'category',
+      height: 300,
+    })
+    this.line.render()
   }
+
+  line: Line | null = null
+
   render() {
+    const {id, data} = this.props
+    if (this.line) {
+      this.line.changeData(data)
+    }
     return (
-      <ReactEcharts option={this.renderOption() as any} />
+      <div id={`cup-utilization-${id}`} />
     )
   }
 }

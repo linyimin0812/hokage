@@ -1,23 +1,34 @@
 import React from 'react'
-import ReactEcharts from 'echarts-for-react'
-import store from '../store'
+import { Line } from '@antv/g2plot'
+import { MetricMetaVO } from '../../../axios/action/monitor/monitor-type'
 
-export default class RamUsage extends React.Component {
-  renderOption = () => {
-    return {
-      title: { text: '内存使用量' },
-      tooltip: { trigger: 'axis' },
-      legend: { orient: "horizontal", x: "center", y: "bottom" },
-      grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
-      toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.metric.memStatMetric.timeList },
-      yAxis: { type: 'value' },
-      series: store.metric.memStatMetric.series
-    }
+type RamUsageProps = {
+  id: string | number,
+  data: MetricMetaVO[]
+}
+
+export default class RamUsage extends React.Component<RamUsageProps> {
+  componentDidMount() {
+    const {id, data} = this.props
+    this.line = new Line(`ram-usage-${id}`, {
+      data: data,
+      xField: 'time',
+      yField: 'value',
+      seriesField: 'category',
+      height: 300,
+    })
+    this.line.render()
   }
+
+  line: Line | null = null
+
   render() {
+    const {id, data} = this.props
+    if (this.line) {
+      this.line.changeData(data)
+    }
     return (
-      <ReactEcharts option={this.renderOption() as any} style={{width: "400px"}} />
+      <div id={`ram-usage-${id}`} />
     )
   }
 }

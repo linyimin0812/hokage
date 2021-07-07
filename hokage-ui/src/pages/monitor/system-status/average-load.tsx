@@ -1,25 +1,34 @@
 import React from 'react'
-import ReactEcharts from 'echarts-for-react'
-import store from '../store'
+import { MetricMetaVO } from '../../../axios/action/monitor/monitor-type'
+import { Line } from '@antv/g2plot'
 
-export default class AverageLoad extends React.Component {
+type AverageLoadProps = {
+  id: string | number,
+  data: MetricMetaVO[]
+}
 
-  renderOption = () => {
-    return {
-      title: { text: 'CPU平均负载' },
-      tooltip: { trigger: 'axis' },
-      legend: { orient: "horizontal", x: "center", y: "bottom" },
-      grid: { left: '3%', right: '4%', bottom: '10%', containLabel: true },
-      toolbox: { feature: { saveAsImage: {} } },
-      xAxis: { type: 'category', boundaryGap: false, data: store.metric.loadAvgMetric.timeList },
-      yAxis: { type: 'value' },
-      series: store.metric.loadAvgMetric.series
-    }
+export default class AverageLoad extends React.Component<AverageLoadProps> {
+  componentDidMount() {
+    const {id, data} = this.props
+    this.line = new Line(`average-load-${id}`, {
+      data: data,
+      xField: 'time',
+      yField: 'value',
+      seriesField: 'category',
+      height: 300,
+    })
+    this.line.render()
   }
 
+  line: Line | null = null
+
   render() {
+    const {id, data} = this.props
+    if (this.line) {
+      this.line.changeData(data)
+    }
     return (
-      <ReactEcharts option={this.renderOption() as any} />
+      <div id={`average-load-${id}`} />
     )
   }
 }

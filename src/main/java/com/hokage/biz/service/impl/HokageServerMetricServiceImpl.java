@@ -44,26 +44,21 @@ public class HokageServerMetricServiceImpl implements HokageServerMetricService 
 
         Map<Integer, List<HokageServerMetricDO>> metricMap = metricDOList.stream().collect(Collectors.groupingBy(HokageServerMetricDO::getType));
 
-        Map<String, MetricMetaVO> map = new HashMap<>(8);
+        Map<String, List<MetricMetaVO>> map = new HashMap<>(8);
 
         Arrays.stream(MetricTypeEnum.values()).forEach(type -> {
-            MetricMetaVO metricMetaVO = new MetricMetaVO();
-            Map<String, List<HokageServerMetricDO>> metricTypeMap = metricMap.get(type.getValue()).stream().collect(Collectors.groupingBy(HokageServerMetricDO::getName));
-            List<String> xAxis = new ArrayList<>(metricTypeMap.values()).get(0).stream()
-                    .sorted((o1, o2) -> o1.getTimestamp() - o2.getTimestamp() > 0 ? 1 : -1)
-                    .map(metricDO -> TimeUtil.format(metricDO.getTimestamp(), TimeUtil.METRIC_FORMAT)).collect(Collectors.toList());
-            List<MetricMetaVO.SeriesVO> series = new ArrayList<>();
+            List<MetricMetaVO> metricMetaVOList = metricMap.get(type.getValue()).stream()
+                    .map(metricDO -> {
+                        MetricMetaVO metaVO = new MetricMetaVO();
+                        metaVO.setCategory(metricDO.getName())
+                                .setValue(metricDO.getValue())
+                                .setTime(TimeUtil.format(metricDO.getTimestamp(), TimeUtil.METRIC_FORMAT));
+                        return metaVO;
+                    })
+                    .sorted(MetricMetaVO::compareTo)
+                    .collect(Collectors.toList());
 
-            metricTypeMap.forEach((name, metrics) -> {
-                MetricMetaVO.SeriesVO seriesVO = new MetricMetaVO.SeriesVO();
-                seriesVO.setName(name);
-                List<Double> dataList = metrics.stream().sorted((o1, o2) -> o1.getTimestamp() - o2.getTimestamp() > 0 ? 1 : -1)
-                        .map(HokageServerMetricDO::getValue).collect(Collectors.toList());
-                seriesVO.setData(dataList);
-                series.add(seriesVO);
-            });
-            metricMetaVO.setSeries(series).setTimeList(xAxis);
-            map.put(type.getField(), metricMetaVO);
+            map.put(type.getField(), metricMetaVOList);
         });
         return response.success(JSON.parseObject(JSON.toJSONString(map), MetricVO.class));
     }

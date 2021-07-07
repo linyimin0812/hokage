@@ -18,6 +18,7 @@ export interface BasicInfoVO {
 export interface SystemInfoVO {
   processInfo: ProcessInfoVO[],
   diskInfo: DiskInfoVO[],
+
 }
 
 export interface NetworkInfoVO {
@@ -27,22 +28,18 @@ export interface NetworkInfoVO {
 }
 
 export interface MetricMetaVO {
-  timeList: string[],
-  series: {
-    name: string,
-    type: string,
-    smooth: boolean,
-    data: number[]
-  }[]
+  time: string,
+  value: number,
+  category: string
 }
 
 export interface MetricVO {
-  loadAvgMetric: MetricMetaVO,
-  cpuStatMetric: MetricMetaVO,
-  memStatMetric: MetricMetaVO,
+  loadAvgMetric: MetricMetaVO[],
+  cpuStatMetric: MetricMetaVO[],
+  memStatMetric: MetricMetaVO[],
 
-  uploadStatMetric: MetricMetaVO,
-  downloadStatMetric: MetricMetaVO
+  uploadStatMetric: MetricMetaVO[],
+  downloadStatMetric: MetricMetaVO[]
 }
 
 export interface MonitorOperateForm {

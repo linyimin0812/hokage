@@ -1,5 +1,7 @@
 package com.hokage.biz.response.resource.metric;
 
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -13,13 +15,14 @@ import java.util.List;
 @Data
 @Accessors(chain = true)
 public class MetricMetaVO {
-    private List<String> timeList;
-    private List<SeriesVO> series;
+    private String time;
+    private Double value;
+    private String category;
 
-    @Data
-    @Accessors(chain = true)
-    public static class SeriesVO {
-        private String name;
-        private List<Double> data;
+    public int compareTo(MetricMetaVO that) {
+        return ComparisonChain.start()
+                .compare(this.category, that.category)
+                .compare(this.time, that.time)
+                .result();
     }
 }

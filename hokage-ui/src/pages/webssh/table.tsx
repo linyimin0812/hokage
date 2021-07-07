@@ -79,7 +79,7 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
           >
             <Table.Column title={'id'} dataIndex={'id'} />
             <Table.Column title={'ip'} dataIndex={'ip'} />
-            <Table.Column title={'port'} dataIndex={'SshPort'} />
+            <Table.Column title={'port'} dataIndex={'sshPort'} />
             <Table.Column title={'账号'} dataIndex={'account'} />
             <Table.Column title={'登录方式'} dataIndex={'loginType'} />
             <Table.Column title={'我的状态'} dataIndex={'status'} />
