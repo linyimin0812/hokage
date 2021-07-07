@@ -172,6 +172,17 @@ CREATE TABLE IF NOT EXISTS `hokage_server_metric` (
 )
   COMMENT 'hokage系统状态数据';
 
+CREATE TABLE IF NOT EXISTS `hokage_server_report_info_handler` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `gmt_create` DATETIME NOT NULL,
+  `gmt_modified` DATETIME NOT NULL,
+  `handler_ip` varchar(16) NOT NULL comment '服务器上报信息处理者',
+  `timestamp` BIGINT NOT NULL comment '抢占时间',
+  `version` TINYINT NOT NULL COMMENT '版本号',
+  PRIMARY KEY (`id`)
+)
+COMMENT 'hokage master';
+
 # create spring session table
 # Reference: https://github.com/spring-projects/spring-session/blob/master/spring-session-jdbc/src/main/resources/org/springframework/session/jdbc/schema-mysql.sql
 CREATE TABLE IF NOT EXISTS SPRING_SESSION (
