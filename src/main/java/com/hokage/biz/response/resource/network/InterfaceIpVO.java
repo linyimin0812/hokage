@@ -9,6 +9,7 @@ import lombok.Data;
  **/
 @Data
 public class InterfaceIpVO {
+    private Long id;
     private String interfaceName;
     private String ip;
 }
