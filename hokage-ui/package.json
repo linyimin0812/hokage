@@ -1,5 +1,5 @@
 {
-  "name": "cad-server-management",
+  "name": "hokage-ui",
   "version": "3.0.0",
   "private": true,
   "homepage": "/",
@@ -8,8 +8,6 @@
     "@antv/g2plot": "^2.3.25",
     "antd": "^4.3.3",
     "axios": "^0.21.1",
-    "echarts": "^4.8.0",
-    "echarts-for-react": "^2.0.16",
     "is-ip": "^3.1.0",
     "lodash": "^4.17.20",
     "mime-types": "^2.1.31",
@@ -22,7 +20,6 @@
     "react-highlight-words": "^0.17.0",
     "react-monaco-editor": "^0.43.0",
     "react-router-dom": "^5.1.2",
-    "recharts": "^1.7.1",
     "screenfull": "^5.0.0",
     "semver": "6.3.0",
     "uuid": "^8.3.2",
@@ -58,7 +55,6 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.13.15",
-    "@types/echarts": "^4.1.15",
     "@types/lodash": "^4.14.161",
     "@types/mime-types": "^2.1.0",
     "@types/moment": "^2.13.0",
