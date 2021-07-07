@@ -17,6 +17,11 @@ export default class CpuUtilization extends React.Component<CpuUtilizationProps>
       yField: 'value',
       seriesField: 'category',
       height: 300,
+      legend: {
+        layout: 'horizontal',
+        position: 'bottom',
+        flipPage: false
+      }
     })
     this.line.render()
   }
@@ -29,7 +34,10 @@ export default class CpuUtilization extends React.Component<CpuUtilizationProps>
       this.line.changeData(data)
     }
     return (
-      <div id={`cup-utilization-${id}`} />
+      <>
+        <h3>CPU使用率</h3>
+        <div id={`cup-utilization-${id}`} />
+      </>
     )
   }
 }

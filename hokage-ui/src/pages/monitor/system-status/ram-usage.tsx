@@ -16,6 +16,11 @@ export default class RamUsage extends React.Component<RamUsageProps> {
       yField: 'value',
       seriesField: 'category',
       height: 300,
+      legend: {
+        layout: 'horizontal',
+        position: 'bottom',
+        flipPage: false
+      }
     })
     this.line.render()
   }
@@ -28,7 +33,10 @@ export default class RamUsage extends React.Component<RamUsageProps> {
       this.line.changeData(data)
     }
     return (
-      <div id={`ram-usage-${id}`} />
+      <>
+        <h3>内存使用量</h3>
+        <div id={`ram-usage-${id}`} />
+      </>
     )
   }
 }

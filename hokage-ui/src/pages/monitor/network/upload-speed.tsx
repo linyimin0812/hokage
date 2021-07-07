@@ -16,6 +16,14 @@ export default class UploadSpeed extends React.Component<UploadSpeedProps> {
       yField: 'value',
       seriesField: 'category',
       height: 300,
+      yAxis: {
+        title: { text: '单位(byte)' }
+      },
+      legend: {
+        layout: 'horizontal',
+        position: 'bottom',
+        flipPage: false
+      }
     })
     this.line.render()
   }
@@ -28,7 +36,10 @@ export default class UploadSpeed extends React.Component<UploadSpeedProps> {
       this.line.changeData(data)
     }
     return (
-      <div id={`upload-speed-${id}`} />
+      <>
+        <h3>上传速率</h3>
+        <div id={`upload-speed-${id}`} />
+      </>
     )
   }
 }

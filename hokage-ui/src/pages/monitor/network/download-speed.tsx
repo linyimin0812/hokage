@@ -16,6 +16,14 @@ export default class DownloadSpeed extends React.Component<DownloadSpeedProps> {
       yField: 'value',
       seriesField: 'category',
       height: 300,
+      yAxis: {
+        title: { text: '单位(byte)' }
+      },
+      legend: {
+        layout: 'horizontal',
+        position: 'bottom',
+        flipPage: false
+      }
     })
     this.line.render()
   }
@@ -28,7 +36,10 @@ export default class DownloadSpeed extends React.Component<DownloadSpeedProps> {
       this.line.changeData(data)
     }
     return (
-      <div id={`download-load-${id}`} />
+      <>
+        <h3>下载速率</h3>
+        <div id={`download-load-${id}`} />
+      </>
     )
   }
 }

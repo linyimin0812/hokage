@@ -16,6 +16,11 @@ export default class AverageLoad extends React.Component<AverageLoadProps> {
       yField: 'value',
       seriesField: 'category',
       height: 300,
+      legend: {
+        layout: 'horizontal',
+        position: 'bottom',
+        flipPage: false
+      }
     })
     this.line.render()
   }
@@ -28,7 +33,10 @@ export default class AverageLoad extends React.Component<AverageLoadProps> {
       this.line.changeData(data)
     }
     return (
-      <div id={`average-load-${id}`} />
+      <>
+        <h3>平均负载</h3>
+        <div id={`average-load-${id}`} />
+      </>
     )
   }
 }
