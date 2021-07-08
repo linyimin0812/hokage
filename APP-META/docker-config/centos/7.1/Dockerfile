@@ -1,6 +1,8 @@
 FROM centos:7.1.1503
 
-RUN yum swap -y fakesystemd && \
+RUN \
+    yum swap -y fakesystemd && \
+    yum update && \
     yum install openssl openssh-server net-tools -y
 
 RUN \

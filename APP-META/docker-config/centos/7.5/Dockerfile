@@ -1,6 +1,8 @@
 FROM centos:7.5.1804
 
-RUN yum install openssl openssh-server net-tools -y
+RUN \
+    yum update && \
+    yum install openssl openssh-server net-tools -y
 
 RUN \
     echo root:123456 | chapasswd && \
