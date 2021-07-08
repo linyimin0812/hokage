@@ -37,4 +37,10 @@ public class Constant {
      * API file name
      */
     public static final String API_FILE = "json-api.sh";
+    /**
+     * report file name
+     */
+    public static final String REPORT_FILE = "report-api.sh";
+
+    public static final Long MASTER_REPORT_ID = 1L;
 }

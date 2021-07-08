@@ -7,6 +7,7 @@
         <result property="gmtCreate" column="gmt_create"/>
         <result property="id" column="id"/>
         <result property="handlerIp" column="handler_ip"/>
+        <result property="handlerPort" column="handler_port" />
         <result property="startTime" column="start_time"/>
         <result property="version" column="version"/>
     </resultMap>
@@ -16,6 +17,7 @@
         gmt_create,
         gmt_modified,
         handler_ip,
+        handler_port,
         start_time,
         version
     </sql>
@@ -35,6 +37,7 @@
             now(),
             now(),
             #{handlerIp},
+            #{handlerPort},
             #{startTime},
             #{version}
         );
@@ -57,6 +60,9 @@
             gmt_modified = now()
             <if test="handlerIp != null and handlerIp != '' ">
                 ,handler_ip = #{handlerIp}
+            </if>
+            <if test="handlerPort != null and handlerPort != '' ">
+                ,handler_port = #{handlerPort}
             </if>
             <if test="startTime != null and startTime != '' ">
                 ,start_time = #{startTime}

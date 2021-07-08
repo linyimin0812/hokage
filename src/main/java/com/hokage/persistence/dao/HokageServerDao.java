@@ -9,9 +9,9 @@ import java.util.List;
 
 /**
  * @author linyimin
- * @date 2020/8/22 11:28 上午
+ * @date 2020/8/22 11:28 am
  * @email linyimin520812@gmail.com
- * @description 服务器信息
+ * @description hokage server dao interface
  */
 public interface HokageServerDao {
     /**
@@ -89,5 +89,12 @@ public interface HokageServerDao {
      * @return
      */
     List<HokageServerDO> selectByQuery(SubordinateServerQuery query);
+
+    /**
+     * select server list by user id
+     * @param userId user primary key
+     * @return server list which is used by user id
+     */
+    List<HokageServerDO> selectByUserId(Long userId);
 
 }

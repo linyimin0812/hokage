@@ -3,6 +3,8 @@ package com.hokage.infra.worker;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,13 +21,19 @@ import java.util.concurrent.TimeUnit;
 @Data
 @Slf4j
 @Component
-public class MetricThreadPoolWorker {
+public class MasterThreadPoolWorker {
     private ThreadPoolExecutor executorPool = null;
 
+    @Value("${system.report.info.handler}")
+    private boolean canBeMaster;
+    private boolean isMaster;
     @PostConstruct
     public void init() {
-        log.info("Initializing MetricThreadPoolWorker [\"metric-thread-worker-pool\"]");
-        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("metric-thread-worker-pool-%d").build();
+        if (!ObjectUtils.defaultIfNull(canBeMaster, false)) {
+            return;
+        }
+        log.info("Initializing MasterThreadPoolWorker [\"master-thread-worker-pool\"]");
+        ThreadFactory factory = new ThreadFactoryBuilder().setNameFormat("master-thread-worker-pool-%d").build();
         int coreNum = Runtime.getRuntime().availableProcessors();
         executorPool = new ThreadPoolExecutor(
                 coreNum,

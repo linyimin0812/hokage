@@ -15,6 +15,7 @@ INSERT IGNORE INTO `hokage_server_report_info_handler` (
     gmt_create,
     gmt_modified,
     handler_ip,
+    handler_port,
     start_time,
     version
 ) VALUES (
@@ -22,6 +23,7 @@ INSERT IGNORE INTO `hokage_server_report_info_handler` (
     now(),
     now(),
     '0.0.0.0',
+    0,
     1592150400000,
     1
 );

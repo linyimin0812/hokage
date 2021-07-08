@@ -127,4 +127,10 @@ public class SshClient {
             }
         }
     }
+
+    public void close() {
+        if (Objects.nonNull(session) && session.isConnected()) {
+            session.disconnect();
+        }
+    }
 }

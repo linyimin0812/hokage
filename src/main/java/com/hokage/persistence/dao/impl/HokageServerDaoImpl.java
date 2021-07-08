@@ -94,4 +94,9 @@ public class HokageServerDaoImpl implements HokageServerDao {
     public List<HokageServerDO> selectByQuery(SubordinateServerQuery query) {
         return serverMapper.selectBySubordinateServerQuery(query);
     }
+
+    @Override
+    public List<HokageServerDO> selectByUserId(Long userId) {
+        return null;
+    }
 }

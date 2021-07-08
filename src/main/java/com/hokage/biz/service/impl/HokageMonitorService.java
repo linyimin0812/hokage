@@ -16,7 +16,7 @@ import com.hokage.biz.response.resource.system.ProcessInfoVO;
 import com.hokage.biz.response.resource.system.SystemInfoVO;
 import com.hokage.biz.service.AbstractCommandService;
 import com.hokage.common.ServiceResponse;
-import com.hokage.infra.worker.MetricThreadPoolWorker;
+import com.hokage.infra.worker.MasterThreadPoolWorker;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerMetricDao;
 import com.hokage.persistence.dataobject.HokageServerMetricDO;
@@ -47,15 +47,15 @@ import java.util.stream.IntStream;
 @Service
 public class HokageMonitorService extends AbstractCommandService {
 
-    @Value("${system.metric.need.pull}")
-    private boolean needPull;
+    @Value("${system.report.info.handler}")
+    private boolean canBeMaster;
 
     private MonitorCommandHandler<BaseCommandParam> commandHandler;
     private SshExecComponent execComponent;
     private HokageServerMetricDao metricDao;
 
     private ScheduledThreadPoolWorker scheduledPoolWorker;
-    private MetricThreadPoolWorker metricPoolWorker;
+    private MasterThreadPoolWorker masterPoolWorker;
 
     @Autowired
     public void setExecComponent(SshExecComponent execComponent) {
@@ -78,21 +78,29 @@ public class HokageMonitorService extends AbstractCommandService {
     }
 
     @Autowired
-    public void setMetricPoolWorker(MetricThreadPoolWorker metricPoolWorker) {
-        this.metricPoolWorker = metricPoolWorker;
+    public void setMasterPoolWorker(MasterThreadPoolWorker masterPoolWorker) {
+        this.masterPoolWorker = masterPoolWorker;
     }
 
     @PostConstruct
     public void init() {
-        if (!needPull) {
+        if (!canBeMaster) {
             return;
         }
         scheduledPoolWorker.getScheduledService().scheduleAtFixedRate(() -> {
-            Map<String, SshClient> cache = getServerCacheDao().getServer2MetricClient().asMap();
-            cache.forEach((key, value) -> {
-                metricPoolWorker.getExecutorPool().execute(() -> this.acquireSystemStat(value));
-                log.info("acquire system stat: {}", value.getSshContext());
-            });
+            if (!masterPoolWorker.isMaster()) {
+                return;
+            }
+            try {
+                Map<String, SshClient> cache = getServerCacheDao().getServer2MetricClient().asMap();
+                cache.forEach((key, value) -> {
+                    masterPoolWorker.getExecutorPool().execute(() -> this.acquireSystemStat(value));
+                    log.info("cd: {}", value.getSshContext());
+                });
+            } catch (Exception e) {
+                log.error("acquireSystemStat scheduled error. errMsg: {}", e.getMessage());
+            }
+
         }, 0, 60, TimeUnit.SECONDS);
     }
 

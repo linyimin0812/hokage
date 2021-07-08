@@ -1,8 +1,9 @@
 package com.hokage.cache;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
 import com.hokage.biz.Constant;
+import com.hokage.biz.interceptor.UserContext;
+import com.hokage.infra.worker.MasterThreadPoolWorker;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerDao;
@@ -13,26 +14,23 @@ import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpATTRS;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,6 +70,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     private ScheduledThreadPoolWorker scheduledWorker;
     private ThreadPoolWorker poolWorker;
+    private MasterThreadPoolWorker masterPoolWorker;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
@@ -93,6 +92,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
         this.poolWorker = poolWorker;
     }
 
+    @Autowired
+    public void setMasterPoolWorker(MasterThreadPoolWorker masterPoolWorker) {
+        this.masterPoolWorker = masterPoolWorker;
+    }
+
     @PostConstruct
     public void init() throws Exception {
         serverKey2SshExecClient = buildDefaultLocalCache();
@@ -102,7 +106,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
             try {
                 this.activeCacheRefresh();
             } catch (Exception e) {
-                log.error("HokageServerCacheDao.activeCacheRefresh error. err: " + JSON.toJSONString(e));
+                log.error("activeCacheRefresh scheduled error. errMsg: {}", e.getMessage());
             }
         }, 0, cacheRefreshIntervalSecond, TimeUnit.SECONDS);
     }
@@ -140,74 +144,102 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     /**
      * refresh server ssh client local cache
-     * @throws Exception
      */
-    private void activeCacheRefresh() throws Exception {
-        List<HokageServerDO> serverDOList = serverDao.selectAll();
+    private void activeCacheRefresh() {
+        UserContext ctx = UserContext.ctx();
+        List<HokageServerDO> serverDOList = Objects.isNull(ctx.getUserId()) ? new ArrayList<>() : serverDao.selectByUserId(ctx.getUserId());
+        log.info("my server size: {}", serverDOList.size());
 
-        log.info("total server size: {}", serverDOList.size());
+        // 缓存exec client
+        poolWorker.getExecutorPool().execute(() -> {
+            this.activeNewServerCache(serverDOList, serverKey2SshExecClient, null);
+            this.invalidateDelServerCache(serverDOList, serverKey2SshExecClient);
+        });
 
-        Map<String, SshClient> serverKey2SshClientMap = serverKey2SshExecClient.asMap();
-        Map<String, HokageServerDO> serverKey2ServerMap = serverDOList.stream().collect(Collectors.toMap(this::buildKey, Function.identity(), (o1, o2) -> o1));
-        activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap, "serverKey");
-        invalidateDelServerCache(serverKey2ServerMap, serverKey2SshClientMap, "serverKey");
+        // 缓存sftp client
+        poolWorker.getExecutorPool().execute(() -> {
+            this.activeNewServerCache(serverDOList, serverKey2SshSftpClient, client -> {
+                try {
+                    this.uploadScript2Server(client, Constant.API_FILE);
+                } catch (Exception e) {
+                    log.error("upload script: {} error. errMsg: {}", Constant.API_FILE, e.getMessage());
+                }
+            });
+            this.invalidateDelServerCache(serverDOList, serverKey2SshSftpClient);
+        });
 
-        Map<String, SshClient> server2MetricClientMap = server2MetricClient.asMap();
-        Map<String, HokageServerDO> server2ServerMap = serverDOList.stream().collect(Collectors.toMap(HokageServerDO::getIp, Function.identity(), (o1, o2) -> o1));
-        activeNewServerCache(serverKey2ServerMap, serverKey2SshClientMap, "server");
-        invalidateDelServerCache(serverKey2ServerMap, serverKey2SshClientMap, "server");
+        // master需要缓存所有服务器
+        masterPoolWorker.getExecutorPool().execute(this::activeMetricClient);
 
     }
 
     /**
-     * active new add server ssh client
-     * @param serverKey2ServerMap server object map
-     * @param serverKey2SshClientMap server ssh clients have cached map
-     * @param type: server --> metric client, serverKey --> execClient and sftClient
-     * @throws Exception
+     * master需要缓存所有服务器
      */
-    private void activeNewServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap, String type) throws Exception {
+    public void activeMetricClient() {
+        if (!masterPoolWorker.isMaster()) {
+            return;
+        }
+        List<HokageServerDO> serverList = serverDao.selectAll();
+        if (CollectionUtils.isEmpty(serverList)) {
+            return;
+        }
+
+        log.info("all server size: {}", serverList.size());
+
+        masterPoolWorker.getExecutorPool().execute(() -> {
+            this.activeNewServerCache(serverList, server2MetricClient, client -> {
+                try {
+                    this.uploadScript2Server(client, Constant.REPORT_FILE);
+                    // TODO: 执行一下脚本
+                } catch (Exception e) {
+                    log.error("upload script: {} error. errMsg: {}", Constant.REPORT_FILE, e.getMessage());
+                }
+            });
+            this.invalidateDelServerCache(serverList, server2MetricClient);
+        });
+    }
+
+    /**
+     * active new add server ssh client
+     * @param serverList server list
+     * @param cache server ssh client cache
+     * @param consumer consumer, for do some job
+     */
+    private void activeNewServerCache(List<HokageServerDO> serverList, Cache<String, SshClient> cache, Consumer<SshClient> consumer) {
+
+        if (CollectionUtils.isEmpty(serverList)) {
+            return;
+        }
+
+        Map<String, HokageServerDO> serverKey2ServerMap = serverList.stream().collect(Collectors.toMap(this::buildKey, Function.identity(), (o1, o2) -> o1));
+        Map<String, SshClient> serverKey2ClientMap = cache.asMap();
         // new add server list
         List<String> newServerKeyList = serverKey2ServerMap.keySet().stream()
                 .filter(serverKey -> {
                     // new server
-                    if (!serverKey2SshClientMap.containsKey(serverKey)) {
+                    if (!serverKey2ClientMap.containsKey(serverKey)) {
                         return true;
                     }
                     // server which is loss connection
-                    Session session = serverKey2SshClientMap.get(serverKey).getSessionIfPresent();
+                    Session session = serverKey2ClientMap.get(serverKey).getSessionIfPresent();
                     return Objects.isNull(session) || !session.isConnected();
                 })
                 .collect(Collectors.toList());
-
+        // cache new server ssh client
         for (String serverKey : newServerKeyList) {
             poolWorker.getExecutorPool().execute(() -> {
                 SshContext context = new SshContext();
                 BeanUtils.copyProperties(serverKey2ServerMap.get(serverKey), context);
-                if (StringUtils.equals(type, "serverKey")) {
-                    SshClient execClient = new SshClient().setContext(context);
-                    SshClient sftpClient = new SshClient().setContext(context);
-                    try {
-                        execClient = new SshClient(context);
-                        sftpClient = new SshClient(context);
-                        // TODO: 账号linyimin的权限问题
-                        uploadScript2Server(sftpClient);
-                        log.info("HokageServerCacheDao.activeCacheRefresh create exec and sftp ssh client: {}", context);
-                    } catch (Exception e) {
-                        log.error("HokageServerCacheDao.activeCacheRefresh create exec and sftp ssh client: {} error. err: {}", context, e.getMessage());
+                try {
+                    SshClient client = new SshClient(context);
+                    cache.put(serverKey, client);
+                    if (Objects.nonNull(consumer)) {
+                        consumer.accept(client);
                     }
-                    serverKey2SshExecClient.put(serverKey, execClient);
-                    serverKey2SshSftpClient.put(serverKey, sftpClient);
-                }
-                if (StringUtils.equals(type, "server")) {
-                    SshClient metricClient = new SshClient().setContext(context);
-                    try {
-                        metricClient = new SshClient(context);
-                        log.info("HokageServerCacheDao.activeCacheRefresh create metric ssh client: {}", context);
-                    } catch (Exception e) {
-                        log.error("HokageServerCacheDao.activeCacheRefresh create metric ssh client: {} error. err: {}", context, e.getMessage());
-                    }
-                    server2MetricClient.put(serverKey, metricClient);
+                    log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
+                } catch (Exception e) {
+                    log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
                 }
             });
         }
@@ -215,46 +247,34 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     /**
      * invalidate deleted server cache
-     * @param serverKey2ServerMap server object map
-     * @param serverKey2SshClientMap server ssh clients have cached map
-     * @param type: server --> metric client, serverKey --> execClient and sftClient
+     * @param serverList server list
+     * @param cache server ssh client cache
      */
-    private void invalidateDelServerCache(Map<String, HokageServerDO> serverKey2ServerMap, Map<String, SshClient> serverKey2SshClientMap, String type) {
-        // delete server list
-        serverKey2SshClientMap.keySet().stream()
+    private void invalidateDelServerCache(List<HokageServerDO> serverList, Cache<String, SshClient> cache) {
+        Map<String, HokageServerDO> serverKey2ServerMap = serverList.stream().collect(Collectors.toMap(this::buildKey, Function.identity(), (o1, o2) -> o1));
+        Map<String, SshClient> serverKey2ClientMap = cache.asMap();
+        // invalid server list
+        List<String> invalidServerKeyList = serverKey2ClientMap.keySet().stream()
                 .filter(serverKey -> !serverKey2ServerMap.containsKey(serverKey))
-                .forEach(serverKey -> {
-                    try {
-                        if (StringUtils.equals(type, "serverKey")) {
-                            SshClient client = serverKey2SshExecClient.getIfPresent(serverKey);
-                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
-                                client.getSessionOrCreate().disconnect();
-                            }
-                            client = serverKey2SshSftpClient.getIfPresent(serverKey);
-                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
-                                client.getSessionOrCreate().disconnect();
-                            }
-                        }
+                .collect(Collectors.toList());
 
-                        if (StringUtils.equals(type, "server")) {
-                            SshClient client = server2MetricClient.getIfPresent(serverKey);
-                            if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
-                                client.getSessionOrCreate().disconnect();
-                            }
-                        }
+        // invalidate cache
+        for (String serverKey : invalidServerKeyList) {
+            try {
+                SshClient client = cache.getIfPresent(serverKey);
+                if (Objects.nonNull(client) && Objects.nonNull(client.getSessionIfPresent())) {
+                    client.getSessionOrCreate().disconnect();
+                }
+            } catch (Exception ignored) {
 
-                    } catch (Exception ignored) {
-
-                    } finally {
-                        serverKey2SshExecClient.invalidate(serverKey);
-                        serverKey2SshSftpClient.invalidate(serverKey);
-                        server2MetricClient.invalidate(serverKey);
-                        log.info("HokageServerCacheDao.activeCacheRefresh invalidate ssh client. serverKey: {}", serverKey);
-                    }
-                });
+            } finally {
+                cache.invalidate(serverKey);
+                log.info("HokageServerCacheDao.invalidateDelServerCache invalidate ssh client. serverKey: {}", serverKey);
+            }
+        }
     }
 
-    private void uploadScript2Server(SshClient client) throws Exception {
+    private void uploadScript2Server(SshClient client, String fileName) throws Exception {
         String script = dispatcher.dispatchScript(client);
         ChannelSftp sftp = null;
         InputStream in = null;
@@ -269,7 +289,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 sftp.mkdir(home);
             }
             in = new ByteArrayInputStream(script.getBytes(StandardCharsets.UTF_8));
-            String dst = Paths.get(sftp.getHome(), Constant.WORK_HOME).resolve(Constant.API_FILE).toAbsolutePath().toString();
+            String dst = Paths.get(sftp.getHome(), Constant.WORK_HOME).resolve(fileName).toAbsolutePath().toString();
             sftp.put(in, dst, ChannelSftp.OVERWRITE);
 
             sftp.chmod(511, dst);
@@ -285,5 +305,9 @@ public class HokageServerCacheDao extends BaseCacheDao {
                 in.close();
             }
         }
+    }
+
+    public void invalidateMetricCache() {
+        server2MetricClient.invalidateAll();
     }
 }
