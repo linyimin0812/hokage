@@ -177,7 +177,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_report_info_handler` (
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `handler_ip` varchar(16) NOT NULL comment '服务器上报信息处理者',
-  `timestamp` BIGINT NOT NULL comment '抢占时间',
+  `start_time` BIGINT NOT NULL comment '抢占时间',
   `version` TINYINT NOT NULL COMMENT '版本号',
   PRIMARY KEY (`id`)
 )

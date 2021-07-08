@@ -10,6 +10,22 @@ INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VAL
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_fixed_date_task', '1000');
 INSERT IGNORE INTO `hokage_sequence` (gmt_create, gmt_modified, name, value) VALUES (now(), now(), 'hokage_server_ssh_key_content', '1000');
 
+INSERT IGNORE INTO `hokage_server_report_info_handler` (
+    id,
+    gmt_create,
+    gmt_modified,
+    handler_ip,
+    start_time,
+    version
+) VALUES (
+    1,
+    now(),
+    now(),
+    '0.0.0.0',
+    1592150400000,
+    1
+);
+
 # 添加管理员
 INSERT IGNORE INTO hokage.hokage_user (
     id,
