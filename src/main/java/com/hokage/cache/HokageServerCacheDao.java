@@ -7,7 +7,9 @@ import com.hokage.infra.worker.MasterThreadPoolWorker;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerDao;
+import com.hokage.persistence.dao.HokageServerReportHandlerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
+import com.hokage.persistence.dataobject.HokageServerReportInfoHandlerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.CommandDispatcher;
 import com.hokage.ssh.context.SshContext;
@@ -16,6 +18,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -71,6 +75,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
     private ScheduledThreadPoolWorker scheduledWorker;
     private ThreadPoolWorker poolWorker;
     private MasterThreadPoolWorker masterPoolWorker;
+    private HokageServerReportHandlerDao reportHandlerDao;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
@@ -97,8 +102,13 @@ public class HokageServerCacheDao extends BaseCacheDao {
         this.masterPoolWorker = masterPoolWorker;
     }
 
+    @Autowired
+    public void setReportHandlerDao(HokageServerReportHandlerDao reportHandlerDao) {
+        this.reportHandlerDao = reportHandlerDao;
+    }
+
     @PostConstruct
-    public void init() throws Exception {
+    public void init() {
         serverKey2SshExecClient = buildDefaultLocalCache();
         serverKey2SshSftpClient = buildDefaultLocalCache();
         server2MetricClient = buildDefaultLocalCache();
@@ -160,9 +170,9 @@ public class HokageServerCacheDao extends BaseCacheDao {
         poolWorker.getExecutorPool().execute(() -> {
             this.activeNewServerCache(serverDOList, serverKey2SshSftpClient, client -> {
                 try {
-                    this.uploadScript2Server(client, Constant.API_FILE);
+                    this.uploadScript2Server(client, Constant.LINUX_API_FILE, null);
                 } catch (Exception e) {
-                    log.error("upload script: {} error. errMsg: {}", Constant.API_FILE, e.getMessage());
+                    log.error("upload script: {} error. errMsg: {}", Constant.LINUX_API_FILE, e.getMessage());
                 }
             });
             this.invalidateDelServerCache(serverDOList, serverKey2SshSftpClient);
@@ -190,15 +200,29 @@ public class HokageServerCacheDao extends BaseCacheDao {
         masterPoolWorker.getExecutorPool().execute(() -> {
             this.activeNewServerCache(serverList, server2MetricClient, client -> {
                 try {
-                    this.uploadScript2Server(client, Constant.REPORT_FILE);
+                    this.uploadScript2Server(client, Constant.LINUX_REPORT_FILE, specifyMaster);
                     // TODO: 执行一下脚本
                 } catch (Exception e) {
-                    log.error("upload script: {} error. errMsg: {}", Constant.REPORT_FILE, e.getMessage());
+                    log.error("upload script: {} error. errMsg: {}", Constant.LINUX_REPORT_FILE, e.getMessage());
                 }
             });
             this.invalidateDelServerCache(serverList, server2MetricClient);
         });
     }
+
+    private final BiFunction<SshClient, String, String> specifyMaster = (client, script) -> {
+      if (StringUtils.isBlank(script)) {
+          return StringUtils.EMPTY;
+      }
+      long id = client.getSshContext().getId();
+        HokageServerReportInfoHandlerDO handlerDO = reportHandlerDao.selectById(Constant.MASTER_REPORT_ID);
+        String ip = handlerDO.getHandlerIp();
+        int port = handlerDO.getHandlerPort();
+
+        return script.replace("#id", String.valueOf(id))
+                .replace("#masterIp", ip)
+                .replace("#masterPort", String.valueOf(port));
+    };
 
     /**
      * active new add server ssh client
@@ -240,6 +264,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
                     log.info("HokageServerCacheDao.activeCacheRefresh create ssh client: {}", context);
                 } catch (Exception e) {
                     log.error("HokageServerCacheDao.activeCacheRefresh create ssh client: {} error. err: {}", context, e.getMessage());
+                    cache.put(serverKey, new SshClient().setContext(context));
                 }
             });
         }
@@ -274,8 +299,13 @@ public class HokageServerCacheDao extends BaseCacheDao {
         }
     }
 
-    private void uploadScript2Server(SshClient client, String fileName) throws Exception {
+    private void uploadScript2Server(SshClient client, String fileName, BiFunction<SshClient, String, String> function) throws Exception {
         String script = dispatcher.dispatchScript(client);
+
+        if (Objects.nonNull(function)) {
+            script = function.apply(client, script);
+        }
+
         ChannelSftp sftp = null;
         InputStream in = null;
         try {
