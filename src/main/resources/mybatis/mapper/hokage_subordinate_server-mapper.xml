@@ -8,6 +8,11 @@
         <result property="id" column="id"/>
         <result property="serverId" column="server_id"/>
         <result property="subordinateId" column="subordinate_id"/>
+        <result property="ip" column="ip"/>
+        <result property="passwd" column="passwd"/>
+        <result property="sshPort" column="ssh_port"/>
+        <result property="account" column="account"/>
+        <result property="loginType" column="login_type"/>
         <result property="status" column="status"/>
     </resultMap>
 
@@ -17,6 +22,11 @@
         gmt_modified,
         server_id,
         subordinate_id,
+        ip,
+        passwd,
+        ssh_port,
+        account,
+        login_type,
         status
     </sql>
 
@@ -36,6 +46,11 @@
             now(),
             #{serverId},
             #{subordinateId},
+            #{ip},
+            #{passwd},
+            #{sshPort},
+            #{account},
+            #{loginType},
             #{status}
         );
     </insert>
@@ -50,6 +65,21 @@
             </if>
             <if test="subordinateId != null and subordinateId != '' ">
                 ,subordinate_id = #{subordinateId}
+            </if>
+            <if test="ip != null and ip != '' ">
+                ,ip = #{ip}
+            </if>
+            <if test="passwd != null and passwd != '' ">
+                ,passwd = #{passwd}
+            </if>
+            <if test="sshPort != null and sshPort != '' ">
+                ,ssh_port = #{sshPort}
+            </if>
+            <if test="account != null and account != '' ">
+                ,account = #{account}
+            </if>
+            <if test="loginType != null and loginType != '' or loginType == 0 ">
+                ,login_type = #{loginType}
             </if>
             <if test="status != null and status != '' or status == 0 ">
                 ,status = #{status}

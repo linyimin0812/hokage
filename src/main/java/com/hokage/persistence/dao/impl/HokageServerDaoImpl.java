@@ -97,6 +97,6 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectByUserId(Long userId) {
-        return null;
+        return Optional.ofNullable(serverMapper.selectByUserId(userId)).orElse(Collections.emptyList());
     }
 }

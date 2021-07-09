@@ -5,6 +5,7 @@ import com.hokage.biz.request.SubordinateServerQuery;
 import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -87,4 +88,11 @@ public interface HokageServerMapper {
      * @return
      */
     List<HokageServerDO> selectBySubordinateServerQuery(SubordinateServerQuery query);
+
+    /**
+     * select user by user id
+     * @param userId subordinate id or supervisor id
+     * @return server list
+     */
+    List<HokageServerDO> selectByUserId(@Param("userId") Long userId);
 }

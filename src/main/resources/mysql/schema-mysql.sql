@@ -81,6 +81,11 @@ CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
   `gmt_modified` DATETIME NOT NULL,
   `subordinate_id` bigint NOT NULL COMMENT '普通用户id',
   `server_id` bigint NOT NULL COMMENT '服务器id',
+  `ip` varchar(16) NOT NULL COMMENT '服务器ip',
+  `ssh_port` varchar(6) NOT NULL COMMENT 'ssh链接端口',
+  `account` varchar(32) NOT NULL COMMENT '登录账户',
+  `login_type` tinyint NOT NULL COMMENT '登录方式, 0-密码登录， 1-密钥文件登录',
+  `passwd` text NOT NULL COMMENT '登录密码',
   `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )

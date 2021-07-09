@@ -262,4 +262,17 @@
             </if>
         </where>
     </select>
+
+    <select id="selectByUserId" resultMap="HokageServerMapper">
+        SELECT <include refid="allColumns" />
+        FROM <include refid="tableNme" />
+        <where>
+            id IN (
+                select server_id from `hokage_supervisor_server` where supervisor_id = #{userId}
+            )
+            OR id IN (
+                select server_id from `hokage_subordinate_server` where subordinate_id = #{userId}
+            )
+        </where>
+    </select>
 </mapper>

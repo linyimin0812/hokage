@@ -24,4 +24,25 @@ public class HokageSubordinateServerDO extends HokageBaseDO {
      * status, {@link com.hokage.biz.enums.RecordStatusEnum}
      */
     private Integer status;
+
+    /**
+     * server ip
+     */
+    private String ip;
+    /**
+     * server ssh port
+     */
+    private String sshPort;
+    /**
+     * server ssh account
+     */
+    private String account;
+    /**
+     * server ssh password
+     */
+    private String passwd;
+    /**
+     * login type: 0-password, 1-key file
+     */
+    private Integer loginType;
 }
