@@ -45,14 +45,20 @@ function report_ip() {
   curl -d "$text" -H "Content-Type: application/json" -X POST http://#masterIp:#masterPort/ip/report
 }
 
-# 安装必要软件
-install_software
+fnCalled="$1"
 
-# 上报ip
-report_ip
-
-# 移除定时任务
-crontab -l | grep -v 'bash ~/.hokage/server-report.sh' | crontab -
-
-# 添加定时任务
-(crontab -l 2> /dev/null); echo "*/1 * * * * bash ~/.hokage/server-report.sh" | crontab -
+if [ -n "$(type -t "$fnCalled")" ] && [ "$(type -t "$fnCalled")" = function ]
+then
+  # 上报ip
+  ${fnCalled}
+else
+  echo "安装必要软件"
+  # 安装必要软件
+  install_software
+  echo "添加定时上报任务"
+  # 移除定时任务
+  crontab -l | grep -v 'bash ~/.hokage/server-report.sh' | crontab -
+  # 添加定时任务
+  (crontab -l 2> /dev/null); echo "*/1 * * * * bash ~/.hokage/server-report.sh" | crontab -
+  echo "完成初始化"
+fi
