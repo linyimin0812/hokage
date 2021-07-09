@@ -42,7 +42,9 @@ public class Constant {
     /**
      * report file name
      */
-    public static final String LINUX_REPORT_FILE = "report-api.sh";
+    public static final String LINUX_REPORT_FILE = "linux-report.sh";
 
     public static final Long MASTER_REPORT_ID = 1L;
+
+    public static final String LOCAL_HOST = "127.0.0.1";
 }

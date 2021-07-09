@@ -67,7 +67,7 @@ public abstract class AbstractCommand implements Command {
     /**
      * remove file or directory
      * @param path file or directory path, may be relative path or absolute path
-     * @return
+     * @return rm command
      */
     public String rm(String path) {
         return String.format("rm -r %s;", FileUtil.escapeNameWithSingleQuote(path));
@@ -122,14 +122,14 @@ public abstract class AbstractCommand implements Command {
     }
 
     public static String general() {
-        return String.format("bash %s/%s/%s general_info", HOME, Constant.WORK_HOME, Constant.API_FILE);
+        return String.format("bash %s/%s/%s general_info", HOME, Constant.WORK_HOME, Constant.LINUX_API_FILE);
     }
 
     public static String interfaceIp() {
-        return String.format("bash %s/%s/%s interface_ip", HOME, Constant.WORK_HOME, Constant.API_FILE);
+        return String.format("bash %s/%s/%s interface_ip", HOME, Constant.WORK_HOME, Constant.LINUX_API_FILE);
     }
 
     public static String systemStat() {
-        return String.format("bash %s/%s/%s system_status", HOME, Constant.WORK_HOME, Constant.API_FILE);
+        return String.format("bash %s/%s/%s system_status", HOME, Constant.WORK_HOME, Constant.LINUX_API_FILE);
     }
 }

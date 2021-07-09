@@ -1,5 +1,6 @@
 package com.hokage.cache;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
 import com.hokage.biz.Constant;
 import com.hokage.biz.interceptor.UserContext;
@@ -11,7 +12,10 @@ import com.hokage.persistence.dao.HokageServerReportHandlerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageServerReportInfoHandlerDO;
 import com.hokage.ssh.SshClient;
+import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
+import com.hokage.ssh.command.result.CommandResult;
+import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.context.SshContext;
 import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelSftp;
@@ -76,6 +80,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
     private ThreadPoolWorker poolWorker;
     private MasterThreadPoolWorker masterPoolWorker;
     private HokageServerReportHandlerDao reportHandlerDao;
+    private SshExecComponent execComponent;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
@@ -105,6 +110,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
     @Autowired
     public void setReportHandlerDao(HokageServerReportHandlerDao reportHandlerDao) {
         this.reportHandlerDao = reportHandlerDao;
+    }
+
+    @Autowired
+    private void setExecComponent(SshExecComponent execComponent) {
+        this.execComponent = execComponent;
     }
 
     @PostConstruct
@@ -200,8 +210,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
         masterPoolWorker.getExecutorPool().execute(() -> {
             this.activeNewServerCache(serverList, server2MetricClient, client -> {
                 try {
+                    this.uploadScript2Server(client, Constant.LINUX_API_FILE, null);
                     this.uploadScript2Server(client, Constant.LINUX_REPORT_FILE, specifyMaster);
-                    // TODO: 执行一下脚本
+                    AbstractCommand command = dispatcher.dispatch(client);
+                    CommandResult reportResult = execComponent.execute(client, command.report());
+                    log.info("execute report shell script result: {}", JSON.toJSONString(reportResult));
                 } catch (Exception e) {
                     log.error("upload script: {} error. errMsg: {}", Constant.LINUX_REPORT_FILE, e.getMessage());
                 }
@@ -300,7 +313,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
     }
 
     private void uploadScript2Server(SshClient client, String fileName, BiFunction<SshClient, String, String> function) throws Exception {
-        String script = dispatcher.dispatchScript(client);
+        String script = dispatcher.dispatchScript(client, fileName);
 
         if (Objects.nonNull(function)) {
             script = function.apply(client, script);

@@ -77,4 +77,9 @@ public class DarwinCommand extends AbstractCommand {
     public String addUser(String account, String passwd) {
         return null;
     }
+
+    @Override
+    public String report() {
+        return null;
+    }
 }

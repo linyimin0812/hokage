@@ -1,6 +1,7 @@
 package com.hokage.biz.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hokage.biz.Constant;
 import com.hokage.biz.response.resource.network.InterfaceIpVO;
 import com.hokage.biz.service.ReportService;
 import com.hokage.persistence.dao.HokageServerDao;
@@ -17,6 +18,7 @@ import java.net.Socket;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author yiminlin
@@ -27,6 +29,8 @@ import java.util.Optional;
 @Service
 public class ReportServiceImpl implements ReportService {
 
+    private static final String ADDR_PREFIX = "addr:";
+
     private HokageServerDao serverDao;
 
     @Autowired
@@ -36,6 +40,20 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public void ipHandle(List<InterfaceIpVO> interfaceList) {
+
+        interfaceList = interfaceList.stream()
+                .filter(inter -> StringUtils.isNotBlank(inter.getIp()) && !StringUtils.contains(inter.getIp(), Constant.LOCAL_HOST))
+                .peek(inter -> {
+                    if (StringUtils.isBlank(inter.getIp())) {
+                        inter.setIp(StringUtils.EMPTY);
+                        return;
+                    }
+                    if (StringUtils.containsIgnoreCase(inter.getIp(), ADDR_PREFIX)) {
+                        int index = StringUtils.indexOfIgnoreCase(inter.getIp(), ADDR_PREFIX);
+                        String ip = StringUtils.substring(inter.getIp(), index + ADDR_PREFIX.length());
+                        inter.setIp(ip);
+                    }
+                }).collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(interfaceList)) {
             log.warn("report interface list is empty.");
@@ -50,7 +68,7 @@ public class ReportServiceImpl implements ReportService {
         }
 
         // 判断服务器ip是否变化
-        boolean isChanged = interfaceList.stream().anyMatch(inter -> StringUtils.equals(inter.getIp(), serverDO.getIp()));
+        boolean isChanged = interfaceList.stream().noneMatch(inter -> StringUtils.equals(inter.getIp(), serverDO.getIp()));
         if (!isChanged) {
             return;
         }

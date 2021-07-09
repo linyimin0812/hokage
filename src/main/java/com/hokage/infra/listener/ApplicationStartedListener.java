@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 public class ApplicationStartedListener implements ApplicationListener<AvailabilityChangeEvent<ReadinessState>> {
 
     private static final String HEALTH_CHECK = "/actuator/health";
-    private static final String LOCAL_HOST = "127.0.0.1";
 
     @Value("${system.report.info.handler}")
     private boolean canBeMaster;
@@ -137,7 +136,7 @@ public class ApplicationStartedListener implements ApplicationListener<Availabil
     private String acquireLocalIp() {
         int port = context.getWebServer().getPort();
         List<String> ipList = IpAddressUtil.acquireIpList().stream()
-                .filter(ip -> !StringUtils.equals(ip, LOCAL_HOST))
+                .filter(ip -> !StringUtils.equals(ip, Constant.LOCAL_HOST))
                 .filter(ip -> IpAddressUtil.checkHealth(ip, port, HEALTH_CHECK))
                 .collect(Collectors.toList());
 

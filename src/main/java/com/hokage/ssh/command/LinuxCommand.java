@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import com.hokage.biz.Constant;
 import com.hokage.ssh.enums.OsTypeEnum;
 import com.hokage.util.FileUtil;
 import org.apache.commons.lang3.ObjectUtils;
@@ -152,6 +153,11 @@ public class LinuxCommand extends AbstractCommand {
     public String addUser(String account, String passwd) {
         String command = "useradd ${account}; echo \"${account}:${passwd}\" | chpasswd;";
         return command.replace("${account}", account).replace("${passwd}", passwd);
+    }
+
+    @Override
+    public String report() {
+        return String.format("bash %s/%s/%s", HOME, Constant.WORK_HOME, Constant.LINUX_REPORT_FILE);
     }
 
     public static void main(String[] args) {

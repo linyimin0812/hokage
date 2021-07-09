@@ -34,7 +34,7 @@ function report_ip() {
   for item in "${files[@]}"
   do
       interface=$(basename "$item")
-      text=$text"{\"\": #id ,\"interfaceName\" : \"$interface\", \"ip\" : \"$( ifconfig "$interface" | grep "inet " | awk '{print $2}')\"}"
+      text=$text"{\"id\": #id ,\"interfaceName\" : \"$interface\", \"ip\" : \"$( ifconfig "$interface" | grep "inet " | awk '{print $2}')\"}"
       if [[ ! $item == "$last" ]]
       then
         text="$text,"
@@ -42,7 +42,7 @@ function report_ip() {
   done
   text=$text"]"
 
-  curl -d "$text" -H "Content-Type: application/json" -X POST http://#masterIp:#masterPort/ip/report
+  curl -d "$text" -H "Content-Type: application/json" -X POST http://#masterIp:#masterPort/report/ip
 }
 
 fnCalled="$1"
@@ -50,6 +50,7 @@ fnCalled="$1"
 if [ -n "$(type -t "$fnCalled")" ] && [ "$(type -t "$fnCalled")" = function ]
 then
   # 上报ip
+  echo "上报ip"
   ${fnCalled}
 else
   echo "安装必要软件"
@@ -57,8 +58,8 @@ else
   install_software
   echo "添加定时上报任务"
   # 移除定时任务
-  crontab -l | grep -v 'bash ~/.hokage/server-report.sh' | crontab -
+  crontab -l | grep -v 'bash ~/.hokage/linux-report.sh report_ip' | crontab -
   # 添加定时任务
-  (crontab -l 2> /dev/null); echo "*/1 * * * * bash ~/.hokage/server-report.sh" | crontab -
+  (crontab -l 2> /dev/null); echo "*/1 * * * * bash ~/.hokage/linux-report.sh report_ip" | crontab -
   echo "完成初始化"
 fi

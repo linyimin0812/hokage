@@ -93,4 +93,10 @@ public interface Command {
      * @return create account command
      */
     String addUser(String account, String passwd);
+
+    /**
+     * execute report bash script
+     * @return report script execute command
+     */
+    String report();
 }

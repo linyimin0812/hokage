@@ -96,7 +96,7 @@ public class SshExecComponent {
     }
 
     public <T> T executeScriptFunction(SshClient client, String method, Function<CommandResult, T> callback) throws Exception {
-        String scriptPath = Paths.get("~", Constant.WORK_HOME).resolve(Constant.API_FILE).toAbsolutePath().toString();
+        String scriptPath = Paths.get("~", Constant.WORK_HOME).resolve(Constant.LINUX_API_FILE).toAbsolutePath().toString();
         String command = String.format("bash %s %s", scriptPath, method);
         CommandResult execResult = this.execute(client, command);
         return callback.apply(execResult);

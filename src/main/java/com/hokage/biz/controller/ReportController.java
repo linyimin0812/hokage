@@ -3,6 +3,7 @@ package com.hokage.biz.controller;
 import com.hokage.biz.response.resource.network.InterfaceIpVO;
 import com.hokage.biz.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +27,10 @@ public class ReportController {
 
     @RequestMapping(value = "/report/ip", method = RequestMethod.POST)
     public void ipHandle(@RequestBody List<InterfaceIpVO> interfaceList) {
+        // TODO: 服务器上报的ip为空
+        if (CollectionUtils.isEmpty(interfaceList)) {
+            return;
+        }
         reportService.ipHandle(interfaceList);
     }
 }

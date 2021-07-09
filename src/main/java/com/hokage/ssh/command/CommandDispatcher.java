@@ -1,5 +1,6 @@
 package com.hokage.ssh.command;
 
+import com.google.common.collect.ImmutableMap;
 import com.hokage.biz.Constant;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.result.CommandResult;
@@ -37,7 +38,7 @@ public class CommandDispatcher implements ApplicationContextAware {
     private SshExecComponent component;
     private Map<OsTypeEnum, Command> osMapCommand;
     @Getter
-    private Map<OsTypeEnum, String> osMapScript;
+    private Map<OsTypeEnum, Map<String,String>> osMapScript;
 
     @Autowired
     public void setComponent(SshExecComponent component) {
@@ -47,8 +48,13 @@ public class CommandDispatcher implements ApplicationContextAware {
     @PostConstruct
     public void init() throws IOException {
         osMapScript = new ConcurrentHashMap<>(2);
-        osMapScript.put(OsTypeEnum.linux, readShellCommand(Constant.LINUX_API_FILE));
-        osMapScript.put(OsTypeEnum.darwin, readShellCommand(Constant.DARWIN_API_FILE));
+        osMapScript.put(OsTypeEnum.linux, ImmutableMap.of(
+                Constant.LINUX_API_FILE, readShellCommand(Constant.LINUX_API_FILE),
+                Constant.LINUX_REPORT_FILE, readShellCommand(Constant.LINUX_REPORT_FILE)
+        ));
+        osMapScript.put(OsTypeEnum.darwin, ImmutableMap.of(
+                Constant.DARWIN_API_FILE, readShellCommand(Constant.DARWIN_API_FILE)
+        ));
     }
 
     @Override
@@ -66,12 +72,12 @@ public class CommandDispatcher implements ApplicationContextAware {
         return (AbstractCommand) osMapCommand.get(os);
     }
 
-    public String dispatchScript(SshClient client) throws Exception {
+    public String dispatchScript(SshClient client, String fileName) throws Exception {
         OsTypeEnum os = acquireOsType(client);
         if (!osMapScript.containsKey(os)) {
             throw new RuntimeException("unsupported os type: " + os);
         }
-        return osMapScript.get(os);
+        return osMapScript.get(os).get(fileName);
     }
 
     private OsTypeEnum acquireOsType(SshClient client) throws Exception {
@@ -86,7 +92,8 @@ public class CommandDispatcher implements ApplicationContextAware {
         return os;
     }
 
-    private String readShellCommand(String path) throws IOException {
+    private String readShellCommand(String fileName) throws IOException {
+        String path = Constant.SHELL_DIR + fileName;
         InputStream in = getClass().getResourceAsStream(path);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         StringBuilder sb = new StringBuilder();
