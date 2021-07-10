@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS `hokage_user` (
   `role` tinyint NOT NULL COMMENT '用户角色标识: 0: 超级管理员, 1 管理员, 2普通用户',
   `email` varchar(128) NOT NULL UNIQUE,
   `is_subscribed` tinyint ZEROFILL NULL COMMENT '是否订阅, 0: 不订阅, 1: 订阅, 发送消息邮件',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT 'hokage用户信息表';
@@ -72,6 +73,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_group` (
   `name` varchar(128) NOT NULL COMMENT '分组名称(只能是字母或者数字)',
   `description` varchar(1024) NULL COMMENT '分组信息描述',
   `creator_id` bigint NULL COMMENT '创建人',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT = '服务器分组配置信息表';
@@ -111,6 +113,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_application` (
    `server_id` bigint NOT NULL COMMENT '申请服务器id',
    `approve_id` varchar(128) NULL COMMENT '可以通过审批的id',
    `actual_approve_id` bigint NOT NULL COMMENT '实际审批人id',
+   `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
    PRIMARY KEY (`id`)
 )
     COMMENT = '管理员与用户关系映射表';
@@ -174,6 +177,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_metric` (
     `name` varchar(128) NOT NULL COMMENT '对应曲线名称',
     `value` DECIMAL(16,2) NOT NULL comment '曲线上的值，对应纵轴',
     `timestamp` BIGINT NOT NULL comment '时间戳，对应横轴',
+
     PRIMARY KEY (`id`)
 )
   COMMENT 'hokage系统状态数据';

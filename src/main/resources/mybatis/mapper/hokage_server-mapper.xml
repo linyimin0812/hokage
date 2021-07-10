@@ -289,4 +289,14 @@
             AND status &lt;&gt; -1
         </where>
     </select>
+
+    <delete id="deleteById">
+        UPDATE <include refid="tableNme" />
+        <set>
+            status=-1
+        </set>
+        <where>
+            id = #{id}
+        </where>
+    </delete>
 </mapper>

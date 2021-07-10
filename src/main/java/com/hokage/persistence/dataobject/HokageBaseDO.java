@@ -20,4 +20,9 @@ public class HokageBaseDO {
      * modified time
      */
     private Date gmtModified;
+
+    /**
+     * record status, see {@link com.hokage.biz.enums.RecordStatusEnum}
+     */
+    private Integer status;
 }

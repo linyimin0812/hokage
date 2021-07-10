@@ -314,8 +314,12 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> delete(ServerOperateForm form) {
-        hokageServerDao.update()
-        return null;
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        long result = hokageServerDao.deleteById(form.getId());
+        if (result > 0) {
+            return response.success(Boolean.TRUE);
+        }
+        return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "更新数据库失败");
     }
 
     @Override

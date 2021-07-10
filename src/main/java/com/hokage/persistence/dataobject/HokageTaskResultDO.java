@@ -52,12 +52,6 @@ public class HokageTaskResultDO extends HokageBaseDO {
      * execute result
      */
     private String execResult;
-
-    /**
-     * result status: -1: deleted, 0: normal
-     */
-    private Integer status;
-
     /**
      * owner of the task
      */

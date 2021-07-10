@@ -97,4 +97,11 @@ public interface HokageServerDao {
      */
     List<HokageServerDO> selectByUserId(Long userId);
 
+    /**
+     * delete by id
+     * @param id server primary id
+     * @return row affected
+     */
+    Long deleteById(Long id);
+
 }

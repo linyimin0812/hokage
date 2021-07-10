@@ -4,9 +4,9 @@ import lombok.Data;
 
 /**
  * @author linyimin
- * @date 2020/7/26 10:18 下午
+ * @date 2020/7/26 10:18 pm
  * @email linyimin520812@gmail.com
- * @description 管理员与用户关系映射表
+ * @description Manager and user relationship mapping table
  */
 
 @Data
@@ -20,8 +20,4 @@ public class HokageSupervisorSubordinateDO extends HokageBaseDO {
      * subordinate id
      */
     private Long subordinateId;
-    /**
-     * status, {@link com.hokage.biz.enums.RecordStatusEnum}
-     */
-    private Integer status;
 }

@@ -95,4 +95,11 @@ public interface HokageServerMapper {
      * @return server list
      */
     List<HokageServerDO> selectByUserId(@Param("userId") Long userId);
+
+    /**
+     * delete by id
+     * @param id server primary id
+     * @return row affected
+     */
+    Long deleteById(@Param("id") Long id);
 }

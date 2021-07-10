@@ -12,6 +12,7 @@
         <result property="role" column="role" />
         <result property="email" column="email" />
         <result property="subscribed" column="is_subscribed" />
+        <result property="status" column="status" />
     </resultMap>
 
     <sql id="allColumns">
@@ -22,7 +23,8 @@
         passwd,
         role,
         email,
-        is_subscribed
+        is_subscribed,
+        status
     </sql>
 
     <sql id="baseSql">
@@ -45,6 +47,9 @@
             <if test="subscribed != null and subscribed !='' ">
                 and is_subscribed=#{subscribed}
             </if>
+            <if test="status != null and status !='' or status == 0 ">
+                and status=#{status}
+            </if>
         </where>
     </sql>
 
@@ -65,7 +70,8 @@
             #{passwd},
             #{role},
             #{email},
-            #{subscribed}
+            #{subscribed},
+            #{status}
         );
     </insert>
     <update id="update" parameterType="HokageUserDO">
@@ -88,6 +94,9 @@
             <if test="subscribed != null and subscribed !='' ">
                 ,is_subscribed=#{subscribed}
             </if>
+            <if test="status != null and status !='' or status == 0 ">
+                ,status=#{status}
+            </if>
         </set>
         <where>
             id=#{id}
@@ -99,7 +108,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            id=#{id}
+            id=#{id} AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listUserByName" parameterType="java.lang.String" resultMap="HokageUserMapper">
@@ -108,7 +117,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            username =#{username}
+            username =#{username} AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listUserByRole" parameterType="java.lang.Integer" resultMap="HokageUserMapper">
@@ -117,7 +126,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            role=#{role}
+            role=#{role} AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listAll" parameterType="HokageUserDO" resultMap="HokageUserMapper">
@@ -133,7 +142,7 @@
         FROM
         <include refid="tableName"/>
         <where>
-            email=#{email}
+            email=#{email} AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -147,6 +156,7 @@
             <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -157,6 +167,7 @@
         <include refid="tableName"/>
         <where>
             role = #{role}
+            AND status &lt;&gt; -1
             <if test="id != null">
                 AND id = #{id}
             </if>
@@ -197,6 +208,7 @@
                     )
                 )
             </if>
+            AND status &lt;&gt; -1
         </where>
     </select>
 </mapper>

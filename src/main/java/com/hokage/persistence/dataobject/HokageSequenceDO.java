@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
- * @date 2020/8/30 4:28 下午
+ * @date 2020/8/30 4:28 pm
  * @email linyimin520812@gmail.com
  * @description
  */

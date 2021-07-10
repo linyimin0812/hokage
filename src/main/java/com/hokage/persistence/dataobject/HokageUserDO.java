@@ -1,6 +1,7 @@
 package com.hokage.persistence.dataobject;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -9,6 +10,7 @@ import lombok.Data;
  */
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class HokageUserDO extends HokageBaseDO {
     /**
      * user id

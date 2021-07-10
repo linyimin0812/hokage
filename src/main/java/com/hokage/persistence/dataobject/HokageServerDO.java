@@ -58,9 +58,4 @@ public class HokageServerDO extends HokageBaseDO {
      * creator
      */
     private Long creatorId;
-
-    /**
-     * status {@link com.hokage.biz.enums.RecordStatusEnum}
-     */
-    private Integer status;
 }

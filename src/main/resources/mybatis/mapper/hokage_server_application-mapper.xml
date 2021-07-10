@@ -10,6 +10,7 @@
         <result property="serverId" column="server_id" />
         <result property="approveIds" column="approve_ids" />
         <result property="actualApproveId" column="actual_approve_id" />
+        <result property="status" column="status" />
     </resultMap>
     <sql id="allColumns" >
         id,
@@ -18,7 +19,8 @@
         apply_id,
         server_id,
         approve_ids,
-        actual_approve_id
+        actual_approve_id,
+        status
     </sql>
 
     <sql id="tableName">
@@ -37,7 +39,8 @@
             #{applyId},
             #{serverId},
             #{approveIds},
-            #{actualApproveId}
+            #{actualApproveId},
+            #{status}
         )
     </insert>
 
@@ -57,6 +60,9 @@
             </if>
             <if test="actualApproveId != null and actualApproveId != '' ">
                 ,actual_approve_id = #{actualApproveId}
+            </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
             </if>
         </set>
         <where>

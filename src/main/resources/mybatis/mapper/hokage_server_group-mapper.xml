@@ -9,6 +9,7 @@
         <result property="name" column="name"/>
         <result property="description" column="description"/>
         <result property="creatorId" column="creator_id"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -17,7 +18,8 @@
         gmt_modified,
         name,
         description,
-        creator_id
+        creator_id,
+        status
     </sql>
 
     <sql id="tableName">
@@ -35,7 +37,8 @@
             now(),
             #{name},
             #{description},
-            #{creatorId}
+            #{creatorId},
+            #{status}
         );
     </insert>
     <update id="update" parameterType="HokageServerGroupDO">
@@ -49,6 +52,9 @@
             <if test="description != null and description != '' ">
                 ,description = #{description}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
+            </if>
         </set>
         <where>
             id = #{id}
@@ -60,6 +66,9 @@
         <include refid="allColumns"/>
         FROM
         <include refid="tableName"/>
+        <where>
+            status &lt;&gt; -1
+        </where>
     </select>
 
     <select id="listByCreatorId" resultMap="HokageServerGroupMapper">
@@ -68,7 +77,7 @@
         FROM
         <include refid="tableName" />
         <where>
-            creator_id = #{id}
+            creator_id = #{id} AND status &lt;&gt; -1
         </where>
     </select>
     <select id="listByCreatorIdAndName" resultMap="HokageServerGroupMapper">
@@ -80,6 +89,8 @@
             creator_id = #{id}
             AND
             name = #{name}
+            AND
+            status &lt;&gt; -1
         </where>
     </select>
 </mapper>
