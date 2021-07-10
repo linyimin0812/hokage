@@ -1,5 +1,7 @@
 #!/bin/bash
 
+ifconfig_cmd=$(type -P ifconfig)
+
 function install_software() {
   if ! command -v apt-get &> /dev/null
   then
@@ -34,7 +36,7 @@ function report_ip() {
   for item in "${files[@]}"
   do
       interface=$(basename "$item")
-      text=$text"{\"id\": #id ,\"interfaceName\" : \"$interface\", \"ip\" : \"$( ifconfig "$interface" | grep "inet " | awk '{print $2}')\"}"
+      text=$text"{\"id\": #id ,\"interfaceName\" : \"$interface\", \"ip\" : \"$($ifconfig_cmd "$interface" | grep "inet " | awk '{print $2}')\"}"
       if [[ ! $item == "$last" ]]
       then
         text="$text,"
