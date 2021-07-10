@@ -16,6 +16,7 @@
         <result property="sshPort" column="ssh_port"/>
         <result property="creatorId" column="creator_id"/>
         <result property="loginType" column="login_type"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="allColumns">
@@ -31,7 +32,8 @@
         passwd,
         ssh_port,
         creator_id,
-        login_type
+        login_type,
+        status
     </sql>
 
     <sql id="tableNme">
@@ -70,6 +72,9 @@
             <if test="loginType != null ">
                 and login_type = #{loginType}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                and status = #{status}
+            </if>
         </where>
     </sql>
 
@@ -107,7 +112,8 @@
             #{passwd},
             #{sshPort},
             #{creatorId},
-            #{loginType}
+            #{loginType},
+            #{status}
         );
     </insert>
 
@@ -143,6 +149,9 @@
             <if test="loginType != null ">
                 ,login_type = #{loginType}
             </if>
+            <if test="status != null and status != '' or status == 0 ">
+                ,status = #{status}
+            </if>
         </set>
         <where>
             id = #{id}
@@ -166,6 +175,7 @@
             <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
                 #{id}
             </foreach>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -176,6 +186,7 @@
         <include refid="tableNme"/>
         <where>
             id=#{id}
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -186,6 +197,7 @@
         <include refid="tableNme"/>
         <where>
             server_group=#{group}
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -198,6 +210,7 @@
             id IN (
                 SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{supervisorId}
             )
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -213,6 +226,7 @@
                     )
                 )
             </if>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -235,9 +249,7 @@
                     )
                 )
             </if>
-
-
-
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -260,6 +272,7 @@
                     )
                 )
             </if>
+            AND status &lt;&gt; -1
         </where>
     </select>
 
@@ -273,6 +286,7 @@
             OR id IN (
                 select server_id from `hokage_subordinate_server` where subordinate_id = #{userId}
             )
+            AND status &lt;&gt; -1
         </where>
     </select>
 </mapper>

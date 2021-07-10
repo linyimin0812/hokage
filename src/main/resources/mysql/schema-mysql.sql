@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server` (
   `server_group` varchar(128) NULL COMMENT '服务器分组',
   `description` varchar(1024) NULL COMMENT '服务器描述',
   `creator_id` bigint NOT NULL COMMENT '创建人id',
+  `status` TINYINT NOT NULL COMMENT '状态： -1：删除， 0：正常',
   PRIMARY KEY (`id`)
 )
   COMMENT = '服务器信息表';

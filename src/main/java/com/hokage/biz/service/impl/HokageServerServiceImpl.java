@@ -314,7 +314,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> delete(ServerOperateForm form) {
-        // TODO: 区分实现，参考listServer的实现
+        hokageServerDao.update()
         return null;
     }
 
