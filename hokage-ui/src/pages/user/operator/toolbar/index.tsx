@@ -23,7 +23,12 @@ export class Toolbar extends React.Component {
       operatorId: getHokageUid(),
       serverIds: [],
       userIds: value.userIds || []
-    }).finally(() => store.isModalVisible = false)
+    }).then(result => {
+      if (result) {
+        store.fetchRecords()
+      }
+    })
+      .finally(() => store.isModalVisible = false)
   }
 
   onModalCancel = () => {
