@@ -11,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author linyimin
@@ -87,7 +88,7 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
      */
     @Override
     public List<HokageSupervisorSubordinateDO> listBySupervisorId(Long id) {
-        return supervisorSubordinateMapper.listBySupervisorId(id);
+        return Optional.ofNullable(supervisorSubordinateMapper.listBySupervisorId(id)).orElse(Collections.emptyList());
     }
 
     /**
@@ -117,5 +118,10 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
             return Collections.emptyList();
         }
         return supervisorSubordinateMapper.listSubordinate(supervisorId, subordinateIds);
+    }
+
+    @Override
+    public Long deleteSupervisor(Long id) {
+        return supervisorSubordinateMapper.deleteSupervisor(id);
     }
 }

@@ -143,4 +143,14 @@
         </where>
     </delete>
 
+    <update id="deleteSupervisor">
+        UPDATE
+        <include refid="tableName" />
+        <set>
+            status=-1
+        </set>
+        <where>
+            supervisor_id=#{id}
+        </where>
+    </update>
 </mapper>

@@ -75,4 +75,11 @@ public interface HokageSupervisorSubordinateDao {
      * @return
      */
     List<HokageSupervisorSubordinateDO> listSubordinate(Long supervisorId, List<Long> subordinateIds);
+
+    /**
+     * delete supervisor
+     * @param id supervisor primary key
+     * @return rows affected
+     */
+    Long deleteSupervisor(Long id);
 }

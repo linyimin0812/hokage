@@ -26,8 +26,8 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * insert a new record
-     * @param subordinateServerDO
-     * @return
+     * @param subordinateServerDO subordinate server data object
+     * @return rows affected
      */
     @Override
     public Long insert(HokageSubordinateServerDO subordinateServerDO) {
@@ -36,8 +36,8 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * update a record
-     * @param subordinateServerDO
-     * @return
+     * @param subordinateServerDO subordinate server data object
+     * @return rows affected
      */
     @Override
     public Long update(HokageSubordinateServerDO subordinateServerDO) {
@@ -46,8 +46,8 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * retrieve subordinate ids based on server ids
-     * @param ids
-     * @return
+     * @param ids server id list
+     * @return subordinate server list which meet the criteria
      */
     @Override
     public List<HokageSubordinateServerDO> listByServerIds(List<Long> ids) {
@@ -56,8 +56,8 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * retrieve server ids based on subordinate ids
-     * @param ids
-     * @return
+     * @param ids subordinate id list
+     * @return subordinate server list which meet the criteria
      */
     @Override
     public List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids) {
@@ -66,8 +66,8 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * retrieve record based on primary key
-     * @param id
-     * @return
+     * @param id primary id
+     * @return subordinate server which meet the criteria
      */
     @Override
     public HokageSubordinateServerDO getById(Long id) {
@@ -76,9 +76,9 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     /**
      * grant servers to a subordinate
-     * @param subordinateId
-     * @param serverIds
-     * @return
+     * @param subordinateId subordinate id
+     * @param serverIds server id list
+     * @return rows affected
      */
     @Override
     public Long addBySubordinateId(Long subordinateId, List<Long> serverIds) {
@@ -86,12 +86,12 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     }
 
     @Override
-    public Integer removeBySubordinateId(Long id) {
+    public Long removeBySubordinateId(Long id) {
         return subordinateServerMapper.removeBySubordinateId(id);
     }
 
     @Override
-    public Integer removeBySubordinateId(Long id, List<Long> serverIds) {
+    public Long removeBySubordinateId(Long id, List<Long> serverIds) {
         return subordinateServerMapper.removeBySubordinateId(id, serverIds);
     }
 

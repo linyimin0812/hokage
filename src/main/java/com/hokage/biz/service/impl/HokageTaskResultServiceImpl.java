@@ -273,8 +273,8 @@ public class HokageTaskResultServiceImpl implements HokageTaskResultService {
                 .setTriggerType(triggerType.getStatus())
                 .setExecServer(serverDO.getAccount() + "@" + serverDO.getIp())
                 .setUserId(taskDO.getUserId())
-                .setStatus(taskDO.getStatus())
-                .setBatchId(batchId);
+                .setBatchId(batchId)
+                .setStatus(taskDO.getStatus());
 
         ServiceResponse<Long> upsert = this.upsert(resultDO);
         if (!upsert.getSucceeded()) {

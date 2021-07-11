@@ -61,6 +61,22 @@ export default class OperatorTable extends React.Component {
     )
   }
 
+  deleteSupervisor = (record: UserVO) => {
+    store.isFetching = true
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      userIds: [record.id]
+    }
+    UserAction.deleteSupervisor(form).then(result => {
+      if (result) {
+        store.fetchRecords()
+      } else {
+        message.error("删除管理员失败")
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
+  }
+
   actionRender = (_: any, record: UserVO) => {
     return <Action>
       <Action.Form
@@ -82,7 +98,7 @@ export default class OperatorTable extends React.Component {
       />
       <Action.Confirm
         title={'删除'}
-        action={async () => {alert('TODO: 添加删除动作')}}
+        action={() => {this.deleteSupervisor(record)}}
         content={`确定删除管理员${record.username}(${record.id})`}
       />
     </Action>

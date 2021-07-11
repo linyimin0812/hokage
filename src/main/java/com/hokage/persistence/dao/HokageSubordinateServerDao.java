@@ -57,18 +57,18 @@ public interface HokageSubordinateServerDao {
 
     /**
      * recycle server manage right by supervisorId
-     * @param id
-     * @return
+     * @param id subordinate id
+     * @return rows affected
      */
-    Integer removeBySubordinateId(Long id);
+    Long removeBySubordinateId(Long id);
 
     /**
      * recycle server manage right by supervisor Id and server ids
-     * @param id
-     * @param serverIds
-     * @return
+     * @param id subordinate primary id
+     * @param serverIds server id list
+     * @return rows affected
      */
-    Integer removeBySubordinateId(Long id, List<Long> serverIds);
+    Long removeBySubordinateId(Long id, List<Long> serverIds);
 
     /**
      * retrieve relationship based-on subordinate id and server id

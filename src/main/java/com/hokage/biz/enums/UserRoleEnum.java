@@ -21,7 +21,7 @@ public enum UserRoleEnum {
      */
     subordinate(2);
 
-    private Integer value;
+    private final Integer value;
 
     public Integer getValue() {
         return this.value;

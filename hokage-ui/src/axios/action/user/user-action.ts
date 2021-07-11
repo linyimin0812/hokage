@@ -157,4 +157,16 @@ export const UserAction = {
       })
     })
   },
+  deleteSupervisor: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.deleteSupervisor(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("删除管理员失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
 }

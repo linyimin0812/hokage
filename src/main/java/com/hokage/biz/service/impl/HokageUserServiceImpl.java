@@ -2,6 +2,7 @@ package com.hokage.biz.service.impl;
 
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.user.UserConverter;
+import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
@@ -100,6 +101,8 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
             return fail(sequence.getCode(), sequence.getMsg());
         }
 
+        hokageUserDO.setStatus(RecordStatusEnum.inuse.getStatus());
+
         Long result = userDao.insert(hokageUserDO);
         if (result > 0) {
             return success(hokageUserDO);
@@ -157,27 +160,40 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<Boolean> deleteSupervisor(List<Long> ids) {
-        checkNotNull(ids, "supervisor ids can't be null");
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> deleteSupervisor(Long id) {
+        checkNotNull(id, "supervisor id can't be null");
+        // 1. 删除其管理的用户关联的服务器
+        List<Long> subIdList = supervisorSubordinateDao.listBySupervisorId(id)
+                .stream()
+                .map(HokageSupervisorSubordinateDO::getSubordinateId)
+                .collect(Collectors.toList());
 
-        boolean isSucceed = ids.stream().allMatch(id -> {
-            HokageUserDO userDO = new HokageUserDO();
-            userDO.setId(id);
-            userDO.setRole(UserRoleEnum.subordinate.getValue());
-
-            if (userDao.update(userDO) <= 0) {
-                return Boolean.FALSE;
+        for (Long subId : subIdList) {
+            long result = subordinateServerDao.removeBySubordinateId(subId);
+            if (result < 0 ) {
+                throw new RuntimeException("delete subordinate server error.");
             }
+        }
 
-            // 1. 删除管理的用户
+        // 2. 删除管理的用户
+        long result = supervisorSubordinateDao.deleteSupervisor(id);
+        if (result < 0) {
+            throw new RuntimeException("delete supervisor subordinate error.");
+        }
 
-            // 2. 删除管理用户关联的服务器
+        // 3. 删除管理的服务器
+        result = supervisorServerDao.removeBySupervisorId(id);
+        if (result < 0) {
+            throw new RuntimeException("delete supervisor server error.");
+        }
 
-            // 3. 删除管理的服务器
+        // 4. 将管理员角色设置为普通角色
+        HokageUserDO userDO = new HokageUserDO();
+        userDO.setId(id);
+        userDO.setRole(UserRoleEnum.subordinate.getValue());
 
-            return supervisorServerDao.removeBySupervisorId(id) > 0;
-        });
-        if (isSucceed) {
+        if (userDao.update(userDO) > 0) {
             return success(Boolean.TRUE);
         }
         return fail("A-XXX", "HokageUserDO deleteSupervisor error");

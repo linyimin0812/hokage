@@ -63,24 +63,24 @@ public interface HokageSubordinateServerMapper {
 
     /**
      * recycle server manage right by subordinateId
-     * @param id
-     * @return
+     * @param id subordinate primary id
+     * @return rows affected
      */
-    Integer removeBySubordinateId(@Param("id") Long id);
+    Long removeBySubordinateId(@Param("id") Long id);
 
     /**
      * recycle server manage right by subordinateId and server ids
-     * @param id
-     * @param serverIds
-     * @return
+     * @param id id subordinate primary id
+     * @param serverIds server id list
+     * @return rows affected
      */
-    Integer removeBySubordinateId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
+    Long removeBySubordinateId(@Param("id") Long id, @Param("serverIds") List<Long> serverIds);
 
     /**
      * retrieve relationship based-on subordinate id and server id
-     * @param subordinateId
-     * @param serverId
-     * @return
+     * @param subordinateId subordinate id
+     * @param serverId server id
+     * @return subordinate server which meet the criteria
      */
     HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
 }

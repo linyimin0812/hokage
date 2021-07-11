@@ -94,7 +94,7 @@
             <if test="subscribed != null and subscribed !='' ">
                 ,is_subscribed=#{subscribed}
             </if>
-            <if test="status != null and status !='' or status == 0 ">
+            <if test="status != null and status !='' ">
                 ,status=#{status}
             </if>
         </set>

@@ -81,4 +81,11 @@ public interface HokageSupervisorSubordinateMapper {
      * @return
      */
     List<HokageSupervisorSubordinateDO> listSubordinate(@Param("supervisorId")Long supervisorId, @Param("subordinateIds") List<Long> subordinateIds);
+
+    /**
+     * delete supervisor
+     * @param id supervisor primary key
+     * @return rows affected
+     */
+    Long deleteSupervisor(@Param("id") Long id);
 }
