@@ -1,11 +1,10 @@
 package com.hokage.biz.controller.user;
 
 import com.google.common.base.Preconditions;
-import com.hokage.biz.converter.user.SearchConverter;
-import com.hokage.biz.enums.UserRoleEnum;
+import com.hokage.biz.converter.user.SupervisorConverter;
 import com.hokage.biz.form.user.UserServerOperateForm;
-import com.hokage.biz.form.user.UserServerSearchForm;
-import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.form.user.UserSearchForm;
+import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.BaseController;
@@ -27,11 +26,11 @@ public class SupervisorController extends BaseController {
 
     private HokageUserService userService;
 
-    private SearchConverter searchConverter;
+    private SupervisorConverter supervisorConverter;
 
     @Autowired
-    public void setSearchConverter(SearchConverter converter) {
-        this.searchConverter = converter;
+    public void setSupervisorConverter(SupervisorConverter supervisorConverter) {
+        this.supervisorConverter = supervisorConverter;
     }
 
     @Autowired
@@ -40,12 +39,9 @@ public class SupervisorController extends BaseController {
     }
 
     @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
-    public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserServerSearchForm form) {
-
-        UserQuery query = searchConverter.doForward(form);
-        query.setRole(UserRoleEnum.supervisor.getValue());
-
-        ServiceResponse<List<HokageUserVO>> response = userService.search(query);
+    public ResultVO<List<HokageUserVO>> searchSupervisor(@RequestBody UserSearchForm form) {
+        SupervisorQuery query = supervisorConverter.doForward(form);
+        ServiceResponse<List<HokageUserVO>> response = userService.searchSupervisor(query);
         if (response.getSucceeded()) {
             return success(response.getData());
         }

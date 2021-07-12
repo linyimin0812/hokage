@@ -160,19 +160,18 @@
         </where>
     </select>
 
-    <select id="querySupervisor" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
+    <select id="querySupervisor" parameterType="com.hokage.biz.request.user.SupervisorQuery" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns" />
         FROM
         <include refid="tableName"/>
         <where>
-            role = #{role}
-            AND status &lt;&gt; -1
+            status &lt;&gt; -1 AND role = 1
             <if test="id != null">
                 AND id = #{id}
             </if>
-            <if test="username != null and username != ''">
-                AND username LIKE CONCAT('%', #{username}, '%')
+            <if test="supervisorName != null and supervisorName != ''">
+                AND username LIKE CONCAT('%', #{supervisorName}, '%')
             </if>
             <if test="serverGroup != null and serverGroup != ''">
                 AND id IN (
@@ -184,21 +183,24 @@
         </where>
     </select>
 
-    <select id="querySubordinate" parameterType="com.hokage.biz.request.UserQuery" resultMap="HokageUserMapper">
+    <select id="querySubordinate" parameterType="com.hokage.biz.request.user.SubordinateQuery" resultMap="HokageUserMapper">
         SELECT
         <include refid="allColumns" />
         FROM
         <include refid="tableName" />
         <where>
-            id IN (
-                SELECT subordinate_id FROM hokage_supervisor_subordinate WHERE supervisor_id = #{operatorId}
-            )
+            status &lt;&gt; -1 AND role = 2
             <if test="id != null">
                 AND id = #{id}
             </if>
-            <if test="username != null and username != ''">
+            <if test="subordinateName != null and subordinateName != ''">
                 AND id IN (
-                    SELECT id FROM hokage_user WHERE username LIKE CONCAT('%', #{username}, '%')
+                    SELECT id FROM hokage_user WHERE username LIKE CONCAT('%', #{subordinateName}, '%')
+                )
+            </if>
+            <if test="operatorId != null and operatorId != ''">
+                AND id IN (
+                    SELECT id FROM `hokage_supervisor_subordinate` WHERE supervisor_id = #{operatorId}
                 )
             </if>
             <if test="serverGroup != null and serverGroup != ''">
@@ -208,7 +210,16 @@
                     )
                 )
             </if>
-            AND status &lt;&gt; -1
+        </where>
+    </select>
+
+    <select id="querySupervisorBySubordinateId" resultMap="HokageUserMapper">
+        SELECT <include refid="allColumns" />
+        FROM <include refid="tableName" />
+        <where>
+            id IN (
+                SELECT supervisor_id FROM `hokage_supervisor_subordinate` WHERE subordinate_id = #{id} AND status &lt;&gt; -1
+            )
         </where>
     </select>
 </mapper>

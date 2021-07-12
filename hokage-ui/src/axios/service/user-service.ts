@@ -77,11 +77,6 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     method: 'POST'
   },
 
-  // add subordinate
-  'addSubordinate': {
-    url: '/user/subordinate/add',
-    method: 'POST'
-  },
   // delete subordinate
   'deleteSubordinate': {
     url: '/user/subordinate/delete',
@@ -105,6 +100,14 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/user/subordinate/server/recycle',
     method: 'POST'
   },
+  'addUserToSupervisor': {
+    url: '/user/subordinate/supervisor/grant',
+    method: 'POST',
+  },
+  'deleteUserSupervisor': {
+    url: '/user/subordinate/supervisor/recycle',
+    method: 'POST'
+  }
 
 }
 

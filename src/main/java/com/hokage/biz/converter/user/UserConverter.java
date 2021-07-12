@@ -8,9 +8,7 @@ import com.hokage.biz.form.user.HokageUserRegisterForm;
 import com.hokage.biz.response.HokageOperation;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
-import com.hokage.persistence.dao.HokageServerDao;
-import com.hokage.persistence.dao.HokageSubordinateServerDao;
-import com.hokage.persistence.dao.HokageSupervisorServerDao;
+import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.hokage.persistence.dataobject.HokageUserDO;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -37,6 +36,7 @@ public class UserConverter {
     private static HokageSupervisorServerDao supervisorServerDao;
     private static HokageSubordinateServerDao subordinateServerDao;
     private static HokageServerDao hokageServerDao;
+    private static HokageUserDao userDao;
 
     private static final ImmutableMap<ConverterTypeEnum, UserDO2VO> CONVERTER_MAP = ImmutableMap.<ConverterTypeEnum, UserDO2VO>builder()
         .put(ConverterTypeEnum.supervisor, new SupervisorUserDO2VO())
@@ -56,6 +56,11 @@ public class UserConverter {
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
         UserConverter.hokageServerDao = hokageServerDao;
+    }
+
+    @Autowired
+    public void setUserDao(HokageUserDao userDao) {
+        UserConverter.userDao = userDao;
     }
 
     public static HokageUserDO registerFormToDO(HokageUserRegisterForm userRegisterForm) {
@@ -85,8 +90,8 @@ public class UserConverter {
     }
 
     public static HokageUserVO converter(HokageUserDO hokageUserDO, ConverterTypeEnum type) {
-        UserDO2VO userDO2VO = CONVERTER_MAP.get(type);
-        return userDO2VO.converter(hokageUserDO);
+        UserDO2VO user2VO = CONVERTER_MAP.get(type);
+        return user2VO.converter(hokageUserDO);
     }
 
 
@@ -131,27 +136,6 @@ public class UserConverter {
             hokageUserVO.setServerGroupList(serverLabels);
             hokageUserVO.setServerNum(serverVOList.size());
             hokageUserVO.setServerVOList(serverVOList);
-
-            // action info
-            List<HokageOperation> operations = Arrays.asList(
-                new HokageOperation(
-                        OperationTypeEnum.modal.name(),
-                        "addServer",
-                        "/supervisor/server/add",
-                        ""),
-                new HokageOperation(
-                        OperationTypeEnum.modal.name(),
-                        "recycleServer",
-                        "/supervisor/server/recycle",
-                        "确认回收服务器?"),
-                new HokageOperation(
-                        OperationTypeEnum.confirm.name(),
-                        "delete",
-                        "/user/supervisor/delete",
-                        "确认删除管理员?")
-            );
-
-            hokageUserVO.setOperationList(operations);
             return hokageUserVO;
         }
 
@@ -202,27 +186,12 @@ public class UserConverter {
             hokageUserVO.setServerNum(serverVOList.size());
             hokageUserVO.setServerVOList(serverVOList);
 
-            // action info
-            List<HokageOperation> operations = Arrays.asList(
-                new HokageOperation(
-                        OperationTypeEnum.link.name(),
-                        "view",
-                        "/user/subordinate/view",
-                        ""),
-                new HokageOperation(
-                        OperationTypeEnum.modal.name(),
-                        "addServer",
-                        "/subordinate/server/add",
-                        ""),
-                new HokageOperation(
-                        OperationTypeEnum.confirm.name(),
-                        "deleteSubordinate",
-                        "/supervisor/subordinate/delete",
-                        ""
-                )
-            );
-
-            hokageUserVO.setOperationList(operations);
+            // 指定管理员
+            HokageUserDO userDO = userDao.querySupervisorBySubordinateId(hokageUserDO.getId());
+            if (Objects.nonNull(userDO)) {
+                hokageUserVO.setSupervisorId(userDO.getId());
+                hokageUserVO.setSupervisorName(userDO.getUsername());
+            }
 
             return hokageUserVO;
         }

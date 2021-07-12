@@ -17,7 +17,7 @@ export class SelectServer extends React.Component<SelectServerProps> {
       <Form name="server-select" form={form}>
         <Form.Item name="serverIds" label={'服务器'} initialValue={[]} rules={[{ required: true, }]}>
           <Select mode="multiple" style={{ width: '100%' }} placeholder={"请选择(支持多选)"}>
-            {store.grantedServerList.map((serverVO: ServerVO, index) => {
+            {store.serverList.map((serverVO: ServerVO, index) => {
               return <Select.Option key={index} value={serverVO.id}>{serverVO.ip}</Select.Option>
             })}
           </Select>

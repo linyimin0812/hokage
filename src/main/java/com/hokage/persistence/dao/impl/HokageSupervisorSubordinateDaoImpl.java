@@ -117,7 +117,9 @@ public class HokageSupervisorSubordinateDaoImpl implements HokageSupervisorSubor
         if (ObjectUtils.defaultIfNull(supervisorId, 0L) == 0 || CollectionUtils.isEmpty(subordinateIds)) {
             return Collections.emptyList();
         }
-        return supervisorSubordinateMapper.listSubordinate(supervisorId, subordinateIds);
+        return Optional.ofNullable(
+                supervisorSubordinateMapper.listSubordinate(supervisorId, subordinateIds)
+        ).orElse(Collections.emptyList());
     }
 
     @Override

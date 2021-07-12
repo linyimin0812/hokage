@@ -6,8 +6,8 @@ import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
-import com.hokage.biz.form.user.UserServerSearchForm;
-import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.request.user.SubordinateQuery;
+import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageUserService;
@@ -126,21 +126,25 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<List<HokageUserVO>> search(UserQuery query) {
-
-        if (UserRoleEnum.supervisor.getValue().equals(query.getRole())) {
-            List<HokageUserDO> supervisorList = userDao.querySupervisor(query);
-            List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
-            return success(userVOList);
+    public ServiceResponse<List<HokageUserVO>> searchSubordinate(SubordinateQuery query) {
+        HokageUserDO userDO = userDao.getUserById(query.getOperatorId());
+        if (Objects.isNull(userDO)) {
+            return fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "user is not exists. user id: " + query.getOperatorId());
         }
-        if (UserRoleEnum.subordinate.getValue().equals(query.getRole())) {
-            List<HokageUserDO> subordinateList = userDao.querySubordinate(query);
-            List<HokageUserVO> userVOList = subordinateList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
-            return success(userVOList);
+        // 超级用户默认查询所有
+        if (UserRoleEnum.super_operator.getValue().equals(userDO.getRole())) {
+            query.setOperatorId(0L);
         }
+        List<HokageUserDO> subordinateList = userDao.querySubordinate(query);
+        List<HokageUserVO> userVOList = subordinateList.stream().map(this::subordinateUserDO2UserVO).collect(Collectors.toList());
+        return success(userVOList);
+    }
 
-        return success(Collections.emptyList());
-
+    @Override
+    public ServiceResponse<List<HokageUserVO>> searchSupervisor(SupervisorQuery query) {
+        List<HokageUserDO> supervisorList = userDao.querySupervisor(query);
+        List<HokageUserVO> userVOList = supervisorList.stream().map(this::supervisorUserDO2UserVO).collect(Collectors.toList());
+        return success(userVOList);
     }
 
     @Override
@@ -282,34 +286,30 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<Boolean> addSubordinate(Long supervisorId, List<Long> ids) {
+    public ServiceResponse<Boolean> addSubordinates2Supervisor(Long supervisorId, List<Long> ids) {
 
-        List<HokageSupervisorSubordinateDO> subordinateDOList = supervisorSubordinateDao.listSubordinate(supervisorId, ids);
-
-        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOList = ids.stream().filter(id -> {
-            // if subordinate has existed, filter
-            return subordinateDOList.stream().noneMatch(DO -> DO.getSubordinateId().equals(id));
-        }).map(id -> {
-            HokageSupervisorSubordinateDO supervisorSubordinateDO  = new HokageSupervisorSubordinateDO();
-
-            // retrieve id
-            ServiceResponse<Long> response = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_subordinate.name());
-            if (!response.getSucceeded() || ObjectUtils.defaultIfNull(response.getData(), 0L) == 0) {
-                throw new RuntimeException("addSubordinate: can't retrieve primary key id, reason: " + response.getMsg());
-            }
-
-            supervisorSubordinateDO.setId(response.getData());
-            supervisorSubordinateDO.setSupervisorId(supervisorId);
-            supervisorSubordinateDO.setSubordinateId(id);
-
-            return supervisorSubordinateDO;
-        }).collect(Collectors.toList());
-
+        List<HokageSupervisorSubordinateDO> supervisorSubordinateDOList = ids.stream().map(id -> assembleSupSubDO(supervisorId, id)).collect(Collectors.toList());
         Long result = supervisorSubordinateDao.insertBatch(supervisorSubordinateDOList);
         if (result > 0) {
             return success(Boolean.TRUE);
         }
-        return fail("A-XXX", "HokageUserDO addSupervisor error");
+        return fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "HokageUserService addSubordinates2Supervisor error");
+    }
+
+    private HokageSupervisorSubordinateDO assembleSupSubDO(Long supervisorId, Long id) {
+        HokageSupervisorSubordinateDO supervisorSubordinateDO  = new HokageSupervisorSubordinateDO();
+
+        // retrieve id
+        ServiceResponse<Long> response = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_subordinate.name());
+        if (!response.getSucceeded() || ObjectUtils.defaultIfNull(response.getData(), 0L) == 0) {
+            throw new RuntimeException("addSubordinate: can't retrieve primary key id, reason: " + response.getMsg());
+        }
+
+        supervisorSubordinateDO.setId(response.getData());
+        supervisorSubordinateDO.setSupervisorId(supervisorId);
+        supervisorSubordinateDO.setSubordinateId(id);
+        supervisorSubordinateDO.setStatus(RecordStatusEnum.inuse.getStatus());
+        return supervisorSubordinateDO;
     }
 
     @Override
@@ -382,6 +382,22 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         }
 
         return success(UserRoleEnum.supervisor.getValue().equals(roleResponse.getData()));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> recycleSubordinates2Supervisor(Long supervisorId, List<Long> userIds) {
+        boolean result = userIds.stream().allMatch(subordinateId -> {
+            HokageSupervisorSubordinateDO supSubDO = new HokageSupervisorSubordinateDO();
+            supSubDO.setSupervisorId(supervisorId);
+            supSubDO.setSubordinateId(subordinateId);
+            supSubDO.setStatus(RecordStatusEnum.deleted.getStatus());
+            return supervisorSubordinateDao.update(supSubDO) > 0;
+        });
+        if (result) {
+            return success(Boolean.TRUE);
+        }
+        throw new RuntimeException("recycleSubordinates2Supervisor update error.");
     }
 
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {

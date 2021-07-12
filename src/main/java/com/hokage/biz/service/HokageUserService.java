@@ -1,7 +1,8 @@
 package com.hokage.biz.service;
 
-import com.hokage.biz.form.user.UserServerSearchForm;
 import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.request.user.SubordinateQuery;
+import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageUserDO;
@@ -36,7 +37,14 @@ public interface HokageUserService {
      * @param query search condition
      * @return
      */
-    ServiceResponse<List<HokageUserVO>> search(UserQuery query);
+    ServiceResponse<List<HokageUserVO>> searchSubordinate(SubordinateQuery query);
+
+    /**
+     * search supervisor
+     * @param query search condition
+     * @return supervisor list which are meeting the criteria
+     */
+    ServiceResponse<List<HokageUserVO>> searchSupervisor(SupervisorQuery query);
 
     /**
      * add supervisor
@@ -90,11 +98,11 @@ public interface HokageUserService {
 
     /**
      * add subordinate
-     * @param supervisorId
-     * @param ids
-     * @return
+     * @param supervisorId supervisor id
+     * @param ids subordinate id list
+     * @return true: success, false: failed
      */
-    ServiceResponse<Boolean> addSubordinate(@Param("supervisorId") Long supervisorId, @Param("subordinateIds") List<Long> ids);
+    ServiceResponse<Boolean> addSubordinates2Supervisor(Long supervisorId, List<Long> ids);
 
     /**
      * delete subordinate
@@ -147,4 +155,12 @@ public interface HokageUserService {
      * @return true: yes, false: no
      */
     ServiceResponse<Boolean> isSupervisor(Long id);
+
+    /**
+     * delete subordinate's supervisor
+     * @param supervisorId supervisor id
+     * @param userIds subordinate list
+     * @return true: success, false: failed
+     */
+    ServiceResponse<Boolean> recycleSubordinates2Supervisor(Long supervisorId, List<Long> userIds);
 }

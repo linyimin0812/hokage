@@ -1,7 +1,7 @@
 package com.hokage.biz.converter.user;
 
 import com.hokage.biz.converter.Converter;
-import com.hokage.biz.form.user.UserServerSearchForm;
+import com.hokage.biz.form.user.UserSearchForm;
 import com.hokage.biz.request.UserQuery;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -16,9 +16,9 @@ import java.util.Objects;
  * @description server search form converter
  */
 @Component
-public class SearchConverter implements Converter<UserServerSearchForm, UserQuery> {
+public class SearchConverter implements Converter<UserSearchForm, UserQuery> {
     @Override
-    public UserQuery doForward(UserServerSearchForm userServerSearchForm) {
+    public UserQuery doForward(UserSearchForm userServerSearchForm) {
         UserQuery query = new UserQuery();
         if (Objects.nonNull(userServerSearchForm.getId())) {
             query.setId(userServerSearchForm.getId());
@@ -40,7 +40,7 @@ public class SearchConverter implements Converter<UserServerSearchForm, UserQuer
     }
 
     @Override
-    public UserServerSearchForm doBackward(UserQuery query) {
+    public UserSearchForm doBackward(UserQuery query) {
         return null;
     }
 }

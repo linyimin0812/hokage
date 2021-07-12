@@ -1,17 +1,23 @@
 import React, { ReactText } from 'react'
-import { Table, Tag } from 'antd'
+import { Divider, message, Table, Tag } from 'antd';
 import store from './store'
-import { randomColor } from '../../../libs'
+import { getHokageUid, randomColor } from '../../../libs';
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
-import { SelectServer } from '../common/select-server'
 import { observer } from 'mobx-react'
+import { SelectSupervisor } from '../common/select-supervisor'
+import { UserAction } from '../../../axios/action';
+
+
 @observer
 export default class OrdinaryTable extends React.Component {
 
   serverGroupRender = (groupList: string[]) => {
+    if (!groupList || groupList.length === 0) {
+      return <span>-</span>
+    }
     return groupList.map(
       (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
     )
@@ -43,18 +49,65 @@ export default class OrdinaryTable extends React.Component {
     </Table>
   }
 
+  addUserToSupervisor = (form: UserServerOperateForm) => {
+    UserAction.addUserToSupervisor(form).then(result => {
+      if (result) {
+        message.info("添加管理成功")
+        store.fetchRecords({operatorId: getHokageUid()})
+      } else {
+        message.error("添加管理员失败")
+      }
+    }).catch(e => message.error(e))
+  }
+
+  deleteUserSupervisor = (record: UserVO) => {
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      supervisorId: record.supervisorId,
+      userIds: [record.id]
+    }
+    UserAction.deleteUserSupervisor(form).then(result => {
+      if (result) {
+        message.info("移除管理成功")
+        store.fetchRecords({operatorId: getHokageUid()})
+      } else {
+        message.error("移除管理员失败")
+      }
+    }).catch(e => message.error(e))
+  }
+
   actionRender = (_: any, record: UserVO) => {
     return <Action>
-      <Action.Form
-        title={'添加服务器'}
-        renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
-      />
-      <Action.Confirm
-        title={'删除'}
-        action={async () => {alert('TODO: 添加删除动作')}}
-        content={`确定删除用户${record.username}(${record.id})`}
-      />
+      {
+        record.supervisorId ?
+          <>
+            <Action.Confirm
+              title={'移除管理员'}
+              action={() => this.deleteUserSupervisor(record)}
+              content={`确定移除${record.supervisorName}(${record.supervisorId})`}
+            />
+            <Divider type={'vertical'} />
+            <Action.Form
+              title={'添加账号'}
+              renderForm={(form: FormInstance) => { return <SelectSupervisor form={form} />}}
+              confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+            />
+          </> :
+          <>
+            <Action.Form
+              title={'设置管理员'}
+              renderForm={(form: FormInstance) => {
+                return <SelectSupervisor form={form} />
+              }}
+              confirmAction={(form: UserServerOperateForm) => {
+                form.userIds = [record.id]
+                form.operatorId = getHokageUid()
+                this.addUserToSupervisor(form)
+              }}
+              onClickAction={() => { store.fetchSupervisorList() }}
+            />
+          </>
+      }
     </Action>
   }
 
@@ -80,6 +133,7 @@ export default class OrdinaryTable extends React.Component {
       >
         <Table.Column title={'id'} dataIndex={'id'} />
         <Table.Column title={'姓名'} dataIndex={'username'} />
+        <Table.Column title={'管理员'} dataIndex={'supervisorName'} />
         <Table.Column title={'使用服务器数量'} dataIndex={'serverNum'} />
         <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
         <Table.Column title={'操作'} render={this.actionRender} />

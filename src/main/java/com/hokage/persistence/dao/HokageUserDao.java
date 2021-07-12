@@ -1,6 +1,8 @@
 package com.hokage.persistence.dao;
 
 import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.request.user.SubordinateQuery;
+import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.persistence.dataobject.HokageUserDO;
 
 import java.util.List;
@@ -15,57 +17,57 @@ public interface HokageUserDao {
 
     /**
      * insert a new record
-     * @param hokageUserDO
-     * @return
+     * @param hokageUserDO hokage user data object
+     * @return rows affected
      */
     Long insert(HokageUserDO hokageUserDO);
 
     /**
      * update a record
-     * @param hokageUserDO
-     * @return
+     * @param hokageUserDO hokage user data object
+     * @return rows affected
      */
     Long update(HokageUserDO hokageUserDO);
 
     /**
      * retrieve user info by user id
-     * @param id
-     * @return
+     * @param id user primary id
+     * @return user which meet the criteria
      */
     HokageUserDO getUserById(Long id);
 
     /**
      * retrieve user info by username
-     * @param name
-     * @return
+     * @param name user name
+     * @return user which meet the criteria
      */
     List<HokageUserDO> listUserByName(String name);
 
     /**
      * retrieve user info by role
-     * @param role
-     * @return
+     * @param role role of user {@link com.hokage.biz.enums.UserRoleEnum}
+     * @return a list of user which role is meet the criteria
      */
     List<HokageUserDO> listUserByRole(Integer role);
 
     /**
      * retrieve user info by hokageUserDO
-     * @param hokageUserDO
-     * @return
+     * @param hokageUserDO user data object
+     * @return a list of user which meet the criteria
      */
     List<HokageUserDO> listAll(HokageUserDO hokageUserDO);
 
     /**
      * retrieve user info by email
-     * @param email
-     * @return
+     * @param email email of the user
+     * @return the user which meet the criteria
      */
     HokageUserDO getUserByEmail(String email);
 
     /**
      * list user info by user ids
-     * @param ids
-     * @return
+     * @param ids user id list
+     * @return a list of user which meet the criteria
      */
     List<HokageUserDO> listUserByIds(List<Long> ids);
 
@@ -74,12 +76,19 @@ public interface HokageUserDao {
      * @param query query condition
      * @return user query result
      */
-    List<HokageUserDO> querySupervisor(UserQuery query);
+    List<HokageUserDO> querySupervisor(SupervisorQuery query);
 
     /**
      * list subordinate user with query condition
      * @param query query condition
      * @return user query result
      */
-    List<HokageUserDO> querySubordinate(UserQuery query);
+    List<HokageUserDO> querySubordinate(SubordinateQuery query);
+
+    /**
+     * query supervisor based-on subordinate id
+     * @param subordinateId subordinate primary id
+     * @return user which meet the criteria
+     */
+    HokageUserDO querySupervisorBySubordinateId(Long subordinateId);
 }

@@ -34,6 +34,8 @@ export interface UserVO {
   serverGroupList: string[],
   operationList: Operation[],
   serverVOList: ServerVO[],
+  supervisorId: number,
+  supervisorName: string
 }
 
 export interface Operation {
@@ -46,6 +48,7 @@ export interface Operation {
 
 export interface UserServerOperateForm {
   operatorId?: number,
+  supervisorId?: number,
   serverIds?: number[],
   userIds?: number[],
   serverGroup?: ServerGroup | string

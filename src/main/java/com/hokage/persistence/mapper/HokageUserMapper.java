@@ -1,8 +1,11 @@
 package com.hokage.persistence.mapper;
 
 import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.request.user.SubordinateQuery;
+import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -78,12 +81,19 @@ public interface HokageUserMapper {
      * @param query query condition
      * @return user query result
      */
-    List<HokageUserDO> querySupervisor(UserQuery query);
+    List<HokageUserDO> querySupervisor(SupervisorQuery query);
 
     /**
      * list subordinate user with query condition
      * @param query query condition
      * @return user query result
      */
-    List<HokageUserDO> querySubordinate(UserQuery query);
+    List<HokageUserDO> querySubordinate(SubordinateQuery query);
+
+    /**
+     * query supervisor based-on subordinate id
+     * @param subordinateId subordinate primary id
+     * @return user which meet the criteria
+     */
+    HokageUserDO querySupervisorBySubordinateId(@Param("id") Long subordinateId);
 }

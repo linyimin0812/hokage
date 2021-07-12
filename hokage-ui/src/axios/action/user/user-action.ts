@@ -13,7 +13,7 @@ import {
   UserServerSearchForm,
   UserServerOperateForm,
   UserVO, UserRoleEnum,
-} from './user-type';
+} from './user-type'
 import { Models } from '../../../libs/model'
 import { ServiceResult } from '../../common'
 import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../libs'
@@ -108,18 +108,6 @@ export const UserAction = {
     })
   },
 
-  addSubordinate: (form: UserServerOperateForm): Promise<boolean> => {
-    return new Promise<boolean>((resolve, reject) => {
-      UserService.addSubordinate(form).then(value => {
-        if (value.success) {
-          return resolve(value.data)
-        }
-        reject(value.msg)
-      }).catch(err => {
-        return reject("添加用户失败. err: " + JSON.stringify(err))
-      })
-    })
-  },
   supervisorSearch: (form: UserSearchFormType): Promise<UserVO[]> => {
     return new Promise<UserVO[]>((resolve, reject) => {
       UserService.searchSupervisor(form).then(value => {
@@ -166,6 +154,30 @@ export const UserAction = {
         reject(value.msg)
       }).catch(err => {
         return reject("删除管理员失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  addUserToSupervisor: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.addUserToSupervisor(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("添加管理员失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  deleteUserSupervisor: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.deleteUserSupervisor(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("移除管理员失败. err: " + JSON.stringify(err))
       })
     })
   },

@@ -18,8 +18,8 @@ public class HokageUserVO {
      * user id
      */
     private Long id;
-    /*
-     * user name
+    /**
+     * username
      */
     private String username;
 
@@ -47,4 +47,14 @@ public class HokageUserVO {
      * detail of server the user use or manage
      */
     List<HokageServerVO> serverVOList;
+
+    /**
+     * supervisor id
+     */
+    private Long supervisorId;
+
+    /**
+     * supervisor name
+     */
+    private String supervisorName;
 }

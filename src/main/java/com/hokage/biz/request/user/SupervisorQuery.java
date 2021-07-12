@@ -1,4 +1,4 @@
-package com.hokage.biz.form.user;
+package com.hokage.biz.request.user;
 
 import com.hokage.common.PageQuery;
 import lombok.Data;
@@ -7,14 +7,13 @@ import lombok.EqualsAndHashCode;
 import java.util.List;
 
 /**
- * @author linyimin
- * @date 2020/11/1 16:00
- * @email linyimin520812@gmail.com
- * @description supervisor information search form
- */
+ * @author yiminlin
+ * @date 2021/07/12 7:24 pm
+ * @description supervisor query
+ **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserServerSearchForm extends PageQuery {
+public class SupervisorQuery extends PageQuery {
     /**
      * operator id
      */
@@ -25,12 +24,11 @@ public class UserServerSearchForm extends PageQuery {
      */
     private Long id;
     /**
-     * user name
+     * supervisor name
      */
-    private String username;
+    private String supervisorName;
     /**
      * server group
      */
     private List<String> serverGroup;
-
 }
