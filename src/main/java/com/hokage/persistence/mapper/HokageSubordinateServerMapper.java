@@ -63,13 +63,6 @@ public interface HokageSubordinateServerMapper {
     Long addBySubordinateId(@Param("subordinateId") Long subordinateId, @Param("serverIds") List<Long> serverIds);
 
     /**
-     * recycle server manage right by subordinateId
-     * @param id subordinate primary id
-     * @return rows affected
-     */
-    Long removeBySubordinateId(@Param("id") Long id);
-
-    /**
      * recycle server manage right by subordinateId and server ids
      * @param id id subordinate primary id
      * @param serverIds server id list

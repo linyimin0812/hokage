@@ -208,7 +208,7 @@
             <include refid="tableNme"/>
         <where>
             id IN (
-                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{supervisorId}
+                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{supervisorId} AND status &lt;&gt; -1
             )
             AND status &lt;&gt; -1
         </where>

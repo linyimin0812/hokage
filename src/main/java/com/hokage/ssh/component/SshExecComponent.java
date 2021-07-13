@@ -53,11 +53,13 @@ public class SshExecComponent {
             BufferedReader errReader = new BufferedReader(new InputStreamReader(err, StandardCharsets.UTF_8));
 
             String buf;
+            String errBuf;
             StringBuilder sb = new StringBuilder();
+            StringBuilder errSb = new StringBuilder();
             stopwatch =  Stopwatch.createStarted();
             exec.connect(TIME_OUT);
 
-            while ((buf = reader.readLine()) != null || (buf = errReader.readLine()) != null) {
+            while ((buf = reader.readLine()) != null) {
                 sb.append(buf).append('\n');
                 if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                     log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
@@ -65,16 +67,24 @@ public class SshExecComponent {
                 }
             }
 
-            String result = StringUtils.chomp(sb.toString());
+            while ((errBuf = errReader.readLine()) != null) {
+                errSb.append(errBuf).append('\n');
+                if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
+                    log.warn("SshExecCommand.execute timeout. sshClient: {}, command: {}", client, command);
+                    break;
+                }
+            }
+
+            String result = StringUtils.chomp(sb.length() > 0 ? sb.toString() : errSb.toString());
 
             if (stopwatch.elapsed(TimeUnit.MILLISECONDS) > TIME_OUT) {
                 return CommandResult.timeout(result, exec.getExitStatus());
             }
 
-            if (exec.getExitStatus() == 0) {
-                return CommandResult.success(result, exec.getExitStatus());
+            if (StringUtils.isNotEmpty(errSb)) {
+                return CommandResult.failed(result, exec.getExitStatus());
             }
-            return CommandResult.failed(result, exec.getExitStatus());
+            return CommandResult.success(result, exec.getExitStatus());
 
         } catch (Exception e) {
             log.warn("SshExecCommand.execute error. sshClient: {}, command: {}, error: {}", client, command, e);

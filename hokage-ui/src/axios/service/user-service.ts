@@ -107,7 +107,11 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   'deleteUserSupervisor': {
     url: '/user/subordinate/supervisor/recycle',
     method: 'POST'
-  }
+  },
+  'searchSupervisorServer': {
+    url: '/user/supervisor/server/search',
+    method: 'POST'
+  },
 
 }
 

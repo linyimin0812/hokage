@@ -9,6 +9,7 @@ import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.request.command.AccountParam;
 import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.request.user.SubordinateQuery;
 import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.biz.response.server.HokageServerVO;
@@ -232,7 +233,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         checkNotNull(id, "supervisor id can't be null");
         checkNotNull(id, "serverIds can't be null");
 
-        boolean isSucceed = serverIds.size() == supervisorServerDao.removeBySupervisorId(id, serverIds);
+        boolean isSucceed = serverIds.size() <= supervisorServerDao.removeBySupervisorId(id, serverIds);
         if (!isSucceed) {
             throw new RuntimeException("recycle supervisor server error.");
         }
@@ -384,13 +385,27 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> recycleSubordinate(Long id, List<Long> serverIds) {
 
-        boolean isSucceed = subordinateServerDao.removeBySubordinateId(id, serverIds) > 0;
-        if (isSucceed) {
-            return success(Boolean.TRUE);
+        List<HokageSubordinateServerDO> serverDOList = subordinateServerDao.listByServerIds(serverIds);
+        Map<Long, HokageServerDO> managementServerMap = serverDao.selectByIds(serverIds)
+                .stream()
+                .collect(Collectors.toMap(HokageServerDO::getId, Function.identity(), (o1, o2) -> o1));
+
+        for (HokageSubordinateServerDO subServerDO : serverDOList) {
+            AccountParam param = new AccountParam();
+            param.setAccount(subServerDO.getAccount());
+            HokageServerDO serverDO = managementServerMap.get(subServerDO.getServerId());
+            ServiceResponse<Boolean> delAccountResponse = accountService.deleteAccount(serverDO.buildKey(), param);
+            if (!delAccountResponse.getSucceeded() || !delAccountResponse.getData()) {
+                String errMsg = String.format("del account error. id: %s, ip: %s, account: %s", serverDO.getId(), serverDO.getIp(), param.getAccount());
+                throw new RuntimeException(errMsg);
+            }
         }
-        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
+
+        subordinateServerDao.removeBySubordinateId(id, serverIds);
+        return success(Boolean.TRUE);
     }
 
     @Override
@@ -477,6 +492,25 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
                 .collect(Collectors.toList());
 
         return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchSupervisorServer(SupervisorServerQuery query) {
+        List<Long> serverIdList =  supervisorServerDao.listBySupervisorIds(Collections.singletonList(query.getSupervisorId()))
+                .stream()
+                .map(HokageSupervisorServerDO::getServerId)
+                .collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(serverIdList)) {
+            return success(Collections.emptyList());
+        }
+
+        List<HokageServerVO> serverVOList = serverDao.selectByIds(serverIdList)
+                .stream()
+                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor))
+                .collect(Collectors.toList());
+
+        return success(serverVOList);
     }
 
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {

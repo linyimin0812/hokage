@@ -18,6 +18,7 @@ import { Models } from '../../../libs/model'
 import { ServiceResult } from '../../common'
 import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../libs'
 import { UserSearchFormType } from '../../../pages/user/common/search'
+import { ServerVO } from '../server/server-type';
 
 export const UserAction = {
   login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -202,6 +203,30 @@ export const UserAction = {
         reject(value.msg)
       }).catch(err => {
         return reject("回收管理员服务器失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  searchSupervisorServer: (form: UserServerOperateForm): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>((resolve, reject) => {
+      UserService.searchSupervisorServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("查询管理员服务器失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  recycleSubordinateServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.recycleSubordinateServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("回收账号失败. err: " + JSON.stringify(err))
       })
     })
   },

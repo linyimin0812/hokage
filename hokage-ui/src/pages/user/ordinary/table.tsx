@@ -33,17 +33,45 @@ export default class OrdinaryTable extends React.Component {
     return <Tag color = {randomColor(status)}> { status } </Tag>
   }
 
-  nestedActionRender = (record: ServerVO) => {
+  nestedActionRender = (subordinateId: number, record: ServerVO) => {
     return <Action>
       <Action.Confirm
         title={'回收'}
-        action={async () => {alert('TODO: 添加删除动作')}}
+        action={() => {
+          const form: UserServerOperateForm = {
+            operatorId: getHokageUid(),
+            serverIds: [record.id],
+            userIds: [subordinateId]
+          }
+          this.recycleSubordinateServer(form)
+        }}
         content={`确定回收账号${record.account}@${record.ip}`}
       />
     </Action>
   }
 
-  expandedRowRender = (_: UserVO) => {
+  recycleSubordinateServer = (form: UserServerOperateForm) => {
+    store.isFetching = true
+    UserAction.recycleSubordinateServer(form).then(result => {
+      if (result) {
+        message.info("回收账号成功")
+        const searchForm: ServerSearchForm = {
+          operatorId: getHokageUid(),
+          userId:form.userIds![0]
+        }
+        store.isFetching = true
+        ServerAction.searchSubordinateServer(searchForm).then(value => {
+          store.serverVOList = value || []
+        }).catch(e => message.error(e))
+          .finally(() => store.isFetching = false)
+      } else {
+        message.error("回收账号失败")
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
+  }
+
+  expandedRowRender = (userVO: UserVO) => {
     return <Table rowKey={'id'} dataSource={store.serverVOList} pagination={false}>
       <Table.Column title={'主机名'} dataIndex={'hostname'} />
       <Table.Column title={'域名'} dataIndex={'domain'} />
@@ -52,7 +80,7 @@ export default class OrdinaryTable extends React.Component {
       <Table.Column title={'账号'} dataIndex={'account'} />
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
-      <Table.Column title={'操作'} render={this.nestedActionRender} />
+      <Table.Column title={'操作'} render={(record: ServerVO) => this.nestedActionRender(userVO.id, record)} />
     </Table>
   }
 
@@ -84,6 +112,7 @@ export default class OrdinaryTable extends React.Component {
   }
 
   addUserAccount =(form: UserServerOperateForm) => {
+    store.isFetching = true
     UserAction.grantSubordinateServer(form).then(result => {
       if (result) {
         message.info("添加账号成功")
@@ -92,6 +121,7 @@ export default class OrdinaryTable extends React.Component {
         message.error("添加账号失败")
       }
     }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
   }
 
   actionRender = (_: any, record: UserVO) => {
@@ -140,7 +170,7 @@ export default class OrdinaryTable extends React.Component {
     if (expanded) {
       store.isFetching = true
       const form: ServerSearchForm = {
-        operatorId: record.id,
+        operatorId: getHokageUid(),
         role: record.role,
         userId: record.id
       }
@@ -150,7 +180,6 @@ export default class OrdinaryTable extends React.Component {
         .finally(() => store.isFetching = false)
     }
   }
-
 
   render() {
     return (

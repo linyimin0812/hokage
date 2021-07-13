@@ -6,7 +6,6 @@ import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.request.command.AccountParam;
 import com.hokage.biz.request.command.BaseCommandParam;
 import com.hokage.common.ServiceResponse;
-import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
@@ -15,7 +14,6 @@ import com.hokage.ssh.command.result.CommandResult;
 import com.hokage.ssh.component.SshExecComponent;
 import com.hokage.ssh.context.SshContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.function.BiFunction;
@@ -55,6 +53,23 @@ public class AccountCommandHandler<T extends BaseCommandParam> {
         } catch (Exception e) {
             log.error("create account error. errMsg: {}", e.getMessage());
             return response.fail(ResultCodeEnum.CREATE_ACCOUNT_ERROR.getCode(), e.getMessage());
+        }
+    });
+
+    public BiFunction<SshClient,T , ServiceResponse<Boolean>> deleteAccountHandler = ((client, param) -> {
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+        try {
+            AccountParam accountParam = (AccountParam) param;
+            AbstractCommand command = dispatcher.dispatch(client);
+            CommandResult delAccountResult = execComponent.execute(client, command.delUser(accountParam.getAccount()));
+            if (!delAccountResult.isSuccess()) {
+                return response.fail(String.valueOf(delAccountResult.getExitStatus()), delAccountResult.getMsg());
+            }
+
+            return response.success(Boolean.TRUE);
+        } catch (Exception e) {
+            log.error("del account error. errMsg: {}", e.getMessage());
+            return response.fail(ResultCodeEnum.DELETE_ACCOUNT_ERROR.getCode(), e.getMessage());
         }
     });
 

@@ -95,6 +95,13 @@ public interface Command {
     String addUser(String account, String passwd);
 
     /**
+     * delete account
+     * @param account account
+     * @return del account command
+     */
+    String delUser(String account);
+
+    /**
      * execute report bash script
      * @return report script execute command
      */

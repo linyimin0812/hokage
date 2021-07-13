@@ -156,6 +156,11 @@ public class LinuxCommand extends AbstractCommand {
     }
 
     @Override
+    public String delUser(String account) {
+        return String.format("userdel %s", account);
+    }
+
+    @Override
     public String report() {
         return String.format("bash %s/%s/%s", HOME, Constant.WORK_HOME, Constant.LINUX_REPORT_FILE);
     }

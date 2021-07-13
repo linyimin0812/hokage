@@ -89,7 +89,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
 
     @Override
     public Long removeBySubordinateId(Long id) {
-        return subordinateServerMapper.removeBySubordinateId(id);
+        return this.removeBySubordinateId(id, Collections.emptyList());
     }
 
     @Override

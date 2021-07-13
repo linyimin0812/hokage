@@ -1,6 +1,7 @@
 package com.hokage.biz.service;
 
 import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.request.user.SubordinateQuery;
 import com.hokage.biz.request.user.SupervisorQuery;
 import com.hokage.biz.response.server.HokageServerVO;
@@ -171,4 +172,11 @@ public interface HokageUserService {
      * @return server vo list which meet the criteria
      */
     ServiceResponse<List<HokageServerVO>> searchSubordinateServer(SubordinateServerQuery query);
+
+    /**
+     * search supervisor server
+     * @param query {@link SupervisorServerQuery}
+     * @return server list
+     */
+    ServiceResponse<List<HokageServerVO>> searchSupervisorServer(SupervisorServerQuery query);
 }

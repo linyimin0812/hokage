@@ -1,16 +1,15 @@
 import React from 'react'
 import { observer } from 'mobx-react'
-import { message, Table, Tag } from 'antd';
+import { message, Table, Tag } from 'antd'
 import store from './store'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { getHokageUid, randomColor } from '../../../libs';
+import { getHokageUid, randomColor } from '../../../libs'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../common/select-server'
-import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
-import { UserAction } from '../../../axios/action';
-import { ServerAction } from '../../../axios/action/server/server-action';
-import { UserSearchFormType } from '../common/search';
+import { ServerVO } from '../../../axios/action/server/server-type'
+import { UserAction } from '../../../axios/action'
+import { UserSearchFormType } from '../common/search'
 import serverSelectStore from '../store'
 
 @observer
@@ -23,7 +22,7 @@ export default class OperatorTable extends React.Component {
     store.fetchRecords(form)
   }
 
-  expandedRowRender = () => {
+  expandedRowRender = (userVO: UserVO) => {
     return <Table rowKey={'id'} dataSource={store.nestedRecords} pagination={false}>
       <Table.Column title={'id'} dataIndex={'id'} />
       <Table.Column title={'主机名'} dataIndex={'hostname'} />
@@ -34,16 +33,23 @@ export default class OperatorTable extends React.Component {
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'使用人数'} dataIndex={'userNum'} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
-      <Table.Column title={'操作'} render={this.nestedActionRender} />
+      <Table.Column title={'操作'} render={(record: ServerVO) => this.nestedActionRender(userVO.id, record)} />
     </Table>
   }
 
-  nestedActionRender = (record: ServerVO) => {
+  nestedActionRender = (supervisorId: number, record: ServerVO) => {
     return <Action>
       <Action.Confirm
         title={'回收'}
-        action={async () => {alert('TODO: 添加删除动作')}}
-        content={`确定回收服务器${record.ip}(${record.id})`}
+        action={() => {
+          const form: UserServerOperateForm = {
+            operatorId: getHokageUid(),
+            serverIds: [record.id],
+            userIds: [supervisorId]
+          }
+          this.recycleSupervisorServer(form)
+        }}
+        content={`确定回收服务器${record.account}@${record.ip}(${record.id})`}
       />
     </Action>
   }
@@ -99,14 +105,7 @@ export default class OperatorTable extends React.Component {
         confirmAction={(value: UserServerOperateForm) => {
           value.operatorId = getHokageUid()
           value.userIds = [record.id]
-          UserAction.recycleSupervisorServer(value).then(result => {
-            if (result) {
-              message.info("回收服务器成功")
-              store.fetchRecords()
-            } else {
-              message.error("回收服务器失败")
-            }
-          }).catch(e => message.error(e))
+          this.recycleSupervisorServer(value)
         }}
         onClickAction={() => { serverSelectStore.fetchHasGrantedServerList(record.id) }}
       />
@@ -131,18 +130,33 @@ export default class OperatorTable extends React.Component {
       .finally(() => store.isFetching = false)
   }
 
+  recycleSupervisorServer = (form: UserServerOperateForm) => {
+    UserAction.recycleSupervisorServer(form).then(result => {
+      if (result) {
+        message.info('回收服务器成功');
+        this.searchSupervisorServer(form.userIds![0])
+      } else {
+        message.error('回收服务器失败');
+      }
+    }).catch(e => message.error(e));
+  }
+
   onExpend = (expanded: boolean, record: UserVO) => {
     if (expanded) {
-      store.isFetching = true
-      const form: ServerSearchForm = {
-        operatorId: record.id,
-        role: record.role
-      }
-      ServerAction.searchServer(form).then(value => {
-        store.nestedRecords = value || []
-      }).catch(e => message.error(e))
-        .finally(() => store.isFetching = false)
+      this.searchSupervisorServer(record.id)
     }
+  }
+
+  searchSupervisorServer = (supervisorId: number) => {
+    store.isFetching = true
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      userIds: [supervisorId],
+    }
+    UserAction.searchSupervisorServer(form).then(value => {
+      store.nestedRecords = value || []
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
   }
 
   render() {

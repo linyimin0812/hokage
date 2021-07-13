@@ -45,7 +45,7 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
 
     @Override
     public List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> ids) {
-        return supervisorServerMapper.listBySupervisorIds(ids);
+        return Optional.ofNullable(supervisorServerMapper.listBySupervisorIds(ids)).orElse(Collections.emptyList());
     }
 
     @Override

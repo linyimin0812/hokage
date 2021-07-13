@@ -51,6 +51,7 @@ public enum ResultCodeEnum {
     TASK_RESULT_NOT_FOUND("E-0002", "task result not found"),
 
     CREATE_ACCOUNT_ERROR("G-0001", "create account error"),
+    DELETE_ACCOUNT_ERROR("G-0002", "delete account error"),
     ;
 
     private String code;

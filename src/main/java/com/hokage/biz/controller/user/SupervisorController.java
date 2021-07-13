@@ -1,10 +1,13 @@
 package com.hokage.biz.controller.user;
 
 import com.google.common.base.Preconditions;
+import com.hokage.biz.converter.server.SupervisorServerConverter;
 import com.hokage.biz.converter.user.SupervisorConverter;
 import com.hokage.biz.form.user.UserServerOperateForm;
 import com.hokage.biz.form.user.UserSearchForm;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.request.user.SupervisorQuery;
+import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.BaseController;
@@ -26,8 +29,8 @@ import java.util.Objects;
 public class SupervisorController extends BaseController {
 
     private HokageUserService userService;
-
     private SupervisorConverter supervisorConverter;
+    private SupervisorServerConverter supServerConverter;
 
     @Autowired
     public void setSupervisorConverter(SupervisorConverter supervisorConverter) {
@@ -37,6 +40,11 @@ public class SupervisorController extends BaseController {
     @Autowired
     public void setUserService(HokageUserService userService) {
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setSupServerConverter(SupervisorServerConverter supServerConverter) {
+        this.supServerConverter = supServerConverter;
     }
 
     @RequestMapping(value = "/user/supervisor/search", method = RequestMethod.POST)
@@ -103,6 +111,21 @@ public class SupervisorController extends BaseController {
         List<Long> supervisorIds = form.getUserIds();
 
         ServiceResponse<Boolean> response = userService.recycleSupervisor(supervisorIds.get(0), form.getServerIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
+    }
+
+    @RequestMapping(value = "/user/supervisor/server/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageServerVO>> searchSupervisorServer(@RequestBody UserServerOperateForm form) {
+
+        Preconditions.checkState(!CollectionUtils.isEmpty(form.getUserIds()), "supervisor id can't be empty");
+
+        SupervisorServerQuery query = supServerConverter.doForward(form);
+
+        ServiceResponse<List<HokageServerVO>> response = userService.searchSupervisorServer(query);
 
         if (response.getSucceeded()) {
             return success(response.getData());

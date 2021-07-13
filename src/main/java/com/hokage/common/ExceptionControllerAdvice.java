@@ -1,5 +1,6 @@
 package com.hokage.common;
 
+import com.hokage.biz.enums.ResultCodeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,6 +24,11 @@ public class ExceptionControllerAdvice {
 
         // class object of the first exception parameter
         Class<?> parameterType = e.getParameter().getParameterType();
+
+        if (Objects.isNull(e.getBindingResult().getFieldError())) {
+            return new ResultVO<>(false, ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), message, null);
+        }
+
         // the first exception parameter name
         String parameterName = e.getBindingResult().getFieldError().getField();
 
@@ -34,10 +40,12 @@ public class ExceptionControllerAdvice {
 
         message = StringUtils.isEmpty(exceptionInfo.msg()) ? message : exceptionInfo.msg();
 
-        if (Objects.nonNull(exceptionInfo)) {
-            return new ResultVO<>(false, exceptionInfo.code(), message, null);
-        }
+        return new ResultVO<>(false, exceptionInfo.code(), message, null);
         // retrieve first error(A-XXXX: means that there are no define error code)
-        return new ResultVO<>(false, "A-XXXX", message, null);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResultVO<String> exceptionHandler(Exception e) {
+        return new ResultVO<>(false, ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), e.getMessage(), null);
     }
 }

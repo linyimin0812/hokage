@@ -79,6 +79,11 @@ public class DarwinCommand extends AbstractCommand {
     }
 
     @Override
+    public String delUser(String account) {
+        return null;
+    }
+
+    @Override
     public String report() {
         return null;
     }

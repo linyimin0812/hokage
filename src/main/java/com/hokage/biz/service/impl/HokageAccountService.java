@@ -28,4 +28,8 @@ public class HokageAccountService extends AbstractCommandService {
     public ServiceResponse<HokageSubordinateServerDO> addAccount(String serverKey, AccountParam param) {
         return super.execute(serverKey, param, commandHandler.addAccountHandler);
     }
+
+    public ServiceResponse<Boolean> deleteAccount(String serverKey, AccountParam param) {
+        return super.execute(serverKey, param, commandHandler.deleteAccountHandler);
+    }
 }
