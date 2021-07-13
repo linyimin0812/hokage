@@ -105,5 +105,18 @@ export const ServerAction = {
       }
     })
   },
+  searchSubordinateServer: (form: ServerSearchForm): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerVO[]> = await ServerService.searchSubordinateServer(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('获取用户服务器失败: ' + JSON.stringify(e))
+      }
+    })
+  },
 
 }

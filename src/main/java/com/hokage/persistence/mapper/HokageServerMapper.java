@@ -102,4 +102,13 @@ public interface HokageServerMapper {
      * @return row affected
      */
     Long deleteById(@Param("id") Long id);
+
+    /**
+     * select by ip, ssh port and acccount
+     * @param ip server ip
+     * @param sshPort ssh port
+     * @param account account name
+     * @return server data object
+     */
+    HokageServerDO selectByAccount(@Param("ip") String ip, @Param("sshPort") String sshPort, @Param("account") String account);
 }

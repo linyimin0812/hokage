@@ -2,6 +2,7 @@ package com.hokage.biz.request;
 
 import com.hokage.common.PageQuery;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -10,6 +11,7 @@ import lombok.Data;
  * @description
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ServerQuery extends PageQuery {
     /**
      * operator id

@@ -15,7 +15,8 @@ public class UserServerOperateForm {
     /**
      * operator id
      */
-    private Long id;
+    private Long operatorId;
+
     /**
      * server ids
      */

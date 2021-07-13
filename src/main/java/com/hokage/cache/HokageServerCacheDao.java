@@ -21,6 +21,7 @@ import com.hokage.ssh.enums.JSchChannelType;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.Session;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +37,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -131,20 +133,37 @@ public class HokageServerCacheDao extends BaseCacheDao {
         }, 0, cacheRefreshIntervalSecond, TimeUnit.SECONDS);
     }
 
+    @SneakyThrows
     public Optional<SshClient> getExecClient(String key) {
-        SshClient client = serverKey2SshExecClient.getIfPresent(key);
+        SshClient client = serverKey2SshExecClient.get(key, () -> this.reloadClient(key));
         if (Objects.nonNull(client)) {
             return Optional.of(client);
         }
         return Optional.empty();
     }
 
+    @SneakyThrows
     public Optional<SshClient> getSftpClient(String key) {
-        SshClient client = serverKey2SshSftpClient.getIfPresent(key);
+        SshClient client = serverKey2SshSftpClient.get(key, () -> this.reloadClient(key));
         if (Objects.nonNull(client)) {
             return Optional.of(client);
         }
         return Optional.empty();
+    }
+
+    @SneakyThrows
+    private SshClient reloadClient(String serverKey) {
+        List<String> serverOptions = Arrays.asList(StringUtils.split(serverKey, "_"));
+        if (serverOptions.size() != 3) {
+            return null;
+        }
+        HokageServerDO serverDO = serverDao.selectByAccount(serverOptions.get(0), serverOptions.get(1), serverOptions.get(2));
+        if (Objects.isNull(serverDO)) {
+            return null;
+        }
+        SshContext context = new SshContext();
+        BeanUtils.copyProperties(serverDO, context);
+        return new SshClient(context);
     }
 
 

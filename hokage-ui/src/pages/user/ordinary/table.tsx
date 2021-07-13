@@ -1,14 +1,17 @@
-import React, { ReactText } from 'react'
-import { Divider, message, Table, Tag } from 'antd';
+import React from 'react'
+import { Divider, message, Table, Tag } from 'antd'
 import store from './store'
-import { getHokageUid, randomColor } from '../../../libs';
+import { getHokageUid, randomColor } from '../../../libs'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { ServerVO } from '../../../axios/action/server/server-type'
+import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { observer } from 'mobx-react'
 import { SelectSupervisor } from '../common/select-supervisor'
-import { UserAction } from '../../../axios/action';
+import { UserAction } from '../../../axios/action'
+import { SelectServer } from '../common/select-server'
+import serverSelectStore from '../store'
+import { ServerAction } from '../../../axios/action/server/server-action';
 
 
 @observer
@@ -24,25 +27,29 @@ export default class OrdinaryTable extends React.Component {
   }
 
   serverStatusRender = (status: string) => {
+    if (!status) {
+      return <span>-</span>
+    }
     return <Tag color = {randomColor(status)}> { status } </Tag>
   }
 
   nestedActionRender = (record: ServerVO) => {
     return <Action>
       <Action.Confirm
-        title={'删除'}
+        title={'回收'}
         action={async () => {alert('TODO: 添加删除动作')}}
-        content={`确定删除服务器${record.ip}(${record.id})`}
+        content={`确定回收账号${record.account}@${record.ip}`}
       />
     </Action>
   }
 
-  expandedRowRender = (record: UserVO) => {
-    const nestedRecords = record.serverVOList || []
-    return <Table rowKey={'id'} dataSource={nestedRecords} pagination={false}>
+  expandedRowRender = (_: UserVO) => {
+    return <Table rowKey={'id'} dataSource={store.serverVOList} pagination={false}>
       <Table.Column title={'主机名'} dataIndex={'hostname'} />
       <Table.Column title={'域名'} dataIndex={'domain'} />
       <Table.Column title={'ip地址'} dataIndex={'ip'} />
+      <Table.Column title={'port'} dataIndex={'sshPort'} />
+      <Table.Column title={'账号'} dataIndex={'account'} />
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
       <Table.Column title={'操作'} render={this.nestedActionRender} />
@@ -76,6 +83,17 @@ export default class OrdinaryTable extends React.Component {
     }).catch(e => message.error(e))
   }
 
+  addUserAccount =(form: UserServerOperateForm) => {
+    UserAction.grantSubordinateServer(form).then(result => {
+      if (result) {
+        message.info("添加账号成功")
+        store.fetchRecords({operatorId: getHokageUid()})
+      } else {
+        message.error("添加账号失败")
+      }
+    }).catch(e => message.error(e))
+  }
+
   actionRender = (_: any, record: UserVO) => {
     return <Action>
       {
@@ -89,8 +107,15 @@ export default class OrdinaryTable extends React.Component {
             <Divider type={'vertical'} />
             <Action.Form
               title={'添加账号'}
-              renderForm={(form: FormInstance) => { return <SelectSupervisor form={form} />}}
-              confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+              renderForm={(form: FormInstance) => {
+                return <SelectServer form={form} />
+              }}
+              confirmAction={(form: UserServerOperateForm) => {
+                form.operatorId = getHokageUid()
+                form.userIds = [record.id]
+                this.addUserAccount(form)
+              }}
+              onClickAction={() => { serverSelectStore.fetchHasGrantedServerList(record.supervisorId) }}
             />
           </> :
           <>
@@ -111,24 +136,30 @@ export default class OrdinaryTable extends React.Component {
     </Action>
   }
 
-  configRowSelection = () => {
-    return {
-      selectedRowKeys: store.selectedRowKeys,
-      onChange: (selectedRowKeys: ReactText[], _: any): void => { store.selectedRowKeys = selectedRowKeys },
-      selections: [
-        Table.SELECTION_ALL,
-        Table.SELECTION_INVERT,
-      ],
+  onExpend = (expanded: boolean, record: UserVO) => {
+    if (expanded) {
+      store.isFetching = true
+      const form: ServerSearchForm = {
+        operatorId: record.id,
+        role: record.role,
+        userId: record.id
+      }
+      ServerAction.searchSubordinateServer(form).then(value => {
+        store.serverVOList = value || []
+      }).catch(e => message.error(e))
+        .finally(() => store.isFetching = false)
     }
   }
+
+
   render() {
     return (
       <Table
         rowKey={'id'}
         loading={store.isFetching}
         dataSource={store.records}
+        onExpand={this.onExpend}
         expandedRowRender={this.expandedRowRender}
-        rowSelection={this.configRowSelection()}
         pagination={false}
       >
         <Table.Column title={'id'} dataIndex={'id'} />

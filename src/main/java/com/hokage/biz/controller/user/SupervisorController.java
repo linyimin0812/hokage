@@ -11,6 +11,7 @@ import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,16 +93,16 @@ public class SupervisorController extends BaseController {
         return fail(response.getCode(), response.getMsg());
     }
 
+    // TODO: 切面判断权限
     @RequestMapping(value = "/user/supervisor/server/recycle", method = RequestMethod.POST)
     public ResultVO<Boolean> recycleSupervisorServer(@RequestBody UserServerOperateForm form) {
-        ServiceResponse<Boolean> response;
-        List<Long> supervisorIds = form.getServerIds();
-        Preconditions.checkNotNull(supervisorIds);
-        if (Objects.nonNull(form.getServerIds())) {
-            response = userService.recycleSupervisor(supervisorIds.get(0), form.getServerIds());
-        } else {
-            response = userService.recycleSupervisor(form.getUserIds().get(0));
-        }
+
+        Preconditions.checkState(!CollectionUtils.isEmpty(form.getUserIds()), "supervisor id can;t be empty");
+        Preconditions.checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server id can;t be empty");
+
+        List<Long> supervisorIds = form.getUserIds();
+
+        ServiceResponse<Boolean> response = userService.recycleSupervisor(supervisorIds.get(0), form.getServerIds());
 
         if (response.getSucceeded()) {
             return success(response.getData());

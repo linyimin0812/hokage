@@ -181,4 +181,28 @@ export const UserAction = {
       })
     })
   },
+  grantSubordinateServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.grantSubordinateServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("添加账号失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  recycleSupervisorServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+      UserService.recycleSupervisorServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("回收管理员服务器失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
 }

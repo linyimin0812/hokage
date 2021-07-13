@@ -1,14 +1,15 @@
 package com.hokage.biz.controller.user;
 
 import com.google.common.base.Preconditions;
+import com.hokage.biz.converter.server.SubordinateServerConverter;
 import com.hokage.biz.converter.user.SubordinateConverter;
-import com.hokage.biz.converter.user.SupervisorConverter;
-import com.hokage.biz.enums.UserRoleEnum;
+import com.hokage.biz.form.server.ServerSearchForm;
 import com.hokage.biz.form.user.UserOperateForm;
 import com.hokage.biz.form.user.UserSearchForm;
 import com.hokage.biz.form.user.UserServerOperateForm;
-import com.hokage.biz.request.UserQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.user.SubordinateQuery;
+import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.BaseController;
@@ -31,6 +32,7 @@ public class SubordinateController extends BaseController {
 
     private HokageUserService userService;
     private SubordinateConverter subordinateConverter;
+    private SubordinateServerConverter subServerConverter;
 
     @Autowired
     public void setUserService(HokageUserService userService) {
@@ -40,6 +42,11 @@ public class SubordinateController extends BaseController {
     @Autowired
     public void setSubordinateConverter(SubordinateConverter converter) {
         this.subordinateConverter = converter;
+    }
+
+    @Autowired
+    public void setSubServerConverter(SubordinateServerConverter subServerConverter) {
+        this.subServerConverter = subServerConverter;
     }
 
     @RequestMapping(value = "/user/subordinate/all", method = RequestMethod.GET)
@@ -97,10 +104,10 @@ public class SubordinateController extends BaseController {
     @RequestMapping(value = "/user/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delSubordinate(@RequestBody UserServerOperateForm form) {
 
-        Preconditions.checkNotNull(form.getId(), "operationId can't be null");
+        Preconditions.checkNotNull(form.getOperatorId(), "operationId can't be null");
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be empty");
 
-        ServiceResponse<Boolean> response = userService.deleteSubordinate(form.getId(), form.getUserIds());
+        ServiceResponse<Boolean> response = userService.deleteSubordinate(form.getOperatorId(), form.getUserIds());
 
         if (response.getSucceeded()) {
             return success(response.getData());
@@ -121,7 +128,19 @@ public class SubordinateController extends BaseController {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getUserIds()));
         Preconditions.checkArgument(!CollectionUtils.isEmpty(form.getServerIds()));
 
-        ServiceResponse<Boolean> response = userService.grantSubordinate(form.getUserIds().get(0), form.getServerIds());
+        ServiceResponse<Boolean> response = userService.grantServer2Subordinate(form.getUserIds().get(0), form.getServerIds());
+
+        if (response.getSucceeded()) {
+            return success(response.getData());
+        }
+        return fail(response.getCode(), response.getMsg());
+    }
+
+    @RequestMapping(value = "/user/subordinate/server/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageServerVO>> searchSubordinateServer(@RequestBody ServerSearchForm form) {
+
+        SubordinateServerQuery query = subServerConverter.doForward(form);
+        ServiceResponse<List<HokageServerVO>> response = userService.searchSubordinateServer(query);
 
         if (response.getSucceeded()) {
             return success(response.getData());

@@ -26,7 +26,7 @@ public class HokageFileManagementService extends AbstractCommandService {
      * @param <R> type of command result
      * @return command result
      */
-    public <R, T extends BaseCommandParam> ServiceResponse<R> ExecuteSftpCommand(String serverKey, T param, BiFunction<SshClient, T, ServiceResponse<R>> commandHandler) {
+    public <R, T extends BaseCommandParam> ServiceResponse<R> executeSftpCommand(String serverKey, T param, BiFunction<SshClient, T, ServiceResponse<R>> commandHandler) {
         ServiceResponse<R> response = new ServiceResponse<>();
         Optional<SshClient> optional = getServerCacheDao().getSftpClient(serverKey);
         if (!optional.isPresent()) {

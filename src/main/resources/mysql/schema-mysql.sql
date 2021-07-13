@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `hokage_server_group` (
   COMMENT = '服务器分组配置信息表';
 
 CREATE TABLE IF NOT EXISTS `hokage_subordinate_server` (
-  `id` bigint NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `gmt_create` DATETIME NOT NULL,
   `gmt_modified` DATETIME NOT NULL,
   `subordinate_id` bigint NOT NULL COMMENT '普通用户id',

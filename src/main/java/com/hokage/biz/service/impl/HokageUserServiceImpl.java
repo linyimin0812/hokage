@@ -1,13 +1,17 @@
 package com.hokage.biz.service.impl;
 
 import com.hokage.biz.converter.server.ConverterTypeEnum;
+import com.hokage.biz.converter.server.ServerDOConverter;
 import com.hokage.biz.converter.user.UserConverter;
 import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
+import com.hokage.biz.request.command.AccountParam;
+import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.user.SubordinateQuery;
 import com.hokage.biz.request.user.SupervisorQuery;
+import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageUserService;
@@ -15,6 +19,7 @@ import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,6 +48,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     private HokageServerDao serverDao;
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageSupervisorSubordinateDao supervisorSubordinateDao;
+    private HokageAccountService accountService;
 
     @Autowired
     public void setUserDao(HokageUserDao userDao) {
@@ -76,6 +83,11 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     @Autowired
     public void setSupervisorSubordinateDao(HokageSupervisorSubordinateDao hokageSupervisorSubordinateDao) {
         this.supervisorSubordinateDao = hokageSupervisorSubordinateDao;
+    }
+
+    @Autowired
+    public void setAccountService(HokageAccountService accountService) {
+        this.accountService = accountService;
     }
 
     @Override
@@ -215,15 +227,24 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> recycleSupervisor(Long id, List<Long> serverIds) {
         checkNotNull(id, "supervisor id can't be null");
         checkNotNull(id, "serverIds can't be null");
 
-        boolean isSucceed = supervisorServerDao.removeBySupervisorId(id, serverIds) > 0;
-        if (isSucceed) {
+        boolean isSucceed = serverIds.size() == supervisorServerDao.removeBySupervisorId(id, serverIds);
+        if (!isSucceed) {
+            throw new RuntimeException("recycle supervisor server error.");
+        }
+        List<HokageSupervisorSubordinateDO> supSubDOList = supervisorSubordinateDao.listBySupervisorId(id);
+        if (CollectionUtils.isEmpty(supSubDOList)) {
             return success(Boolean.TRUE);
         }
-        return fail("A-XXX", "HokageUserDO recycleSupervisor error");
+        isSucceed = supSubDOList.stream().allMatch(supSubDO -> subordinateServerDao.removeBySubordinateId(supSubDO.getSubordinateId(), serverIds) > 0);
+        if (!isSucceed) {
+            throw new RuntimeException("remove subordinate server error.");
+        }
+        return success(Boolean.TRUE);
     }
 
     @Override
@@ -323,12 +344,33 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
     }
 
     @Override
-    public ServiceResponse<Boolean> grantSubordinate(Long id, List<Long> serverIds) {
-        boolean isSucceed = subordinateServerDao.addBySubordinateId(id, serverIds) > 0;
-        if (isSucceed) {
-            return success(Boolean.TRUE);
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> grantServer2Subordinate(Long id, List<Long> serverIds) {
+        HokageUserDO userDO = userDao.getUserById(id);
+        if (Objects.isNull(userDO)) {
+            throw new RuntimeException("user is not exist. user id: " + id);
         }
-        return fail("A-XXX", "HokageUserDO grantSupervisor error");
+        for (long serverId : serverIds) {
+            HokageServerDO serverDO = serverDao.selectById(serverId);
+            if (Objects.isNull(serverDO)) {
+                throw new RuntimeException("server is not exist. server id: " + serverId);
+            }
+            AccountParam param = new AccountParam();
+            String account = userDO.getUsername() + "_" + serverId;
+            String passwd = UUID.randomUUID().toString();
+            param.setAccount(account).setPasswd(passwd);
+            ServiceResponse<HokageSubordinateServerDO> response = accountService.addAccount(serverDO.buildKey(), param);
+            if (!response.getSucceeded()) {
+                throw new RuntimeException("add account error. exitCode: " + response.getCode() + ", errMsg: " + response.getMsg());
+            }
+            HokageSubordinateServerDO subServerDO = response.getData();
+            subServerDO.setSubordinateId(id);
+            long result = subordinateServerDao.insert(subServerDO);
+            if (result <= 0) {
+                return fail("A-XXX", "HokageUserDO grantSupervisor error");
+            }
+        }
+        return success(Boolean.TRUE);
     }
 
     @Override
@@ -398,6 +440,43 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
             return success(Boolean.TRUE);
         }
         throw new RuntimeException("recycleSubordinates2Supervisor update error.");
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchSubordinateServer(SubordinateServerQuery query) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByOrdinateIds(Collections.singletonList(query.getSubordinateId()));
+
+        List<Long> serverIdList = subServerDOList.stream().map(HokageSubordinateServerDO::getServerId).collect(Collectors.toList());
+        Map<Long, HokageServerDO> serverDOMap = serverDao.selectByIds(serverIdList)
+                .stream()
+                .collect(Collectors.toMap(HokageServerDO::getId, Function.identity(), (o1, o2) -> o1));
+
+        List<HokageServerVO> serverVOList = subServerDOList.stream()
+                .map(subServerDO -> {
+                    HokageServerDO serverDO = serverDOMap.get(subServerDO.getServerId());
+
+                    HokageServerVO serverVO = new HokageServerVO();
+                    serverVO.setId(serverDO.getId());
+                    List<String> serverGroupList = new ArrayList<>();
+                    if (StringUtils.isNotEmpty(serverDO.getServerGroup())) {
+                        serverGroupList = Arrays.asList(StringUtils.split(serverDO.getServerGroup(), ","));
+                    }
+                    serverVO.setServerGroupList(serverGroupList);
+                    serverVO.setDomain(serverDO.getDomain());
+                    serverVO.setHostname(serverDO.getHostname());
+                    serverVO.setDescription(serverDO.getDescription());
+
+                    serverVO.setIp(subServerDO.getIp());
+                    serverVO.setSshPort(subServerDO.getSshPort());
+                    serverVO.setAccount(subServerDO.getAccount());
+                    serverVO.setLoginType(subServerDO.getLoginType());
+
+                    return serverVO;
+                })
+                .collect(Collectors.toList());
+
+        return response.success(serverVOList);
     }
 
     private HokageUserVO supervisorUserDO2UserVO(HokageUserDO userDO) {

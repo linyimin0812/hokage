@@ -4,12 +4,14 @@ import { UserVO } from '../../../axios/action/user/user-type'
 import { UserAction } from '../../../axios/action'
 import { UserSearchFormType } from '../common/search'
 import { getHokageUid } from '../../../libs'
+import { ServerVO } from '../../../axios/action/server/server-type';
 
 export class Store {
   @observable selectedRowKeys: ReactText[] = []
   @observable isFetching: boolean = false
   @observable records: UserVO[] = []
   @observable supervisorList: UserVO[] = []
+  @observable serverVOList: ServerVO[] = []
 
   fetchRecords = (value: UserSearchFormType) => {
     this.isFetching = true

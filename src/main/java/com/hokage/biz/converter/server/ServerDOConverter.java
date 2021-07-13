@@ -77,26 +77,6 @@ public class ServerDOConverter {
             // 1. set common property
             HokageServerVO hokageServerVO = preConverter(serverDO);
 
-            // 2. set operation list
-            List<HokageOperation> operations = Arrays.asList(
-                new HokageOperation(
-                        OperationTypeEnum.modal.name(),
-                        "specifySupervisor",
-                        "/server/supervisor/add",
-                        ""),
-                new HokageOperation(
-                        OperationTypeEnum.confirm.name(),
-                        "recycleSupervisor",
-                        "/server/supervisor/recycle",
-                        ""),
-                new HokageOperation(
-                        OperationTypeEnum.confirm.name(),
-                        "modifySupervisor",
-                        "/server/supervisor/modify",
-                        "")
-            );
-            hokageServerVO.setOperationList(operations);
-
             // set server supervisors
             List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(
                     Collections.singletonList(serverDO.getId())
@@ -129,19 +109,7 @@ public class ServerDOConverter {
         public HokageServerVO converter(HokageServerDO serverDO) {
 
             // 1. set common property
-            HokageServerVO serverVO = preConverter(serverDO);
-
-            // 2. set operation list
-            List<HokageOperation> operations = Collections.singletonList(
-                new HokageOperation(
-                        OperationTypeEnum.confirm.name(),
-                        "recycle",
-                        "/server/recycle",
-                        "")
-            );
-            serverVO.setOperationList(operations);
-
-            return serverVO;
+            return preConverter(serverDO);
         }
 
         @Override

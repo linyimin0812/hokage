@@ -132,6 +132,9 @@
     <insert id="addBySubordinateId" >
         insert into
         <include refid="tableName"/>
+        (
+            <include refid="allColumn"/>
+        )
         VALUES
         <foreach collection="serverIds" item="serverId" index="index" separator=",">
             (
@@ -169,4 +172,12 @@
         </where>
     </select>
 
+    <select id="queryBySupervisorIdAndSubordinateId" resultMap="HokageSubordinateServerMapper">
+        SELECT <include refid="allColumn" />
+        FROM
+        <include refid="tableName" />
+        <where>
+            subordinate_id=#{subordinateId} AND status &lt;&gt; -1
+        </where>
+    </select>
 </mapper>

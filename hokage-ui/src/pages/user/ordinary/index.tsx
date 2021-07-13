@@ -2,7 +2,6 @@ import React from 'react'
 import BreadCrumb, { BreadcrumbProps } from '../../../layout/bread-crumb'
 import { UserSearch, UserSearchFormType } from '../common/search'
 import { getHokageUid } from '../../../libs'
-import Toolbar from './toolbar';
 import { observer } from 'mobx-react'
 import store from './store'
 import OrdinaryTable from './table'
@@ -31,7 +30,6 @@ export default class OrdinaryUser extends React.Component {
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <UserSearch onFinish={this.onFinish} usernameType={'ordinary'} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <Toolbar />
           <OrdinaryTable />
         </div>
       </div>

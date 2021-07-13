@@ -6,7 +6,9 @@ import com.hokage.persistence.mapper.HokageSubordinateServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author linyimin
@@ -61,7 +63,7 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
      */
     @Override
     public List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids) {
-        return subordinateServerMapper.selectByOrdinateIds(ids);
+        return Optional.ofNullable(subordinateServerMapper.selectByOrdinateIds(ids)).orElse(Collections.emptyList());
     }
 
     /**

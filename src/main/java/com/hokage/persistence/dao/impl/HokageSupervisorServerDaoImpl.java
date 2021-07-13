@@ -28,41 +28,21 @@ public class HokageSupervisorServerDaoImpl implements HokageSupervisorServerDao 
         this.supervisorServerMapper = supervisorServerMapper;
     }
 
-    /**
-     * 插入一条新纪录
-     * @param supervisorServerDO
-     * @return
-     */
     @Override
     public Long insert(HokageSupervisorServerDO supervisorServerDO) {
         return supervisorServerMapper.insert(supervisorServerDO);
     }
 
-    /**
-     * 更新一条记录
-     * @param supervisorServerDO
-     * @return
-     */
     @Override
     public Long update(HokageSupervisorServerDO supervisorServerDO) {
         return supervisorServerMapper.update(supervisorServerDO);
     }
 
-    /**
-     * retrieve supervisor id by server ids
-     * @param ids: server ids
-     * @return
-     */
     @Override
     public List<HokageSupervisorServerDO> listByServerIds(List<Long> ids) {
         return Optional.ofNullable(supervisorServerMapper.listByServerIds(ids)).orElse(Collections.emptyList());
     }
 
-    /**
-     * retrieve server id by supervisor ids
-     * @param ids: supervisor ids
-     * @return
-     */
     @Override
     public List<HokageSupervisorServerDO> listBySupervisorIds(List<Long> ids) {
         return supervisorServerMapper.listBySupervisorIds(ids);

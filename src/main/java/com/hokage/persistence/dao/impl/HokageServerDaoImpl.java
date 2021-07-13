@@ -81,6 +81,11 @@ public class HokageServerDaoImpl implements HokageServerDao {
     }
 
     @Override
+    public HokageServerDO selectByAccount(String ip, String sshPort, String account) {
+        return serverMapper.selectByAccount(ip, sshPort, account);
+    }
+
+    @Override
     public List<HokageServerDO> selectByQuery(AllServerQuery query) {
         return serverMapper.selectByAllServerQuery(query);
     }

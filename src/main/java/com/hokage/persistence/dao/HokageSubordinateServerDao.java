@@ -1,5 +1,6 @@
 package com.hokage.persistence.dao;
 
+import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 
 import java.util.List;
@@ -14,44 +15,44 @@ public interface HokageSubordinateServerDao {
 
     /**
      * insert a new record
-     * @param subordinateServerDO
-     * @return
+     * @param subordinateServerDO subordinate server data object
+     * @return rows affected
      */
     Long insert(HokageSubordinateServerDO subordinateServerDO);
 
     /**
      * update a record
-     * @param subordinateServerDO
-     * @return
+     * @param subordinateServerDO subordinate server data object
+     * @return rows affected
      */
     Long update(HokageSubordinateServerDO subordinateServerDO);
 
     /**
      * retrieve subordinate ids based on server ids
-     * @param ids
-     * @return
+     * @param ids server id list
+     * @return subordinate server list which meet the criteria
      */
     List<HokageSubordinateServerDO> listByServerIds(List<Long> ids);
 
     /**
      * retrieve server ids based on subordinate ids
-     * @param ids
-     * @return
+     * @param ids subordinate id list
+     * @return subordinate server list which meet the criteria
      */
     List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids);
 
     /**
      * retrieve record based on primary key
-     * @param id
-     * @return
+     * @param id primary id
+     * @return subordinate server which meet the criteria
      */
     HokageSubordinateServerDO getById(Long id);
 
     /**
      * grant servers to a subordinate
-     * @param subordinateId
-     * @param serverIds
-     * @return
+     * @param subordinateId subordinate id
+     * @param serverIds server id list
+     * @return rows affected
      */
     Long addBySubordinateId(Long subordinateId, List<Long> serverIds);
 
@@ -72,10 +73,9 @@ public interface HokageSubordinateServerDao {
 
     /**
      * retrieve relationship based-on subordinate id and server id
-     * @param subordinateId
-     * @param serverId
-     * @return
+     * @param subordinateId subordinate id
+     * @param serverId server id
+     * @return subordinate server data object
      */
     HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
-
 }

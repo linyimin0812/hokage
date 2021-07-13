@@ -70,6 +70,15 @@ public interface HokageServerDao {
     List<HokageServerDO> selectBySupervisorId(Long supervisorId);
 
     /**
+     * select by ip, ssh port and acccount
+     * @param ip server ip
+     * @param sshPort ssh port
+     * @param account account name
+     * @return server data object
+     */
+    HokageServerDO selectByAccount(String ip, String sshPort, String account);
+
+    /**
      * retrieve server info
      * @param query
      * @return

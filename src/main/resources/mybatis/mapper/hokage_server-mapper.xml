@@ -299,4 +299,14 @@
             id = #{id}
         </where>
     </delete>
+
+    <select id="selectByAccount" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns" />
+        FROM
+        <include refid="tableNme" />
+        <where>
+            ip=#{ip} AND account=#{account} AND ssh_port=#{sshPort} AND status &lt;&gt; 1
+        </where>
+    </select>
 </mapper>

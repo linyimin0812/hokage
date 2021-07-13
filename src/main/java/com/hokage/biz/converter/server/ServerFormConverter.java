@@ -1,6 +1,7 @@
 package com.hokage.biz.converter.server;
 
 import com.hokage.biz.converter.Converter;
+import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import org.springframework.beans.BeanUtils;
@@ -26,6 +27,7 @@ public class ServerFormConverter implements Converter<HokageServerForm, HokageSe
             String group = String.join(",", hokageServerForm.getServerGroupList());
             serverDO.setServerGroup(group);
         }
+        serverDO.setStatus(RecordStatusEnum.inuse.getStatus());
         serverDO.setCreatorId(hokageServerForm.getOperatorId());
         return serverDO;
     }

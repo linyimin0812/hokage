@@ -49,6 +49,8 @@ public enum ResultCodeEnum {
 
     FIXED_DATE_NOT_FOUND("E-0001", "task not found"),
     TASK_RESULT_NOT_FOUND("E-0002", "task result not found"),
+
+    CREATE_ACCOUNT_ERROR("G-0001", "create account error"),
     ;
 
     private String code;

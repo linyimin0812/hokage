@@ -28,6 +28,9 @@ export default class OperatorTable extends React.Component {
       <Table.Column title={'id'} dataIndex={'id'} />
       <Table.Column title={'主机名'} dataIndex={'hostname'} />
       <Table.Column title={'域名'} dataIndex={'domain'} />
+      <Table.Column title={'ip'} dataIndex={'ip'} />
+      <Table.Column title={'port'} dataIndex={'sshPort'} />
+      <Table.Column title={'管理账号'} dataIndex={'account'} />
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'使用人数'} dataIndex={'userNum'} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
@@ -38,9 +41,9 @@ export default class OperatorTable extends React.Component {
   nestedActionRender = (record: ServerVO) => {
     return <Action>
       <Action.Confirm
-        title={'删除'}
+        title={'回收'}
         action={async () => {alert('TODO: 添加删除动作')}}
-        content={`确定删除服务器${record.ip}(${record.id})`}
+        content={`确定回收服务器${record.ip}(${record.id})`}
       />
     </Action>
   }
@@ -93,7 +96,18 @@ export default class OperatorTable extends React.Component {
       <Action.Form
         title={'回收服务器'}
         renderForm={(form: FormInstance) => { return <SelectServer form={form} />}}
-        confirmAction={(value: UserServerOperateForm) => {alert(JSON.stringify(value))}}
+        confirmAction={(value: UserServerOperateForm) => {
+          value.operatorId = getHokageUid()
+          value.userIds = [record.id]
+          UserAction.recycleSupervisorServer(value).then(result => {
+            if (result) {
+              message.info("回收服务器成功")
+              store.fetchRecords()
+            } else {
+              message.error("回收服务器失败")
+            }
+          }).catch(e => message.error(e))
+        }}
         onClickAction={() => { serverSelectStore.fetchHasGrantedServerList(record.id) }}
       />
       <Action.Confirm

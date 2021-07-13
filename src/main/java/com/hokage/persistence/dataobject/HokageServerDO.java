@@ -58,4 +58,12 @@ public class HokageServerDO extends HokageBaseDO {
      * creator
      */
     private Long creatorId;
+
+    /**
+     * build cache key
+     * @return ip_port_account
+     */
+    public String buildKey() {
+        return ip + "_" + sshPort + "_" + account;
+    }
 }
