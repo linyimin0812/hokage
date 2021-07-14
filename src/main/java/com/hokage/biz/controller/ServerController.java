@@ -24,8 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * @author linyimin
@@ -71,6 +73,21 @@ public class ServerController extends BaseController {
         }
 
         return success(response.getData());
+    }
+
+    @RequestMapping(value = "/server/all/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageServerVO>> searchAllServer(@RequestBody ServerSearchForm form) {
+        return success(Collections.emptyList());
+    }
+
+    @RequestMapping(value = "/server/supervisor/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageServerVO>> searchSupervisorServer(@RequestBody ServerSearchForm form) {
+        return success(Collections.emptyList());
+    }
+
+    @RequestMapping(value = "/server/subordinate/search", method = RequestMethod.POST)
+    public ResultVO<List<HokageServerVO>> searchSubordinateServer(@RequestBody ServerSearchForm form) {
+        return success(Collections.emptyList());
     }
 
     @RequestMapping(value = "/server/add", method = RequestMethod.POST)
