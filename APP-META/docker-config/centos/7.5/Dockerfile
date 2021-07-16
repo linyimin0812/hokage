@@ -1,11 +1,11 @@
 FROM centos:7.5.1804
 
 RUN \
-    yum update && \
+    yum update -y && \
     yum install openssl openssh-server net-tools -y
 
 RUN \
-    echo root:123456 | chapasswd && \
+    echo root:123456 | chpasswd && \
     ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N '' && \
     ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N '' && \
     ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N '' && \

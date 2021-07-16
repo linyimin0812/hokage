@@ -3,8 +3,6 @@ import { ReactText } from 'react'
 import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
 import { getHokageRole, getHokageUid } from '../../../libs'
 import { ServerAction } from '../../../axios/action/server/server-action'
-import { Action } from '../../../component/Action';
-import { UserAction } from '../../../axios/action';
 
 class Store {
   @observable selectedRowKeys: ReactText[] = []
