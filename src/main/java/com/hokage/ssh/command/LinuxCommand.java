@@ -151,8 +151,7 @@ public class LinuxCommand extends AbstractCommand {
 
     @Override
     public String addUser(String account, String passwd) {
-        String command = "useradd ${account}; echo \"${account}:${passwd}\" | chpasswd;";
-        return command.replace("${account}", account).replace("${passwd}", passwd);
+        return String.format("bash %s/%s/%s add_user %s %s", HOME, Constant.WORK_HOME, Constant.LINUX_API_FILE, account, passwd);
     }
 
     @Override

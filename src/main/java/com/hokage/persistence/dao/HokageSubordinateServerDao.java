@@ -28,6 +28,13 @@ public interface HokageSubordinateServerDao {
     Long update(HokageSubordinateServerDO subordinateServerDO);
 
     /**
+     * insert or update a record
+     * @param subordinateServerDO subordinate server do
+     * @return rows affected
+     */
+    Long upsert(HokageSubordinateServerDO subordinateServerDO);
+
+    /**
      * retrieve subordinate ids based on server ids
      * @param ids server id list
      * @return subordinate server list which meet the criteria

@@ -5,9 +5,11 @@ import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.mapper.HokageSubordinateServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -44,6 +46,16 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     @Override
     public Long update(HokageSubordinateServerDO subordinateServerDO) {
         return subordinateServerMapper.update(subordinateServerDO);
+    }
+
+    @Override
+    public Long upsert(HokageSubordinateServerDO subordinateServerDO) {
+        HokageSubordinateServerDO subServerDO = subordinateServerMapper.queryBySubordinateIdAndServerId(subordinateServerDO.getSubordinateId(), subordinateServerDO.getServerId());
+        if (Objects.isNull(subServerDO)) {
+            return this.insert(subordinateServerDO);
+        }
+        subordinateServerDO.setId(subServerDO.getId());
+        return this.update(subordinateServerDO);
     }
 
     /**

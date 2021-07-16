@@ -366,7 +366,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
             }
             HokageSubordinateServerDO subServerDO = response.getData();
             subServerDO.setSubordinateId(id);
-            long result = subordinateServerDao.insert(subServerDO);
+            long result = subordinateServerDao.upsert(subServerDO);
             if (result <= 0) {
                 return fail("A-XXX", "HokageUserDO grantSupervisor error");
             }
