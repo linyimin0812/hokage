@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$PATH/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin
+
 ifconfig_cmd=$(type -P ifconfig)
 
 function install_software() {
