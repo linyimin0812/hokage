@@ -15,8 +15,8 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     method: 'GET'
   },
 
-  // add server label
-  'addServerLabel': {
+  // add server group
+  'addServerGroup': {
     url: '/server/group/add',
     method: 'POST'
   },
@@ -29,7 +29,7 @@ const serviceInfo: { [name: string]: ServiceParam} = {
 
   // save server
   'saveServer': {
-    url: '/server/add',
+    url: '/server/save',
     method: 'POST'
   },
 

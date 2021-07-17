@@ -24,10 +24,10 @@ export const ServerAction = {
     })
   },
 
-  addServerLabel: (form: UserServerOperateForm): Promise<Option[]> => {
+  addServerGroup: (form: UserServerOperateForm): Promise<Option[]> => {
     return new Promise<Option[]>(async (resolve, reject) => {
       try {
-        const result: ServiceResult<Option[]> = await ServerService.addServerLabel(form)
+        const result: ServiceResult<Option[]> = await ServerService.addServerGroup(form)
         if (!result.success) {
           return reject(result.msg)
         }

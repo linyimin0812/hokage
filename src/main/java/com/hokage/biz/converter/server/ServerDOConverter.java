@@ -1,7 +1,5 @@
 package com.hokage.biz.converter.server;
 
-import com.hokage.biz.enums.OperationTypeEnum;
-import com.hokage.biz.response.HokageOperation;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.hokage.persistence.dao.HokageSupervisorServerDao;
@@ -15,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,9 +32,9 @@ public class ServerDOConverter {
     private static HokageSupervisorServerDao supervisorServerDao;
     private static HokageUserDao hokageUserDao;
 
-    private static final ImmutableMap<ConverterTypeEnum, ServerDO2VO> CONVERTER_MAP =
-        ImmutableMap.<ConverterTypeEnum, ServerDO2VO>builder()
-            .put(ConverterTypeEnum.all, new AllServerDO2VO())
+    private static final ImmutableMap<ConverterTypeEnum, Server2VO> CONVERTER_MAP =
+        ImmutableMap.<ConverterTypeEnum, Server2VO>builder()
+            .put(ConverterTypeEnum.all, new AllServer2VO())
             .put(ConverterTypeEnum.supervisor, new SupervisorServerDO2VO())
             .build();
 
@@ -56,12 +53,12 @@ public class ServerDOConverter {
         ServerDOConverter.hokageUserDao = hokageUserDao;
     }
 
-    public static HokageServerVO converterDO2VO(HokageServerDO serverDO, ConverterTypeEnum type) {
-        ServerDO2VO serverDo2VO = CONVERTER_MAP.get(type);
+    public static HokageServerVO converter2VO(HokageServerDO serverDO, ConverterTypeEnum type) {
+        Server2VO serverDo2VO = CONVERTER_MAP.get(type);
         return serverDo2VO.converter(serverDO);
     }
 
-    private interface ServerDO2VO {
+    private interface Server2VO {
         /**
          * serverDO to serverVO
          * @param serverDO server DO
@@ -70,7 +67,7 @@ public class ServerDOConverter {
         HokageServerVO converter(HokageServerDO serverDO);
     }
 
-    private static class AllServerDO2VO implements ServerDO2VO {
+    private static class AllServer2VO implements Server2VO {
         @Override
         public HokageServerVO converter(HokageServerDO serverDO) {
 
@@ -103,7 +100,7 @@ public class ServerDOConverter {
         }
     }
 
-    static class SupervisorServerDO2VO implements ServerDO2VO {
+    static class SupervisorServerDO2VO implements Server2VO {
 
         @Override
         public HokageServerVO converter(HokageServerDO serverDO) {

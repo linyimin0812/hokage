@@ -16,7 +16,6 @@ import com.hokage.biz.request.SubordinateServerQuery;
 import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageSequenceService;
-import com.hokage.biz.service.HokageServerGroupService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.common.ServiceResponse;
@@ -101,9 +100,9 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     private final ImmutableMap<String, Function<ServerQuery, List<HokageServerDO>>> SERVER_QUERY_MAP =
             ImmutableMap.<String, Function<ServerQuery, List<HokageServerDO>>>builder()
-                    .put(AllServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((AllServerQuery) query)))
-                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((SupervisorServerQuery) query)))
-                    .put(SubordinateServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByQuery((SubordinateServerQuery) query)))
+                    .put(AllServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((AllServerQuery) query)))
+                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((SupervisorServerQuery) query)))
+                    .put(SubordinateServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((SubordinateServerQuery) query)))
                     .build();
 
     private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
@@ -113,7 +112,7 @@ public class HokageServerServiceImpl implements HokageServerService {
                         return serverIds.stream().anyMatch(serverId -> {
                             HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
 
-                            applicationDO.setApplyId(form.getId())
+                            applicationDO.setApplyId(form.getOperatorId())
                                     .setServerId(serverId);
 
                             // get approve id
@@ -130,7 +129,7 @@ public class HokageServerServiceImpl implements HokageServerService {
                             .anyMatch(serverId -> {
                                 HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
 
-                                applicationDO.setApplyId(form.getId())
+                                applicationDO.setApplyId(form.getOperatorId())
                                         .setServerId(serverId);
 
                                 // get approve id
@@ -152,7 +151,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
         List<HokageServerDO> serverDOList = hokageServerDao.selectAll();
         List<HokageServerVO> serverVOList = serverDOList.stream()
-                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
                 .collect(Collectors.toList());
         response.success(serverVOList);
         return response;
@@ -171,7 +170,19 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         List<HokageServerDO> serverDOList = queryFunction.apply(query);
         List<HokageServerVO> serverVOList = serverDOList.stream()
-                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
+                .collect(Collectors.toList());
+
+        return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchAllServer(AllServerQuery allServerQuery) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+
+        List<HokageServerDO> serverDOList = hokageServerDao.selectByAllQuery(allServerQuery);
+        List<HokageServerVO> serverVOList = serverDOList.stream()
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
                 .collect(Collectors.toList());
 
         return response.success(serverVOList);
@@ -205,33 +216,22 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<HokageServerForm> save(HokageServerForm form) {
-
-        ServiceResponse<HokageServerForm> response = new ServiceResponse<>();
-
-        HokageServerDO serverDO = formConverter.doForward(form);
-
+    public ServiceResponse<HokageServerDO> save(HokageServerDO serverDO) {
+        ServiceResponse<HokageServerDO> response = new ServiceResponse<>();
         // set ssh key content as password if loginType = 1
-        updatePasswordContent(serverDO);
-
-        // TODO: get hostname from ssh
-
-
-        upsertServer(serverDO);
-
-        // add supervisor
-        addSupervisor(serverDO, form);
-
-        form.setId(serverDO.getId());
-
-        return response.success(form);
+        setPasswordContent(serverDO);
+        long result = upsertServer(serverDO);
+        if (result > 0) {
+            return response.success(serverDO);
+        }
+        return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), "save server error.");
     }
 
     /**
      * insert or update server
-     * @param serverDO
+     * @param serverDO {@link HokageServerDO}
      */
-    private void upsertServer(HokageServerDO serverDO) {
+    private Long upsertServer(HokageServerDO serverDO) {
         if (Objects.isNull(serverDO.getId()) || serverDO.getId()  == 0) {
             // insert
             ServiceResponse<Long> primaryKeyResponse = sequenceService.nextValue(SequenceNameEnum.hokage_server.name());
@@ -240,15 +240,11 @@ public class HokageServerServiceImpl implements HokageServerService {
             }
             serverDO.setId(primaryKeyResponse.getData());
 
-            if (hokageServerDao.insert(serverDO) <= 0) {
-                throw new RuntimeException("ServerService insert server info error.");
-            }
+            return hokageServerDao.insert(serverDO);
 
         } else {
             // update
-            if (hokageServerDao.update(serverDO) <= 0) {
-                throw new RuntimeException("ServerService update server info error.");
-            }
+            return hokageServerDao.update(serverDO);
         }
     }
 
@@ -300,9 +296,9 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     /**
      * update password content if login type is 1
-     * @param serverDO
+     * @param serverDO {@link HokageServerDO}
      */
-    private void updatePasswordContent(HokageServerDO serverDO) {
+    private void setPasswordContent(HokageServerDO serverDO) {
         if (LoginTypeEnum.key.getValue().equals(serverDO.getLoginType())) {
             HokageServerSshKeyContentDO contentDO = contentDao.listByUid(serverDO.getPasswd());
             if (Objects.isNull(contentDO)) {
@@ -315,7 +311,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Override
     public ServiceResponse<Boolean> delete(ServerOperateForm form) {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        long result = hokageServerDao.deleteById(form.getId());
+        long result = hokageServerDao.deleteById(form.getOperatorId());
         if (result > 0) {
             return response.success(Boolean.TRUE);
         }
@@ -326,7 +322,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Transactional(rollbackFor = Exception.class)
     public ServiceResponse<Boolean> designateSupervisor(ServerOperateForm form) {
 
-        Long operatorId = checkNotNull(form.getId(), "id can't be null");
+        Long operatorId = checkNotNull(form.getOperatorId(), "id can't be null");
         checkState(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be null");
         checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server ids can't be null");
 
@@ -370,7 +366,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> revokeSupervisor(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
         checkState(!CollectionUtils.isEmpty(form.getUserIds()));
         checkState(!CollectionUtils.isEmpty(form.getServerIds()));
 
@@ -396,7 +392,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> designateSubordinate(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getId(), "id can't be null");
+        Long operatorId = checkNotNull(form.getOperatorId(), "id can't be null");
         checkState(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be null");
         checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server ids can't be null");
 
@@ -439,7 +435,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
         checkState(!CollectionUtils.isEmpty(form.getUserIds()));
         checkState(!CollectionUtils.isEmpty(form.getServerIds()));
 
@@ -465,7 +461,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     public ServiceResponse<Boolean> applyServer(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getId(), "operator id can't null");
+        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
         checkState(!CollectionUtils.isEmpty(form.getServerIds()));
 
         ServiceResponse<Boolean> response = new ServiceResponse<>();
@@ -492,7 +488,7 @@ public class HokageServerServiceImpl implements HokageServerService {
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
         List<HokageServerDO> serverDOList = hokageServerDao.selectBySupervisorId(supervisorId);
         List<HokageServerVO> serverVOList = serverDOList.stream()
-                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
                 .collect(Collectors.toList());
 
         return response.success(serverVOList);
@@ -506,7 +502,7 @@ public class HokageServerServiceImpl implements HokageServerService {
 
         List<HokageServerDO> notGrantServerList = allServer.stream().filter(serverDO -> !grantServerIdList.contains(serverDO.getId())).collect(Collectors.toList());
         List<HokageServerVO> serverVOList = notGrantServerList.stream()
-                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.all))
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
                 .collect(Collectors.toList());
 
         return response.success(serverVOList);

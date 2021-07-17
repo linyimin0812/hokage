@@ -49,8 +49,7 @@ export interface ServerUserVO {
 export interface ServerGroup {
   id?: number,
   name: string,
-  description?: string,
-  creatorId?: number,
+  description?: string
 }
 
 export interface ServerForm {

@@ -70,8 +70,8 @@ public interface HokageServerMapper {
 
     /**
      * query server info
-     * @param query
-     * @return
+     * @param query {@link AllServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByAllServerQuery(AllServerQuery query);
 

@@ -38,7 +38,7 @@ public class ServerSearchForm extends PageQuery {
     /**
      * supervisor name
      */
-    private String supervisorName;
+    private String supervisor;
 
     /**
      * server group

@@ -1,6 +1,5 @@
 package com.hokage.biz.service;
 
-import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.response.HokageOptionVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerGroupDO;
@@ -16,49 +15,49 @@ import java.util.List;
 public interface HokageServerGroupService {
     /**
      * insert a new record
-     * @param serverGroupDO
-     * @return
+     * @param serverGroupDO server group data object
+     * @return insert success return true, otherwise false
      */
     ServiceResponse<Boolean> insert(HokageServerGroupDO serverGroupDO);
 
     /**
      * list all server group
-     * @return
+     * @return {@link List<HokageOptionVO>>}
      */
-    ServiceResponse<List<HokageServerGroupDO>> selectAll();
+    ServiceResponse<List<HokageOptionVO<String>>> listGroupOptions();
 
     /**
      * update server group
-     * @param serverGroupDO
-     * @return
+     * @param serverGroupDO server group data object
+     * @return update success return true, otherwise false
      */
     ServiceResponse<Boolean> update(HokageServerGroupDO serverGroupDO);
 
     /**
      * update or insert a record
-     * @param serverGroupDO
-     * @return
+     * @param serverGroupDO server group data object
+     * @return  {@link HokageServerGroupDO}
      */
     ServiceResponse<HokageServerGroupDO> upsert(HokageServerGroupDO serverGroupDO);
 
     /**
      * list server grpup based-on creator id
-     * @param id
-     * @return
+     * @param id creator id
+     * @return {@link List<HokageServerGroupDO>}
      */
     ServiceResponse<List<HokageServerGroupDO>> listByCreatorId(Long id);
 
     /**
      * list server group based-on creator id
-     * @param id
-     * @return
+     * @param id creator id
+     * @return {@link List<HokageOptionVO>}
      */
     ServiceResponse<List<HokageOptionVO<String>>> listGroup(Long id);
 
     /**
      * add server group
-     * @param form
-     * @return
+     * @param groupDO server group data object
+     * @return if add success return true, otherwise false
      */
-    ServiceResponse<Boolean> addGroup(ServerOperateForm form);
+    ServiceResponse<Boolean> addGroup(HokageServerGroupDO groupDO);
 }

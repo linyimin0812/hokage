@@ -86,17 +86,17 @@ public class HokageServerDaoImpl implements HokageServerDao {
     }
 
     @Override
-    public List<HokageServerDO> selectByQuery(AllServerQuery query) {
-        return serverMapper.selectByAllServerQuery(query);
+    public List<HokageServerDO> selectByAllQuery(AllServerQuery query) {
+        return Optional.ofNullable(serverMapper.selectByAllServerQuery(query)).orElse(Collections.emptyList());
     }
 
     @Override
-    public List<HokageServerDO> selectByQuery(SupervisorServerQuery query) {
+    public List<HokageServerDO> selectByAllQuery(SupervisorServerQuery query) {
         return serverMapper.selectBySupervisorServerQuery(query);
     }
 
     @Override
-    public List<HokageServerDO> selectByQuery(SubordinateServerQuery query) {
+    public List<HokageServerDO> selectByAllQuery(SubordinateServerQuery query) {
         return serverMapper.selectBySubordinateServerQuery(query);
     }
 

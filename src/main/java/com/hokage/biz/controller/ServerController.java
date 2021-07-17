@@ -1,12 +1,14 @@
 package com.hokage.biz.controller;
 
 import com.google.common.base.Preconditions;
+import com.hokage.biz.converter.server.ServerFormConverter;
 import com.hokage.biz.converter.server.ServerSearchConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
+import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.ServerQuery;
 import com.hokage.biz.response.HokageOptionVO;
 import com.hokage.biz.response.server.HokageServerVO;
@@ -15,6 +17,7 @@ import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageServerSshKeyContentDao;
+import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageServerSshKeyContentDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * @author linyimin
@@ -41,6 +43,8 @@ public class ServerController extends BaseController {
 
     private HokageServerSshKeyContentDao contentDao;
 
+    private ServerFormConverter serverFormConverter;
+
     @Autowired
     public void setServerService(HokageServerService serverService) {
         this.serverService = serverService;
@@ -49,6 +53,11 @@ public class ServerController extends BaseController {
     @Autowired
     public void setContentDao(HokageServerSshKeyContentDao contentDao) {
         this.contentDao = contentDao;
+    }
+
+    @Autowired
+    public void setServerFormConverter(ServerFormConverter serverFormConverter) {
+        this.serverFormConverter = serverFormConverter;
     }
 
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
@@ -76,7 +85,9 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/all/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchAllServer(@RequestBody ServerSearchForm form) {
-        return success(Collections.emptyList());
+        AllServerQuery allServerQuery = ServerSearchConverter.converterToAll(form);
+        ServiceResponse<List<HokageServerVO>> response = serverService.searchAllServer(allServerQuery);
+        return response(response);
     }
 
     @RequestMapping(value = "/server/supervisor/search", method = RequestMethod.POST)
@@ -89,16 +100,19 @@ public class ServerController extends BaseController {
         return success(Collections.emptyList());
     }
 
-    @RequestMapping(value = "/server/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/server/save", method = RequestMethod.POST)
     public ResultVO<HokageServerForm> addServer(@RequestBody HokageServerForm form) {
 
-        ServiceResponse<HokageServerForm> response = serverService.save(form);
+        HokageServerDO serverDO = serverFormConverter.doForward(form);
+        ServiceResponse<HokageServerDO> response = serverService.save(serverDO);
 
         if (!response.getSucceeded()) {
             return fail(response.getCode(), response.getMsg());
         }
 
-        return success(response.getData());
+        form = serverFormConverter.doBackward(serverDO);
+
+        return success(form);
     }
 
     @RequestMapping(value = "/server/delete", method = RequestMethod.POST)

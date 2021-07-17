@@ -2,10 +2,8 @@ package com.hokage.biz.converter.user;
 
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
-import com.hokage.biz.enums.OperationTypeEnum;
 import com.hokage.biz.form.user.HokageUserLoginForm;
 import com.hokage.biz.form.user.HokageUserRegisterForm;
-import com.hokage.biz.response.HokageOperation;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.persistence.dao.*;
@@ -118,7 +116,7 @@ public class UserConverter {
 
             List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream().map(serverDO -> {
 
-                HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
+                HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor);
 
                 // supervisor info
                 serverVO.setSupervisorList(Collections.singletonList(hokageUserDO.getUsername()));
@@ -162,7 +160,7 @@ public class UserConverter {
             List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream()
                     .map(serverDO -> {
 
-                        HokageServerVO serverVO = ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor);
+                        HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor);
 
                         // supervisor info
                         serverVO.setSubordinateName(Collections.singletonList(hokageUserDO.getUsername()));

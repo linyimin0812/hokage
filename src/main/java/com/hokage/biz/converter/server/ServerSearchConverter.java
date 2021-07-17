@@ -20,7 +20,6 @@ public class ServerSearchConverter {
         if (!CollectionUtils.isEmpty(form.getServerGroup())) {
             query.setServerGroup(String.join(",", form.getServerGroup()));
         }
-        query.setSupervisor(form.getSupervisorName());
         return query;
     }
 

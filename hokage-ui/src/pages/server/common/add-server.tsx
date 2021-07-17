@@ -63,20 +63,16 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
       serverGroup: {
         name: value.name,
         description: value.description || '',
-        creatorId: getHokageUid()
       }
     }
-    ServerAction.addServerLabel(form).then(result => {
+    ServerAction.addServerGroup(form).then(result => {
       if (result) {
         message.success(`已添加'${value.name}'分组`)
-        this.setState({serverGroupOptions: result})
+        this.setState({serverGroupOptions: result, isAddGroup: false})
+      } else {
+        message.error("添加分组失败")
       }
     }).catch(err => message.error(err))
-      .finally(() => {
-        this.setState({
-          isAddGroup: false,
-        })
-      })
   }
 
   loginTypeChange = (e: RadioChangeEvent) => {

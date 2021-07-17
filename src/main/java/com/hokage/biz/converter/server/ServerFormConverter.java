@@ -4,10 +4,13 @@ import com.hokage.biz.converter.Converter;
 import com.hokage.biz.enums.RecordStatusEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.persistence.dataobject.HokageServerDO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +39,10 @@ public class ServerFormConverter implements Converter<HokageServerForm, HokageSe
     public HokageServerForm doBackward(HokageServerDO serverDO) {
         HokageServerForm form = new HokageServerForm();
         BeanUtils.copyProperties(serverDO, form);
+        if (StringUtils.isNotEmpty(serverDO.getServerGroup())) {
+            List<String> serverGroupList = Arrays.asList(serverDO.getServerGroup().split(","));
+            form.setServerGroupList(serverGroupList);
+        }
         return form;
     }
 }

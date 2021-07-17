@@ -31,6 +31,11 @@ public enum ResultCodeEnum {
     SERVER_SYSTEM_ERROR("B-001", "system error"),
 
     /**
+     * server group
+     */
+    SERVER_GROUP_EXISTED("B-002", "server group has existed."),
+
+    /**
      * upload file error
      */
     SERVER_UPLOAD_FILE_ERROR("C-001", "file is empty."),

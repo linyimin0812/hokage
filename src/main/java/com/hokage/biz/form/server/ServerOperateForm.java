@@ -15,7 +15,7 @@ public class ServerOperateForm {
     /**
      * operator id
      */
-    private Long id;
+    private Long operatorId;
     /**
      * user ids
      */
@@ -28,10 +28,10 @@ public class ServerOperateForm {
     /**
      * server group
      */
-    private ServerGroup serverGroup;
+    private ServerGroupForm serverGroup;
 
     @Data
-    public static class ServerGroup {
+    public static class ServerGroupForm {
         /**
          * primary key
          */

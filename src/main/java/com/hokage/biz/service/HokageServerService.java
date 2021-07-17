@@ -2,6 +2,7 @@ package com.hokage.biz.service;
 
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
+import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.ServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.common.ServiceResponse;
@@ -19,7 +20,7 @@ public interface HokageServerService {
 
     /**
      * retrieve all server
-     * @return
+     * @return server list include the subordinate account
      */
     ServiceResponse<List<HokageServerVO>> selectAll();
 
@@ -32,32 +33,32 @@ public interface HokageServerService {
 
     /**
      * retrieve server information based on server ids
-     * @param ids
-     * @return
+     * @param ids server primary id list
+     * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids);
 
 
     /**
      * retrieve server information based on server type
-     * @param type
-     * @return
+     * @param type server type
+     * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerDO>> selectByType(String type);
 
     /**
      * retrieve server information based on server group
-     * @param group
-     * @return
+     * @param group server group
+     * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerDO>> selectByGroup(String group);
 
     /**
      * insert or update server info
-     * @param form
+     * @param serverDO server data object
      * @return
      */
-    ServiceResponse<HokageServerForm> save(HokageServerForm form);
+    ServiceResponse<HokageServerDO> save(HokageServerDO serverDO);
 
     /**
      * delete server
@@ -114,4 +115,11 @@ public interface HokageServerService {
      * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerVO>> listNotGrantServer(Long supervisorId);
+
+    /**
+     * search all server (operator server)
+     * @param allServerQuery {@link AllServerQuery}
+     * @return server list which meet the criteria
+     */
+    ServiceResponse<List<HokageServerVO>> searchAllServer(AllServerQuery allServerQuery);
 }

@@ -13,36 +13,36 @@ import java.util.List;
 public interface HokageServerGroupDao {
     /**
      * insert a new record
-     * @param serverGroupDO
-     * @return
+     * @param serverGroupDO server group data pbject
+     * @return rows affected
      */
     Long insert(HokageServerGroupDO serverGroupDO);
 
     /**
      * list all server group
-     * @return
+     * @return {@link List<HokageServerGroupDO>}
      */
     List<HokageServerGroupDO> selectAll();
 
     /**
-     * update
-     * @param serverGroupDO
-     * @return
+     * update a server group record
+     * @param serverGroupDO server group data pbject
+     * @return rows affected
      */
     Long update(HokageServerGroupDO serverGroupDO);
 
     /**
      * list server group based-on creator id
-     * @param id
-     * @return
+     * @param id creator id
+     * @return {@link List<HokageServerGroupDO>}
      */
     List<HokageServerGroupDO> listByCreatorId(Long id);
 
     /**
      * list server group based-on creator id and group name
-     * @param creatorId
-     * @param name
-     * @return
+     * @param creatorId creator id
+     * @param name group name
+     * @return {@link List<HokageServerGroupDO>}
      */
     List<HokageServerGroupDO> listByCreatorId(Long creatorId, String name);
 }

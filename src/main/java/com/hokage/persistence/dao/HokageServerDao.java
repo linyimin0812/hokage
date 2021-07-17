@@ -80,24 +80,24 @@ public interface HokageServerDao {
 
     /**
      * retrieve server info
-     * @param query
-     * @return
+     * @param query {@link AllServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
-    List<HokageServerDO> selectByQuery(AllServerQuery query);
+    List<HokageServerDO> selectByAllQuery(AllServerQuery query);
 
     /**
      * retrieve server info
      * @param query
      * @return
      */
-    List<HokageServerDO> selectByQuery(SupervisorServerQuery query);
+    List<HokageServerDO> selectByAllQuery(SupervisorServerQuery query);
 
     /**
      * retrieve server info
      * @param query
      * @return
      */
-    List<HokageServerDO> selectByQuery(SubordinateServerQuery query);
+    List<HokageServerDO> selectByAllQuery(SubordinateServerQuery query);
 
     /**
      * select server list by user id

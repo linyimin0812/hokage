@@ -507,7 +507,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
 
         List<HokageServerVO> serverVOList = serverDao.selectByIds(serverIdList)
                 .stream()
-                .map(serverDO -> ServerDOConverter.converterDO2VO(serverDO, ConverterTypeEnum.supervisor))
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor))
                 .collect(Collectors.toList());
 
         return success(serverVOList);

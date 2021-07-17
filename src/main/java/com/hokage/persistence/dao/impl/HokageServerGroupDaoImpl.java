@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author linyimin
@@ -26,30 +27,16 @@ public class HokageServerGroupDaoImpl implements HokageServerGroupDao {
         this.serverGroupMapper = serverGroupMapper;
     }
 
-    /**
-     * insert a new record
-     * @param serverGroupDO
-     * @return
-     */
     @Override
     public Long insert(HokageServerGroupDO serverGroupDO) {
         return serverGroupMapper.insert(serverGroupDO);
     }
 
-    /**
-     * list all server group
-     * @return
-     */
     @Override
     public List<HokageServerGroupDO> selectAll() {
-        return serverGroupMapper.selectAll();
+        return Optional.ofNullable(serverGroupMapper.selectAll()).orElse(Collections.emptyList());
     }
 
-    /**
-     * update server group
-     * @param serverGroupDO
-     * @return
-     */
     @Override
     public Long update(HokageServerGroupDO serverGroupDO) {
         return serverGroupMapper.update(serverGroupDO);
@@ -57,17 +44,12 @@ public class HokageServerGroupDaoImpl implements HokageServerGroupDao {
 
     @Override
     public List<HokageServerGroupDO> listByCreatorId(Long id) {
-        return serverGroupMapper.listByCreatorId(id);
+        return Optional.ofNullable(serverGroupMapper.listByCreatorId(id)).orElse(Collections.emptyList());
     }
 
     @Override
     public List<HokageServerGroupDO> listByCreatorId(Long creatorId, String name) {
-        List<HokageServerGroupDO> serverGroupDOList = serverGroupMapper.listByCreatorIdAndName(creatorId, name);
-
-        if (CollectionUtils.isEmpty(serverGroupDOList)) {
-            return Collections.emptyList();
-        }
-        return serverGroupDOList;
+        return Optional.ofNullable(serverGroupMapper.listByCreatorIdAndName(creatorId, name)).orElse(Collections.emptyList());
     }
 
 }

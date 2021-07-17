@@ -220,7 +220,7 @@
         <where>
             <include refid="queryBaseSql" />
             <if test="supervisor != null">
-                and id IN (
+                AND id IN (
                     SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id IN (
                         SELECT id FROM hokage_user WHERE `username` LIKE CONCAT('%', #{supervisor}, '%')
                     )
