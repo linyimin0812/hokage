@@ -1,5 +1,5 @@
 import React, { ReactText } from 'react'
-import { Button, Col, Row, Table } from 'antd';
+import { Button, Col, Row, Table } from 'antd'
 import { ServerVO } from '../../axios/action/server/server-type'
 import { Action } from '../../component/Action'
 import { observer } from 'mobx-react'
@@ -62,6 +62,13 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
     )
   }
 
+  renderLoginType = (loginType: String) => {
+    if (loginType === '1') {
+      return <span>密钥</span>
+    }
+    return <span>密码</span>
+  }
+
   render() {
     const rowSelection = {
       selectedRowKeys: store.selectedRowKeys,
@@ -78,12 +85,13 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
             pagination={false}
           >
             <Table.Column title={'id'} dataIndex={'id'} />
+            <Table.Column title={'主机名'} dataIndex={'hostname'} />
             <Table.Column title={'ip'} dataIndex={'ip'} />
             <Table.Column title={'port'} dataIndex={'sshPort'} />
             <Table.Column title={'账号'} dataIndex={'account'} />
-            <Table.Column title={'登录方式'} dataIndex={'loginType'} />
-            <Table.Column title={'我的状态'} dataIndex={'status'} />
-            <Table.Column title={'备注'} dataIndex={'description'} />
+            <Table.Column title={'登录方式'} dataIndex={'loginType'} render={this.renderLoginType} />
+            <Table.Column title={'服务器状态'} dataIndex={'status'} />
+            <Table.Column title={'描述'} dataIndex={'description'} ellipsis />
             <Table.Column title={'操作'} render={this.actionRender} />
           </Table>
         </div>

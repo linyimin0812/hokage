@@ -35,6 +35,7 @@ export interface ServerVO {
   status: string,
   userList: ServerUserVO[]
   operationList: Operation[],
+  accountType: AccountTypeEnum
 }
 
 export interface ServerUserVO {
@@ -83,4 +84,9 @@ interface ServerSearchBaseForm {
   domain?: string,
   ip?: string,
   serverGroup?: string,
+}
+
+export enum AccountTypeEnum {
+  admin,
+  ordinary,
 }

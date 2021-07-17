@@ -40,6 +40,12 @@ export default class OperatorServerTable extends React.Component {
     (group, index) => <Tag color={randomColor(group)} key={index}>{group}</Tag>
   )
 
+  serverOperatorRender = (supervisorList: string[]) => {
+    return supervisorList.map(
+      (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
+    )
+  }
+
   actionRender = (record: ServerVO) => {
     return <Action>
       <Action.Request title={'添加用户'} action={() => {alert('指定服务器')}} />
@@ -62,12 +68,17 @@ export default class OperatorServerTable extends React.Component {
         expandedRowRender={this.expandedRowRender}
         pagination={false}
       >
+        <Table.Column title={'id'} dataIndex={'id'} />
         <Table.Column title={'主机名'} dataIndex={'hostname'} />
         <Table.Column title={'域名'} dataIndex={'domain'} />
         <Table.Column title={'IP地址'} dataIndex={'ip'} />
         <Table.Column title={'分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
+        {
+          <Table.Column title={'管理员'} dataIndex={'supervisorList'} render={this.serverOperatorRender} />
+        }
         <Table.Column title={'使用人数'} dataIndex={'userNum'} />
         <Table.Column title={'状态'} dataIndex={'status'} render={this.statusRender} />
+        <Table.Column title={'描述'} dataIndex={'description'} ellipsis />
         <Table.Column title={'操作'} render={this.actionRender} />
       </Table>
     )

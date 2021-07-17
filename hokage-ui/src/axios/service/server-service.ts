@@ -38,6 +38,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/server/search',
     method: 'POST'
   },
+  'searchAllServer': {
+    url: '/server/all/search',
+    method: 'POST'
+  },
   'listSupervisorGrantServer': {
     url: '/supervisor/grant/server/list',
     method: 'GET'

@@ -20,14 +20,9 @@ export default class MyServerTable extends React.Component {
 
   actionRender = (record: ServerVO) => {
     return <Action>
-      <Action.Request title={'添加用户'} action={() => {alert('指定服务器')}} />
-      <Action.Confirm
-        title={'删除'}
-        action={async () => {
-          alert('TODO: 添加删除动作')
-        }}
-        content={`确定删除服务器${record.ip}(${record.id})`}
-      />
+      <Action.Request title={'Web终端'} action={() => {alert('打开终端')}} />
+      <Action.Request title={'文件管理'} action={() => {alert('文件管理')}} />
+      <Action.Request title={'资源监控'} action={() => {alert('资源监控')}} />
     </Action>
   }
 
@@ -39,6 +34,7 @@ export default class MyServerTable extends React.Component {
         dataSource={store.records}
         pagination={false}
       >
+        <Table.Column title={'id'} dataIndex={'id'} />
         <Table.Column title={'主机名'} dataIndex={'hostname'} />
         <Table.Column title={'域名'} dataIndex={'domain'} />
         <Table.Column title={'IP地址'} dataIndex={'ip'} />
