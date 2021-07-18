@@ -49,6 +49,7 @@ public class ServerDOConverter {
         ImmutableMap.<ConverterTypeEnum, Server2VO>builder()
             .put(ConverterTypeEnum.all, new AllServer2VO())
             .put(ConverterTypeEnum.supervisor, new SupervisorServerDO2VO())
+            .put(ConverterTypeEnum.subordinate, new SubordinateServer2VO())
             .build();
 
     @Autowired
@@ -119,6 +120,12 @@ public class ServerDOConverter {
             hokageServerVO.setSupervisorList(supervisorNameList);
             hokageServerVO.setSupervisorIdList(supervisorIds);
 
+            // number of users of the server
+            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
+                    Collections.singletonList(serverDO.getId())
+            );
+            hokageServerVO.setUserNum(subordinateServerDOList.size());
+
             return hokageServerVO;
         }
 
@@ -134,6 +141,27 @@ public class ServerDOConverter {
         public HokageServerVO converter(HokageServerDO serverDO) {
 
             // 1. set common property
+            HokageServerVO serverVO = preConverter(serverDO);
+
+            // number of users of the server
+            List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
+                    Collections.singletonList(serverDO.getId())
+            );
+            serverVO.setUserNum(subordinateServerDOList.size());
+
+            return serverVO;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+    }
+
+    static class SubordinateServer2VO implements Server2VO {
+
+        @Override
+        public HokageServerVO converter(HokageServerDO serverDO) {
             return preConverter(serverDO);
         }
 
@@ -146,7 +174,6 @@ public class ServerDOConverter {
     private static HokageServerVO preConverter(HokageServerDO serverDO) {
 
         HokageServerVO serverVO = new HokageServerVO();
-
         // server information
         BeanUtils.copyProperties(serverDO, serverVO);
 
@@ -164,12 +191,6 @@ public class ServerDOConverter {
         if (StringUtils.isEmpty(serverDO.getHostname())) {
             serverVO.setHostname(acquireHostname(serverDO));
         }
-
-        // number of users of the server
-        List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
-                Collections.singletonList(serverDO.getId())
-        );
-        serverVO.setUserNum(subordinateServerDOList.size());
 
         return serverVO;
     }

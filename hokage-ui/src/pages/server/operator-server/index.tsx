@@ -5,7 +5,7 @@ import { ServerSearchForm } from '../../../axios/action/server/server-type'
 import OperatorServerTable from './table'
 import store from './store'
 import { observer } from 'mobx-react'
-import { getHokageRole, getHokageUid } from '../../../libs';
+import { getHokageRole, getHokageUid } from '../../../libs'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },

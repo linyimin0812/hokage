@@ -1,8 +1,8 @@
 package com.hokage.persistence.dao;
 
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.SubordinateServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.persistence.dataobject.HokageServerDO;
 
 import java.util.List;
@@ -92,12 +92,6 @@ public interface HokageServerDao {
      */
     List<HokageServerDO> selectBySupervisorQuery(SupervisorServerQuery query);
 
-    /**
-     * retrieve server info
-     * @param query {@link SubordinateServerQuery}
-     * @return {@link List<HokageServerDO>}
-     */
-    List<HokageServerDO> selectByAllQuery(SubordinateServerQuery query);
 
     /**
      * select server list by user id
@@ -113,4 +107,10 @@ public interface HokageServerDao {
      */
     Long deleteById(Long id);
 
+    /**
+     * select subordinate server
+     * @param query {@link SubordinateServerQuery}
+     * @return
+     */
+    List<HokageServerDO> selectSubordinateServer(SubordinateServerQuery query);
 }

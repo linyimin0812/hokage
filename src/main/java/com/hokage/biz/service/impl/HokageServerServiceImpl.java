@@ -3,26 +3,27 @@ package com.hokage.biz.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
+import com.hokage.biz.converter.server.ServerSearchConverter;
 import com.hokage.biz.enums.LoginTypeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.ServerQuery;
-import com.hokage.biz.request.SubordinateServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.ServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
-import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
     private HokageServerSshKeyContentDao contentDao;
-    private HokageServerCacheDao serverCacheDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -93,18 +93,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     public void setContentDao(HokageServerSshKeyContentDao contentDao) {
         this.contentDao = contentDao;
     }
-
-    @Autowired
-    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
-        this.serverCacheDao = serverCacheDao;
-    }
-
-    private final ImmutableMap<String, Function<ServerQuery, List<HokageServerDO>>> SERVER_QUERY_MAP =
-            ImmutableMap.<String, Function<ServerQuery, List<HokageServerDO>>>builder()
-                    .put(AllServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((AllServerQuery) query)))
-                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectBySupervisorQuery((SupervisorServerQuery) query)))
-                    .put(SubordinateServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((SubordinateServerQuery) query)))
-                    .build();
 
     private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
             ImmutableMap.<Integer, Function<ServerOperateForm, Boolean>>builder()
@@ -159,25 +147,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
-    public ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query) {
-
-        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
-
-        Function<ServerQuery, List<HokageServerDO>> queryFunction = SERVER_QUERY_MAP.get(query.getClass().getSimpleName());
-
-        if (Objects.isNull(queryFunction)) {
-            return response.fail("A-XXX", "search server error, not support search type.");
-        }
-
-        List<HokageServerDO> serverDOList = queryFunction.apply(query);
-        List<HokageServerVO> serverVOList = serverDOList.stream()
-                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
-                .collect(Collectors.toList());
-
-        return response.success(serverVOList);
-    }
-
-    @Override
     public ServiceResponse<List<HokageServerVO>> searchAllServer(AllServerQuery allServerQuery) {
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
 
@@ -197,6 +166,65 @@ public class HokageServerServiceImpl implements HokageServerService {
                 .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor))
                 .collect(Collectors.toList());
 
+        return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchSubordinateServer(SubordinateServerQuery query) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageServerVO> serverVOList;
+        // 超级管理员返回全部使用账号
+        if (UserRoleEnum.super_operator.getValue().equals(query.getRole())) {
+            query.setOperatorId(0L);
+            serverVOList = hokageServerDao.selectSubordinateServer(query)
+                    .stream()
+                    .map(serverDO -> {
+                        HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.subordinate);
+                        return subordinateServerDao.listByServerIds(Collections.singletonList(serverDO.getId()))
+                                .stream()
+                                .map(subServerDO -> {
+                                    serverVO.setAccount(subServerDO.getAccount());
+                                    return serverVO;
+                                }).collect(Collectors.toList());
+                    })
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+        } else {
+            List<HokageServerDO> serverDOList = hokageServerDao.selectSubordinateServer(query);
+            serverVOList = serverDOList.stream()
+                    .map(serverDO -> {
+                        HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.subordinate);
+                        HokageSubordinateServerDO subordinateServerDO = subordinateServerDao.queryBySubordinateIdAndServerId(query.getOperatorId(), serverDO.getId());
+                        serverVO.setAccount(subordinateServerDO.getAccount());
+                        return serverVO;
+                    })
+                    .collect(Collectors.toList());
+        }
+
+
+        return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageServerDO> serverDOList = new ArrayList<>();
+        if (UserRoleEnum.super_operator.getValue().equals(query.getRole())) {
+            serverDOList = hokageServerDao.selectAll();
+        } else if (UserRoleEnum.supervisor.getValue().equals(query.getRole())) {
+            serverDOList = hokageServerDao.selectBySupervisorId(query.getOperatorId());
+        } else if (UserRoleEnum.subordinate.getValue().equals(query.getRole())) {
+            List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByOrdinateIds(Collections.singletonList(query.getOperatorId()));
+            serverDOList = subServerDOList.stream().map(subServerDO -> {
+                HokageServerDO serverDO = hokageServerDao.selectById(subServerDO.getServerId());
+                serverDO.setAccount(subServerDO.getAccount());
+                return serverDO;
+            }).collect(Collectors.toList());
+        }
+        List<HokageServerVO> serverVOList = serverDOList
+                .stream()
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
+                .collect(Collectors.toList());
         return response.success(serverVOList);
     }
 
@@ -262,8 +290,8 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     /**
      * add supervisor when add server
-     * @param serverDO
-     * @param form
+     * @param serverDO {@link HokageServerDO}
+     * @param form {@link HokageServerForm}
      */
     private void addSupervisor(HokageServerDO serverDO, HokageServerForm form) {
         if (!CollectionUtils.isEmpty(form.getSupervisorList())) {

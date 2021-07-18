@@ -44,6 +44,7 @@ export interface MetricVO {
 
 export interface MonitorOperateForm {
   operatorId: number,
+  serverId: number,
   ip: string,
   sshPort: string,
   account: string,

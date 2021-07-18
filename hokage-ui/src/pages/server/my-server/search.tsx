@@ -25,7 +25,7 @@ export const MyServerSearch = (props: SearchPropTypes) => {
       >
         <Row gutter={24} style={{ width: '100%' }}>
           <Col span={6} key="hostname">
-            <Form.Item name="hoatname" label="主机名">
+            <Form.Item name="hostname" label="主机名">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
@@ -34,8 +34,8 @@ export const MyServerSearch = (props: SearchPropTypes) => {
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>
-          <Col span={6} key="ipAddress">
-            <Form.Item name="ipAddress" label="ip地址">
+          <Col span={6} key="ip">
+            <Form.Item name="ip" label="ip地址">
               <Input placeholder="请输入" />
             </Form.Item>
           </Col>

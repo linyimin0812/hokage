@@ -154,10 +154,10 @@ public class HokageServerCacheDao extends BaseCacheDao {
     @SneakyThrows
     private SshClient reloadClient(String serverKey) {
         List<String> serverOptions = Arrays.asList(StringUtils.split(serverKey, "_"));
-        if (serverOptions.size() != 3) {
+        if (serverOptions.size() != 4) {
             return null;
         }
-        HokageServerDO serverDO = serverDao.selectByAccount(serverOptions.get(0), serverOptions.get(1), serverOptions.get(2));
+        HokageServerDO serverDO = serverDao.selectById(Long.valueOf(serverOptions.get(0)));
         if (Objects.isNull(serverDO)) {
             return null;
         }
@@ -174,11 +174,11 @@ public class HokageServerCacheDao extends BaseCacheDao {
      * @return ip_port_account
      */
     private String buildKey(HokageServerDO serverDO) {
-        return buildKey(serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount());
+        return buildKey(serverDO.getId(), serverDO.getIp(), serverDO.getSshPort(), serverDO.getAccount());
     }
 
-    public String buildKey(String ip, String port, String account) {
-        return ip + "_" + port + "_" + account;
+    public String buildKey(Long id, String ip, String port, String account) {
+        return id + "_" + ip + "_" + port + "_" + account;
     }
 
     /**

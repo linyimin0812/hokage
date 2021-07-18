@@ -1,8 +1,8 @@
 package com.hokage.persistence.mapper;
 
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.SubordinateServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -44,7 +44,7 @@ public interface HokageServerMapper {
      * @param ids
      * @return
      */
-    List<HokageServerDO> selectByIds(List<Long> ids);
+    List<HokageServerDO> selectByIds(@Param("serverIds") List<Long> ids);
 
     /**
      * retrieve server info based-on server id

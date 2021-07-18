@@ -1,3 +1,8 @@
+## 开发环境
+
+1. node: 12+
+2. java 8+
+
 ## 启动
 
 ```shell script

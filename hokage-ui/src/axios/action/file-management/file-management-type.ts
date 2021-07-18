@@ -20,6 +20,7 @@ export interface FileProperty {
 
 export interface FileOperateForm {
   operatorId: number,
+  serverId: number,
   ip: string,
   sshPort: string,
   account: string,

@@ -74,9 +74,10 @@ export default class Index extends React.Component<NetworkProp, NetworkState>{
   }
 
   assembleOperateForm = () => {
-    const { ip, sshPort, account } = this.props.serverVO
+    const { ip, sshPort, account, id } = this.props.serverVO
     const form: MonitorOperateForm = {
       operatorId: getHokageUid(),
+      serverId: id,
       ip: ip,
       sshPort: sshPort,
       account: account

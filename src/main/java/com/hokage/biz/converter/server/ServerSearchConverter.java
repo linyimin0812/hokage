@@ -2,9 +2,10 @@ package com.hokage.biz.converter.server;
 
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.ServerSearchForm;
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.SubordinateServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.ServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -45,6 +46,12 @@ public class ServerSearchConverter {
         if (!CollectionUtils.isEmpty(form.getServerGroup())) {
             query.setServerGroup(String.join(",", form.getServerGroup()));
         }
+        return query;
+    }
+
+    public static ServerQuery converter(ServerSearchForm form) {
+        ServerQuery query = new ServerQuery();
+        BeanUtils.copyProperties(form, query);
         return query;
     }
 

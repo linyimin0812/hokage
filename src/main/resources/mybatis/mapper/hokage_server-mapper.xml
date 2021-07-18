@@ -171,11 +171,13 @@
         FROM
         <include refid="tableNme"/>
         <where>
-            id IN
-            <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
-                #{id}
-            </foreach>
-            AND status &lt;&gt; -1
+            status &lt;&gt; -1
+            <if test="serverIds != null and serverIds.size > 0">
+                AND id IN
+                <foreach collection="serverIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
         </where>
     </select>
 
@@ -214,7 +216,7 @@
         </where>
     </select>
 
-    <select id="selectByAllServerQuery" parameterType="com.hokage.biz.request.AllServerQuery" resultMap="HokageServerMapper">
+    <select id="selectByAllServerQuery" parameterType="com.hokage.biz.request.server.AllServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns"/>
         FROM <include refid="tableNme"/>
         <where>
@@ -230,7 +232,7 @@
         </where>
     </select>
 
-    <select id="selectBySupervisorServerQuery" parameterType="com.hokage.biz.request.SupervisorServerQuery" resultMap="HokageServerMapper">
+    <select id="selectBySupervisorServerQuery" parameterType="com.hokage.biz.request.server.SupervisorServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
@@ -255,14 +257,16 @@
         </where>
     </select>
 
-    <select id="selectBySubordinateServerQuery" parameterType="com.hokage.biz.request.SubordinateServerQuery" resultMap="HokageServerMapper">
+    <select id="selectBySubordinateServerQuery" parameterType="com.hokage.biz.request.server.SubordinateServerQuery" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
-            id IN (
-                SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id = #{operatorId}
-            )
             <include refid="queryBaseSql" />
+            <if test="operatorId != null and operatorId != ''">
+                AND id IN (
+                    SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id = #{operatorId}
+                )
+            </if>
             <if test="account != null and account != ''">
                 AND account LIKE CONCAT('%', account,'%')
             </if>
@@ -272,6 +276,11 @@
                     SELECT server_id FROM hokage_subordinate_server WHERE subordinate_id IN (
                         SELECT id FROM hokage_user WHERE `username` LIKE CONCAT('%', #{username}, '%')
                     )
+                )
+            </if>
+            <if test="account != null and account != ''">
+                AND id IN (
+                    SELECT server_id FROM hokage_subordinate_server WHERE account LIKE CONCAT('%', #{account}, '%')
                 )
             </if>
             AND status &lt;&gt; -1

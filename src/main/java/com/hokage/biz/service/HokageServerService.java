@@ -1,10 +1,10 @@
 package com.hokage.biz.service;
 
-import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.ServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.ServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerDO;
@@ -24,13 +24,6 @@ public interface HokageServerService {
      * @return server list include the subordinate account
      */
     ServiceResponse<List<HokageServerVO>> selectAll();
-
-    /**
-     * search server
-     * @param query ServerSearchForm
-     * @return List<HokageServerVO>
-     */
-    ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query);
 
     /**
      * retrieve server information based on server ids
@@ -130,4 +123,18 @@ public interface HokageServerService {
      * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerVO>> searchSupervisorServer(SupervisorServerQuery query);
+
+    /**
+     * search subordinate server
+     * @param query {@link SubordinateServerQuery}
+     * @return {@link List<HokageServerVO>}
+     */
+    ServiceResponse<List<HokageServerVO>> searchSubordinateServer(SubordinateServerQuery query);
+
+    /**
+     * serach server
+     * @param query {@link ServerQuery}
+     * @return {@link List<HokageServerVO>}
+     */
+    ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query);
 }

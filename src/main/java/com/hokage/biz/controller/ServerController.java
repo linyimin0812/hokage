@@ -4,13 +4,13 @@ import com.google.common.base.Preconditions;
 import com.hokage.biz.converter.server.ServerFormConverter;
 import com.hokage.biz.converter.server.ServerSearchConverter;
 import com.hokage.biz.enums.ResultCodeEnum;
-import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.ServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.ServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.BaseController;
@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,25 +61,9 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchServer(@RequestBody ServerSearchForm form) {
-
-        Preconditions.checkNotNull(form.getRole(), "role can't be empty.");
-        Preconditions.checkNotNull(form.getOperatorId(), "operator id can't be empty.");
-
-        ServerQuery query = ServerSearchConverter.converterToSubordinate(form);
-        if (UserRoleEnum.super_operator.getValue().equals(form.getRole())) {
-           query = ServerSearchConverter.converterToAll(form);
-        }
-        if (UserRoleEnum.supervisor.getValue().equals(form.getRole())) {
-            query = ServerSearchConverter.converterToSupervisor(form);
-        }
-
+        ServerQuery query = ServerSearchConverter.converter(form);
         ServiceResponse<List<HokageServerVO>> response = serverService.searchServer(query);
-
-        if (!response.getSucceeded()) {
-            return fail(response.getCode(), response.getMsg());
-        }
-
-        return success(response.getData());
+        return response(response);
     }
 
     @RequestMapping(value = "/server/all/search", method = RequestMethod.POST)
@@ -99,7 +82,9 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/subordinate/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchSubordinateServer(@RequestBody ServerSearchForm form) {
-        return success(Collections.emptyList());
+        SubordinateServerQuery query = ServerSearchConverter.converterToSubordinate(form);
+        ServiceResponse<List<HokageServerVO>> response = serverService.searchSubordinateServer(query);
+        return response(response);
     }
 
     @RequestMapping(value = "/server/save", method = RequestMethod.POST)

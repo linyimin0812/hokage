@@ -11,6 +11,7 @@ import lombok.Data;
 @Data
 public class FileOperateForm {
     private Long operatorId;
+    private Long serverId;
     private String ip;
     private String sshPort;
     private String account;
@@ -21,6 +22,6 @@ public class FileOperateForm {
     private String permission;
 
     public String buildKey() {
-        return String.format("%s_%s_%s", ip, sshPort, account);
+        return String.format("%s_%s_%s_%s", serverId, ip, sshPort, account);
     }
 }

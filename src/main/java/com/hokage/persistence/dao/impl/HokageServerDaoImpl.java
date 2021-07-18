@@ -1,16 +1,14 @@
 package com.hokage.persistence.dao.impl;
 
-import com.hokage.biz.request.AllServerQuery;
-import com.hokage.biz.request.SubordinateServerQuery;
-import com.hokage.biz.request.SupervisorServerQuery;
+import com.hokage.biz.request.server.AllServerQuery;
+import com.hokage.biz.request.server.SubordinateServerQuery;
+import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.mapper.HokageServerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -43,19 +41,12 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectAll() {
-        List<HokageServerDO> serverDOList = serverMapper.selectAll();
-        if (CollectionUtils.isEmpty(serverDOList)) {
-            return Collections.emptyList();
-        }
-        return serverDOList;
+        return Optional.ofNullable(serverMapper.selectAll()).orElse(Collections.emptyList());
     }
 
     @Override
     public List<HokageServerDO> selectByIds(List<Long> ids) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return new ArrayList<>();
-        }
-        return serverMapper.selectByIds(ids);
+        return Optional.ofNullable(serverMapper.selectByIds(ids)).orElse(Collections.emptyList());
     }
 
     @Override
@@ -72,7 +63,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectByGroup(String group) {
-        return serverMapper.selectByGroup(group);
+        return Optional.ofNullable(serverMapper.selectByGroup(group)).orElse(Collections.emptyList());
     }
 
     @Override
@@ -92,12 +83,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
 
     @Override
     public List<HokageServerDO> selectBySupervisorQuery(SupervisorServerQuery query) {
-        return serverMapper.selectBySupervisorServerQuery(query);
-    }
-
-    @Override
-    public List<HokageServerDO> selectByAllQuery(SubordinateServerQuery query) {
-        return serverMapper.selectBySubordinateServerQuery(query);
+        return Optional.ofNullable(serverMapper.selectBySupervisorServerQuery(query)).orElse(Collections.emptyList());
     }
 
     @Override
@@ -108,5 +94,10 @@ public class HokageServerDaoImpl implements HokageServerDao {
     @Override
     public Long deleteById(Long id) {
         return serverMapper.deleteById(id);
+    }
+
+    @Override
+    public List<HokageServerDO> selectSubordinateServer(SubordinateServerQuery query) {
+        return Optional.ofNullable(serverMapper.selectBySubordinateServerQuery(query)).orElse(Collections.emptyList());
     }
 }

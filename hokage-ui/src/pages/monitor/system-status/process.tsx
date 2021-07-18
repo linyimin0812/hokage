@@ -60,9 +60,10 @@ export default class Process extends React.Component<ProcessProp> {
   }
 
   assembleOperateForm = (record: ProcessInfoVO) => {
-    const { ip, sshPort, account } = this.props.serverVO
+    const { ip, sshPort, account, id } = this.props.serverVO
     const form: MonitorOperateForm = {
       operatorId: getHokageUid(),
+      serverId: id,
       ip: ip,
       sshPort: sshPort,
       account: account,

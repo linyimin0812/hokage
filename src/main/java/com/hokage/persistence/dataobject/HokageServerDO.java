@@ -64,6 +64,6 @@ public class HokageServerDO extends HokageBaseDO {
      * @return ip_port_account
      */
     public String buildKey() {
-        return ip + "_" + sshPort + "_" + account;
+        return id + "_" + ip + "_" + sshPort + "_" + account;
     }
 }

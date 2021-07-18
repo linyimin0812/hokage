@@ -11,6 +11,19 @@ import lombok.EqualsAndHashCode;
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class SupervisorServerQuery extends PageQuery {
+public class SupervisorServerQuery extends ServerQuery {
+    /**
+     * supervisor id
+     */
     private Long supervisorId;
+    /**
+     * ssh account
+     */
+    private String account;
+
+    /**
+     * username
+     */
+    private String username;
+
 }

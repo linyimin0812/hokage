@@ -52,6 +52,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const { serverVO } = this.props
     const form: FileOperateForm = {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
@@ -136,6 +137,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const { name, curDir } = record
     return {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
@@ -244,7 +246,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
   }
 
   downloadFile = (record: FileProperty) => {
-    const { ip, sshPort, account } = this.props.serverVO
+    const { id, ip, sshPort, account } = this.props.serverVO
 
     if (record.type === 'directory') {
       this.downloadDirectory(record)
@@ -253,7 +255,7 @@ export default class FileTable extends React.Component<FileTablePropsType, FileT
     const file = path.resolve(record.curDir, record.name)
     const link = document.createElement('a')
     const url = process.env.REACT_APP_ENV === 'local' ? '/api/server/file/download' : '/server/file/download'
-    const serverKey = `${ip}_${sshPort}_${account}`;
+    const serverKey = `${id}_${ip}_${sshPort}_${account}`;
     link.href = `${url}?serverKey=${serverKey}&file=${file}`
     document.body.appendChild(link)
     const evt = document.createEvent("MouseEvents")

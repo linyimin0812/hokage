@@ -1,6 +1,7 @@
-package com.hokage.biz.request;
+package com.hokage.biz.request.server;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -9,6 +10,7 @@ import lombok.Data;
  * @description
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AllServerQuery extends ServerQuery {
 
     /**

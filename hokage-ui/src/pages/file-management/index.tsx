@@ -38,9 +38,10 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
     store.activeKey = activeKey
     const pane = store.panes.find(pane => pane.key === activeKey)
     if (pane && pane.serverVO) {
-      const { ip, sshPort, account } = pane.serverVO
+      const { ip, sshPort, account, id } = pane.serverVO
       const form: FileOperateForm = {
         operatorId: getHokageUid(),
+        serverId: id,
         ip: ip,
         sshPort: sshPort,
         account: account,

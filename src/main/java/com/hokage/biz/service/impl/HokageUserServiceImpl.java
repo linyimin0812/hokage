@@ -463,24 +463,14 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
         List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByOrdinateIds(Collections.singletonList(query.getSubordinateId()));
 
         List<Long> serverIdList = subServerDOList.stream().map(HokageSubordinateServerDO::getServerId).collect(Collectors.toList());
-        Map<Long, HokageServerDO> serverDOMap = serverDao.selectByIds(serverIdList)
+        Map<Long, HokageServerDO> serverMap = serverDao.selectByIds(serverIdList)
                 .stream()
                 .collect(Collectors.toMap(HokageServerDO::getId, Function.identity(), (o1, o2) -> o1));
 
         List<HokageServerVO> serverVOList = subServerDOList.stream()
                 .map(subServerDO -> {
-                    HokageServerDO serverDO = serverDOMap.get(subServerDO.getServerId());
-
-                    HokageServerVO serverVO = new HokageServerVO();
-                    serverVO.setId(serverDO.getId());
-                    List<String> serverGroupList = new ArrayList<>();
-                    if (StringUtils.isNotEmpty(serverDO.getServerGroup())) {
-                        serverGroupList = Arrays.asList(StringUtils.split(serverDO.getServerGroup(), ","));
-                    }
-                    serverVO.setServerGroupList(serverGroupList);
-                    serverVO.setDomain(serverDO.getDomain());
-                    serverVO.setHostname(serverDO.getHostname());
-                    serverVO.setDescription(serverDO.getDescription());
+                    HokageServerDO serverDO = serverMap.get(subServerDO.getServerId());
+                    HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.subordinate);
 
                     serverVO.setIp(subServerDO.getIp());
                     serverVO.setSshPort(subServerDO.getSshPort());

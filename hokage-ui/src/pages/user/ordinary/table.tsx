@@ -3,7 +3,7 @@ import { Divider, message, Table, Tag } from 'antd'
 import store from './store'
 import { getHokageUid, randomColor } from '../../../libs'
 import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type';
+import { ServerSearchForm, ServerStatusEnum, ServerVO } from '../../../axios/action/server/server-type';
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { observer } from 'mobx-react'
@@ -11,8 +11,6 @@ import { SelectSupervisor } from '../common/select-supervisor'
 import { UserAction } from '../../../axios/action'
 import { SelectServer } from '../common/select-server'
 import serverSelectStore from '../store'
-import { ServerAction } from '../../../axios/action/server/server-action';
-
 
 @observer
 export default class OrdinaryTable extends React.Component {
@@ -26,11 +24,14 @@ export default class OrdinaryTable extends React.Component {
     )
   }
 
-  serverStatusRender = (status: string) => {
-    if (!status) {
-      return <span>-</span>
+  serverStatusRender = (status: number) => {
+    if (status === ServerStatusEnum.offline) {
+      return <Tag color={'red'}>offline</Tag>
     }
-    return <Tag color = {randomColor(status)}> { status } </Tag>
+    if (status === ServerStatusEnum.online) {
+      return <Tag color={'green'}>online</Tag>
+    }
+    return <Tag color={'magenta'}>unknown</Tag>
   }
 
   nestedActionRender = (subordinateId: number, record: ServerVO) => {
@@ -60,7 +61,7 @@ export default class OrdinaryTable extends React.Component {
           userId:form.userIds![0]
         }
         store.isFetching = true
-        ServerAction.searchSubordinateServer(searchForm).then(value => {
+        UserAction.searchSubordinateServer(searchForm).then(value => {
           store.serverVOList = value || []
         }).catch(e => message.error(e))
           .finally(() => store.isFetching = false)
@@ -174,7 +175,7 @@ export default class OrdinaryTable extends React.Component {
         role: record.role,
         userId: record.id
       }
-      ServerAction.searchSubordinateServer(form).then(value => {
+      UserAction.searchSubordinateServer(form).then(value => {
         store.serverVOList = value || []
       }).catch(e => message.error(e))
         .finally(() => store.isFetching = false)

@@ -70,6 +70,7 @@ export class FileReader extends React.Component<FileReaderPropsType, FileReaderS
     const { name, curDir } = contentVO
     return {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,

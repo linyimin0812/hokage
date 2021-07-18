@@ -1,7 +1,5 @@
 import React from 'react'
-import { Button, Divider, message, Result } from 'antd'
-import { PlusOutlined } from '@ant-design/icons/lib'
-import AddServer from '../server/common/add-server'
+import { message, Result } from 'antd'
 
 interface ApplyServerPromptStateType {
   isModalVisible: boolean
@@ -38,18 +36,18 @@ export default class ApplyServerPrompt extends React.Component<any, ApplyServerP
   }
 
   render() {
-    const { isModalVisible } = this.state
+    // const { isModalVisible } = this.state
     return (
       <>
         <Result
           title="你还没有可用服务器哦,请点击申请按钮进行申请,或者点击添加按钮进行添加"
-          extra={[
-            <Button key="1" icon={<PlusOutlined translate="true" />} onClick={this.applyServer}>申请</Button>,
-            <Divider type="vertical" />,
-            <Button key="2" icon={<PlusOutlined translate="true" />} onClick={this.add}>添加</Button>
-          ]}
+          // extra={[
+          //   <Button key="1" icon={<PlusOutlined translate="true" />} onClick={this.applyServer}>申请</Button>,
+          //   <Divider type="vertical" />,
+          //   <Button key="2" icon={<PlusOutlined translate="true" />} onClick={this.add}>添加</Button>
+          // ]}
         />
-        <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+        {/*<AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />*/}
       </>
     )
   }

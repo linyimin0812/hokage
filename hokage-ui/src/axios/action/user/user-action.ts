@@ -2,7 +2,7 @@
  * long description for the file
  * @summary short description for the file
  * @author linyimin <linyimin520812@gmail.com>
- * Created at     : 2020-10-27 00:55:23
+ * Created at: 2020-10-27 00:55:23
  */
 
 import { UserService } from '../../service'
@@ -18,7 +18,7 @@ import { Models } from '../../../libs/model'
 import { ServiceResult } from '../../common'
 import { removeHokageRole, removeHokageUid, setHokageRole, setHokageUid } from '../../../libs'
 import { UserSearchFormType } from '../../../pages/user/common/search'
-import { ServerVO } from '../server/server-type';
+import { ServerVO } from '../server/server-type'
 
 export const UserAction = {
   login: (formData: UserLoginForm): Promise<ServiceResult<UserRegisterForm>> => {
@@ -227,6 +227,18 @@ export const UserAction = {
         reject(value.msg)
       }).catch(err => {
         return reject("回收账号失败. err: " + JSON.stringify(err))
+      })
+    })
+  },
+  searchSubordinateServer: (form: UserServerOperateForm): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>((resolve, reject) => {
+      UserService.searchSubordinateServer(form).then(value => {
+        if (value.success) {
+          return resolve(value.data)
+        }
+        reject(value.msg)
+      }).catch(err => {
+        return reject("查询用户服务器失败. err: " + JSON.stringify(err))
       })
     })
   },

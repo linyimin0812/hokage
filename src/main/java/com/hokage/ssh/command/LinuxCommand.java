@@ -67,6 +67,8 @@ public class LinuxCommand extends AbstractCommand {
                 "grep -v \"ps axo\"" + " | " +
                 "grep -v \"awk BEGIN\"" + " | " +
                 "grep -v \"sed N;\"" + " | " +
+                "grep -v \"sed \"" + " | " +
+                "sed 's/\\\"/\\\\\\\"/g'" + " | " +
                 "awk 'BEGIN {print \"[\"} NR>1 {print \"{" +
                 "\\\"pid\\\": \"$1\", " +
                 "\\\"account\\\": \\\"\"$2\"\\\", " +

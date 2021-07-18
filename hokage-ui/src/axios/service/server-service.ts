@@ -46,7 +46,7 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     method: 'GET'
   },
   'searchSubordinateServer': {
-    url: '/user/subordinate/server/search',
+    url: '/server/subordinate/search',
     method: 'POST'
   },
   searchSupervisorServer: {

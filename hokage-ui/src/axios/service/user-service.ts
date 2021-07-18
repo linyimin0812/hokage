@@ -112,6 +112,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/user/supervisor/server/search',
     method: 'POST'
   },
+  'searchSubordinateServer': {
+    url: '/user/subordinate/server/search',
+    method: 'POST'
+  }
 
 }
 

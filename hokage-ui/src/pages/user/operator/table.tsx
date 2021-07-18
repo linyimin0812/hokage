@@ -7,7 +7,7 @@ import { getHokageUid, randomColor } from '../../../libs'
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../common/select-server'
-import { ServerVO } from '../../../axios/action/server/server-type'
+import { ServerStatusEnum, ServerVO } from '../../../axios/action/server/server-type';
 import { UserAction } from '../../../axios/action'
 import { UserSearchFormType } from '../common/search'
 import serverSelectStore from '../store'
@@ -54,11 +54,14 @@ export default class OperatorTable extends React.Component {
     </Action>
   }
 
-  serverStatusRender = (status: string) => {
-    if (!status) {
-      return <span>-</span>
+  serverStatusRender = (status: number) => {
+    if (status === ServerStatusEnum.offline) {
+      return <Tag color={'red'}>offline</Tag>
     }
-    return <Tag color = {randomColor(status)}> { status } </Tag>
+    if (status === ServerStatusEnum.online) {
+      return <Tag color={'green'}>online</Tag>
+    }
+    return <Tag color={'magenta'}>unknown</Tag>
   }
 
   serverGroupRender = (groupList: string[]) => {

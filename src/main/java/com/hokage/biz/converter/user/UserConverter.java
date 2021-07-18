@@ -14,6 +14,7 @@ import com.google.common.collect.ImmutableMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -175,12 +176,13 @@ public class UserConverter {
                         return serverVO;
                     }).collect(Collectors.toList());
 
-            List<String> serverLabels = serverVOList.stream()
-                    .flatMap(serverVO -> serverVO.getServerGroupIdList().stream())
+            List<String> serverGroup = serverVOList.stream()
+                    .filter(serverVO -> !CollectionUtils.isEmpty(serverVO.getServerGroupList()))
+                    .flatMap(serverVO -> serverVO.getServerGroupList().stream())
                     .distinct()
                     .collect(Collectors.toList());
 
-            hokageUserVO.setServerGroupList(serverLabels);
+            hokageUserVO.setServerGroupList(serverGroup);
             hokageUserVO.setServerNum(serverVOList.size());
             hokageUserVO.setServerVOList(serverVOList);
 

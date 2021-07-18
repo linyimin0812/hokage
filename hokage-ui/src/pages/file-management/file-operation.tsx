@@ -46,6 +46,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
     const paths: string[] = pane.fileVO?.curDir.split('/').filter((path, index) => index <= pathIndex)!
     const form: FileOperateForm = {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
@@ -58,6 +59,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
     const { id, serverVO, fileVO } = this.props
     const form: FileOperateForm = {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,
@@ -78,6 +80,7 @@ export class FileOperation extends React.Component<FileOperationPropsType, FileO
     const { id, serverVO} = this.props
     const form: FileOperateForm = {
       operatorId: getHokageUid(),
+      serverId: serverVO.id,
       ip: serverVO.ip,
       sshPort: serverVO.sshPort,
       account: serverVO.account,

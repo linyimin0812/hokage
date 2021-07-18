@@ -1,4 +1,4 @@
-package com.hokage.biz.request;
+package com.hokage.biz.request.server;
 
 import com.hokage.common.PageQuery;
 import lombok.Data;
@@ -39,4 +39,6 @@ public class ServerQuery extends PageQuery {
      * server group
      */
     private String serverGroup;
+
+    private Integer role;
 }
