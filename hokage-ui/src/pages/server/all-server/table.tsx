@@ -2,7 +2,7 @@ import React from 'react'
 import { message, Table, Tag } from 'antd';
 import store from './store'
 import { getHokageRole, getHokageUid, randomColor } from '../../../libs';
-import { ServerVO } from '../../../axios/action/server/server-type'
+import { ServerStatusEnum, ServerVO } from '../../../axios/action/server/server-type';
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
 import { UserRoleEnum, UserServerOperateForm } from '../../../axios/action/user/user-type';
@@ -56,6 +56,16 @@ export default class AllServerTable extends React.Component {
 
   }
 
+  renderStatus = (status: number) => {
+    if (status === ServerStatusEnum.offline) {
+      return <Tag color={'red'}>offline</Tag>
+    }
+    if (status === ServerStatusEnum.online) {
+      return <Tag color={'green'}>online</Tag>
+    }
+    return <Tag color={'magenta'}>unknown</Tag>
+  }
+
   render () {
     const role = getHokageRole()
     return (
@@ -73,7 +83,7 @@ export default class AllServerTable extends React.Component {
         <Table.Column title={'分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
         <Table.Column title={'管理员'} dataIndex={'supervisorList'} render={this.serverOperatorRender} />
         <Table.Column title={'使用人数'} dataIndex={'userNum'} />
-        <Table.Column title={'状态'} dataIndex={'status'} />
+        <Table.Column title={'状态'} dataIndex={'status'} render={this.renderStatus} />
         <Table.Column title={'描述'} dataIndex={'description'} ellipsis />
         {
           role === UserRoleEnum.super_operator ? <Table.Column title={'操作'} render={this.actionRender} /> : null

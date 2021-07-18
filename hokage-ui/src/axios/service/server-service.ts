@@ -49,6 +49,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
     url: '/user/subordinate/server/search',
     method: 'POST'
   },
+  searchSupervisorServer: {
+    url: '/server/supervisor/search',
+    method: 'POST'
+  },
   deleteServer: {
     url: '/server/delete',
     method: 'POST'

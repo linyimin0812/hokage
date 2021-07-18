@@ -87,15 +87,15 @@ public interface HokageServerDao {
 
     /**
      * retrieve server info
-     * @param query
-     * @return
+     * @param query {@link SupervisorServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
-    List<HokageServerDO> selectByAllQuery(SupervisorServerQuery query);
+    List<HokageServerDO> selectBySupervisorQuery(SupervisorServerQuery query);
 
     /**
      * retrieve server info
-     * @param query
-     * @return
+     * @param query {@link SubordinateServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByAllQuery(SubordinateServerQuery query);
 

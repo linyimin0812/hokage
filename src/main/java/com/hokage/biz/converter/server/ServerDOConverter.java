@@ -1,6 +1,11 @@
 package com.hokage.biz.converter.server;
 
+import com.hokage.biz.enums.server.ServerStatusEnum;
+import com.hokage.biz.request.command.ServerParam;
 import com.hokage.biz.response.server.HokageServerVO;
+import com.hokage.cache.HokageServerCacheDao;
+import com.hokage.common.ServiceResponse;
+import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.hokage.persistence.dao.HokageSupervisorServerDao;
 import com.hokage.persistence.dao.HokageUserDao;
@@ -9,6 +14,10 @@ import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import com.google.common.collect.ImmutableMap;
+import com.hokage.ssh.SshClient;
+import com.hokage.ssh.command.handler.ServerCommandHandler;
+import com.jcraft.jsch.Session;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,6 +41,9 @@ public class ServerDOConverter {
     private static HokageSubordinateServerDao subordinateServerDao;
     private static HokageSupervisorServerDao supervisorServerDao;
     private static HokageUserDao hokageUserDao;
+    private static HokageServerCacheDao serverCacheDao;
+    private static HokageServerDao serverDao;
+    private static ServerCommandHandler<ServerParam> serverCommandHandler;
 
     private static final ImmutableMap<ConverterTypeEnum, Server2VO> CONVERTER_MAP =
         ImmutableMap.<ConverterTypeEnum, Server2VO>builder()
@@ -51,6 +64,21 @@ public class ServerDOConverter {
     @Autowired
     public void setHokageUserDao(HokageUserDao hokageUserDao) {
         ServerDOConverter.hokageUserDao = hokageUserDao;
+    }
+
+    @Autowired
+    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
+        ServerDOConverter.serverCacheDao = serverCacheDao;
+    }
+
+    @Autowired
+    public void setServerCommandHandler(ServerCommandHandler<ServerParam> serverCommandHandler) {
+        ServerDOConverter.serverCommandHandler = serverCommandHandler;
+    }
+
+    @Autowired
+    public void setServerDao(HokageServerDao serverDao) {
+        ServerDOConverter.serverDao = serverDao;
     }
 
     public static HokageServerVO converter2VO(HokageServerDO serverDO, ConverterTypeEnum type) {
@@ -128,7 +156,14 @@ public class ServerDOConverter {
             serverVO.setServerGroupList(Collections.emptyList());
         }
 
-        // TODO: retrieve server status from ssh
+        // retrieve server status from ssh
+        ServerStatusEnum statusEnum = acquireServerStatus(serverDO.buildKey());
+        serverVO.setStatus(statusEnum.getStatus());
+
+        // set hostname
+        if (StringUtils.isEmpty(serverDO.getHostname())) {
+            serverVO.setHostname(acquireHostname(serverDO));
+        }
 
         // number of users of the server
         List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
@@ -137,6 +172,35 @@ public class ServerDOConverter {
         serverVO.setUserNum(subordinateServerDOList.size());
 
         return serverVO;
+    }
+
+    @SneakyThrows
+    private static ServerStatusEnum acquireServerStatus(String serverKey) {
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
+        if (!optional.isPresent()) {
+            return ServerStatusEnum.unknown;
+        }
+        Session session = optional.get().getSessionOrCreate();
+        if (session.isConnected()) {
+            return ServerStatusEnum.online;
+        }
+        return ServerStatusEnum.offline;
+    }
+
+    @SneakyThrows
+    private static String acquireHostname(HokageServerDO serverDO) {
+        Optional<SshClient> optional = serverCacheDao.getExecClient(serverDO.buildKey());
+        if (!optional.isPresent()) {
+            return StringUtils.EMPTY;
+        }
+        SshClient client = optional.get();
+        ServiceResponse<String> response = serverCommandHandler.hostnameHandler.apply(client, null);
+        if (response.getSucceeded()) {
+            serverDO.setHostname(response.getData());
+            serverDao.update(serverDO);
+            return response.getData();
+        }
+        return StringUtils.EMPTY;
     }
 
 }

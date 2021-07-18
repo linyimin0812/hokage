@@ -91,7 +91,7 @@ public class HokageServerDaoImpl implements HokageServerDao {
     }
 
     @Override
-    public List<HokageServerDO> selectByAllQuery(SupervisorServerQuery query) {
+    public List<HokageServerDO> selectBySupervisorQuery(SupervisorServerQuery query) {
         return serverMapper.selectBySupervisorServerQuery(query);
     }
 

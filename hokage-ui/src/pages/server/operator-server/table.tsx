@@ -2,7 +2,7 @@ import React from 'react'
 import store from './store'
 import { Table, Tag } from 'antd'
 import { randomColor } from '../../../libs'
-import { ServerUserVO, ServerVO } from '../../../axios/action/server/server-type'
+import { ServerStatusEnum, ServerUserVO, ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
 
@@ -34,13 +34,29 @@ export default class OperatorServerTable extends React.Component {
     </Action>
   }
 
-  statusRender = (text: string) => text ? <Tag color={randomColor(text)}> {text} </Tag> : null
+  statusRender = (status: number) => {
+    if (status === ServerStatusEnum.offline) {
+      return <Tag color={'red'}>offline</Tag>
+    }
+    if (status === ServerStatusEnum.online) {
+      return <Tag color={'green'}>online</Tag>
+    }
+    return <Tag color={'magenta'}>unknown</Tag>
+  }
 
-  serverGroupRender = (serverGroupList: string[]) => serverGroupList.map(
-    (group, index) => <Tag color={randomColor(group)} key={index}>{group}</Tag>
-  )
+  serverGroupRender = (serverGroupList: string[]) => {
+    if (!serverGroupList || serverGroupList.length === 0) {
+      return <span>-</span>
+    }
+    return serverGroupList.map(
+      (group, index) => <Tag color={randomColor(group)} key={index}>{group}</Tag>
+    )
+  }
 
   serverOperatorRender = (supervisorList: string[]) => {
+    if (!supervisorList || supervisorList.length === 0) {
+      return <span>-</span>
+    }
     return supervisorList.map(
       (tag: string)=> <Tag color={randomColor(tag)} key={tag}>{tag}</Tag>
     )

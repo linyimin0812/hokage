@@ -4,6 +4,7 @@ import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.ServerQuery;
+import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerDO;
@@ -122,4 +123,11 @@ public interface HokageServerService {
      * @return server list which meet the criteria
      */
     ServiceResponse<List<HokageServerVO>> searchAllServer(AllServerQuery allServerQuery);
+
+    /**
+     * search supervisor server
+     * @param query {@link SupervisorServerQuery}
+     * @return server list which meet the criteria
+     */
+    ServiceResponse<List<HokageServerVO>> searchSupervisorServer(SupervisorServerQuery query);
 }

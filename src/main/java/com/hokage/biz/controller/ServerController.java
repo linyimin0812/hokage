@@ -10,7 +10,7 @@ import com.hokage.biz.form.server.ServerOperateForm;
 import com.hokage.biz.form.server.ServerSearchForm;
 import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.ServerQuery;
-import com.hokage.biz.response.HokageOptionVO;
+import com.hokage.biz.request.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.BaseController;
@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -93,7 +92,9 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/supervisor/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchSupervisorServer(@RequestBody ServerSearchForm form) {
-        return success(Collections.emptyList());
+        SupervisorServerQuery query = ServerSearchConverter.converterToSupervisor(form);
+        ServiceResponse<List<HokageServerVO>> response = serverService.searchSupervisorServer(query);
+        return response(response);
     }
 
     @RequestMapping(value = "/server/subordinate/search", method = RequestMethod.POST)

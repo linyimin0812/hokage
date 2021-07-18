@@ -5,10 +5,10 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author yiminlin
- * @date 2021/06/21 12:48 am
- * @description network param
+ * @date 2021/07/18 6:36 pm
+ * @description server param
  **/
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NetworkParam extends BaseCommandParam {
+public class ServerParam extends BaseCommandParam{
 }

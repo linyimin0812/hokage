@@ -132,4 +132,8 @@ public abstract class AbstractCommand implements Command {
     public static String systemStat() {
         return String.format("bash %s/%s/%s system_status", HOME, Constant.WORK_HOME, Constant.LINUX_API_FILE);
     }
+
+    public static String hostname() {
+        return "hostname";
+    }
 }

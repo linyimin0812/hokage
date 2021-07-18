@@ -15,7 +15,7 @@ class Store {
     form.operatorId = getHokageUid()
     form.role = getHokageRole()
     this.isFetching = true
-    ServerAction.searchServer(form).then(result => {
+    ServerAction.searchSupervisorServer(form).then(result => {
       this.records = (result || []).map(serverVO => {
         serverVO.key = serverVO.id + ''
         return serverVO

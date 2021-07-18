@@ -5,6 +5,7 @@ import { ServerSearchForm } from '../../../axios/action/server/server-type'
 import OperatorServerTable from './table'
 import store from './store'
 import { observer } from 'mobx-react'
+import { getHokageRole, getHokageUid } from '../../../libs';
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -16,6 +17,8 @@ const breadcrumbProps: BreadcrumbProps[] = [
 export default class OperatorServer extends React.Component {
 
   onFinish = (value: ServerSearchForm) => {
+    value.operatorId = getHokageUid()
+    value.role = getHokageRole()
     store.fetchRecords(value)
   }
 

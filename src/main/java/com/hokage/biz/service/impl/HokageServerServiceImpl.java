@@ -3,7 +3,6 @@ package com.hokage.biz.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
-import com.hokage.biz.converter.server.ServerFormConverter;
 import com.hokage.biz.enums.LoginTypeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
@@ -103,7 +102,7 @@ public class HokageServerServiceImpl implements HokageServerService {
     private final ImmutableMap<String, Function<ServerQuery, List<HokageServerDO>>> SERVER_QUERY_MAP =
             ImmutableMap.<String, Function<ServerQuery, List<HokageServerDO>>>builder()
                     .put(AllServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((AllServerQuery) query)))
-                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((SupervisorServerQuery) query)))
+                    .put(SupervisorServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectBySupervisorQuery((SupervisorServerQuery) query)))
                     .put(SubordinateServerQuery.class.getSimpleName(), (query -> hokageServerDao.selectByAllQuery((SubordinateServerQuery) query)))
                     .build();
 
@@ -185,6 +184,17 @@ public class HokageServerServiceImpl implements HokageServerService {
         List<HokageServerDO> serverDOList = hokageServerDao.selectByAllQuery(allServerQuery);
         List<HokageServerVO> serverVOList = serverDOList.stream()
                 .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
+                .collect(Collectors.toList());
+
+        return response.success(serverVOList);
+    }
+
+    @Override
+    public ServiceResponse<List<HokageServerVO>> searchSupervisorServer(SupervisorServerQuery query) {
+        ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
+        List<HokageServerDO> serverDOList = hokageServerDao.selectBySupervisorQuery(query);
+        List<HokageServerVO> serverVOList = serverDOList.stream()
+                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor))
                 .collect(Collectors.toList());
 
         return response.success(serverVOList);

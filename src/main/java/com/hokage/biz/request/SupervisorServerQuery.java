@@ -1,6 +1,7 @@
 package com.hokage.biz.request;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author linyimin
@@ -9,6 +10,7 @@ import lombok.Data;
  * @description
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class SupervisorServerQuery extends ServerQuery {
     /**
      * ssh account
@@ -19,4 +21,9 @@ public class SupervisorServerQuery extends ServerQuery {
      * username
      */
     private String username;
+
+    /**
+     * supervisor id
+     */
+    private Long supervisorId;
 }

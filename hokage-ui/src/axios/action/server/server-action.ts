@@ -78,6 +78,19 @@ export const ServerAction = {
       }
     })
   },
+  searchSupervisorServer: (form: ServerSearchForm): Promise<ServerVO[]> => {
+    return new Promise<ServerVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerVO[]> = await ServerService.searchSupervisorServer(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('搜索服务器信息失败: ' + JSON.stringify(e))
+      }
+    })
+  },
 
   listSupervisorGrantServer: (supervisorId: number): Promise<ServerVO[]> => {
     return new Promise<ServerVO[]>(async (resolve, reject) => {

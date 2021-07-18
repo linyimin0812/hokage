@@ -1,5 +1,6 @@
 package com.hokage.biz.converter.server;
 
+import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.ServerSearchForm;
 import com.hokage.biz.request.AllServerQuery;
 import com.hokage.biz.request.SubordinateServerQuery;
@@ -28,6 +29,12 @@ public class ServerSearchConverter {
         BeanUtils.copyProperties(form, query);
         if (!CollectionUtils.isEmpty(form.getServerGroup())) {
             query.setServerGroup(String.join(",", form.getServerGroup()));
+        }
+        if (UserRoleEnum.supervisor.getValue().equals(form.getRole())) {
+            query.setSupervisorId(form.getOperatorId());
+        }
+        if (UserRoleEnum.subordinate.getValue().equals(form.getRole())) {
+            throw new RuntimeException("permission required.");
         }
         return query;
     }

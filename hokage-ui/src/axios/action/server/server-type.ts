@@ -32,7 +32,7 @@ export interface ServerVO {
   subordinateList: string[],
   subordinateIdList: number[],
   userNum: number,
-  status: string,
+  status: number,
   userList: ServerUserVO[]
   operationList: Operation[],
   accountType: AccountTypeEnum
@@ -88,4 +88,11 @@ interface ServerSearchBaseForm {
 export enum AccountTypeEnum {
   admin,
   ordinary,
+}
+
+export enum ServerStatusEnum {
+  unknown=-2,
+  offline=-1,
+  online=0
+
 }

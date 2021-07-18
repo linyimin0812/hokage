@@ -82,7 +82,7 @@ public class HokageServerVO {
     /**
      * status of server
      */
-    private String status;
+    private Integer status;
     /**
      * operations
      */
