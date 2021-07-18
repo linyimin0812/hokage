@@ -6,6 +6,9 @@ import Toolbar from './toolbar'
 import AllServerTable from './table'
 import { observer } from 'mobx-react'
 import store from './store'
+import AuthDiv from '../../../component/AuthDiv';
+import { getHokageRole } from '../../../libs';
+import { UserRoleEnum } from '../../../axios/action/user/user-type'
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -21,12 +24,15 @@ export default class AllServer extends React.Component {
   }
 
   render() {
+    const role = getHokageRole()
     return (
       <div>
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <AllServerSearch onFinish={this.onFinish} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <Toolbar />
+          <AuthDiv auth={role === UserRoleEnum.super_operator} >
+            <Toolbar />
+          </AuthDiv>
           <AllServerTable />
         </div>
       </div>

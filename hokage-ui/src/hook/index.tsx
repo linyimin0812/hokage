@@ -9,7 +9,7 @@ export const useServerOptions = () => {
   const [serverOptions, setServerOptions] = useState<Option[]>([])
 
   useEffect(() => {
-    ServerAction.listServerLabelOptions().then(options => {
+    ServerAction.listServerGroup().then(options => {
       setServerOptions(options || [])
     }).catch((err) => {
       message.error(err)

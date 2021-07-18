@@ -37,7 +37,7 @@ public class ServerGroupController extends BaseController {
     }
 
     @RequestMapping(value = "/server/group/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageOptionVO<String>>> listServerGroup(@RequestParam Long id) {
+    public ResultVO<List<HokageOptionVO<String>>> listServerGroup() {
         ServiceResponse<List<HokageOptionVO<String>>> optionListResult = serverGroupService.listGroupOptions();
         if (optionListResult.getSucceeded()) {
             return success(optionListResult.getData());

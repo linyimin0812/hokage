@@ -1,11 +1,12 @@
 import React from 'react'
-import { Table, Tag } from 'antd'
+import { message, Table, Tag } from 'antd';
 import store from './store'
-import { getHokageRole, randomColor } from '../../../libs';
+import { getHokageRole, getHokageUid, randomColor } from '../../../libs';
 import { ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
-import { UserRoleEnum } from '../../../axios/action/user/user-type';
+import { UserRoleEnum, UserServerOperateForm } from '../../../axios/action/user/user-type';
+import { ServerAction } from '../../../axios/action/server/server-action';
 
 @observer
 export default class AllServerTable extends React.Component {
@@ -31,10 +32,28 @@ export default class AllServerTable extends React.Component {
       <Action.Request title={'编辑'} action={() => {alert('编辑')}} />
       <Action.Confirm
         title={'删除'}
-        action={async () => {alert('TODO: 添加删除动作')}}
+        action={async () => {this.deleteServer(record.id)}}
         content={`确定删除服务器${record.ip}(${record.id})`}
       />
     </Action>
+  }
+
+  deleteServer = (serverId: number) => {
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      serverIds: [serverId]
+    }
+    store.isFetching = true
+    ServerAction.deleteServer(form).then(result => {
+      if (result) {
+        message.info("删除成功")
+        store.fetchRecords()
+      } else {
+        message.error('删除失败')
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
+
   }
 
   render () {

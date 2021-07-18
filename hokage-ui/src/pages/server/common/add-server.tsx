@@ -40,7 +40,7 @@ export default class AddServer extends React.Component<AddServerPropTypes, AddSe
   }
 
   listServerGroupOptions = () => {
-    ServerAction.listServerGroup(getHokageUid()).then(data => {
+    ServerAction.listServerGroup().then(data => {
       this.setState({serverGroupOptions: data})
     }).catch(err => message.error(err))
   }

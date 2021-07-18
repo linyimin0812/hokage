@@ -62,10 +62,10 @@ public interface HokageServerService {
 
     /**
      * delete server
-     * @param form
-     * @return
+     * @param id server primary id
+     * @return delete success return true, otherwise false
      */
-    ServiceResponse<Boolean> delete(ServerOperateForm form);
+    ServiceResponse<Boolean> delete(Long id);
 
     /**
      * designate servers to a supervisor

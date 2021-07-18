@@ -58,21 +58,11 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
         return this.update(subordinateServerDO);
     }
 
-    /**
-     * retrieve subordinate ids based on server ids
-     * @param ids server id list
-     * @return subordinate server list which meet the criteria
-     */
     @Override
     public List<HokageSubordinateServerDO> listByServerIds(List<Long> ids) {
-        return subordinateServerMapper.selectByServerIds(ids);
+        return Optional.ofNullable(subordinateServerMapper.selectByServerIds(ids)).orElse(Collections.emptyList());
     }
 
-    /**
-     * retrieve server ids based on subordinate ids
-     * @param ids subordinate id list
-     * @return subordinate server list which meet the criteria
-     */
     @Override
     public List<HokageSubordinateServerDO> listByOrdinateIds(List<Long> ids) {
         return Optional.ofNullable(subordinateServerMapper.selectByOrdinateIds(ids)).orElse(Collections.emptyList());

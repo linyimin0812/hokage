@@ -9,11 +9,6 @@ import { serviceConfig } from './service-wrap'
  */
 
 const serviceInfo: { [name: string]: ServiceParam} = {
-  // list all server label
-  'listServerLabel': {
-    url: '/server/label/list',
-    method: 'GET'
-  },
 
   // add server group
   'addServerGroup': {
@@ -52,6 +47,10 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   },
   'searchSubordinateServer': {
     url: '/user/subordinate/server/search',
+    method: 'POST'
+  },
+  deleteServer: {
+    url: '/server/delete',
     method: 'POST'
   }
 }

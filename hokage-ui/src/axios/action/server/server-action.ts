@@ -10,20 +10,6 @@ import { ServiceResult } from '../../common'
 import { UserServerOperateForm } from '../user/user-type'
 
 export const ServerAction = {
-  listServerLabelOptions: (): Promise<Option[]> => {
-    return new Promise<Option[]>(async (resolve, reject) => {
-      try {
-        const result: ServiceResult<Option[]> = await ServerService.listServerLabel()
-        if (!result.success) {
-          return reject(result.msg)
-        }
-        resolve(result.data)
-      } catch (err) {
-        reject('获取服务器类型失败')
-      }
-    })
-  },
-
   addServerGroup: (form: UserServerOperateForm): Promise<Option[]> => {
     return new Promise<Option[]>(async (resolve, reject) => {
       try {
@@ -37,10 +23,10 @@ export const ServerAction = {
       }
     })
   },
-  listServerGroup: (id: number): Promise<Option[]> => {
+  listServerGroup: (): Promise<Option[]> => {
     return new Promise<Option[]>(async (resolve, reject) => {
       try {
-        const result: ServiceResult<Option[]> = await ServerService.listServerGroup({ id: id })
+        const result: ServiceResult<Option[]> = await ServerService.listServerGroup()
         if (!result.success) {
           return reject(result.msg)
         }
@@ -133,5 +119,20 @@ export const ServerAction = {
       }
     })
   },
+
+  deleteServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await ServerService.deleteServer(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject('删除服务器失败: ' + JSON.stringify(e))
+      }
+    })
+  },
+
 
 }

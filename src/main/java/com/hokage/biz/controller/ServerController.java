@@ -20,6 +20,7 @@ import com.hokage.persistence.dao.HokageServerSshKeyContentDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageServerSshKeyContentDO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -117,7 +118,10 @@ public class ServerController extends BaseController {
 
     @RequestMapping(value = "/server/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServer(@RequestBody ServerOperateForm form) {
-        ServiceResponse<Boolean> response = serverService.delete(form);
+        // TODO: 切面判断权限
+        Preconditions.checkState(!CollectionUtils.isEmpty(form.getServerIds()), "server id list can't be empty");
+        Long serverId = form.getServerIds().get(0);
+        ServiceResponse<Boolean> response = serverService.delete(serverId);
 
         if (!response.getSucceeded()) {
             return fail(response.getCode(), response.getMsg());
@@ -180,19 +184,6 @@ public class ServerController extends BaseController {
         }
 
         return success(Boolean.TRUE);
-    }
-
-    @RequestMapping(value = "/server/label/list", method = RequestMethod.GET)
-    public ResultVO<List<HokageOptionVO<String>>> listServerLabel() {
-        List<HokageOptionVO<String>> optionVOList = Arrays.asList(
-                new HokageOptionVO<>("请选择", ""),
-                new HokageOptionVO<>("普通服务器", "X86"),
-                new HokageOptionVO<>("GPU服务器", "GPU"),
-                new HokageOptionVO<>("内网服务器", "internal"),
-                new HokageOptionVO<>("外网服务器", "external")
-        );
-
-        return success(optionVOList);
     }
 
     @RequestMapping(value = "/app/file/upload", method = RequestMethod.POST)

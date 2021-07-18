@@ -18,10 +18,12 @@ import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
+import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,13 +47,13 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     private HokageServerDao hokageServerDao;
     private HokageUserService userService;
-    private ServerFormConverter formConverter;
     private HokageSequenceService sequenceService;
     private HokageSupervisorServerDao supervisorServerDao;
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
     private HokageServerSshKeyContentDao contentDao;
+    private HokageServerCacheDao serverCacheDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -61,11 +63,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Autowired
     public void setUserService(HokageUserService userService) {
         this.userService = userService;
-    }
-
-    @Autowired
-    public void setFormConverter(ServerFormConverter converter) {
-        this.formConverter = converter;
     }
 
     @Autowired
@@ -94,8 +91,13 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Autowired
-    private void setContentDao(HokageServerSshKeyContentDao contentDao) {
+    public void setContentDao(HokageServerSshKeyContentDao contentDao) {
         this.contentDao = contentDao;
+    }
+
+    @Autowired
+    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
+        this.serverCacheDao = serverCacheDao;
     }
 
     private final ImmutableMap<String, Function<ServerQuery, List<HokageServerDO>>> SERVER_QUERY_MAP =
@@ -309,9 +311,25 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
-    public ServiceResponse<Boolean> delete(ServerOperateForm form) {
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> delete(Long serverId) {
         ServiceResponse<Boolean> response = new ServiceResponse<>();
-        long result = hokageServerDao.deleteById(form.getOperatorId());
+        // 1. 服务器是否存在使用者
+        List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(serverId));
+        if (!CollectionUtils.isEmpty(subServerDOList)) {
+            return response.fail(StringUtils.EMPTY, "服务器存在使用者, 请先回收相关账号");
+        }
+        // 2. 服务器是否存在管理者
+        List<HokageSupervisorServerDO> supServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverId));
+        if (!CollectionUtils.isEmpty(supServerDOList)) {
+            return response.fail(StringUtils.EMPTY, "服务器存在管理者, 请先移除相关管理员");
+        }
+
+        HokageServerDO serverDO = hokageServerDao.selectById(serverId);
+        if (Objects.isNull(serverDO)) {
+            throw new RuntimeException("server is not exists, server id: " + serverId);
+        }
+        long result = hokageServerDao.deleteById(serverId);
         if (result > 0) {
             return response.success(Boolean.TRUE);
         }
