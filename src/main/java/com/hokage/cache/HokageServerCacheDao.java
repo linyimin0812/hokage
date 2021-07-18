@@ -157,6 +157,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
         if (serverOptions.size() != 4) {
             return null;
         }
+        // TODO： 不能这么做， 需要考虑是普通账号还是管理账号
         HokageServerDO serverDO = serverDao.selectById(Long.valueOf(serverOptions.get(0)));
         if (Objects.isNull(serverDO)) {
             return null;
@@ -186,6 +187,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
      */
     private void activeCacheRefresh() {
         UserContext ctx = UserContext.ctx();
+        // TODO: 修复，不能这么做， 需要考虑是普通账号还是管理账号
         List<HokageServerDO> serverDOList = Objects.isNull(ctx.getUserId()) ? new ArrayList<>() : serverDao.selectByUserId(ctx.getUserId());
         log.info("my server size: {}", serverDOList.size());
 
