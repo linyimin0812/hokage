@@ -357,7 +357,7 @@ public class HokageUserServiceImpl extends HokageServiceResponse implements Hoka
                 throw new RuntimeException("server is not exist. server id: " + serverId);
             }
             AccountParam param = new AccountParam();
-            String account = userDO.getUsername() + "_" + serverId;
+            String account = userDO.getUsername() + "-" + serverId;
             String passwd = UUID.randomUUID().toString();
             param.setAccount(account).setPasswd(passwd);
             ServiceResponse<HokageSubordinateServerDO> response = accountService.addAccount(serverDO.buildKey(), param);
