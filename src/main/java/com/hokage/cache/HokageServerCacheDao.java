@@ -3,7 +3,6 @@ package com.hokage.cache;
 import com.alibaba.fastjson.JSON;
 import com.google.common.cache.Cache;
 import com.hokage.biz.Constant;
-import com.hokage.biz.interceptor.UserContext;
 import com.hokage.infra.worker.MasterThreadPoolWorker;
 import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.ThreadPoolWorker;
@@ -12,7 +11,6 @@ import com.hokage.persistence.dao.HokageServerReportHandlerDao;
 import com.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageServerReportInfoHandlerDO;
-import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
@@ -177,8 +175,6 @@ public class HokageServerCacheDao extends BaseCacheDao {
         this.uploadScript2Server(client, Constant.LINUX_API_FILE, null);
         return client;
     }
-
-
 
     /**
      * build cache key

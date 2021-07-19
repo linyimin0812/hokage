@@ -98,7 +98,7 @@ public class HomeServiceImpl implements HomeService {
                 .stream()
                 .filter(serverVO -> ServerStatusEnum.online.getStatus().equals(serverVO.getStatus()))
                 .collect(Collectors.toList());
-        return this.assembleDetailMeta(serverVOList);
+        return this.assembleDetailMeta(availableVOList);
     }
 
     private HomeDetailMeta totalDetail(List<HokageServerVO> serverVOList) {

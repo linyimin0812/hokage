@@ -9,8 +9,8 @@ import {
   PageHeader,
   Descriptions,
   Divider,
-  Avatar
-} from 'antd'
+  Avatar, Spin,
+} from 'antd';
 import moment from 'moment'
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import store from './store'
@@ -37,6 +37,10 @@ class Index extends React.Component {
     store.fetchHomeDetail()
   }
 
+  renderDescriptions = (key: string, value: string | number) => {
+    return <Descriptions.Item label={key}>{value}</Descriptions.Item>
+  }
+
   render() {
     const {allVO, availableVO, accountVO} = store.homeDetailVO
     return (
@@ -44,49 +48,39 @@ class Index extends React.Component {
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
         <div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
           <Divider orientation="left">所有服务器信息概览</Divider>
-          <Row gutter={16} >
-            <Col span={8}>
-              <Card>
-                <PageHeader className="site-page-header" title="主机总数" subTitle={allVO.total}>
-                  <Descriptions size="default" column={2}>
-                    {
-                      Object.keys(allVO.groupInfo).map(key => {
-                        return <Descriptions.Item label={key}>{allVO.groupInfo[key]}</Descriptions.Item>
-                      })
-                    }
-                  </Descriptions>
-                </PageHeader>
-              </Card>
-            </Col>
+          <Spin spinning={store.isFetching}>
+            <Row gutter={16} >
+              <Col span={8}>
+                <Card>
+                  <PageHeader className="site-page-header" title="主机总数" subTitle={allVO.total}>
+                    <Descriptions size="default" column={2}>
+                      { Object.keys(allVO.groupInfo).map(key => this.renderDescriptions(key, allVO.groupInfo[key])) }
+                    </Descriptions>
+                  </PageHeader>
+                </Card>
+              </Col>
 
-            <Col span={8}>
-              <Card>
-                <PageHeader className="site-page-header" title="可用主机总数" subTitle={availableVO.total}>
-                  <Descriptions size="default" column={2}>
-                    {
-                      Object.keys(availableVO.groupInfo).map(key => {
-                        return <Descriptions.Item label={key}>{availableVO.groupInfo[key]}</Descriptions.Item>
-                      })
-                    }
-                  </Descriptions>
-                </PageHeader>
-              </Card>
-            </Col>
+              <Col span={8}>
+                <Card>
+                  <PageHeader className="site-page-header" title="可用主机总数" subTitle={availableVO.total}>
+                    <Descriptions size="default" column={2}>
+                      { Object.keys(allVO.groupInfo).map(key => this.renderDescriptions(key, availableVO.groupInfo[key])) }
+                    </Descriptions>
+                  </PageHeader>
+                </Card>
+              </Col>
 
-            <Col span={8}>
-              <Card>
-                <PageHeader className="site-page-header" title="全部用户数" subTitle={accountVO.total}>
-                  <Descriptions size="default" column={2}>
-                    {
-                      Object.keys(accountVO.groupInfo).map(key => {
-                        return <Descriptions.Item label={key}>{accountVO.groupInfo[key]}</Descriptions.Item>
-                      })
-                    }
-                  </Descriptions>
-                </PageHeader>
-              </Card>
-            </Col>
-          </Row>
+              <Col span={8}>
+                <Card>
+                  <PageHeader className="site-page-header" title="全部用户数" subTitle={accountVO.total}>
+                    <Descriptions size="default" column={2}>
+                      { Object.keys(allVO.groupInfo).map(key => this.renderDescriptions(key, accountVO.groupInfo[key])) }
+                    </Descriptions>
+                  </PageHeader>
+                </Card>
+              </Col>
+            </Row>
+          </Spin>
         </div>
         <Divider style={{margin: '4px 0px'}} />
 
