@@ -2,8 +2,8 @@ import React from 'react'
 import { observer } from 'mobx-react'
 import { message, Table, Tag } from 'antd'
 import store from './store'
-import { UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type'
-import { getHokageUid, randomColor } from '../../../libs'
+import { UserRoleEnum, UserServerOperateForm, UserVO } from '../../../axios/action/user/user-type';
+import { getHokageRole, getHokageUid, randomColor } from '../../../libs';
 import { Action } from '../../../component/Action'
 import { FormInstance } from 'antd/lib/form'
 import { SelectServer } from '../common/select-server'
@@ -33,7 +33,9 @@ export default class OperatorTable extends React.Component {
       <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
       <Table.Column title={'使用人数'} dataIndex={'userNum'} />
       <Table.Column title={'状态'} dataIndex={'status'} render={this.serverStatusRender} />
-      <Table.Column title={'操作'} render={(record: ServerVO) => this.nestedActionRender(userVO.id, record)} />
+      {
+        UserRoleEnum.super_operator === getHokageRole() ? <Table.Column title={'操作'} render={(record: ServerVO) => this.nestedActionRender(userVO.id, record)} /> : null
+      }
     </Table>
   }
 
@@ -176,7 +178,9 @@ export default class OperatorTable extends React.Component {
         <Table.Column title={'姓名'} dataIndex={'username'} />
         <Table.Column title={'服务器数量'} dataIndex={'serverNum'} />
         <Table.Column title={'服务器分组'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
-        <Table.Column title={'操作'} render={this.actionRender} />
+        {
+          UserRoleEnum.super_operator === getHokageRole() ? <Table.Column title={'操作'} render={this.actionRender} /> : null
+        }
       </Table>
     )
   }

@@ -180,4 +180,11 @@
             subordinate_id=#{subordinateId} AND status &lt;&gt; -1
         </where>
     </select>
+
+    <select id="selectAll" resultMap="HokageSubordinateServerMapper">
+        SELECT
+        <include refid="allColumn" />
+        FROM <include refid="tableName">
+    </include>
+    </select>
 </mapper>

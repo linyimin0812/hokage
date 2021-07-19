@@ -6,6 +6,7 @@ import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.persistence.dataobject.HokageServerDO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author linyimin
@@ -16,56 +17,56 @@ import java.util.List;
 public interface HokageServerDao {
     /**
      * insert a new record
-     * @param serverDO
-     * @return
+     * @param serverDO {@link HokageServerDO}
+     * @return rows affected
      */
     Long insert(HokageServerDO serverDO);
 
     /**
      * update a record
-     * @param serverDO
-     * @return
+     * @param serverDO {@link HokageServerDO}
+     * @return rows affected
      */
     Long update(HokageServerDO serverDO);
 
     /**
      * retrieve all server
-     * @return
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectAll();
 
     /**
      * retrieve server based-on batch ids
-     * @param ids
-     * @return
+     * @param ids server id list
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByIds(List<Long> ids);
 
     /**
      * retrieve server based-on id
-     * @param id
-     * @return
+     * @param id server primary id
+     * @return {@link HokageServerDO}
      */
     HokageServerDO selectById(Long id);
 
     /**
      * retrieve servers based-on server type
-     * @param type
-     * @return
+     * @param type server type
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> listByType(String type);
 
     /**
      * retrieve servers based-on server group
-     * @param group
-     * @return
+     * @param group server group
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByGroup(String group);
 
     /**
      * retrieve server based-on supervisor id
-     * @param supervisorId
-     * @return
+     * @param supervisorId supervisor id
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectBySupervisorId(Long supervisorId);
 
@@ -110,7 +111,15 @@ public interface HokageServerDao {
     /**
      * select subordinate server
      * @param query {@link SubordinateServerQuery}
-     * @return
+     * @return List<HokageServerDO>
      */
     List<HokageServerDO> selectSubordinateServer(SubordinateServerQuery query);
+
+    /**
+     * select server by id and account
+     * @param serverId server id
+     * @param account account
+     * @return {@link HokageServerDO}
+     */
+    Optional<HokageServerDO> selectByIdAndAccount(long serverId, String account);
 }

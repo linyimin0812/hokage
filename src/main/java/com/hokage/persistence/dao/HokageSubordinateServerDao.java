@@ -85,4 +85,10 @@ public interface HokageSubordinateServerDao {
      * @return subordinate server data object
      */
     HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
+
+    /**
+     * select all subordinate server
+     * @return {@link List<HokageSubordinateServerDO>}
+     */
+    List<HokageSubordinateServerDO> selectAll();
 }

@@ -77,4 +77,10 @@ public interface HokageSubordinateServerMapper {
      * @return subordinate server which meet the criteria
      */
     HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId);
+
+    /**
+     * select all subordinate server
+     * @return {@link List<HokageSubordinateServerDO>}
+     */
+    List<HokageSubordinateServerDO> selectAll();
 }

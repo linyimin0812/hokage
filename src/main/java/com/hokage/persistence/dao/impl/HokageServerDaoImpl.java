@@ -4,11 +4,15 @@ import com.hokage.biz.request.server.AllServerQuery;
 import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.persistence.dao.HokageServerDao;
+import com.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
+import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.mapper.HokageServerMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +27,16 @@ import java.util.Optional;
 public class HokageServerDaoImpl implements HokageServerDao {
 
     private HokageServerMapper serverMapper;
+    private HokageSubordinateServerDao subordinateServerDao;
 
     @Autowired
     public void setServerMapper(HokageServerMapper serverMapper) {
         this.serverMapper = serverMapper;
+    }
+
+    @Autowired
+    public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
+        this.subordinateServerDao = subordinateServerDao;
     }
 
     @Override
@@ -99,5 +109,26 @@ public class HokageServerDaoImpl implements HokageServerDao {
     @Override
     public List<HokageServerDO> selectSubordinateServer(SubordinateServerQuery query) {
         return Optional.ofNullable(serverMapper.selectBySubordinateServerQuery(query)).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public Optional<HokageServerDO> selectByIdAndAccount(long serverId, String account) {
+        Optional<HokageServerDO> optional;
+        HokageServerDO serverDO = serverMapper.selectById(serverId);
+        if (StringUtils.equals(serverDO.getAccount(), account)) {
+            optional = Optional.of(serverDO);
+        } else {
+            List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(serverId));
+            optional = subServerDOList.stream()
+                    .filter(subServerDO -> StringUtils.equals(account, subServerDO.getAccount()))
+                    .map(subServerDO -> {
+                        serverDO.setAccount(subServerDO.getAccount());
+                        serverDO.setPasswd(subServerDO.getPasswd());
+                        serverDO.setLoginType(subServerDO.getLoginType());
+                        return serverDO;
+                    })
+                    .findFirst();
+        }
+        return optional;
     }
 }

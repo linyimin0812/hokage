@@ -5,6 +5,8 @@ import { Toolbar } from './toolbar'
 import store from './store'
 import { observer } from 'mobx-react'
 import OperatorTable from './table'
+import { getHokageRole } from '../../../libs'
+import { UserRoleEnum } from '../../../axios/action/user/user-type'
 
 
 const breadcrumbProps: BreadcrumbProps[] = [
@@ -27,7 +29,9 @@ export default class Operator extends React.Component {
         <BreadCrumb breadcrumbProps= {breadcrumbProps} />
         <UserSearch onFinish={this.onFinish} usernameType={'operator'} />
         <div style={{ backgroundColor: '#FFFFFF' }}>
-          <Toolbar />
+          {
+            UserRoleEnum.super_operator === getHokageRole() ? <Toolbar /> : null
+          }
           <OperatorTable />
         </div>
       </div>

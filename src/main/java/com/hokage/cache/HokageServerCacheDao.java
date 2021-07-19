@@ -39,7 +39,6 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -166,30 +165,17 @@ public class HokageServerCacheDao extends BaseCacheDao {
             return null;
         }
         String account = StringUtils.join(serverOptions.subList(3, serverOptions.size()), "_");
-
         long serverId = Long.parseLong(serverOptions.get(0));
-        HokageServerDO serverDO = serverDao.selectById(serverId);
-        Optional<HokageServerDO> optional;
-        if (StringUtils.equals(account, serverDO.getAccount())) {
-            optional = Optional.of(serverDO);
-
-        } else {
-            List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(serverId));
-            optional = subServerDOList.stream()
-                    .filter(subServerDO -> StringUtils.equals(account, subServerDO.getAccount()))
-                    .map(subServerDO -> {
-                        serverDO.setAccount(subServerDO.getAccount());
-                        return serverDO;
-                    })
-                    .findFirst();
-        }
+        Optional<HokageServerDO> optional = serverDao.selectByIdAndAccount(serverId, account);
 
         if (!optional.isPresent()) {
             return null;
         }
         SshContext context = new SshContext();
         BeanUtils.copyProperties(optional.get(), context);
-        return new SshClient(context);
+        SshClient client = new SshClient(context);
+        this.uploadScript2Server(client, Constant.LINUX_API_FILE, null);
+        return client;
     }
 
 
@@ -211,29 +197,6 @@ public class HokageServerCacheDao extends BaseCacheDao {
      * refresh server ssh client local cache
      */
     private void activeCacheRefresh() {
-        UserContext ctx = UserContext.ctx();
-        // TODO: 修复，不能这么做， 需要考虑是普通账号还是管理账号
-        List<HokageServerDO> serverDOList = Objects.isNull(ctx.getUserId()) ? new ArrayList<>() : serverDao.selectByUserId(ctx.getUserId());
-        log.info("my server size: {}", serverDOList.size());
-
-        // 缓存exec client
-        poolWorker.getExecutorPool().execute(() -> {
-            this.activeNewServerCache(serverDOList, serverKey2SshExecClient, null);
-            this.invalidateDelServerCache(serverDOList, serverKey2SshExecClient);
-        });
-
-        // 缓存sftp client
-        poolWorker.getExecutorPool().execute(() -> {
-            this.activeNewServerCache(serverDOList, serverKey2SshSftpClient, client -> {
-                try {
-                    this.uploadScript2Server(client, Constant.LINUX_API_FILE, null);
-                } catch (Exception e) {
-                    log.error("upload script: {} error. errMsg: {}", Constant.LINUX_API_FILE, e.getMessage());
-                }
-            });
-            this.invalidateDelServerCache(serverDOList, serverKey2SshSftpClient);
-        });
-
         // master需要缓存所有服务器
         masterPoolWorker.getExecutorPool().execute(this::activeMetricClient);
 

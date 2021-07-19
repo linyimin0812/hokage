@@ -103,4 +103,9 @@ public class HokageSubordinateServerDaoImpl implements HokageSubordinateServerDa
     public HokageSubordinateServerDO queryBySubordinateIdAndServerId(Long subordinateId, Long serverId) {
         return subordinateServerMapper.queryBySubordinateIdAndServerId(subordinateId, serverId);
     }
+
+    @Override
+    public List<HokageSubordinateServerDO> selectAll() {
+        return Optional.ofNullable(subordinateServerMapper.selectAll()).orElse(Collections.emptyList());
+    }
 }

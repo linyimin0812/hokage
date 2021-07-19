@@ -7,6 +7,8 @@ import style from './layout.module.css'
 import { Link } from 'react-router-dom'
 import { IconMap } from '../libs/icon-config'
 import logo from './logo.png'
+import { UserRoleEnum } from '../axios/action/user/user-type';
+import { getHokageRole } from '../libs';
 
 interface SiderPropsType {
   collapsed: boolean
@@ -41,11 +43,13 @@ class Sider extends React.Component<SiderPropsType, SiderStateType> {
   }
 
   makeMenu = (menu: MenusType) => {
-    // if (menu.auth !== undefined && !hasPermissions(menu.auth)) return null;
     return (menu.child) ? this.makeSubMenu(menu) : this.makeItem(menu)
   };
 
   makeItem = (menu: MenusType) => {
+    if (!this.menuItemVisible(menu)) {
+      return null
+    }
     const Icon = IconMap[menu.icon]
     return (
       <Menu.Item key={menu.path}>
@@ -55,7 +59,17 @@ class Sider extends React.Component<SiderPropsType, SiderStateType> {
         </Link>
       </Menu.Item>
     )
-  };
+  }
+
+  menuItemVisible = (menu: MenusType) => {
+    if (menu.title === '我管理的服务器' && UserRoleEnum.subordinate === getHokageRole()) {
+      return false
+    }
+    if (menu.title === '服务器使用者' && UserRoleEnum.subordinate === getHokageRole()) {
+      return false
+    }
+    return true
+  }
 
   makeSubMenu = (subMenu: MenusType) => {
     const Icon = IconMap[subMenu.icon]
