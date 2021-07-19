@@ -14,6 +14,12 @@ import {
 import moment from 'moment'
 import BreadCrumb, { BreadcrumbProps } from '../../layout/bread-crumb'
 import store from './store'
+import { observer } from 'mobx-react'
+import AverageLoad from '../monitor/system-status/average-load';
+import CpuUtilization from '../monitor/system-status/cpu-utilization';
+import RamUsage from '../monitor/system-status/ram-usage'
+import UploadSpeed from '../monitor/network/upload-speed';
+import DownloadSpeed from '../monitor/network/download-speed';
 
 const data = [
   {
@@ -31,10 +37,12 @@ const data = [
 
 const breadcrumbProps: BreadcrumbProps[] = [{ name: '首页', link: '/app/index' }]
 
+@observer
 class Index extends React.Component {
 
   componentDidMount() {
     store.fetchHomeDetail()
+    store.fetchHomeSystemMetric()
   }
 
   renderDescriptions = (key: string, value: string | number) => {
@@ -43,6 +51,7 @@ class Index extends React.Component {
 
   render() {
     const {allVO, availableVO, accountVO} = store.homeDetailVO
+    const { loadAvgMetric, cpuStatMetric, memStatMetric, uploadStatMetric, downloadStatMetric } = store.systemMetric
     return (
       <div className="gutter-example button-demo">
         <BreadCrumb breadcrumbProps={breadcrumbProps} />
@@ -83,7 +92,19 @@ class Index extends React.Component {
           </Spin>
         </div>
         <Divider style={{margin: '4px 0px'}} />
-
+        <div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
+          <Divider orientation="left">{`CPU使用率最高-${store.serverIp}`}</Divider>
+          <Spin spinning={store.isMetricFetching}>
+            <Row gutter={12} align="middle" justify={"center"} >
+              <Col span={8}><AverageLoad data={loadAvgMetric} id={store.serverId} /></Col>
+              <Col span={8}><CpuUtilization data={cpuStatMetric} id={store.serverId} /></Col>
+              <Col span={8}><RamUsage data={memStatMetric} id={store.serverId} /></Col>
+              <Col span={12}><UploadSpeed data={uploadStatMetric} id={store.serverId} /></Col>
+              <Col span={12}><DownloadSpeed data={downloadStatMetric} id={store.serverId} /></Col>
+            </Row>
+          </Spin>
+        </div>
+        <Divider style={{margin: '4px 0px'}} />
         <div style={{ backgroundColor: '#FFFFFF', padding: '8px 8px' }}>
           <Divider orientation="left">我的消息</Divider>
           <Card bordered={false}>

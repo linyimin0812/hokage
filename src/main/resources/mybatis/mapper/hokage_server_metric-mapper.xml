@@ -81,4 +81,14 @@
             timestamp BETWEEN #{start} AND #{end}
         </where>
     </select>
+
+    <select id="queryAllByTimeInterval" resultMap="HokageServerMetricMapper">
+        SELECT
+        <include refid="allColumn" />
+        FROM
+        <include refid="tableName" />
+        <where>
+            timestamp BETWEEN #{start} AND #{end}
+        </where>
+    </select>
 </mapper>

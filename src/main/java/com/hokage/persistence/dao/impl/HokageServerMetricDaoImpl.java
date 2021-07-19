@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author yiminlin
@@ -37,11 +38,12 @@ public class HokageServerMetricDaoImpl implements HokageServerMetricDao {
 
     @Override
     public List<HokageServerMetricDO> queryByTimeInterval(String server, Long start, Long end) {
-        List<HokageServerMetricDO> serverMetricDOList = serverMetricMapper.queryByTimeInterval(server, start, end);
-        if (CollectionUtils.isEmpty(serverMetricDOList)) {
-            return Collections.emptyList();
-        }
-        return serverMetricDOList;
+        return Optional.ofNullable(serverMetricMapper.queryByTimeInterval(server, start, end)).orElse(Collections.emptyList());
+    }
+
+    @Override
+    public List<HokageServerMetricDO> queryByTimeInterval(Long start, Long end) {
+        return Optional.ofNullable(serverMetricMapper.queryAllByTimeInterval(start, end)).orElse(Collections.emptyList());
     }
 
     @Override

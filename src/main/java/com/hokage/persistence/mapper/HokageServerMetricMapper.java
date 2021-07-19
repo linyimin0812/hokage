@@ -31,6 +31,7 @@ public interface HokageServerMetricMapper {
 
     /**
      * query server metric between start and end
+     * @param server server ip
      * @param start start time
      * @param end end time
      * @return server metric list between start and end
@@ -45,4 +46,12 @@ public interface HokageServerMetricMapper {
      * @return server metric list between start and end and type
      */
     List<HokageServerMetricDO> queryByTimeIntervalAndType(@Param("server") String server, @Param("start")Long start, @Param("end") Long end, @Param("type") Integer type);
+
+    /**
+     * query server metric between start and end
+     * @param start start time
+     * @param end end time
+     * @return server metric list between start and end
+     */
+    List<HokageServerMetricDO> queryAllByTimeInterval(Long start, Long end);
 }

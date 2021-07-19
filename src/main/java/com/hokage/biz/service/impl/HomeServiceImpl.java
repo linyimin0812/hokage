@@ -9,8 +9,13 @@ import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.service.HomeService;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.HokageServerDao;
+import com.hokage.persistence.dao.HokageServerMetricDao;
 import com.hokage.persistence.dao.HokageSubordinateServerDao;
+import com.hokage.persistence.dataobject.HokageServerMetricDO;
 import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
+import com.hokage.ssh.enums.MetricTypeEnum;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +34,7 @@ import java.util.stream.Collectors;
 public class HomeServiceImpl implements HomeService {
     private HokageServerDao serverDao;
     private HokageSubordinateServerDao subordinateServerDao;
+    private HokageServerMetricDao metricDao;
 
     @Autowired
     public void setServerDao(HokageServerDao serverDao) {
@@ -38,6 +44,11 @@ public class HomeServiceImpl implements HomeService {
     @Autowired
     public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
         this.subordinateServerDao = subordinateServerDao;
+    }
+
+    @Autowired
+    public void setMetricDao(HokageServerMetricDao metricDao) {
+        this.metricDao = metricDao;
     }
 
     @Override
@@ -55,6 +66,32 @@ public class HomeServiceImpl implements HomeService {
 
         return response.success(detailVO);
 
+    }
+
+    @Override
+    public ServiceResponse<String> acquireMostBusyServerIp() {
+        ServiceResponse<String> response = new ServiceResponse<>();
+        long end = System.currentTimeMillis();
+        long start = end - 10 * 60 * 1000;
+        List<HokageServerMetricDO> metricDOList = metricDao.queryByTimeInterval(start, end);
+        Map<String, List<HokageServerMetricDO>> metricMap = metricDOList
+                .stream()
+                .collect(Collectors.groupingBy(HokageServerMetricDO::getServer));
+
+        Pair<String, Double> pair = null;
+        for (Map.Entry<String, List<HokageServerMetricDO>> entry : metricMap.entrySet()) {
+            double sum = entry.getValue()
+                    .stream()
+                    .filter(metricDO -> MetricTypeEnum.cpu.getValue().equals(metricDO.getType()))
+                    .mapToDouble(HokageServerMetricDO::getValue)
+                    .sum();
+
+            if (Objects.isNull(pair) || pair.getValue() < sum) {
+                pair = Pair.of(entry.getKey(), sum);
+            }
+        }
+        String serverIp = Objects.isNull(pair) ? StringUtils.EMPTY : pair.getKey();
+        return response.success(serverIp);
     }
 
     private HomeDetailMeta accountDetail(List<HokageServerVO> serverVOList) {
