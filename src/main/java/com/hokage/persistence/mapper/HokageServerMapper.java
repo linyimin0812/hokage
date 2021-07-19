@@ -21,50 +21,50 @@ import java.util.List;
 public interface HokageServerMapper {
     /**
      * insert a new record
-     * @param serverDO
-     * @return
+     * @param serverDO {@link HokageServerDO}
+     * @return rows affected
      */
     Long insert(HokageServerDO serverDO);
 
     /**
      * update a record
-     * @param serverDO
-     * @return
+     * @param serverDO serverDO {@link HokageServerDO}
+     * @return rows affected
      */
     Long update(HokageServerDO serverDO);
 
     /**
      * retrieve all server info
-     * @return
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectAll();
 
     /**
      * retrieve server infos based-on server id
-     * @param ids
-     * @return
+     * @param ids server id list
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByIds(@Param("serverIds") List<Long> ids);
 
     /**
      * retrieve server info based-on server id
-     * @param id
-     * @return
+     * @param id server id
+     * @return {@link HokageServerDO}
      */
     HokageServerDO selectById(Long id);
 
     /**
      * retrieve server infos based-on server group
-     * @param group
-     * @return
+     * @param group server group
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectByGroup(String group);
 
 
     /**
      * retrieve server infos based-on supervisor id
-     * @param supervisorId
-     * @return
+     * @param supervisorId supervisor id
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectBySupervisorId(Long supervisorId);
 
@@ -77,15 +77,15 @@ public interface HokageServerMapper {
 
     /**
      * query server info
-     * @param query
-     * @return
+     * @param query {@link SupervisorServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectBySupervisorServerQuery(SupervisorServerQuery query);
 
     /**
      * query server info
-     * @param query
-     * @return
+     * @param query {@link SubordinateServerQuery}
+     * @return {@link List<HokageServerDO>}
      */
     List<HokageServerDO> selectBySubordinateServerQuery(SubordinateServerQuery query);
 

@@ -9,8 +9,10 @@ import com.hokage.infra.worker.ScheduledThreadPoolWorker;
 import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.HokageServerDao;
 import com.hokage.persistence.dao.HokageServerReportHandlerDao;
+import com.hokage.persistence.dao.HokageSubordinateServerDao;
 import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageServerReportInfoHandlerDO;
+import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.AbstractCommand;
 import com.hokage.ssh.command.CommandDispatcher;
@@ -77,6 +79,7 @@ public class HokageServerCacheDao extends BaseCacheDao {
 
     private HokageServerDao serverDao;
     private CommandDispatcher dispatcher;
+    private HokageSubordinateServerDao subordinateServerDao;
 
     private ScheduledThreadPoolWorker scheduledWorker;
     private ThreadPoolWorker poolWorker;
@@ -115,8 +118,13 @@ public class HokageServerCacheDao extends BaseCacheDao {
     }
 
     @Autowired
-    private void setExecComponent(SshExecComponent execComponent) {
+    public void setExecComponent(SshExecComponent execComponent) {
         this.execComponent = execComponent;
+    }
+
+    @Autowired
+    public void setSubordinateServerDao(HokageSubordinateServerDao subordinateServerDao) {
+        this.subordinateServerDao = subordinateServerDao;
     }
 
     @PostConstruct
@@ -154,16 +162,33 @@ public class HokageServerCacheDao extends BaseCacheDao {
     @SneakyThrows
     private SshClient reloadClient(String serverKey) {
         List<String> serverOptions = Arrays.asList(StringUtils.split(serverKey, "_"));
-        if (serverOptions.size() != 4) {
+        if (serverOptions.size() < 4) {
             return null;
         }
-        // TODO： 不能这么做， 需要考虑是普通账号还是管理账号
-        HokageServerDO serverDO = serverDao.selectById(Long.valueOf(serverOptions.get(0)));
-        if (Objects.isNull(serverDO)) {
+        String account = StringUtils.join(serverOptions.subList(3, serverOptions.size()), "_");
+
+        long serverId = Long.parseLong(serverOptions.get(0));
+        HokageServerDO serverDO = serverDao.selectById(serverId);
+        Optional<HokageServerDO> optional;
+        if (StringUtils.equals(account, serverDO.getAccount())) {
+            optional = Optional.of(serverDO);
+
+        } else {
+            List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(serverId));
+            optional = subServerDOList.stream()
+                    .filter(subServerDO -> StringUtils.equals(account, subServerDO.getAccount()))
+                    .map(subServerDO -> {
+                        serverDO.setAccount(subServerDO.getAccount());
+                        return serverDO;
+                    })
+                    .findFirst();
+        }
+
+        if (!optional.isPresent()) {
             return null;
         }
         SshContext context = new SshContext();
-        BeanUtils.copyProperties(serverDO, context);
+        BeanUtils.copyProperties(optional.get(), context);
         return new SshClient(context);
     }
 

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Table } from 'antd'
-import { ServerVO } from '../../axios/action/server/server-type'
+import { Table, Tag } from 'antd';
+import { ServerStatusEnum, ServerVO } from '../../axios/action/server/server-type';
 import { Action } from '../../component/Action'
 import { observer } from 'mobx-react'
 import store from './store'
@@ -36,6 +36,16 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
     return <span>密码</span>
   }
 
+  renderStatus = (status: number) => {
+    if (status === ServerStatusEnum.offline) {
+      return <Tag color={'red'}>offline</Tag>
+    }
+    if (status === ServerStatusEnum.online) {
+      return <Tag color={'green'}>online</Tag>
+    }
+    return <Tag color={'magenta'}>unknown</Tag>
+  }
+
   render() {
 
     return (
@@ -52,7 +62,7 @@ export default class WebSshServer extends React.Component<SshInfoProps> {
             <Table.Column title={'port'} dataIndex={'sshPort'} />
             <Table.Column title={'账号'} dataIndex={'account'} />
             <Table.Column title={'登录方式'} dataIndex={'loginType'} render={this.renderLoginType} />
-            <Table.Column title={'服务器状态'} dataIndex={'status'} />
+            <Table.Column title={'服务器状态'} dataIndex={'status'} render={this.renderStatus} />
             <Table.Column title={'描述'} dataIndex={'description'} ellipsis />
             <Table.Column title={'操作'} render={this.actionRender} />
           </Table>

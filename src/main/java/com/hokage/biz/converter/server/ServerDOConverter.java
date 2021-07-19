@@ -195,33 +195,39 @@ public class ServerDOConverter {
         return serverVO;
     }
 
-    @SneakyThrows
     private static ServerStatusEnum acquireServerStatus(String serverKey) {
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
-        if (!optional.isPresent()) {
-            return ServerStatusEnum.unknown;
+        try {
+            Optional<SshClient> optional = serverCacheDao.getExecClient(serverKey);
+            if (!optional.isPresent()) {
+                return ServerStatusEnum.unknown;
+            }
+            Session session = optional.get().getSessionOrCreate();
+            if (session.isConnected()) {
+                return ServerStatusEnum.online;
+            }
+            return ServerStatusEnum.offline;
+        } catch (Exception e) {
+            return ServerStatusEnum.offline;
         }
-        Session session = optional.get().getSessionOrCreate();
-        if (session.isConnected()) {
-            return ServerStatusEnum.online;
-        }
-        return ServerStatusEnum.offline;
     }
 
-    @SneakyThrows
     private static String acquireHostname(HokageServerDO serverDO) {
-        Optional<SshClient> optional = serverCacheDao.getExecClient(serverDO.buildKey());
-        if (!optional.isPresent()) {
+        try {
+            Optional<SshClient> optional = serverCacheDao.getExecClient(serverDO.buildKey());
+            if (!optional.isPresent()) {
+                return StringUtils.EMPTY;
+            }
+            SshClient client = optional.get();
+            ServiceResponse<String> response = serverCommandHandler.hostnameHandler.apply(client, null);
+            if (response.getSucceeded()) {
+                serverDO.setHostname(response.getData());
+                serverDao.update(serverDO);
+                return response.getData();
+            }
+            return StringUtils.EMPTY;
+        } catch (Exception e) {
             return StringUtils.EMPTY;
         }
-        SshClient client = optional.get();
-        ServiceResponse<String> response = serverCommandHandler.hostnameHandler.apply(client, null);
-        if (response.getSucceeded()) {
-            serverDO.setHostname(response.getData());
-            serverDao.update(serverDO);
-            return response.getData();
-        }
-        return StringUtils.EMPTY;
     }
 
 }
