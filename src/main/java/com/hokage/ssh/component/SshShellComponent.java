@@ -184,11 +184,11 @@ public class SshShellComponent {
     private SshContext acquireSshContext(String data) {
         SshContext context = JSON.parseObject(data, new TypeReference<SshContext>(){});
         // retrieve ssh password
-        ServiceResponse<List<HokageServerDO>> response = serverService.selectByIds(Collections.singletonList(context.getId()));
-        if (!response.getSucceeded() || CollectionUtils.isEmpty(response.getData())) {
+        ServiceResponse<HokageServerDO> response = serverService.selectByIdAndAccount(context.getId(), context.getAccount());
+        if (!response.getSucceeded() || Objects.isNull(response.getData())) {
             throw new RuntimeException("server is not exist. connection information: " + JSON.toJSONString(context));
         }
-        String password = response.getData().get(0).getPasswd();
+        String password = response.getData().getPasswd();
         context.setPasswd(password);
         return context;
     }

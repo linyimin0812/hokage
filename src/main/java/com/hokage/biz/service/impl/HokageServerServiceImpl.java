@@ -330,6 +330,16 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
+    public ServiceResponse<HokageServerDO> selectByIdAndAccount(Long id, String account) {
+        ServiceResponse<HokageServerDO> response = new ServiceResponse<>();
+        Optional<HokageServerDO> optional = hokageServerDao.selectByIdAndAccount(id, account);
+        if (!optional.isPresent()) {
+            return response.success(null);
+        }
+        return response.success(optional.get());
+    }
+
+    @Override
     public ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids) {
 
         ServiceResponse<List<HokageServerDO>> response = new ServiceResponse<>();

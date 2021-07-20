@@ -123,4 +123,12 @@ public interface HokageServerService {
      * @return true if revoke subordinate success, otherwise false
      */
     ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form);
+
+    /**
+     * acquire server by id and account
+     * @param id server id
+     * @param account account
+     * @return {@link HokageServerDO}
+     */
+    ServiceResponse<HokageServerDO> selectByIdAndAccount(Long id, String account);
 }
