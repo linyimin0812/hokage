@@ -73,7 +73,7 @@ class Index extends React.Component {
                 <Card>
                   <PageHeader className="site-page-header" title="可用主机总数" subTitle={availableVO.total}>
                     <Descriptions size="default" column={2}>
-                      { Object.keys(allVO.groupInfo).map(key => this.renderDescriptions(key, availableVO.groupInfo[key])) }
+                      { Object.keys(availableVO.groupInfo).map(key => this.renderDescriptions(key, availableVO.groupInfo[key])) }
                     </Descriptions>
                   </PageHeader>
                 </Card>
@@ -83,7 +83,7 @@ class Index extends React.Component {
                 <Card>
                   <PageHeader className="site-page-header" title="全部用户数" subTitle={accountVO.total}>
                     <Descriptions size="default" column={2}>
-                      { Object.keys(allVO.groupInfo).map(key => this.renderDescriptions(key, accountVO.groupInfo[key])) }
+                      { Object.keys(accountVO.groupInfo).map(key => this.renderDescriptions(key, accountVO.groupInfo[key])) }
                     </Descriptions>
                   </PageHeader>
                 </Card>
