@@ -12,6 +12,7 @@ import com.hokage.biz.request.server.ServerQuery;
 import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
+import com.hokage.biz.response.server.ServerAccountVO;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.common.BaseController;
 import com.hokage.common.ResultVO;
@@ -66,6 +67,18 @@ public class ServerController extends BaseController {
         return response(response);
     }
 
+    @RequestMapping(value = "/server/view", method = RequestMethod.GET)
+    public ResultVO<HokageServerVO> viewServer(@RequestParam("id") Long id) {
+        ServiceResponse<HokageServerVO> response = serverService.viewServer(id);
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/account/list", method = RequestMethod.GET)
+    public ResultVO<List<ServerAccountVO>> serverAccountList(@RequestParam("id") Long id) {
+        ServiceResponse<List<ServerAccountVO>> response = serverService.listServerAccount(id);
+        return response(response);
+    }
+
     @RequestMapping(value = "/server/all/search", method = RequestMethod.POST)
     public ResultVO<List<HokageServerVO>> searchAllServer(@RequestBody ServerSearchForm form) {
         AllServerQuery allServerQuery = ServerSearchConverter.converterToAll(form);
@@ -116,31 +129,10 @@ public class ServerController extends BaseController {
         return success(Boolean.TRUE);
     }
 
+
     @RequestMapping(value = "/server/supervisor/add", method = RequestMethod.POST)
     public ResultVO<Boolean> addServerSupervisor(@RequestBody ServerOperateForm form) {
         ServiceResponse<Boolean> response = serverService.designateSupervisor(form);
-
-        if (!response.getSucceeded()) {
-            return fail(response.getCode(), response.getMsg());
-        }
-
-        return success(Boolean.TRUE);
-    }
-
-    @RequestMapping(value = "/server/supervisor/delete", method = RequestMethod.POST)
-    public ResultVO<Boolean> delServerSupervisor(@RequestBody ServerOperateForm form) {
-        ServiceResponse<Boolean> response = serverService.revokeSupervisor(form);
-
-        if (!response.getSucceeded()) {
-            return fail(response.getCode(), response.getMsg());
-        }
-
-        return success(Boolean.TRUE);
-    }
-
-    @RequestMapping(value = "/server/apply", method = RequestMethod.POST)
-    public ResultVO<Boolean> applyServer(@RequestBody ServerOperateForm form) {
-        ServiceResponse<Boolean> response = serverService.applyServer(form);
 
         if (!response.getSucceeded()) {
             return fail(response.getCode(), response.getMsg());
@@ -164,13 +156,9 @@ public class ServerController extends BaseController {
     @RequestMapping(value = "/server/subordinate/delete", method = RequestMethod.POST)
     public ResultVO<Boolean> delServerSubordinate(@RequestBody ServerOperateForm form) {
         ServiceResponse<Boolean> response = serverService.revokeSubordinate(form);
-
-        if (!response.getSucceeded()) {
-            return fail(response.getCode(), response.getMsg());
-        }
-
-        return success(Boolean.TRUE);
+        return response(response);
     }
+
 
     @RequestMapping(value = "/app/file/upload", method = RequestMethod.POST)
     public ResultVO<String> uploadFile(@RequestParam(value = "sshKeyFile") MultipartFile file) throws IOException {

@@ -6,6 +6,7 @@ import com.hokage.biz.request.server.ServerQuery;
 import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.server.SupervisorServerQuery;
 import com.hokage.biz.response.server.HokageServerVO;
+import com.hokage.biz.response.server.ServerAccountVO;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dataobject.HokageServerDO;
 
@@ -32,25 +33,10 @@ public interface HokageServerService {
      */
     ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids);
 
-
-    /**
-     * retrieve server information based on server type
-     * @param type server type
-     * @return server list which meet the criteria
-     */
-    ServiceResponse<List<HokageServerDO>> selectByType(String type);
-
-    /**
-     * retrieve server information based on server group
-     * @param group server group
-     * @return server list which meet the criteria
-     */
-    ServiceResponse<List<HokageServerDO>> selectByGroup(String group);
-
     /**
      * insert or update server info
      * @param serverDO server data object
-     * @return
+     * @return {@link HokageServerDO}
      */
     ServiceResponse<HokageServerDO> save(HokageServerDO serverDO);
 
@@ -63,38 +49,17 @@ public interface HokageServerService {
 
     /**
      * designate servers to a supervisor
-     * @param form
-     * @return
+     * @param form {@link ServerOperateForm}
+     * @return designate supervisor success return true, otherwise false
      */
     ServiceResponse<Boolean> designateSupervisor(ServerOperateForm form);
 
     /**
-     * revoke a supervisor
-     * @param form
-     * @return
-     */
-    ServiceResponse<Boolean> revokeSupervisor(ServerOperateForm form);
-
-    /**
      * designate servers to a subordinate
-     * @param form
-     * @return
+     * @param form {@link ServerOperateForm}
+     * @return designate subordinate
      */
     ServiceResponse<Boolean> designateSubordinate(ServerOperateForm form);
-
-    /**
-     * revoke a subordinate
-     * @param form
-     * @return
-     */
-    ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form);
-
-    /**
-     * apply server
-     * @param form
-     * @return
-     */
-    ServiceResponse<Boolean> applyServer(ServerOperateForm form);
 
     /**
      * list server which have grant to the supervisor
@@ -137,4 +102,25 @@ public interface HokageServerService {
      * @return {@link List<HokageServerVO>}
      */
     ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query);
+
+    /**
+     * list server account
+     * @param id server id
+     * @return {@link List<ServerAccountVO>}
+     */
+    ServiceResponse<List<ServerAccountVO>> listServerAccount(Long id);
+
+    /**
+     * view server detail
+     * @param id server id
+     * @return {@link List<HokageServerVO>}
+     */
+    ServiceResponse<HokageServerVO> viewServer(Long id);
+
+    /**
+     * revoke subordiante server
+     * @param form {@link ServerOperateForm}
+     * @return true if revoke subordinate success, otherwise false
+     */
+    ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form);
 }

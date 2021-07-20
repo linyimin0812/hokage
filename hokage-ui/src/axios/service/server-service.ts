@@ -56,6 +56,18 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   deleteServer: {
     url: '/server/delete',
     method: 'POST'
+  },
+  viewServer: {
+    url: '/server/view',
+    method: 'GET'
+  },
+  deleteSupervisorServer: {
+    url: '/server/supervisor/delete',
+    method: 'POST'
+  },
+  listAccount: {
+    url: '/server/account/list',
+    method: 'GET'
   }
 }
 

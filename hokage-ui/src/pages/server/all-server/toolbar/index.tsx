@@ -13,7 +13,10 @@ import { observer } from 'mobx-react'
 export default class Toolbar extends React.Component {
 
   addServer = () => {
-    store.addServerModalVisible = true
+    store.form = {
+      editServerModalVisible: true,
+      initFormValue: undefined
+    }
   }
 
   onModalOk = (value: ServerForm) => {
@@ -29,24 +32,32 @@ export default class Toolbar extends React.Component {
     if (!value.loginType) {
       value.loginType = 0
     }
+    const { form } = store
+    if (form.initFormValue && form.initFormValue.id) {
+      value.id = form.initFormValue.id
+    }
     ServerAction.saveServer(value).then(() => {
-      store.addServerModalVisible = false
       store.fetchRecords({operatorId: getHokageUid()})
+      store.form = {
+        editServerModalVisible: false,
+        initFormValue: undefined
+      }
     }).catch(e => message.error(e))
   }
 
   onModalCancel = () => {
-    store.addServerModalVisible = false
+    store.form.editServerModalVisible = false
   }
 
   render() {
+    const { editServerModalVisible, initFormValue } = store.form
     return (
       <Row gutter={24} style={{ backgroundColor: '#e6f7ff', border: '#91d5ff', margin: '0 0' }}>
         <Col span={4} style={{ display: 'flex', alignItems: 'center' }} />
         <Col span={20} style={{padding: '0 0'}}>
           <span style={{ float: 'right' }}>
             <Button icon={<PlusOutlined translate="true" />} onClick={this.addServer}>添加</Button>
-            <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={store.addServerModalVisible} />
+            <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={editServerModalVisible} initValue={initFormValue} />
           </span>
         </Col>
       </Row>

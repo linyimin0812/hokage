@@ -84,7 +84,7 @@ public class UserController extends BaseController {
         if (Objects.isNull(session.getAttribute(Constant.USER_SESSION_KEY))) {
             return fail(ResultCodeEnum.USER_NO_LOGIN.getCode(), ResultCodeEnum.USER_NO_LOGIN.getMsg());
         }
-        session.removeAttribute(form.getEmail());
+        session.removeAttribute(Constant.USER_SESSION_KEY);
 
         return success(true);
     }

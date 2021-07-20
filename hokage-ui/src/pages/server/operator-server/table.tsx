@@ -1,10 +1,12 @@
 import React from 'react'
 import store from './store'
-import { Table, Tag } from 'antd'
-import { randomColor } from '../../../libs'
+import { message, Table, Tag } from 'antd';
+import { getHokageUid, randomColor } from '../../../libs';
 import { ServerStatusEnum, ServerUserVO, ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
+import { UserServerOperateForm } from '../../../axios/action/user/user-type';
+import { ServerAction } from '../../../axios/action/server/server-action';
 
 @observer
 export default class OperatorServerTable extends React.Component {
@@ -14,22 +16,19 @@ export default class OperatorServerTable extends React.Component {
   }
 
   expandedRowRender = (record: ServerVO) => {
-    const nestedRecords = record.userList || []
+    const nestedRecords = store.accountList || []
     return <Table rowKey={'id'} dataSource={nestedRecords} pagination={false}>
       <Table.Column title={'id'} dataIndex={'id'} />
       <Table.Column title={'姓名'} dataIndex={'username'} />
       <Table.Column title={'账号'} dataIndex={'account'} />
-      <Table.Column title={'申请时间'} dataIndex={'serverGroupList'} render={this.serverGroupRender} />
-      <Table.Column title={'最近登录时间'} dataIndex={'userNum'} />
-      <Table.Column title={'状态'} dataIndex={'status'} render={this.statusRender} />
+      <Table.Column title={'创建时间'} dataIndex={'createdTime'} />
+      <Table.Column title={'最近登录时间'} dataIndex={'latestLoginTime'} />
       <Table.Column title={'操作'} render={this.nestedActionRender} />
     </Table>
   }
 
   nestedActionRender = (record: ServerUserVO) => {
     return <Action>
-      <Action.Confirm title={'禁用'} action={async () => {alert('TODO: 添加禁用动作')}} content={`确定禁用用户${record.username}(${record.id})`} />
-      <Action.Confirm title={'启用'} action={async () => {alert('TODO: 添加启用动作')}} content={`确定启用用户${record.username}(${record.id})`} />
       <Action.Confirm title={'删除'} action={async () => {alert('TODO: 添加删除动作')}} content={`确定删除用户${record.username}(${record.id})`} />
     </Action>
   }
@@ -75,12 +74,36 @@ export default class OperatorServerTable extends React.Component {
     </Action>
   }
 
+  deleteServer = (record: ServerVO) => {
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      userIds: [getHokageUid()],
+      serverIds: [record.id]
+    }
+    store.isFetching = true
+    ServerAction.deleteSupervisorServer(form).then(result => {
+      if (result) {
+        message.info("删除管理员服务器成功")
+      } else {
+        message.error("删除管理员服务器失败")
+      }
+    }).catch(e => message.error(e))
+      .finally(() => store.isFetching = false)
+  }
+
+  onExpand = (expanded: boolean, record: ServerVO) => {
+    if (!expanded) {
+      return
+    }
+    store.fetchAccountList(record.id)
+  }
   render() {
     return (
       <Table
         rowKey={'id'}
         loading={store.isFetching}
         dataSource={store.records}
+        onExpand={this.onExpand}
         expandedRowRender={this.expandedRowRender}
         pagination={false}
       >

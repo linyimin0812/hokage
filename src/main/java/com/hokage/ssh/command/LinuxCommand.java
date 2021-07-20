@@ -101,9 +101,18 @@ public class LinuxCommand extends AbstractCommand {
     }
 
     @Override
-    public String lastLog() {
-        return "lastlog -t 365 " + " | " +
-                "awk 'BEGIN {print \"[\"} NR>1 { printf \"{" +
+    public String latestLog() {
+        return "lastlog -t 365 " + " | " + this.latestLogPipe();
+
+    }
+
+    @Override
+    public String latestLog(String account) {
+        return "lastlog -t 365 -u " + account + " | " + this.latestLogPipe();
+    }
+
+    private String latestLogPipe() {
+        return "awk 'BEGIN {print \"[\"} NR>1 { printf \"{" +
                 "\\\"account\\\": \\\"\"$1\"\\\", " +
                 "\\\"port\\\": \\\"\"$2\"\\\", " +
                 "\\\"from\\\":\"; " +
@@ -175,7 +184,7 @@ public class LinuxCommand extends AbstractCommand {
         System.out.println(command.wc("/root/.presto_history"));
         System.out.println(command.cpuInfo());
         System.out.println(AbstractCommand.accountInfo());
-        System.out.println(command.lastLog());
+        System.out.println(command.latestLog());
         System.out.println(command.df());
         System.out.println(command.addUser("linyimin", "lym130060"));
     }

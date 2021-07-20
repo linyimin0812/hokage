@@ -1,12 +1,13 @@
 import React from 'react'
-import { message, Table, Tag } from 'antd';
+import { message, Table, Tag } from 'antd'
 import store from './store'
-import { getHokageRole, getHokageUid, randomColor } from '../../../libs';
-import { ServerStatusEnum, ServerVO } from '../../../axios/action/server/server-type';
+import { getHokageRole, getHokageUid, randomColor } from '../../../libs'
+import { ServerStatusEnum, ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
-import { UserRoleEnum, UserServerOperateForm } from '../../../axios/action/user/user-type';
-import { ServerAction } from '../../../axios/action/server/server-action';
+import { UserRoleEnum, UserServerOperateForm } from '../../../axios/action/user/user-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
+import allServerStore from '../all-server/store'
 
 @observer
 export default class AllServerTable extends React.Component {
@@ -29,7 +30,7 @@ export default class AllServerTable extends React.Component {
 
   actionRender = (record: ServerVO) => {
     return <Action>
-      <Action.Request title={'编辑'} action={() => {alert('编辑')}} />
+      <Action.Request title={'编辑'} action={() => {allServerStore.fetchRecord(record.id)}} />
       <Action.Confirm
         title={'删除'}
         action={async () => {this.deleteServer(record.id)}}

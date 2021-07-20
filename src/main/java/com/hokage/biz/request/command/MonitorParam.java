@@ -14,4 +14,5 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 public class MonitorParam extends BaseCommandParam {
     private Long pid;
+    private String account;
 }

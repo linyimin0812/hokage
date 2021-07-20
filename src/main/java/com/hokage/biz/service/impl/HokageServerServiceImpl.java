@@ -1,29 +1,33 @@
 package com.hokage.biz.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hokage.biz.converter.server.ConverterTypeEnum;
 import com.hokage.biz.converter.server.ServerDOConverter;
-import com.hokage.biz.converter.server.ServerSearchConverter;
 import com.hokage.biz.enums.LoginTypeEnum;
 import com.hokage.biz.enums.SequenceNameEnum;
 import com.hokage.biz.enums.ResultCodeEnum;
 import com.hokage.biz.enums.UserRoleEnum;
 import com.hokage.biz.form.server.HokageServerForm;
 import com.hokage.biz.form.server.ServerOperateForm;
+import com.hokage.biz.request.command.MonitorParam;
 import com.hokage.biz.request.server.AllServerQuery;
 import com.hokage.biz.request.server.ServerQuery;
 import com.hokage.biz.request.server.SubordinateServerQuery;
 import com.hokage.biz.request.server.SupervisorServerQuery;
+import com.hokage.biz.response.resource.general.LastLogInfoVO;
 import com.hokage.biz.response.server.HokageServerVO;
+import com.hokage.biz.response.server.ServerAccountVO;
 import com.hokage.biz.service.HokageSequenceService;
 import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
+import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
 import com.google.common.collect.ImmutableMap;
+import com.hokage.ssh.SshClient;
+import com.hokage.ssh.command.handler.MonitorCommandHandler;
+import com.hokage.util.TimeUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +57,10 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageUserDao userDao;
     private HokageServerApplicationDao applicationDao;
     private HokageServerSshKeyContentDao contentDao;
+    private HokageSupervisorSubordinateDao supSubDao;
+
+    private MonitorCommandHandler<MonitorParam> monitorCommandHandler;
+    private HokageServerCacheDao serverCacheDao;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -92,6 +100,21 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Autowired
     public void setContentDao(HokageServerSshKeyContentDao contentDao) {
         this.contentDao = contentDao;
+    }
+
+    @Autowired
+    public void setSupSubDao(HokageSupervisorSubordinateDao supSubDao) {
+        this.supSubDao = supSubDao;
+    }
+
+    @Autowired
+    public void setServerCacheDao(HokageServerCacheDao serverCacheDao) {
+        this.serverCacheDao = serverCacheDao;
+    }
+
+    @Autowired
+    public void setMonitorCommandHandler(MonitorCommandHandler<MonitorParam> monitorCommandHandler) {
+        this.monitorCommandHandler = monitorCommandHandler;
     }
 
     private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
@@ -229,6 +252,84 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
+    public ServiceResponse<List<ServerAccountVO>> listServerAccount(Long id) {
+        ServiceResponse<List<ServerAccountVO>> response = new ServiceResponse<>();
+        List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByServerIds(Collections.singletonList(id));
+        List<ServerAccountVO> serverAccountVOList = subServerDOList.stream()
+                .map(subServerDO -> {
+                    HokageUserDO userDO = userDao.getUserById(subServerDO.getSubordinateId());
+
+                    ServerAccountVO serverAccountVO = new ServerAccountVO();
+                    serverAccountVO.setId(userDO.getId());
+                    serverAccountVO.setAccount(subServerDO.getAccount());
+                    serverAccountVO.setUsername(userDO.getUsername());
+                    String createdTime = TimeUtil.format(subServerDO.getGmtCreate().getTime(), TimeUtil.DISPLAY_FORMAT);
+                    serverAccountVO.setCreatedTime(createdTime);
+
+                    try {
+                        Optional<SshClient> optional = serverCacheDao.getExecClient(subServerDO.buildKey());
+                        if (optional.isPresent()) {
+                            MonitorParam param = new MonitorParam();
+                            param.setAccount(subServerDO.getAccount());
+                            ServiceResponse<List<LastLogInfoVO>> result = monitorCommandHandler.lastLogInfoHandler.apply(optional.get(), param);
+                            if (result.getSucceeded() && !CollectionUtils.isEmpty(result.getData())) {
+                                LastLogInfoVO lastLogInfoVO = result.getData().get(0);
+                                serverAccountVO.setLatestLoginTime(lastLogInfoVO.getLatest());
+                            }
+                        }
+                    } catch (Exception ignored) {
+
+                    }
+
+                    return serverAccountVO;
+                }).collect(Collectors.toList());
+
+        return response.success(serverAccountVOList);
+    }
+
+    @Override
+    public ServiceResponse<HokageServerVO> viewServer(Long id) {
+        ServiceResponse<HokageServerVO> response = new ServiceResponse<>();
+        HokageServerDO serverDO = hokageServerDao.selectById(id);
+        if (Objects.isNull(serverDO)) {
+            return response.success(null);
+        }
+        return response.success(ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form) {
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        List<Long> userIdList = form.getUserIds();
+        List<Long> revokeServerIdList = form.getServerIds();
+
+        for (Long userId : userIdList) {
+            List<Long> subordinateIdList = supSubDao.listBySupervisorId(userId)
+                    .stream()
+                    .map(HokageSupervisorSubordinateDO::getSubordinateId)
+                    .collect(Collectors.toList());
+
+            List<Long> serverIdList = subordinateServerDao.listByOrdinateIds(subordinateIdList)
+                    .stream()
+                    .map(HokageSubordinateServerDO::getServerId)
+                    .collect(Collectors.toList());
+
+
+            if (CollectionUtils.containsAny(serverIdList, revokeServerIdList)) {
+                throw new RuntimeException("服务器存在使用者，请先回收其账号");
+            }
+
+            subordinateServerDao.removeBySubordinateId(userId, revokeServerIdList);
+        }
+        return response.success(Boolean.TRUE);
+    }
+
+    @Override
     public ServiceResponse<List<HokageServerDO>> selectByIds(List<Long> ids) {
 
         ServiceResponse<List<HokageServerDO>> response = new ServiceResponse<>();
@@ -242,16 +343,6 @@ public class HokageServerServiceImpl implements HokageServerService {
         response.success(serverDOList);
 
         return response;
-    }
-
-    @Override
-    public ServiceResponse<List<HokageServerDO>> selectByType(String type) {
-        return null;
-    }
-
-    @Override
-    public ServiceResponse<List<HokageServerDO>> selectByGroup(String group) {
-        return null;
     }
 
     @Override
@@ -421,32 +512,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Override
-    public ServiceResponse<Boolean> revokeSupervisor(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
-        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
-        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
-
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
-
-        ServiceResponse<Boolean> isSuperResponse = userService.isSuperOperator(operatorId);
-
-        if (!isSuperResponse.getSucceeded()) {
-            return response.fail(isSuperResponse.getCode(), isSuperResponse.getMsg());
-        }
-
-        if (!isSuperResponse.getData()) {
-            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
-        }
-
-        List<Long> userIds = form.getUserIds();
-        List<Long> serverIds = form.getServerIds();
-
-        boolean result = userIds.stream().anyMatch(userId -> supervisorServerDao.removeBySupervisorId(userId, serverIds) > 0);
-
-        return response.success(result);
-    }
-
-    @Override
     public ServiceResponse<Boolean> designateSubordinate(ServerOperateForm form) {
         Long operatorId = checkNotNull(form.getOperatorId(), "id can't be null");
         checkState(!CollectionUtils.isEmpty(form.getUserIds()), "user ids can't be null");
@@ -487,56 +552,6 @@ public class HokageServerServiceImpl implements HokageServerService {
         }
 
         return response.fail(ResultCodeEnum.SERVER_SYSTEM_ERROR.getCode(), ResultCodeEnum.SERVER_SYSTEM_ERROR.getMsg());
-    }
-
-    @Override
-    public ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
-        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
-        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
-
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
-
-        ServiceResponse<Boolean> isSupervisorResponse = userService.isSupervisor(operatorId);
-
-        if (!isSupervisorResponse.getSucceeded()) {
-            return response.fail(isSupervisorResponse.getCode(), isSupervisorResponse.getMsg());
-        }
-
-        if (!isSupervisorResponse.getData()) {
-            return response.fail(ResultCodeEnum.USER_NO_PERMISSION.getCode(), ResultCodeEnum.USER_NO_PERMISSION.getMsg());
-        }
-
-        List<Long> userIds = form.getUserIds();
-        List<Long> serverIds = form.getServerIds();
-
-        boolean result = userIds.stream().anyMatch(userId -> subordinateServerDao.removeBySubordinateId(userId, serverIds) > 0);
-
-        return response.success(result);
-    }
-
-    @Override
-    public ServiceResponse<Boolean> applyServer(ServerOperateForm form) {
-        Long operatorId = checkNotNull(form.getOperatorId(), "operator id can't null");
-        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
-
-        ServiceResponse<Boolean> response = new ServiceResponse<>();
-
-        ServiceResponse<Integer> roleResponse = userService.getRoleByUserId(operatorId);
-
-        if (!roleResponse.getSucceeded() || Objects.isNull(roleResponse.getData())) {
-            return response.fail(roleResponse.getCode(), roleResponse.getMsg());
-        }
-
-        Function<ServerOperateForm, Boolean> applyFunction = SERVER_APPLY_MAP.get(roleResponse.getData());
-
-        if (Objects.isNull(applyFunction)) {
-            throw new RuntimeException("Unsupported server apply: " + JSON.toJSONString(form));
-        }
-
-        Boolean result = applyFunction.apply(form);
-
-        return response.success(result);
     }
 
     @Override

@@ -4,7 +4,7 @@
  * @email linyimin520812@gmail.com
  * @description
  */
-import { Option, ServerForm, ServerSearchForm, ServerVO } from './server-type'
+import { Option, ServerForm, ServerSearchForm, ServerUserVO, ServerVO } from './server-type'
 import { ServerService } from '../../service/server-service'
 import { ServiceResult } from '../../common'
 import { UserServerOperateForm } from '../user/user-type'
@@ -147,5 +147,45 @@ export const ServerAction = {
     })
   },
 
+  viewServer: (serverId: number): Promise<ServerVO> => {
+    return new Promise<ServerVO>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerVO> = await ServerService.viewServer({id: serverId})
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject("获取服务器信息失败: " + JSON.stringify(e))
+      }
+    })
+  },
 
+  deleteSupervisorServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await ServerService.deleteSupervisorServer(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject("删除管理员服务器失败: " + JSON.stringify(e))
+      }
+    })
+  },
+
+  listAccount: (serverId: number): Promise<ServerUserVO[]> => {
+    return new Promise<ServerUserVO[]>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<ServerUserVO[]> = await ServerService.listAccount({id: serverId})
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject("获取服务器账号信息失败: " + JSON.stringify(e))
+      }
+    })
+  }
 }

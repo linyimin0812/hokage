@@ -93,7 +93,7 @@ export default class ApplyAndSearchServer extends React.Component<ApplyAndSearch
             <span style={{ float: 'right' }}>{(selectionKeys || []).length > 0 ? this.renderSelectionAction() : this.renderServerAction()}</span>
           </Col>
         </Row>
-        <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} />
+        <AddServer onModalOk={this.onModalOk} onModalCancel={this.onModalCancel} isModalVisible={isModalVisible} initValue={undefined} />
       </>
     )
   }

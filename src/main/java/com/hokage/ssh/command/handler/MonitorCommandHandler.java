@@ -129,7 +129,13 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
         ServiceResponse<List<LastLogInfoVO>> response = new ServiceResponse<>();
         try {
             AbstractCommand command = dispatcher.dispatch(client);
-            CommandResult lastLogResult = execComponent.execute(client, command.lastLog());
+            String latestLogCommand = command.latestLog();
+
+            MonitorParam monitorParam = (MonitorParam) param;
+            if (Objects.nonNull(monitorParam) && StringUtils.isNotEmpty(monitorParam.getAccount())) {
+                latestLogCommand = command.latestLog(monitorParam.getAccount());
+            }
+            CommandResult lastLogResult = execComponent.execute(client, latestLogCommand);
             if (!lastLogResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", lastLogResult.getExitStatus(), lastLogResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);

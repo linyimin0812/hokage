@@ -40,4 +40,8 @@ public class HokageSubordinateServerDO extends HokageBaseDO {
      * login type: 0-password, 1-key file
      */
     private Integer loginType;
+
+    public String buildKey() {
+        return serverId + "_" + ip + "_" + sshPort + "_" + account;
+    }
 }

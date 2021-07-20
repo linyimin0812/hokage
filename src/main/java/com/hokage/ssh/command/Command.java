@@ -63,10 +63,17 @@ public interface Command {
     String cpuInfo();
 
     /**
-     * acquire last login account
-     * @return lastlog command
+     * acquire latest login account
+     * @return latest login command
      */
-    String lastLog();
+    String latestLog();
+
+    /**
+     * acquire specify user latest login account
+     * @param account account
+     * @return latest login command
+     */
+    String latestLog(String account);
 
     /**
      * acquire disk partition information

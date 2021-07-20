@@ -1,8 +1,9 @@
 import { observable } from 'mobx'
 import { ReactText } from 'react'
-import { ServerSearchForm, ServerVO } from '../../../axios/action/server/server-type'
+import { ServerSearchForm, ServerUserVO, ServerVO } from '../../../axios/action/server/server-type'
 import { getHokageRole, getHokageUid } from '../../../libs'
 import { ServerAction } from '../../../axios/action/server/server-action'
+import { message } from 'antd';
 
 class Store {
   @observable selectedRowKeys: ReactText[] = []
@@ -10,6 +11,8 @@ class Store {
 
   @observable records: ServerVO[] = []
   @observable isFetching: boolean = false
+
+  @observable accountList: ServerUserVO[] = []
 
   fetchRecords = (form: ServerSearchForm = {}) => {
     form.operatorId = getHokageUid()
@@ -21,6 +24,14 @@ class Store {
         return serverVO
       })
     }).finally(() => this.isFetching = false)
+  }
+
+  fetchAccountList = (serverId: number) => {
+    this.isFetching = true
+    ServerAction.listAccount(serverId).then(accountList => {
+      this.accountList = accountList ? accountList : []
+    }).catch(e => message.error(e))
+      .finally(() => this.isFetching = false)
   }
 }
 

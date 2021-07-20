@@ -22,7 +22,7 @@ export interface ServerVO {
   hostname: string,
   domain: string,
   ip: string,
-  loginType: string,
+  loginType: string | number,
   account: string,
   sshPort: string,
   serverGroupList: string[],
@@ -42,8 +42,8 @@ export interface ServerUserVO {
   id: number,
   username: string,
   account: string,
-  applyTime: string,
-  lastLoginTime: string
+  createdTime: string,
+  latestLoginTime: string
 }
 
 export interface ServerGroup {
@@ -58,10 +58,9 @@ export interface ServerForm {
   ip: string,
   loginType: number,
   sshPort: string,
+  account: string,
   serverGroupList: string[],
   description: string,
-  labels: string[],
-  supervisors: number[],
   operatorId: number,
   passwd: string | UploadChangeParam
 }
@@ -77,6 +76,7 @@ export interface ServerSearchForm extends ServerSearchBaseForm{
 }
 
 interface ServerSearchBaseForm {
+  id?: number,
   operatorId?: number,
   role?: number,
   hostname?: string,
