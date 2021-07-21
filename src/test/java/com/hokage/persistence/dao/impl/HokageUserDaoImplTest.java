@@ -32,10 +32,10 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         userDO.setPasswd("123456");
         userDO.setEmail("banzhe@gmail.com");
         userDO.setUsername("banzhe");
-
+        userDO.setStatus(0);
         Long result = userDao.insert(userDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -49,9 +49,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         });
 
         userDOList = userDao.listAll(new HokageUserDO());
-        userDOList.forEach(hokageUserDO -> {
-            Assert.assertEquals("linyimin", hokageUserDO.getUsername());
-        });
+        userDOList.forEach(hokageUserDO -> Assert.assertEquals("linyimin", hokageUserDO.getUsername()));
     }
 
     @Test
@@ -83,7 +81,7 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         List<HokageUserDO> userDOList = userDao.listAll(new HokageUserDO());
         userDOList.forEach(hokageUserDO -> {
             List<HokageUserDO> userDOs = userDao.listUserByRole(hokageUserDO.getRole());
-            Assert.assertEquals(true, userDOs.size() > 0);
+            Assert.assertTrue(userDOs.size() > 0);
         });
     }
 
@@ -99,6 +97,6 @@ public class HokageUserDaoImplTest extends HokageBaseDaoTest {
         userDO.setUsername("banzhe");
         List<HokageUserDO> userDOList = userDao.listAll(userDO);
 
-        Assert.assertEquals(true, userDOList.size() > 0);
+        Assert.assertTrue(userDOList.size() > 0);
     }
 }

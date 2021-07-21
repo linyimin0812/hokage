@@ -48,7 +48,7 @@ public class ApplicationStartedListener implements ApplicationListener<Availabil
 
     private HokageServerCacheDao serverCacheDao;
 
-    @Autowired
+    @Autowired(required = false)
     public void setContext(ServletWebServerApplicationContext context) {
         this.context = context;
     }

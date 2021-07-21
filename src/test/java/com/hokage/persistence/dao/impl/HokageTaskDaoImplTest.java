@@ -27,17 +27,18 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
     public void insert() {
 
         HokageFixedDateTaskDO taskDO = new HokageFixedDateTaskDO();
-        taskDO.setId(hokageSequenceService.nextValue("hokage_task").getData());
+        taskDO.setId(hokageSequenceService.nextValue("hokage_fixed_date_task").getData());
         taskDO.setExecCommand("ls -l");
         taskDO.setExecServers("10.108.210.102, 10.108.210.106");
         taskDO.setExecTime(1576866660000L);
         taskDO.setTaskName("look file directory");
         taskDO.setTaskType(1);
         taskDO.setUserId(12L);
+        taskDO.setStatus(0);
 
         Long result = taskDao.insert(taskDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -51,9 +52,7 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
         });
 
         taskDOList = taskDao.findAll(new HokageFixedDateTaskDO());
-        taskDOList.forEach(hokageTaskDO -> {
-            Assert.assertEquals(hokageTaskDO.getUserId() + 0, 56L);
-        });
+        taskDOList.forEach(hokageTaskDO -> Assert.assertEquals(hokageTaskDO.getUserId().longValue(), 56L));
     }
 
     @Test
@@ -87,7 +86,7 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
         List<HokageFixedDateTaskDO> taskDOList = taskDao.findAll(new HokageFixedDateTaskDO());
         taskDOList.forEach(hokageTaskDO -> {
             List<HokageFixedDateTaskDO> taskDOs = taskDao.findByType(hokageTaskDO.getTaskType());
-            Assert.assertEquals(true, taskDOs.size() > 0);
+            Assert.assertTrue(taskDOs.size() > 0);
         });
     }
 
@@ -107,7 +106,7 @@ public class HokageTaskDaoImplTest extends HokageBaseDaoTest {
 
         List<HokageFixedDateTaskDO> taskDOList = taskDao.findAll(taskDO);
 
-        Assert.assertEquals(true, taskDOList.size() > 0);
+        Assert.assertTrue(taskDOList.size() > 0);
 
     }
 }

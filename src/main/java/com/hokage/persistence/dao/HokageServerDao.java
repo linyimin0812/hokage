@@ -50,13 +50,6 @@ public interface HokageServerDao {
     HokageServerDO selectById(Long id);
 
     /**
-     * retrieve servers based-on server type
-     * @param type server type
-     * @return {@link List<HokageServerDO>}
-     */
-    List<HokageServerDO> listByType(String type);
-
-    /**
      * retrieve servers based-on server group
      * @param group server group
      * @return {@link List<HokageServerDO>}

@@ -28,10 +28,11 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
         supervisorSubordinateDO.setId(hokageSequenceService.nextValue("hokage_supervisor_subordinate").getData());
         supervisorSubordinateDO.setSubordinateId(12L);
         supervisorSubordinateDO.setSupervisorId(56L);
+        supervisorSubordinateDO.setStatus(0);
 
         Long result = supervisorSubordinateDao.insert(supervisorSubordinateDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -45,16 +46,14 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
         });
         supervisorSubordinateDOs = supervisorSubordinateDao.listBySupervisorId(78L);
 
-        Assert.assertEquals(true, supervisorSubordinateDOs.size() > 0);
+        Assert.assertTrue(supervisorSubordinateDOs.size() > 0);
     }
 
     @Test
     @Rollback
     public void selectById() {
         List<HokageSupervisorSubordinateDO> supervisorSubordinateDOs = supervisorSubordinateDao.listAll();
-        supervisorSubordinateDOs.forEach(supervisorSubordinateDO -> {
-            Assert.assertNotEquals(null, supervisorSubordinateDao.listById(supervisorSubordinateDO.getId()));
-        });
+        supervisorSubordinateDOs.forEach(supervisorSubordinateDO -> Assert.assertNotEquals(null, supervisorSubordinateDao.listById(supervisorSubordinateDO.getId())));
     }
 
     @Test
@@ -73,7 +72,7 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
     public void selectBySupervisorId() {
         this.insert();
         List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.listBySupervisorId(56L);
-        Assert.assertEquals(true, supervisorSubordinateDOS.size() > 0);
+        Assert.assertTrue(supervisorSubordinateDOS.size() > 0);
     }
 
     @Test
@@ -82,6 +81,6 @@ public class HokageSupervisorSubordinateDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         List<HokageSupervisorSubordinateDO> supervisorSubordinateDOS = supervisorSubordinateDao.listBySubordinateId(12L);
         supervisorSubordinateDao.listAll();
-        Assert.assertEquals(true, supervisorSubordinateDOS.size() > 0);
+        Assert.assertTrue(supervisorSubordinateDOS.size() > 0);
     }
 }

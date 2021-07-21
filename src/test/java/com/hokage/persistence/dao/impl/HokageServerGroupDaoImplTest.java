@@ -29,8 +29,9 @@ public class HokageServerGroupDaoImplTest extends HokageBaseDaoTest {
         serverGroupDO.setId(hokageSequenceService.nextValue("hokage_server_group").getData());
         serverGroupDO.setDescription("开发测试");
         serverGroupDO.setName("dev");
+        serverGroupDO.setStatus(0);
         Long id = hokageServerGroupDao.insert(serverGroupDO);
-        Assert.assertEquals(true, id > 0);
+        Assert.assertTrue(id > 0);
     }
 
     @Test
@@ -54,9 +55,7 @@ public class HokageServerGroupDaoImplTest extends HokageBaseDaoTest {
             hokageServerGroupDao.update(hokageServerGroupDO);
         });
 
-        hokageServerGroupDao.selectAll().forEach(hokageServerGroupDO -> {
-            Assert.assertEquals("prod", hokageServerGroupDO.getName());
-        });
+        hokageServerGroupDao.selectAll().forEach(hokageServerGroupDO -> Assert.assertEquals("prod", hokageServerGroupDO.getName()));
 
     }
 }

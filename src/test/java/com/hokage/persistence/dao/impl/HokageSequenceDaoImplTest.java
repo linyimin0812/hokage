@@ -29,7 +29,7 @@ public class HokageSequenceDaoImplTest extends HokageBaseDaoTest{
 
         Integer result = sequenceDao.insert(sequenceDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -44,7 +44,7 @@ public class HokageSequenceDaoImplTest extends HokageBaseDaoTest{
         sequenceDO = sequenceDao.getSequenceByName("banzhe");
         Assert.assertNotEquals(null, sequenceDO);
 
-        Assert.assertEquals(true, sequenceDO.getValue() == 1111L);
+        Assert.assertTrue(sequenceDO.getValue() == 1111L);
     }
 
     @Test

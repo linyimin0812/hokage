@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -30,8 +30,9 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
         supervisorServerDO.setId(hokageSequenceService.nextValue("hokage_supervisor_server").getData());
         supervisorServerDO.setServerId(12L);
         supervisorServerDO.setSupervisorId(56L);
+        supervisorServerDO.setStatus(0);
         Long result = supervisorServerDao.insert(supervisorServerDO);
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -39,16 +40,16 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void update() {
         this.insert();
 
-        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Arrays.asList(12L));
+        List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(12L));
 
         supervisorServerDOS.forEach(item -> {
             item.setServerId(1L);
             supervisorServerDao.update(item);
         });
 
-        supervisorServerDOS = supervisorServerDao.listByServerIds(Arrays.asList(1L));
+        supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(1L));
         Assert.assertNotEquals(supervisorServerDOS, null);
-        Assert.assertEquals(true, supervisorServerDOS.size() > 0);
+        Assert.assertTrue(supervisorServerDOS.size() > 0);
     }
 
     @Test
@@ -56,13 +57,13 @@ public class HokageSupervisorServerDaoImplTest extends HokageBaseDaoTest {
     public void selectByServerId() {
 
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.listByServerIds(Arrays.asList(12L)).size() > 0);
+        Assert.assertTrue(supervisorServerDao.listByServerIds(Collections.singletonList(12L)).size() > 0);
     }
 
     @Test
     @Rollback
     public void selectBySupervisorId() {
         this.insert();
-        Assert.assertEquals(true, supervisorServerDao.listBySupervisorIds(Arrays.asList(56L)).size() > 0);
+        Assert.assertTrue(supervisorServerDao.listBySupervisorIds(Collections.singletonList(56L)).size() > 0);
     }
 }

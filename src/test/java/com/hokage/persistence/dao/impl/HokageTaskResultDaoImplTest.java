@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author linyimin
@@ -34,10 +35,13 @@ public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
         taskResultDO.setExecResult("true");
         taskResultDO.setTaskId(111L);
         taskResultDO.setTaskStatus(1);
-
+        taskResultDO.setStatus(0);
+        taskResultDO.setTriggerType(0);
+        taskResultDO.setUserId(1001L);
+        taskResultDO.setBatchId(UUID.randomUUID().toString());
         Long result = taskResultDao.insert(taskResultDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -51,9 +55,7 @@ public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
         });
 
         taskResultDOList = taskResultDao.findByTaskId(111L);
-        taskResultDOList.forEach(hokageTaskResultDO -> {
-            Assert.assertEquals(1, hokageTaskResultDO.getExitCode() + 0);
-        });
+        taskResultDOList.forEach(hokageTaskResultDO -> Assert.assertEquals(1, hokageTaskResultDO.getExitCode().intValue()));
 
 
     }
@@ -75,6 +77,6 @@ public class HokageTaskResultDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         List<HokageTaskResultDO> taskResultDOList = taskResultDao.findByTaskId(111L);
 
-        Assert.assertEquals(true, taskResultDOList.size() > 0);
+        Assert.assertTrue(taskResultDOList.size() > 0);
     }
 }

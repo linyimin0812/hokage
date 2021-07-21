@@ -64,13 +64,6 @@ public class HokageServerDaoImpl implements HokageServerDao {
         return serverMapper.selectById(id);
     }
 
-
-    @Override
-    public List<HokageServerDO> listByType(String type) {
-        return Collections.emptyList();
-    }
-
-
     @Override
     public List<HokageServerDO> selectByGroup(String group) {
         return Optional.ofNullable(serverMapper.selectByGroup(group)).orElse(Collections.emptyList());

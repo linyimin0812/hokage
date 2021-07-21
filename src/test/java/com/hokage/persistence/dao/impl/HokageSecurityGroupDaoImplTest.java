@@ -36,7 +36,7 @@ public class HokageSecurityGroupDaoImplTest extends HokageBaseDaoTest {
         securityGroupDO.setStatus(1);
         securityGroupDO.setUserId(12312321L);
         Long result = securityGroupDao.insert(securityGroupDO);
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class HokageSecurityGroupDaoImplTest extends HokageBaseDaoTest {
             Assert.assertEquals("0.0.0,0/0", groupDO.getAuthObject());
             groupDO.setAuthObject("0.0.0,0/1");
             Long result = securityGroupDao.update(groupDO);
-            Assert.assertEquals(true, result > 0);
+            Assert.assertTrue(result > 0);
         });
         securityGroupDOS = securityGroupDao.selectAll();
         securityGroupDOS.forEach(groupDO -> {

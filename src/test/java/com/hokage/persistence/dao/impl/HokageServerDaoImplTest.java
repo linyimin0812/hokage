@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * @description HokageServerDaoImplTest
  */
 
-@Import(HokageServerDaoImpl.class)
+@Import({HokageServerDaoImpl.class, HokageSubordinateServerDaoImpl.class})
 public class HokageServerDaoImplTest extends HokageBaseDaoTest {
 
     @Autowired
@@ -39,9 +39,12 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         serverDO.setPasswd("123456");
         serverDO.setSshPort("22");
         serverDO.setLoginType(1);
+        serverDO.setCreatorId(1001L);
+        serverDO.setStatus(0);
+
         Long result = serverDao.insert(serverDO);
 
-        Assert.assertEquals(true, result > 0);
+        Assert.assertTrue(result > 0);
 
     }
 
@@ -51,20 +54,19 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         this.insert();
 
         List<HokageServerDO> serverDOs = serverDao.selectAll();
-        Assert.assertEquals(true, serverDOs.size() > 0);
+        Assert.assertTrue(serverDOs.size() > 0);
 
         serverDOs.forEach(hokageServerDO -> {
             hokageServerDO.setAccount("linyimin");
             Long id = serverDao.update(hokageServerDO);
-            Assert.assertEquals(true, id > 0);
+            Assert.assertTrue(id > 0);
         });
 
         serverDOs = serverDao.selectAll();
-        Assert.assertEquals(true, serverDOs.size() > 0);
+        Assert.assertTrue(serverDOs.size() > 0);
 
         serverDOs.forEach(hokageServerDO -> {
             hokageServerDO.setAccount("linyimin");
-            Long id = serverDao.update(hokageServerDO);
             Assert.assertEquals("linyimin", hokageServerDO.getAccount());
         });
     }
@@ -85,7 +87,7 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         this.insert();
         List<HokageServerDO> serverDOS = serverDao.selectAll();
-        List<Long> ids = serverDOS.stream().map(serverDO -> serverDO.getId()).collect(Collectors.toList());
+        List<Long> ids = serverDOS.stream().map(HokageServerDO::getId).collect(Collectors.toList());
 
         List<HokageServerDO> result = serverDao.selectByIds(ids);
 
@@ -98,22 +100,9 @@ public class HokageServerDaoImplTest extends HokageBaseDaoTest {
         this.insert();
         this.insert();
         List<HokageServerDO> serverDOS = serverDao.selectAll();
-        List<Long> ids = serverDOS.stream().map(serverDO -> serverDO.getId()).collect(Collectors.toList());
+        List<Long> ids = serverDOS.stream().map(HokageServerDO::getId).collect(Collectors.toList());
         HokageServerDO serverDO = serverDao.selectById(ids.get(0));
         Assert.assertEquals(serverDO.getId(), ids.get(0));
-    }
-
-    @Test
-    @Rollback
-    public void selectByType() {
-        this.insert();
-        List<HokageServerDO> serverDOS = serverDao.listByType("1");
-        Assert.assertEquals(1, serverDOS.size());
-
-        this.insert();
-        serverDOS = serverDao.listByType("1");
-        Assert.assertEquals(2, serverDOS.size());
-
     }
 
     @Test

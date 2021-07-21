@@ -30,7 +30,12 @@ public class HokageSubordinateServerDaoImplTest extends HokageBaseDaoTest {
         subordinateServerDO.setId(hokageSequenceService.nextValue("hokage_subordinate_server").getData());
         subordinateServerDO.setServerId(12312L);
         subordinateServerDO.setSubordinateId(2L);
-
+        subordinateServerDO.setIp("0.0.0.0");
+        subordinateServerDO.setSshPort("22");
+        subordinateServerDO.setAccount("root");
+        subordinateServerDO.setPasswd("123456");
+        subordinateServerDO.setLoginType(0);
+        subordinateServerDO.setStatus(0);
         Long result = subordinateServerDao.insert(subordinateServerDO);
 
         Assert.assertTrue(result > 0);
