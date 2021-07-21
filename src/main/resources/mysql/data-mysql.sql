@@ -42,7 +42,7 @@ INSERT IGNORE INTO hokage.hokage_user (
     2,
     NOW(),
     NOW(),
-    'banzhe',               # 超级管理员姓名
+    'admin',               # 超级管理员姓名
     '$2a$10$.b8fqqoQp8PgrO0pwU1GnegjQBjDcWSad7iFac3FmnB2UmwtlQKI2', # 密码, 使用Bcrypt加密，请在 https://www.javainuse.com/onlineBcrypt 指定生成
     100,                    # 超级管理员角色（指定为100）
     'banzhe@eaxmple.com',   # 超级管理员邮箱（用于登录）

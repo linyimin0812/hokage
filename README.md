@@ -32,58 +32,128 @@
 
 文件管理支持文件列表查看、文本文件，图片及PDF文件预览、文件上传与下载、文件删除、重命名、权限修改及文件压缩等功能。
 
+![](hokage-doc/images/file-management.gif)
 
 
-## 开发环境
+### 批量任务
 
-1. node: 12+
-2. java 8+
+批量任务目前仅支持shell脚本，指定服务器在指定时间内执行命令。
 
-## 启动
+![](hokage-doc/images/bat-command.gif)
 
-```shell script
-docker run -itd --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.6
+### 资源监控
+
+资源监控包含3部分：
+
+1. 基本信息：包含**系统信息**、**CPU信息**、**内存信息**、**账户信息**及**最近登录账号信息**
+   ![](hokage-doc/images/basic-info.png)
+2. 系统状态：包含**平均负载**、**CPU使用率**、**内存使用量**、**进程信息**及**磁盘使用率**。其中进程信息和磁盘使用率是实时数据。
+   平均负载、CPU使用率及内存使用量还包含历史数据。对于**进程信息**可以之间将进程kill掉(默认使用kill -9 pid)
+   ![](hokage-doc/images/system-status.png)
+3. 网络信息：包含**下载速率**、**上传速率**、**网络接口信息**、**ARP缓存表**及**网络连接信息**
+   ![](hokage-doc/images/network-info.png)
+   
+
+   
+
+
+## 环境准备
+
+1. java 8+
+2. node: 12+
+3. mysql 5.6+
+
+
+## 运行
+
+1. 修改MySQL配置(application-prod.properties)
+
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/hokage?createDatabaseIfNotExist=true&useSSL=false
+spring.datasource.username=root
+spring.datasource.password=123456
 ```
 
-### use the fat jar to start
+2. 设置profile(application.properties)
 
-```shell script
+```text
+spring.profiles.active=prod
+```
+
+3. 设置超级管理员(src/main/resources/mysql/data-mysql.sql)
+
+替换插入语句中的超级管理员姓名和密码
+
+```mysql
+INSERT IGNORE INTO hokage.hokage_user (
+    id,
+    gmt_create,
+    gmt_modified,
+    username,
+    passwd,
+    role,
+    email,
+    is_subscribed
+) VALUES (
+    2,
+    NOW(),
+    NOW(),
+    'admin',               # 超级管理员姓名
+    '$2a$10$.b8fqqoQp8PgrO0pwU1GnegjQBjDcWSad7iFac3FmnB2UmwtlQKI2', # 密码, 使用Bcrypt加密，请在 https://www.javainuse.com/onlineBcrypt 指定生成
+    100,                    # 超级管理员角色（指定为100）
+    'banzhe@eaxmple.com',   # 超级管理员邮箱（用于登录）
+    0                       # 是否订阅
+);
+```
+
+### fat jar直接运行
+
+4. 打包或者下载release中的jar包
+
+```shell
 mvn clean package -Ddockerfile.build.skip=true
-cd target
+```
+
+5. 运行jar包
+
+```shell
 ./hokage-0.0.1-SNAPSHOT
 ```
 
-### use docker to start
+### docker运行
 
-```shell script
+```shell
 mvn clean package
 docker run -d --restart=always --name hokage -p 8080:8080 hokage-0.0.1:SNAPSHOT
 ```
 
 
-## swagger
+## 开发
 
-```
-127.0.0.1:8080/swagger-ui/index.html?url=/v3/api-docs
-```
+### 启动MySQL
 
-## development
-
-### set proxy port
-
-houkage-ui/package.json
-
-```json
-{
-  "proxy": "http://127.0.0.1:8080"
-}
+```shell script
+docker run -itd --restart=always --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql:5.6
 ```
 
-### start up ui
+### 前端设置代理服务端口，与服务端保持一致(config-overrides.js)
+
+```
+target: 'http://localhost:8080'
+```
+
+
+### 前端代码启动
 
 ```shell script
 npm install
-PORT=3000 npm start
+npm start
+```
+
+### swagger
+
+```
+127.0.0.1:8080/swagger-ui/index.html?url=/v3/api-docs
 ```
 
 
