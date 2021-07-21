@@ -21,9 +21,9 @@ import com.hokage.biz.service.HokageServerService;
 import com.hokage.biz.service.HokageUserService;
 import com.hokage.cache.HokageServerCacheDao;
 import com.hokage.common.ServiceResponse;
+import com.hokage.infra.worker.ThreadPoolWorker;
 import com.hokage.persistence.dao.*;
 import com.hokage.persistence.dataobject.*;
-import com.google.common.collect.ImmutableMap;
 import com.hokage.ssh.SshClient;
 import com.hokage.ssh.command.handler.MonitorCommandHandler;
 import com.hokage.util.TimeUtil;
@@ -34,7 +34,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -55,12 +54,13 @@ public class HokageServerServiceImpl implements HokageServerService {
     private HokageSupervisorServerDao supervisorServerDao;
     private HokageSubordinateServerDao subordinateServerDao;
     private HokageUserDao userDao;
-    private HokageServerApplicationDao applicationDao;
     private HokageServerSshKeyContentDao contentDao;
     private HokageSupervisorSubordinateDao supSubDao;
 
     private MonitorCommandHandler<MonitorParam> monitorCommandHandler;
     private HokageServerCacheDao serverCacheDao;
+
+    private ThreadPoolWorker threadPoolWorker;
 
     @Autowired
     public void setHokageServerDao(HokageServerDao hokageServerDao) {
@@ -88,11 +88,6 @@ public class HokageServerServiceImpl implements HokageServerService {
     }
 
     @Autowired
-    public void setApplicationDao(HokageServerApplicationDao applicationDao) {
-        this.applicationDao = applicationDao;
-    }
-
-    @Autowired
     public void setUserDao(HokageUserDao userDao) {
         this.userDao = userDao;
     }
@@ -117,46 +112,10 @@ public class HokageServerServiceImpl implements HokageServerService {
         this.monitorCommandHandler = monitorCommandHandler;
     }
 
-    private final ImmutableMap<Integer, Function<ServerOperateForm, Boolean>> SERVER_APPLY_MAP =
-            ImmutableMap.<Integer, Function<ServerOperateForm, Boolean>>builder()
-                    .put(UserRoleEnum.supervisor.getValue(), (form -> {
-                        List<Long> serverIds = form.getServerIds();
-                        return serverIds.stream().anyMatch(serverId -> {
-                            HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
-
-                            applicationDO.setApplyId(form.getOperatorId())
-                                    .setServerId(serverId);
-
-                            // get approve id
-                            List<HokageUserDO> userDOList = userDao.listUserByRole(UserRoleEnum.super_operator.getValue());
-                            if (CollectionUtils.isEmpty(userDOList)) {
-                                throw new RuntimeException("super operator is empty.");
-                            }
-                            String approveIds = userDOList.stream().map(userDo -> String.valueOf(userDo.getId())).collect(Collectors.joining(","));
-                            applicationDO.setApproveIds(approveIds);
-                            return applicationDao.save(applicationDO);
-                        });
-                    }))
-                    .put(UserRoleEnum.subordinate.getValue(), (form -> form.getServerIds().stream()
-                            .anyMatch(serverId -> {
-                                HokageServerApplicationDO applicationDO = new HokageServerApplicationDO();
-
-                                applicationDO.setApplyId(form.getOperatorId())
-                                        .setServerId(serverId);
-
-                                // get approve id
-                                List<HokageSupervisorServerDO> supervisorServerDOS = supervisorServerDao.listByServerIds(Collections.singletonList(serverId));
-                                if (CollectionUtils.isEmpty(supervisorServerDOS)) {
-                                    throw new RuntimeException(String.format("supervisor of server id: %s is empty.", serverId));
-                                }
-
-                                String approveIds = supervisorServerDOS.stream().map(serverDO -> String.valueOf(serverDO.getId())).collect(Collectors.joining(","));
-
-                                applicationDO.setApproveIds(approveIds);
-
-                                return applicationDao.save(applicationDO);
-                            })
-                    )).build();
+    @Autowired
+    public void setThreadPoolWorker(ThreadPoolWorker threadPoolWorker) {
+        this.threadPoolWorker = threadPoolWorker;
+    }
 
     @Override
     public ServiceResponse<List<HokageServerVO>> selectAll() {
@@ -231,23 +190,25 @@ public class HokageServerServiceImpl implements HokageServerService {
     @Override
     public ServiceResponse<List<HokageServerVO>> searchServer(ServerQuery query) {
         ServiceResponse<List<HokageServerVO>> response = new ServiceResponse<>();
-        List<HokageServerDO> serverDOList = new ArrayList<>();
+        List<HokageServerVO> serverVOList = new ArrayList<>();
         if (UserRoleEnum.super_operator.getValue().equals(query.getRole())) {
-            serverDOList = hokageServerDao.selectAll();
+            serverVOList = hokageServerDao.selectAll()
+                    .stream()
+                    .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
+                    .collect(Collectors.toList());
         } else if (UserRoleEnum.supervisor.getValue().equals(query.getRole())) {
-            serverDOList = hokageServerDao.selectBySupervisorId(query.getOperatorId());
+            serverVOList = hokageServerDao.selectBySupervisorId(query.getOperatorId())
+                    .stream()
+                    .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor))
+                    .collect(Collectors.toList());
         } else if (UserRoleEnum.subordinate.getValue().equals(query.getRole())) {
             List<HokageSubordinateServerDO> subServerDOList = subordinateServerDao.listByOrdinateIds(Collections.singletonList(query.getOperatorId()));
-            serverDOList = subServerDOList.stream().map(subServerDO -> {
+            serverVOList = subServerDOList.stream().map(subServerDO -> {
                 HokageServerDO serverDO = hokageServerDao.selectById(subServerDO.getServerId());
                 serverDO.setAccount(subServerDO.getAccount());
-                return serverDO;
+                return ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.subordinate);
             }).collect(Collectors.toList());
         }
-        List<HokageServerVO> serverVOList = serverDOList
-                .stream()
-                .map(serverDO -> ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.all))
-                .collect(Collectors.toList());
         return response.success(serverVOList);
     }
 
@@ -299,7 +260,22 @@ public class HokageServerServiceImpl implements HokageServerService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ServiceResponse<Boolean> revokeSubordinate(ServerOperateForm form) {
+    public ServiceResponse<Boolean> revokeSubordinateServer(ServerOperateForm form) {
+        checkState(!CollectionUtils.isEmpty(form.getUserIds()));
+        checkState(!CollectionUtils.isEmpty(form.getServerIds()));
+
+        ServiceResponse<Boolean> response = new ServiceResponse<>();
+
+        for (Long userId : form.getUserIds()) {
+            threadPoolWorker.getExecutorPool().execute(() -> userService.recycleSubordinate(userId, form.getServerIds()));
+            subordinateServerDao.removeBySubordinateId(userId, form.getServerIds());
+        }
+        return response.success(Boolean.TRUE);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ServiceResponse<Boolean> revokeSupervisorServer(ServerOperateForm form) {
         checkState(!CollectionUtils.isEmpty(form.getUserIds()));
         checkState(!CollectionUtils.isEmpty(form.getServerIds()));
 
@@ -324,7 +300,7 @@ public class HokageServerServiceImpl implements HokageServerService {
                 throw new RuntimeException("服务器存在使用者，请先回收其账号");
             }
 
-            subordinateServerDao.removeBySubordinateId(userId, revokeServerIdList);
+            supervisorServerDao.removeBySupervisorId(userId, revokeServerIdList);
         }
         return response.success(Boolean.TRUE);
     }
@@ -386,52 +362,6 @@ public class HokageServerServiceImpl implements HokageServerService {
         } else {
             // update
             return hokageServerDao.update(serverDO);
-        }
-    }
-
-    /**
-     * add supervisor when add server
-     * @param serverDO {@link HokageServerDO}
-     * @param form {@link HokageServerForm}
-     */
-    private void addSupervisor(HokageServerDO serverDO, HokageServerForm form) {
-        if (!CollectionUtils.isEmpty(form.getSupervisorList())) {
-            List<HokageSupervisorServerDO> supervisorServerDOList = supervisorServerDao.listByServerIds(Collections.singletonList(serverDO.getId()));
-
-            List<Long> supervisorIds = form.getSupervisorList();
-
-            List<Long> addList;
-            List<Long> deleteList = new ArrayList<>();
-
-            if (!CollectionUtils.isEmpty(supervisorServerDOList)) {
-                addList = supervisorIds.stream().filter(id -> supervisorServerDOList.stream()
-                        .noneMatch(superServerDO -> id.equals(superServerDO.getSupervisorId())))
-                        .collect(Collectors.toList());
-
-                deleteList = supervisorServerDOList.stream()
-                        .map(HokageSupervisorServerDO::getSupervisorId)
-                        .filter(id -> !supervisorIds.contains(id))
-                        .collect(Collectors.toList());
-            } else {
-                addList = new ArrayList<>(supervisorIds);
-            }
-
-            boolean result = addList.stream().allMatch(id -> {
-                HokageSupervisorServerDO supervisorServerDO = new HokageSupervisorServerDO();
-                ServiceResponse<Long> primaryKeyRes = sequenceService.nextValue(SequenceNameEnum.hokage_supervisor_server.name());
-                supervisorServerDO.setId(primaryKeyRes.getData());
-                supervisorServerDO.setServerId(serverDO.getId());
-                supervisorServerDO.setSupervisorId(id);
-                return supervisorServerDao.insert(supervisorServerDO) > 0;
-            });
-
-            if (!CollectionUtils.isEmpty(deleteList)) {
-                result &= deleteList.stream().allMatch(id -> supervisorServerDao.removeBySupervisorId(id, Collections.singletonList(serverDO.getId())) > 0);
-            }
-
-            if (!result) {
-                throw new RuntimeException("update supervisor error.");
-            }
         }
     }
 

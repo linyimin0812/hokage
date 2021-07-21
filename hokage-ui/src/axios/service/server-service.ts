@@ -68,7 +68,11 @@ const serviceInfo: { [name: string]: ServiceParam} = {
   listAccount: {
     url: '/server/account/list',
     method: 'GET'
-  }
+  },
+  deleteSubordinateServer: {
+    url: '/server/subordinate/delete',
+    method: 'POST'
+  },
 }
 
 export const ServerService = serviceConfig(serviceInfo)

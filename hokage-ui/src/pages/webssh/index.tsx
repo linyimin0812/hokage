@@ -10,6 +10,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { v4 as uuid } from 'uuid'
 import './index.less'
 import { toJS } from 'mobx'
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -17,9 +18,9 @@ const breadcrumbProps: BreadcrumbProps[] = [
 ]
 
 @observer
-export default class WebSshHome extends React.Component {
+class WebSshHome extends React.Component<RouteComponentProps> {
 
-  constructor(props: any) {
+  constructor(props: RouteComponentProps) {
     super(props)
     if (!store.panes || store.panes.length === 0) {
       store.panes = [{
@@ -29,6 +30,16 @@ export default class WebSshHome extends React.Component {
         closable: false
       }]
     }
+  }
+
+  componentDidMount() {
+    const {state} = this.props.location
+    if (!state) {
+      return
+    }
+    // @ts-ignore
+    const serverVO: ServerVO = JSON.parse(state.serverVO)
+    this.addPane(serverVO)
   }
 
   componentWillUnmount() {
@@ -112,3 +123,5 @@ export default class WebSshHome extends React.Component {
     )
   }
 }
+
+export default withRouter(WebSshHome)

@@ -154,8 +154,14 @@ public class ServerController extends BaseController {
     }
 
     @RequestMapping(value = "/server/subordinate/delete", method = RequestMethod.POST)
-    public ResultVO<Boolean> delServerSubordinate(@RequestBody ServerOperateForm form) {
-        ServiceResponse<Boolean> response = serverService.revokeSubordinate(form);
+    public ResultVO<Boolean> delSubordinateServer(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.revokeSubordinateServer(form);
+        return response(response);
+    }
+
+    @RequestMapping(value = "/server/supervisor/delete", method = RequestMethod.POST)
+    public ResultVO<Boolean> delSupervisorServer(@RequestBody ServerOperateForm form) {
+        ServiceResponse<Boolean> response = serverService.revokeSupervisorServer(form);
         return response(response);
     }
 

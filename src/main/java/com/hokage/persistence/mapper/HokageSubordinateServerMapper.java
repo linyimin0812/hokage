@@ -38,14 +38,14 @@ public interface HokageSubordinateServerMapper {
      * @param ids server id list
      * @return subordinate server list which meet the criteria
      */
-    List<HokageSubordinateServerDO> selectByServerIds(List<Long> ids);
+    List<HokageSubordinateServerDO> selectByServerIds(@Param("serverIds") List<Long> ids);
 
     /**
      * retrieve server ids based on subordinate ids
      * @param ids subordinate id list
      * @return subordinate server list which meet the criteria
      */
-    List<HokageSubordinateServerDO> selectByOrdinateIds(List<Long> ids);
+    List<HokageSubordinateServerDO> selectByOrdinateIds(@Param("subordinateIds") List<Long> ids);
 
     /**
      * retrieve record based on primary key

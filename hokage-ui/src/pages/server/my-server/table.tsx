@@ -28,9 +28,9 @@ export default class MyServerTable extends React.Component {
 
   actionRender = (record: ServerVO) => {
     return <Action>
-      <Action.Request title={'Web终端'} action={() => {alert('打开终端')}} />
-      <Action.Request title={'文件管理'} action={() => {alert('文件管理')}} />
-      <Action.Request title={'资源监控'} action={() => {alert('资源监控')}} />
+      <Action.Link to={{pathname: '/app/web/ssh', state: {serverVO: JSON.stringify(record)}}}>Web终端</Action.Link>
+      <Action.Link to={{pathname: '/app/web/file', state: {serverVO: JSON.stringify(record)}}}>文件管理</Action.Link>
+      <Action.Link to={{pathname: '/app/server/monitor', state: {serverVO: JSON.stringify(record)}}}>资源监控</Action.Link>
     </Action>
   }
 

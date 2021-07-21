@@ -1,12 +1,12 @@
 import React from 'react'
 import store from './store'
-import { message, Table, Tag } from 'antd';
-import { getHokageUid, randomColor } from '../../../libs';
+import { message, Table, Tag } from 'antd'
+import { getHokageUid, randomColor } from '../../../libs'
 import { ServerStatusEnum, ServerUserVO, ServerVO } from '../../../axios/action/server/server-type'
 import { Action } from '../../../component/Action'
 import { observer } from 'mobx-react'
-import { UserServerOperateForm } from '../../../axios/action/user/user-type';
-import { ServerAction } from '../../../axios/action/server/server-action';
+import { UserServerOperateForm } from '../../../axios/action/user/user-type'
+import { ServerAction } from '../../../axios/action/server/server-action'
 
 @observer
 export default class OperatorServerTable extends React.Component {
@@ -28,9 +28,25 @@ export default class OperatorServerTable extends React.Component {
   }
 
   nestedActionRender = (record: ServerUserVO) => {
+    const serverId = record.id
     return <Action>
-      <Action.Confirm title={'删除'} action={async () => {alert('TODO: 添加删除动作')}} content={`确定删除用户${record.username}(${record.id})`} />
+      <Action.Confirm title={'删除'} action={() => {this.revokeSubordinateServer(record.id, serverId)}} content={`确定删除用户${record.username}(${record.id})`} />
     </Action>
+  }
+
+  revokeSubordinateServer = (subordinateId: number, serverId: number) => {
+    const form: UserServerOperateForm = {
+      operatorId: getHokageUid(),
+      userIds: [subordinateId],
+      serverIds: [serverId]
+    }
+    ServerAction.deleteSubordinateServer(form).then(result => {
+      if (result) {
+        message.info("删除账号成功")
+      } else {
+        message.error("删除账号失败")
+      }
+    }).catch(e => message.error(e))
   }
 
   statusRender = (status: number) => {
@@ -66,9 +82,7 @@ export default class OperatorServerTable extends React.Component {
       <Action.Request title={'添加用户'} action={() => {alert('指定服务器')}} />
       <Action.Confirm
         title={'删除'}
-        action={async () => {
-          alert('TODO: 添加删除动作')
-        }}
+        action={async () => this.deleteServer(record)}
         content={`确定删除服务器${record.ip}(${record.id})`}
       />
     </Action>

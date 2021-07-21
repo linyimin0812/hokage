@@ -9,6 +9,7 @@ import { ServerVO } from '../../axios/action/server/server-type'
 import store, { MonitorPanesType } from './store'
 import { v4 as uuid } from 'uuid'
 import { observer } from 'mobx-react'
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
@@ -16,9 +17,9 @@ const breadcrumbProps: BreadcrumbProps[] = [
 ]
 
 @observer
-export default class ServerResourceManagementHome extends React.Component {
+class ServerResourceManagementHome extends React.Component<RouteComponentProps> {
 
-  constructor(props: any) {
+  constructor(props: RouteComponentProps) {
     super(props)
     if (!store.panes || store.panes.length === 0) {
       store.panes = [{
@@ -29,6 +30,16 @@ export default class ServerResourceManagementHome extends React.Component {
       }]
       store.activeKey = '1'
     }
+  }
+
+  componentDidMount() {
+    const {state} = this.props.location
+    if (!state) {
+      return
+    }
+    // @ts-ignore
+    const serverVO: ServerVO = JSON.parse(state.serverVO)
+    this.addPane(serverVO)
   }
 
   renderMonitorPage = (serverVO: ServerVO) => {
@@ -102,5 +113,6 @@ export default class ServerResourceManagementHome extends React.Component {
       </>
     )
   }
-
 }
+
+export default withRouter(ServerResourceManagementHome)

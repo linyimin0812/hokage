@@ -160,7 +160,7 @@ public class MonitorCommandHandler<T extends BaseCommandParam> {
     public BiFunction<SshClient, T, ServiceResponse<List<GeneralInfoVO>>> generalInfoHandler = ((client, param) -> {
         ServiceResponse<List<GeneralInfoVO>> response = new ServiceResponse<>();
         try {
-            CommandResult generalInfoResult = execComponent.execute(client, "bash ~/.hokage/json-api.sh general_info");
+            CommandResult generalInfoResult = execComponent.execute(client, AbstractCommand.general());
             if (!generalInfoResult.isSuccess()) {
                 String errMsg= String.format("exiStatus: %s, msg: %s", generalInfoResult.getExitStatus(), generalInfoResult.getMsg());
                 return response.fail(ResultCodeEnum.COMMAND_EXECUTED_FAILED.getCode(), errMsg);

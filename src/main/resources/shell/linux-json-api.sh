@@ -116,7 +116,7 @@ function add_user() {
   if id "$1" >& /dev/null; then
     echo "account has existed"
   else
-    useradd "$1"
+    useradd -M "$1"
   fi
   # create home directory
   if [[ ! -d "/home/$1" ]]; then

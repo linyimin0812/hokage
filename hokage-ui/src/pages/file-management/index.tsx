@@ -9,19 +9,20 @@ import { ServerVO } from '../../axios/action/server/server-type'
 import { v4 as uuid } from 'uuid'
 import { FileOperateForm } from '../../axios/action/file-management/file-management-type'
 import { getHokageUid } from '../../libs'
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 const breadcrumbProps: BreadcrumbProps[] = [
   { name: '首页', link: '/app/index' },
   { name: '文件管理' }
 ]
 
-interface HomePropsType {
+interface HomePropsType extends RouteComponentProps{
   initActionPanes: PanesType[],
   initActiveKey: string,
   addActionPanel: (id: string) => void
 }
 @observer
-export default class FileManagementHome extends React.Component<HomePropsType> {
+class FileManagementHome extends React.Component<HomePropsType> {
   constructor(props: HomePropsType) {
     super(props)
     if (!store.panes || store.panes.length === 0) {
@@ -32,6 +33,16 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
         closable: false
       }]
     }
+  }
+
+  componentDidMount() {
+    const {state} = this.props.location
+    if (!state) {
+      return
+    }
+    // @ts-ignore
+    const serverVO: ServerVO = JSON.parse(state.serverVO)
+    this.addPane(serverVO)
   }
 
   onChange = (activeKey: string) => {
@@ -100,3 +111,5 @@ export default class FileManagementHome extends React.Component<HomePropsType> {
     )
   }
 }
+
+export default withRouter(FileManagementHome)

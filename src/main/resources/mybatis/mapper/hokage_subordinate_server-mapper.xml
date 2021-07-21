@@ -96,11 +96,13 @@
         FROM
         <include refid="tableName"/>
         <where>
-            server_id IN
-            <foreach collection="list" item="serverId" index="index" open="(" close=")" separator=",">
-                #{serverId}
-            </foreach>
-            AND status &lt;&gt; -1
+            status &lt;&gt; -1
+            <if test="serverIds != null and serverIds.size > 0">
+                AND server_id IN
+                <foreach collection="serverIds" item="serverId" index="index" open="(" close=")" separator=",">
+                    #{serverId}
+                </foreach>
+            </if>
         </where>
     </select>
 
@@ -110,11 +112,13 @@
         FROM
         <include refid="tableName"/>
         <where>
-            subordinate_id IN
-            <foreach collection="list" item="subordinateId" index="index" open="(" close=")" separator=",">
-                #{subordinateId}
-            </foreach>
-            AND status &lt;&gt; -1
+            status &lt;&gt; -1
+            <if test="subordinateIds != null and subordinateIds.size > 0">
+                AND subordinate_id IN
+                <foreach collection="subordinateIds" item="subordinateId" index="index" open="(" close=")" separator=",">
+                    #{subordinateId}
+                </foreach>
+            </if>
         </where>
     </select>
 

@@ -7,19 +7,17 @@ import com.hokage.biz.form.user.HokageUserRegisterForm;
 import com.hokage.biz.response.server.HokageServerVO;
 import com.hokage.biz.response.user.HokageUserVO;
 import com.hokage.persistence.dao.*;
+import com.hokage.persistence.dataobject.HokageServerDO;
 import com.hokage.persistence.dataobject.HokageSubordinateServerDO;
 import com.hokage.persistence.dataobject.HokageSupervisorServerDO;
 import com.hokage.persistence.dataobject.HokageUserDO;
 import com.google.common.collect.ImmutableMap;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -98,7 +96,7 @@ public class UserConverter {
         /**
          * userDO to userVO
          * @param hokageUserDO hokage user data object
-         * @return
+         * @return {@link HokageUserVO}
          */
         HokageUserVO converter(HokageUserDO hokageUserDO);
     }
@@ -110,7 +108,7 @@ public class UserConverter {
 
             HokageUserVO hokageUserVO = preConverter(hokageUserDO);
             // server information which managed by the supervisor
-            List<Long> serverIds = supervisorServerDao.listByServerIds(Arrays.asList(hokageUserDO.getId()))
+            List<Long> serverIds = supervisorServerDao.listByServerIds(Collections.singletonList(hokageUserDO.getId()))
                     .stream()
                     .map(HokageSupervisorServerDO::getServerId)
                     .collect(Collectors.toList());
@@ -152,39 +150,23 @@ public class UserConverter {
             HokageUserVO hokageUserVO = preConverter(hokageUserDO);
 
             // server information which managed by the supervisor
-            List<Long> serverIds = subordinateServerDao.listByServerIds(
-                    Collections.singletonList(hokageUserDO.getId())
-            ).stream()
+            List<Long> subordinateIdList = Collections.singletonList(hokageUserDO.getId());
+            List<Long> serverIds = subordinateServerDao.listByOrdinateIds(subordinateIdList)
+                    .stream()
                     .map(HokageSubordinateServerDO::getServerId)
                     .collect(Collectors.toList());
 
-            List<HokageServerVO> serverVOList = hokageServerDao.selectByIds(serverIds).stream()
-                    .map(serverDO -> {
+            List<HokageServerDO> serverDOList = hokageServerDao.selectByIds(serverIds);
 
-                        HokageServerVO serverVO = ServerDOConverter.converter2VO(serverDO, ConverterTypeEnum.supervisor);
-
-                        // supervisor info
-                        serverVO.setSubordinateName(Collections.singletonList(hokageUserDO.getUsername()));
-                        serverVO.setSubordinateIdList(Collections.singletonList(hokageUserDO.getId()));
-
-                        // number of users of the server
-                        List<HokageSubordinateServerDO> subordinateServerDOList = subordinateServerDao.listByServerIds(
-                            Collections.singletonList(serverDO.getId())
-                        );
-                        serverVO.setUserNum(subordinateServerDOList.size());
-
-                        return serverVO;
-                    }).collect(Collectors.toList());
-
-            List<String> serverGroup = serverVOList.stream()
-                    .filter(serverVO -> !CollectionUtils.isEmpty(serverVO.getServerGroupList()))
-                    .flatMap(serverVO -> serverVO.getServerGroupList().stream())
-                    .distinct()
+            List<String> serverGroupList = serverDOList.stream()
+                    .map(HokageServerDO::getServerGroup)
+                    .filter(StringUtils::isNotEmpty)
+                    .map(groupStr -> Arrays.asList(StringUtils.split(groupStr, ",")))
+                    .flatMap(Collection::stream)
                     .collect(Collectors.toList());
 
-            hokageUserVO.setServerGroupList(serverGroup);
-            hokageUserVO.setServerNum(serverVOList.size());
-            hokageUserVO.setServerVOList(serverVOList);
+            hokageUserVO.setServerGroupList(serverGroupList);
+            hokageUserVO.setServerNum(serverDOList.size());
 
             // 指定管理员
             HokageUserDO userDO = userDao.querySupervisorBySubordinateId(hokageUserDO.getId());

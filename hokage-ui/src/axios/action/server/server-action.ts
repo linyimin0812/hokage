@@ -175,6 +175,20 @@ export const ServerAction = {
     })
   },
 
+  deleteSubordinateServer: (form: UserServerOperateForm): Promise<boolean> => {
+    return new Promise<boolean>(async (resolve, reject) => {
+      try {
+        const result: ServiceResult<boolean> = await ServerService.deleteSubordinateServer(form)
+        if (!result.success) {
+          return reject(result.msg)
+        }
+        resolve(result.data)
+      } catch (e) {
+        reject("删除账号失败: " + JSON.stringify(e))
+      }
+    })
+  },
+
   listAccount: (serverId: number): Promise<ServerUserVO[]> => {
     return new Promise<ServerUserVO[]>(async (resolve, reject) => {
       try {
