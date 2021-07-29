@@ -5,6 +5,8 @@
 - Ubuntu: 14.04, 16.04, 18.04, 20.04
 - CentOS: 7.1, 7.2, 7.5, 7.6, 8.1, 8.2
 
+[demo](http://server.linyimin.club:8080/) 账号：admin@eaxmple.com 密码：123456
+
 
 ![](hokage-doc/images/home.png)
 
