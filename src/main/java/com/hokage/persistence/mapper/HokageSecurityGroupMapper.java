@@ -13,7 +13,7 @@ import java.util.List;
  * @description 服务器安全组信息
  */
 @Mapper
-@Component
+//@Component
 public interface HokageSecurityGroupMapper {
     /**
      * 插入一条信息记录

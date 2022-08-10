@@ -38,4 +38,6 @@ public class HokageServerApplicationDO extends HokageBaseDO {
      * actual approve id
      */
     private Long actualApproveId;
+
+    private HokageUserDO userDO;
 }

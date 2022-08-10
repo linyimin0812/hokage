@@ -29,7 +29,6 @@ public interface HokageTaskResultMapper {
      * @return rows affected
      */
     Long update(HokageTaskResultDO taskResultDO);
-
     /**
      * query task result based on task result primary id
      * @param id task result primary id

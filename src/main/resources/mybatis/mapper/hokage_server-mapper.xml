@@ -93,7 +93,7 @@
         </if>
     </sql>
 
-    <insert id="insert" parameterType="HokageServerDO">
+    <insert id="insert" parameterType="com.hokage.persistence.dataobject.HokageServerDO">
         INSERT INTO
         <include refid="tableNme"/>
         (
@@ -158,12 +158,7 @@
         </where>
     </update>
 
-    <select id="selectAll" resultMap="HokageServerMapper">
-        SELECT
-        <include refid="allColumns"/>
-        FROM
-        <include refid="tableNme"/>
-    </select>
+
 
     <select id="selectByIds" parameterType="java.util.List" resultMap="HokageServerMapper">
         SELECT
@@ -210,7 +205,7 @@
             <include refid="tableNme"/>
         <where>
             id IN (
-                SELECT server_id FROM hokage_supervisor_server WHERE supervisor_id = #{supervisorId} AND status &lt;&gt; -1
+                SELECT server_id FROM `hokage_supervisor_server` WHERE supervisor_id = #{supervisorId} AND status &lt;&gt; -1
             )
             AND status &lt;&gt; -1
         </where>
@@ -268,7 +263,7 @@
                 )
             </if>
             <if test="account != null and account != ''">
-                AND account LIKE CONCAT('%', account,'%')
+                AND account LIKE CONCAT('%', #{account},'%')
             </if>
 
             <if test="username != null and username != ''">
@@ -287,12 +282,19 @@
         </where>
     </select>
 
+    <select id="selectAll" resultMap="HokageServerMapper">
+        SELECT
+        <include refid="allColumns"/>
+        FROM
+        <include refid="tableNme"/>
+    </select>
+
     <select id="selectByUserId" resultMap="HokageServerMapper">
         SELECT <include refid="allColumns" />
         FROM <include refid="tableNme" />
         <where>
             id IN (
-                select server_id from `hokage_supervisor_server` where supervisor_id = #{userId}
+                select server_id from `hokage_supervisor_server1` where supervisor_id = #{userId}
             )
             OR id IN (
                 select server_id from `hokage_subordinate_server` where subordinate_id = #{userId}

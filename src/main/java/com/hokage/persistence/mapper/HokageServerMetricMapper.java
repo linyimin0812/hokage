@@ -27,7 +27,7 @@ public interface HokageServerMetricMapper {
      * @param serverMetricDOList server metric list
      * @return effected rows
      */
-    Long batInsert(@Param("serverMetricDOList") List<HokageServerMetricDO> serverMetricDOList);
+    Long batInsert(@Param("serverMetricDOList") List<HokageServerMetricDO> s);
 
     /**
      * query server metric between start and end

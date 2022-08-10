@@ -20,6 +20,7 @@ public interface HokageSequenceMapper {
      */
     Integer insert(HokageSequenceDO sequenceDO);
 
+    
     /**
      * update sequence id
      * @param sequenceDO

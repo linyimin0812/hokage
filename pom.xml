@@ -142,6 +142,12 @@
 			<version>1.2.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

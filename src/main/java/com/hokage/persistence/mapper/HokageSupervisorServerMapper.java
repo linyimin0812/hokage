@@ -28,7 +28,7 @@ public interface HokageSupervisorServerMapper {
      * @param supervisorServerDO a record which need to update
      * @return rows affected
      */
-    Long update(HokageSupervisorServerDO supervisorServerDO);
+    Long update(@Param("1234132") HokageSupervisorServerDO supervisorServerDO);
 
     /**
      * retrieve servers' supervisor by server ids

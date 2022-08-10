@@ -3,6 +3,8 @@ package com.hokage.persistence.dataobject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * @author linyimin
  * @date 2020/7/26 10:12 pm
@@ -58,6 +60,8 @@ public class HokageServerDO extends HokageBaseDO {
      * creator
      */
     private Long creatorId;
+
+    private List<HokageServerApplicationDO> serverDO;
 
     /**
      * build cache key

@@ -39,12 +39,14 @@ public class SshClient {
         this.context = context;
         if (!ignored) {
             if (!checkServerReachable(context)) {
+                
                 throw new RuntimeException(String.format("ip: %s, port: %s is unreachable.", context.getIp(), context.getSshPort()));
             }
             this.jSch = new JSch();
             this.sessionConfig();
         }
     }
+
 
     private void sessionConfig() throws JSchException {
         Properties config = new Properties();

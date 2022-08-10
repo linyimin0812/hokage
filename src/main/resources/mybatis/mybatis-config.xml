@@ -25,6 +25,16 @@
         <typeAlias type="com.hokage.persistence.dataobject.HokageServerMetricDO" alias="HokageSystemMetricDO" />
         <typeAlias type="com.hokage.persistence.dataobject.HokageServerReportInfoHandlerDO" alias="ServerReportInfoHandlerDO" />
     </typeAliases>
+    
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql"/>
+            <property name="offsetAsPageNum" value="true"/>
+            <property name="rowBoundsWithCount" value="true"/>
+            <property name="pageSizeZero" value="true"/>
+        </plugin>
+    </plugins>
+
     <mappers>
         <mapper resource="mybatis/mapper/hokage_user-mapper.xml"/>
         <mapper resource="mybatis/mapper/hokage_supervisor_server-mapper.xml"/>
@@ -39,5 +49,6 @@
         <mapper resource="mybatis/mapper/Hokage_server_ssh_key_content-mapper.xml" />
         <mapper resource="mybatis/mapper/hokage_server_metric-mapper.xml" />
         <mapper resource="mybatis/mapper/hokage_server_report_info_handler-mapper.xml" />
+        <package name=""/>
     </mappers>
 </configuration>
